@@ -1,0 +1,27 @@
+{
+  "status": "warn",
+  "generated_at": "2026-08-19T12:00:00+08:00",
+  "fixture": true,
+  "checks": [
+    { "id": "pair-uniqueness", "label": "Unique unordered model pairs", "status": "pass", "detail": "Each pair is stored once under stable model order." },
+    { "id": "finite-metrics", "label": "Finite metric values", "status": "pass", "detail": "No NaN or Infinity values in fixture slices." },
+    { "id": "taxonomy-coverage", "label": "Derived taxonomy coverage", "status": "warn", "detail": "Fixture categories are illustrative; final audit awaits real exporter output." },
+    { "id": "source-separation", "label": "Official source dimensions retained", "status": "pass", "detail": "Topic labels do not replace origin_type or official source." }
+  ],
+  "classification": {
+    "total_event_dates": 13661,
+    "deterministic": 10385,
+    "keyword": 2597,
+    "manual": 0,
+    "unresolved": 679
+  },
+  "thresholds": {
+    "min_overlap_default": 50,
+    "near_bi_max_gap": 2,
+    "high_loss_threshold": 0.25
+  },
+  "files": [
+    { "path": "data/derived/event_classification.csv", "sha256": "fixture" },
+    { "path": "data/derived/pair_metrics_by_event_type.csv", "sha256": "fixture" }
+  ]
+}

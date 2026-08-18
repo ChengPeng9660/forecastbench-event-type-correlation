@@ -1,0 +1,452 @@
+{
+  "schema_version": "1.0.0",
+  "event_type": {
+    "id": "politics_conflict",
+    "label_zh": "政治与冲突",
+    "label_en": "Politics & Conflict",
+    "file": "event-types/politics_conflict.json"
+  },
+  "scope": {
+    "origin_type": "all",
+    "source": "all",
+    "near_bi": false
+  },
+  "sample": {
+    "n_unique_events": 2190,
+    "n_event_dates": 3620,
+    "date_min": "2024-07-21",
+    "date_max": "2026-03-29"
+  },
+  "models": [
+    "gpt-3.5-turbo",
+    "gpt-4",
+    "gpt-4o",
+    "claude-2.1",
+    "claude-3-opus",
+    "claude-3.5-sonnet"
+  ],
+  "pairs": [
+    {
+      "a": "gpt-3.5-turbo",
+      "b": "gpt-4",
+      "n_overlap": 121,
+      "n_dates": 5,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.06,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 2.64,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.504,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 2.85,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-3.5-turbo__gpt-4"
+    },
+    {
+      "a": "gpt-3.5-turbo",
+      "b": "gpt-4o",
+      "n_overlap": 172,
+      "n_dates": 6,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0222,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.21,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.034,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 3.57,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-3.5-turbo__gpt-4o"
+    },
+    {
+      "a": "gpt-3.5-turbo",
+      "b": "claude-2.1",
+      "n_overlap": 223,
+      "n_dates": 7,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0348,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 2.12,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.269,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 0.93,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__gpt-3.5-turbo__claude-2.1"
+    },
+    {
+      "a": "gpt-3.5-turbo",
+      "b": "claude-3-opus",
+      "n_overlap": 274,
+      "n_dates": 8,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0474,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 3.03,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.504,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 1.65,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__gpt-3.5-turbo__claude-3-opus"
+    },
+    {
+      "a": "gpt-3.5-turbo",
+      "b": "claude-3.5-sonnet",
+      "n_overlap": 104,
+      "n_dates": 9,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.06,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.6,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.034,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 2.37,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-3.5-turbo__claude-3.5-sonnet"
+    },
+    {
+      "a": "gpt-4",
+      "b": "gpt-4o",
+      "n_overlap": 138,
+      "n_dates": 7,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0516,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.86,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.551,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 1.41,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__gpt-4__gpt-4o"
+    },
+    {
+      "a": "gpt-4",
+      "b": "claude-2.1",
+      "n_overlap": 189,
+      "n_dates": 8,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0642,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 2.77,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.081,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 2.13,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-4__claude-2.1"
+    },
+    {
+      "a": "gpt-4",
+      "b": "claude-3-opus",
+      "n_overlap": 240,
+      "n_dates": 9,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0264,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.34,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.316,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 2.85,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-4__claude-3-opus"
+    },
+    {
+      "a": "gpt-4",
+      "b": "claude-3.5-sonnet",
+      "n_overlap": 70,
+      "n_dates": 10,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.039,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 2.25,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.551,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 3.57,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-4__claude-3.5-sonnet"
+    },
+    {
+      "a": "gpt-4o",
+      "b": "claude-2.1",
+      "n_overlap": 155,
+      "n_dates": 9,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0432,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.08,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.598,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 3.33,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__gpt-4o__claude-2.1"
+    },
+    {
+      "a": "gpt-4o",
+      "b": "claude-3-opus",
+      "n_overlap": 206,
+      "n_dates": 10,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0558,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.99,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.128,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 0.69,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__gpt-4o__claude-3-opus"
+    },
+    {
+      "a": "gpt-4o",
+      "b": "claude-3.5-sonnet",
+      "n_overlap": 257,
+      "n_dates": 4,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.018,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 2.9,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.363,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 1.41,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__gpt-4o__claude-3.5-sonnet"
+    },
+    {
+      "a": "claude-2.1",
+      "b": "claude-3-opus",
+      "n_overlap": 172,
+      "n_dates": 4,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0348,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 2.64,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": -0.06,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 1.89,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__claude-2.1__claude-3-opus"
+    },
+    {
+      "a": "claude-2.1",
+      "b": "claude-3.5-sonnet",
+      "n_overlap": 223,
+      "n_dates": 5,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0474,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.21,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": 0.175,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 2.61,
+        "near_bi": false
+      },
+      "row_id": "politics_conflict__claude-2.1__claude-3.5-sonnet"
+    },
+    {
+      "a": "claude-3-opus",
+      "b": "claude-3.5-sonnet",
+      "n_overlap": 189,
+      "n_dates": 6,
+      "metrics": {
+        "adjusted_pog": {
+          "value": 0.0264,
+          "se": null,
+          "ci95": null
+        },
+        "high_loss_lift": {
+          "value": 1.86,
+          "se": null,
+          "ci95": null
+        },
+        "adjusted_loss_corr": {
+          "value": -0.013,
+          "se": null,
+          "ci95": null
+        }
+      },
+      "diagnostics": {
+        "mean_bi_gap": 0.45,
+        "near_bi": true
+      },
+      "row_id": "politics_conflict__claude-3-opus__claude-3.5-sonnet"
+    }
+  ],
+  "missing_cells": [],
+  "missing_summary": []
+}

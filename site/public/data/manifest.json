@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_version": "fixture-2026-08-19",
+  "taxonomy_version": "0.1.0-derived",
+  "metric_version": "three-adjusted-pair-metrics-v1",
+  "built_at": "2026-08-19T12:00:00+08:00",
+  "commit_sha": "fixture",
+  "fixture": true,
+  "source_snapshot": {
+    "event_rows": 13661,
+    "unique_events": 8204,
+    "sha256": "fixture-not-a-source-checksum"
+  },
+  "event_types": [
+    { "id": "finance_economics", "label_zh": "金融与经济", "label_en": "Finance & Economics", "file": "event-types/finance_economics.json", "dimension": "topic" },
+    { "id": "politics_conflict", "label_zh": "政治与冲突", "label_en": "Politics & Conflict", "file": "event-types/politics_conflict.json", "dimension": "topic" },
+    { "id": "science_health_climate", "label_zh": "科学、健康与气候", "label_en": "Science, Health & Climate", "file": "event-types/science_health_climate.json", "dimension": "topic" }
+  ],
+  "metrics": [
+    {
+      "id": "adjusted_pog",
+      "label": "Adjusted Pairwise Oracle Gain",
+      "short_label": "Adjusted POG",
+      "direction": "higher",
+      "format": ".3f",
+      "description": "衡量两个模型是否会在不同问题上各有所长，即逐题错误的事后互补空间。"
+    },
+    {
+      "id": "high_loss_lift",
+      "label": "Adjusted High-loss Lift",
+      "short_label": "High-loss lift",
+      "direction": "lower",
+      "format": ".2f",
+      "reference": 1,
+      "description": "衡量两个模型发生严重错误时的共同出现程度；1 表示近似独立。"
+    },
+    {
+      "id": "adjusted_loss_corr",
+      "label": "Adjusted-loss Correlation",
+      "short_label": "Loss correlation",
+      "direction": "lower",
+      "format": ".3f",
+      "domain": [-1, 1],
+      "description": "衡量两个模型逐题 difficulty-adjusted Brier loss 的 Pearson 相关性。"
+    }
+  ]
+}

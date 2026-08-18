@@ -1,0 +1,69 @@
+{
+  "taxonomy_version": "forecastbench-topic-v1.1.0",
+  "generic_pair_prefix": "We are presenting you with two probability questions",
+  "official_sources": {
+    "acled": {"official_source": "ACLED", "origin_type": "Dataset", "source_domain_hint": "conflict_event_data"},
+    "dbnomics": {"official_source": "DBnomics", "origin_type": "Dataset", "source_domain_hint": "weather_climate_data"},
+    "fred": {"official_source": "FRED", "origin_type": "Dataset", "source_domain_hint": "macroeconomic_data"},
+    "wikipedia": {"official_source": "Wikipedia", "origin_type": "Dataset", "source_domain_hint": "encyclopedia"},
+    "yfinance": {"official_source": "Yahoo Finance", "origin_type": "Dataset", "source_domain_hint": "equity_market_data"},
+    "infer": {"official_source": "INFER", "origin_type": "Market", "source_domain_hint": "open_forecasting_market"},
+    "manifold": {"official_source": "Manifold", "origin_type": "Market", "source_domain_hint": "open_forecasting_market"},
+    "metaculus": {"official_source": "Metaculus", "origin_type": "Market", "source_domain_hint": "open_forecasting_market"},
+    "polymarket": {"official_source": "Polymarket", "origin_type": "Market", "source_domain_hint": "open_forecasting_market"}
+  },
+  "source_rules": {
+    "acled": {"topic": "politics_conflict", "subtopic": "conflict_events", "rule_id": "source.acled"},
+    "dbnomics": {"topic": "climate_weather", "subtopic": "weather_climate_indicators", "rule_id": "source.dbnomics"},
+    "fred": {"topic": "finance_economics", "subtopic": "macroeconomic_indicators", "rule_id": "source.fred"},
+    "yfinance": {"topic": "finance_economics", "subtopic": "equity_prices", "rule_id": "source.yfinance"}
+  },
+  "wikipedia_rules": [
+    {"topic": "health_science", "subtopic": "infectious_disease", "rule_id": "wikipedia.health", "pattern": "\\b(vaccine|infection|influenza|virus|syndrome|fever|disease|hepatitis|mers|herpes)\\b"},
+    {"topic": "sports", "subtopic": "chess_ranking", "rule_id": "wikipedia.chess", "pattern": "\\b(fide|elo|chess)\\b|\\b(rating|ranking)\\b"},
+    {"topic": "sports", "subtopic": "swimming_records", "rule_id": "wikipedia.swimming", "pattern": "\\b(world record|freestyle|backstroke|butterfly|breaststroke|medley|swimming)\\b"}
+  ],
+  "event_overrides": [
+    {"source": "metaculus", "event_id": "13467", "topic": "climate_weather", "subtopic": "geoengineering_policy", "rule_id": "review.metaculus.13467", "confidence": "medium", "review_required": true, "candidates": ["politics_conflict", "climate_weather"]},
+    {"source": "infer", "event_id": "1374", "topic": "politics_conflict", "subtopic": "critical_infrastructure_security", "rule_id": "review.infer.1374", "confidence": "high", "candidates": ["politics_conflict", "technology_ai"]},
+    {"source": "metaculus", "event_id": "15796", "topic": "sports", "subtopic": "olympic_participation", "rule_id": "review.metaculus.15796", "confidence": "high", "candidates": ["politics_conflict", "sports"]},
+    {"source": "metaculus", "event_id": "17180", "topic": "politics_conflict", "subtopic": "election_integrity", "rule_id": "review.metaculus.17180", "confidence": "medium", "review_required": true, "candidates": ["politics_conflict", "technology_ai"]},
+    {"source": "metaculus", "event_id": "17432", "topic": "technology_ai", "subtopic": "ai_capabilities", "rule_id": "review.metaculus.17432", "confidence": "high", "candidates": ["health_science", "technology_ai"]},
+    {"source": "manifold", "event_id": "KtGRsTouYWiDPaPhRC3o", "topic": "technology_ai", "subtopic": "ai_creative_capabilities", "rule_id": "review.manifold.KtGRsTouYWiDPaPhRC3o", "confidence": "medium", "review_required": true, "candidates": ["technology_ai", "sports"]},
+    {"source": "manifold", "event_id": "RJH3aufks8LK0Pjyhrgl", "topic": "finance_economics", "subtopic": "inflation", "rule_id": "review.manifold.RJH3aufks8LK0Pjyhrgl", "confidence": "high", "candidates": ["politics_conflict", "finance_economics"]},
+    {"source": "manifold", "event_id": "gTpJ2NRBMPIL7IJenUsE", "topic": "entertainment_culture", "subtopic": "video_games", "rule_id": "review.manifold.gTpJ2NRBMPIL7IJenUsE", "confidence": "medium", "review_required": true, "candidates": ["technology_ai", "entertainment_culture"]},
+    {"source": "polymarket", "event_id": "0x1d6f2f967ebf572de38a27ea879c668de22fd3b95540a6cbe17ee5818db57223", "topic": "politics_conflict", "subtopic": "legislation", "rule_id": "review.polymarket.bitcoin_act", "confidence": "medium", "review_required": true, "candidates": ["politics_conflict", "finance_economics"]},
+    {"source": "manifold", "event_id": "tu2ouer9zq", "topic": "technology_ai", "subtopic": "ai_capabilities", "rule_id": "review.manifold.tu2ouer9zq", "confidence": "high", "candidates": ["technology_ai", "sports"]},
+    {"source": "infer", "event_id": "1554", "topic": "politics_conflict", "subtopic": "export_controls", "rule_id": "review.infer.1554", "confidence": "high", "candidates": ["politics_conflict", "technology_ai"]},
+    {"source": "infer", "event_id": "1555", "topic": "politics_conflict", "subtopic": "ai_regulation", "rule_id": "review.infer.1555", "confidence": "high", "candidates": ["politics_conflict", "technology_ai"]},
+    {"source": "manifold", "event_id": "rF0NagHSV237D4FXYJgK", "topic": "entertainment_culture", "subtopic": "film", "rule_id": "review.manifold.rF0NagHSV237D4FXYJgK", "confidence": "high", "candidates": ["technology_ai", "entertainment_culture"]},
+    {"source": "infer", "event_id": "1681", "topic": "health_science", "subtopic": "medical_devices", "rule_id": "review.infer.1681", "confidence": "high", "candidates": ["health_science", "technology_ai"]},
+    {"source": "manifold", "event_id": "oj4g2w07uo", "topic": "politics_conflict", "subtopic": "government_policy", "rule_id": "review.manifold.oj4g2w07uo", "confidence": "medium", "review_required": true, "candidates": ["politics_conflict", "finance_economics"]},
+    {"source": "polymarket", "event_id": "0x2e1a4dc939f815ba720dc1eba072191c2271bb0ea2fc36c54535db0121d8c48d", "topic": "finance_economics", "subtopic": "equity_market_cap", "rule_id": "review.polymarket.tesla_market_cap", "confidence": "high", "candidates": ["finance_economics", "technology_ai"]},
+    {"source": "polymarket", "event_id": "0x3f34e931e2457b68c4acce8c4f4d0f5e5a1a9d68afb44afb70af88478718dd76", "topic": "entertainment_culture", "subtopic": "film_awards", "rule_id": "review.polymarket.f1_movie", "confidence": "high", "candidates": ["sports", "entertainment_culture"]},
+    {"source": "polymarket", "event_id": "0xa57a712aa14e925e0e1615b737549a09b0f09db451910b68af6910b6f8b0494d", "topic": "technology_ai", "subtopic": "cryptography", "rule_id": "review.polymarket.sha256", "confidence": "high"},
+    {"source": "infer", "event_id": "1597", "topic": "politics_conflict", "subtopic": "defense_policy", "rule_id": "review.infer.1597", "confidence": "high"},
+    {"source": "infer", "event_id": "1675", "topic": "finance_economics", "subtopic": "energy_trade", "rule_id": "review.infer.1675", "confidence": "high"},
+    {"source": "polymarket", "event_id": "0xad0144e9296cf5133595a42c2155be25c8f24eb1a79266c0ec81a40a2f806933", "topic": "other", "subtopic": "unresolved_domain", "rule_id": "review.polymarket.lone_actor", "confidence": "low", "eligible": false, "review_required": true},
+    {"source": "polymarket", "event_id": "0xd56c9ee002e2ae2766bb390373a18ecf78201df41533f2d7470f9440cbba18d7", "topic": "other", "subtopic": "personal_life", "rule_id": "review.polymarket.trump_divorce", "confidence": "low", "eligible": false, "review_required": true},
+    {"source": "polymarket", "event_id": "0x0c4c1d224e536067363a96bb1916acfcfef47d503b8838c0113a39104ac05428", "topic": "finance_economics", "subtopic": "equity_prices", "rule_id": "review.polymarket.tesla_578", "confidence": "high"},
+    {"source": "polymarket", "event_id": "0x80075f84b96d341fa75f7d95616607d23116f6fb41cf44f1d079f6fd6524b601", "topic": "finance_economics", "subtopic": "equity_prices", "rule_id": "review.polymarket.tsla_close", "confidence": "high"}
+  ],
+  "manual_overrides": [
+    {"topic": "entertainment_culture", "subtopic": "film", "rule_id": "override.james_bond", "pattern": "\\bjames bond\\b"},
+    {"topic": "entertainment_culture", "subtopic": "music_competition", "rule_id": "override.eurovision", "pattern": "\\beurovision\\b"},
+    {"topic": "health_science", "subtopic": "infectious_disease", "rule_id": "override.avian_influenza", "pattern": "\\b(h5n1|hpai|avian influenza|avian flu)\\b"},
+    {"topic": "sports", "subtopic": "american_football", "rule_id": "override.super_bowl", "pattern": "\\bsuper bowl\\b"},
+    {"topic": "sports", "subtopic": "ice_hockey", "rule_id": "override.president_trophy", "pattern": "\\bpresident(?:'s|’s|s)? trophy\\b"},
+    {"topic": "finance_economics", "subtopic": "equity_prices", "rule_id": "override.tesla_asset_price", "pattern": "\\b(?:tesla|tsla)\\b(?=.*(?:\\$|\\bprice\\b|\\bstock\\b|\\bshares?\\b|\\bmarket cap\\b))"}
+  ],
+  "keyword_rules": [
+    {"topic": "politics_conflict", "subtopic": "politics_conflict", "rule_id": "keyword.politics_conflict", "pattern": "\\b(election|president|prime minister|senate|congress|government|federal law|supreme court|tariff|sanctions|ceasefire|war|conflict|ukraine|russia|russian|iran|israel|hamas|putin|trump|biden|military|nuclear|european union|jcpoa|export controls|diplomatic|coalition)\\b"},
+    {"topic": "finance_economics", "subtopic": "finance_economics", "rule_id": "keyword.finance_economics", "pattern": "\\b(stock|stocks|market cap|fdv|price|trading|bitcoin|btc|ethereum|eth|crypto|inflation|recession|gdp|unemployment|interest rates?|fed cut|federal reserve|treasury|revenue|gas prices?|oil|bonds?|yield|spread|exchange rate|credit)\\b"},
+    {"topic": "climate_weather", "subtopic": "climate_weather", "rule_id": "keyword.climate_weather", "pattern": "\\b(climate|weather|temperature|warming|heatwave|hurricane|typhoon|tornado|rainfall|snowfall|precipitation|drought|wildfire|carbon emissions?|greenhouse gas|geoengineering)\\b"},
+    {"topic": "health_science", "subtopic": "health_science", "rule_id": "keyword.health_science", "pattern": "\\b(vaccine|virus|influenza|disease|infection|medical|fda|clinical trial|surgery|alzheimer|h5n1|hpai|avian flu|exoplanet|science|scientists|millennium prize|habitable)\\b"},
+    {"topic": "technology_ai", "subtopic": "technology_ai", "rule_id": "keyword.technology_ai", "pattern": "\\b(ai|openai|chatgpt|llm|anthropic|claude|gpt|gemini|xai|grok|deepfake|cyberattack|cyber attack|model weights|chip|browser|iphone|robotaxi|tesla|spacex|starship|agi|artificial intelligence|technology|tech sector|sector tecnológico)\\b"},
+    {"topic": "sports", "subtopic": "sports", "rule_id": "keyword.sports", "pattern": "\\b(world cup|olympics?|wimbledon|fifa|mls|nba|nfl|nhl|hockey|formula 1|f1|grand slam|gold medal|championship|match|tournament|trophy|player score|elo rating|world record|super bowl)\\b"},
+    {"topic": "entertainment_culture", "subtopic": "entertainment_culture", "rule_id": "keyword.entertainment_culture", "pattern": "\\b(movie|box office|gross|james bond|album|song|grammy|oscar|emmy|television|book|novel|video game|game release|superman|deadpool|despicable me|one piece|actor|actress|eurovision)\\b"}
+  ]
+}

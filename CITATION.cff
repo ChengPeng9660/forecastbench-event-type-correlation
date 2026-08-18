@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this analysis, please cite this repository and ForecastBench."
+message: "If you use this analysis, cite this MIT-licensed software, the CC BY-SA 4.0 derived data, and ForecastBench."
 title: "ForecastBench Event-Type Model Dependence Atlas"
 type: software
 authors:
@@ -8,4 +8,28 @@ authors:
 year: 2026
 license: MIT
 repository-code: "https://github.com/ChengPeng9660/forecastbench-event-type-correlation"
-
+keywords:
+  - forecasting
+  - model dependence
+  - ForecastBench
+references:
+  - type: conference-paper
+    title: "ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities"
+    authors:
+      - family-names: Karger
+        given-names: Ezra
+      - family-names: Bastani
+        given-names: Houtan
+      - family-names: Chen
+        given-names: Yueh-Han
+      - family-names: Jacobs
+        given-names: Zachary
+      - family-names: Halawi
+        given-names: Danny
+      - family-names: Zhang
+        given-names: Fred
+      - family-names: Tetlock
+        given-names: Philip E.
+    year: 2025
+    collection-title: "International Conference on Learning Representations"
+    url: "https://iclr.cc/virtual/2025/poster/28507"

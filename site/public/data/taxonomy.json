@@ -1,0 +1,47 @@
+{
+  "categories": [
+    {
+      "id": "finance_economics",
+      "label_zh": "金融与经济",
+      "label_en": "Finance & Economics",
+      "level": "topic",
+      "derived": true,
+      "parent_id": null,
+      "definition": "宏观经济、市场、公司金融、价格与指标事件。",
+      "rules": ["official FRED/Yahoo Finance source", "audited market-topic rules"],
+      "n_event_dates": 4310,
+      "n_unique_events": 2570,
+      "confidence_counts": { "deterministic": 3500, "keyword": 620, "manual": 80, "unresolved": 110 }
+    },
+    {
+      "id": "politics_conflict",
+      "label_zh": "政治与冲突",
+      "label_en": "Politics & Conflict",
+      "level": "topic",
+      "derived": true,
+      "parent_id": null,
+      "definition": "选举、公共政策、国际关系、武装冲突与地缘政治事件。",
+      "rules": ["official ACLED source", "audited market-topic rules"],
+      "n_event_dates": 3620,
+      "n_unique_events": 2190,
+      "confidence_counts": { "deterministic": 2810, "keyword": 610, "manual": 90, "unresolved": 110 }
+    },
+    {
+      "id": "science_health_climate",
+      "label_zh": "科学、健康与气候",
+      "label_en": "Science, Health & Climate",
+      "level": "topic",
+      "derived": true,
+      "parent_id": null,
+      "definition": "天气气候、医疗、生物、科研与公共健康事件。",
+      "rules": ["official DBnomics source", "Wikipedia and market-topic rules"],
+      "n_event_dates": 2780,
+      "n_unique_events": 1660,
+      "confidence_counts": { "deterministic": 1760, "keyword": 790, "manual": 90, "unresolved": 140 }
+    }
+  ],
+  "official_dimensions": {
+    "origin_type": ["Dataset", "Market"],
+    "sources": ["ACLED", "DBnomics", "FRED", "Metaculus", "Polymarket", "Wikipedia", "Yahoo Finance"]
+  }
+}
