@@ -13,6 +13,7 @@ import csv
 import gzip
 import hashlib
 import json
+import os
 import shutil
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -530,8 +531,8 @@ def build_site_artifacts(
         ),
         "manual": taxonomy_summary["status_counts"].get("manual_override", 0),
         "unresolved": sum(
-            taxonomy_summary["status_counts"].get(key, 0)
-            for key in ("fallback", "generic_pair_unrecoverable")
+            not as_bool(row["topic_analysis_eligible"])
+            for row in taxonomy.values()
         ),
     }
     missing_scored = metrics_audit.get("join_counters", {}).get("scored_rows_missing_taxonomy", 0)
@@ -561,8 +562,14 @@ def build_site_artifacts(
         *[event_dir / reference["file"].split("/", 1)[1] for reference in event_refs],
         full_gzip, eligible_gzip, derived_dir / "analysis_audit.json",
     ]
+    repository_root = Path(
+        os.path.commonpath([site_data_dir.resolve(), derived_dir.resolve()])
+    )
     audit_payload["files"] = [
-        {"path": str(path.relative_to(site_data_dir.parent.parent if path.is_relative_to(site_data_dir) else derived_dir.parent.parent)), "sha256": sha256_file(path)}
+        {
+            "path": str(path.resolve().relative_to(repository_root)),
+            "sha256": sha256_file(path),
+        }
         for path in hash_targets
     ]
     write_json(site_data_dir / "audit.json", audit_payload)

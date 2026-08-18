@@ -21,9 +21,10 @@
   equity-price, cryptography, defense-policy, energy-trade, and entity-word
   ambiguities. Eleven eligible rows remain review-required by design.
 - Generated 1,050,945 scored rows from 266 exact model names across 18 dates.
-  All 1,063 clean-candidate JSON files were readable; 181 filename-identifiable
-  non-clean files were excluded before read and no file-read exception was
-  tolerated.
+  Of 1,063 JSON files considered, 181 filename-identifiable non-clean files
+  were excluded before read and two additional payload-identified non-clean
+  files were excluded after read. All remaining clean-candidate reads had zero
+  errors; no file-read exception was tolerated.
 - Computed 634,410 rows: 35,245 global unordered model pairs crossed with seven
   topic, two origin, and nine source slices. Of these, 156,315 meet common
   support `n >= 50`.

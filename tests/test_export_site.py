@@ -104,6 +104,13 @@ def test_exporter_writes_real_schema_and_explicit_nulls(tmp_path: Path) -> None:
     manifest = json.loads((site_data / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["fixture"] is False
     assert manifest["source_snapshot"]["official_targets"] == 1
+    audit = json.loads((site_data / "audit.json").read_text(encoding="utf-8"))
+    assert audit["classification"]["unresolved"] == 0
+    assert all(
+        item["path"].startswith(("site/public/data/", "data/derived/"))
+        for item in audit["files"]
+    )
+    assert all((tmp_path / item["path"]).is_file() for item in audit["files"])
     finance = json.loads(
         (site_data / "event-types" / "finance_economics.json").read_text(encoding="utf-8")
     )
