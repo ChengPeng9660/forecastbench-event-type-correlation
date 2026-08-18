@@ -1,0 +1,229 @@
+{
+  "categories": [
+    {
+      "confidence_counts": {
+        "high": 2800,
+        "medium": 172
+      },
+      "definition": "宏观经济、利率、汇率、股票、加密资产与金融市场问题。",
+      "derived": true,
+      "id": "finance_economics",
+      "label_en": "Finance & Economics",
+      "label_zh": "金融与经济",
+      "level": "topic",
+      "n_event_dates": 2972,
+      "n_unique_events": 770,
+      "parent_id": null,
+      "rules": [
+        "keyword.finance_economics",
+        "override.tesla_asset_price",
+        "review.infer.1675",
+        "review.manifold.RJH3aufks8LK0Pjyhrgl",
+        "review.polymarket.tesla_578",
+        "review.polymarket.tesla_market_cap",
+        "review.polymarket.tsla_close",
+        "source.fred",
+        "source.yfinance"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "high": 1379,
+        "medium": 447
+      },
+      "definition": "选举、公共政策、外交、战争、武装冲突与地缘政治问题。",
+      "derived": true,
+      "id": "politics_conflict",
+      "label_en": "Politics & Conflict",
+      "label_zh": "政治与冲突",
+      "level": "topic",
+      "n_event_dates": 1826,
+      "n_unique_events": 1399,
+      "parent_id": null,
+      "rules": [
+        "keyword.politics_conflict",
+        "review.infer.1374",
+        "review.infer.1554",
+        "review.infer.1555",
+        "review.infer.1597",
+        "review.manifold.oj4g2w07uo",
+        "review.metaculus.17180",
+        "review.polymarket.bitcoin_act",
+        "source.acled"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "high": 1213,
+        "medium": 20
+      },
+      "definition": "气温、降水、天气指标与气候相关问题。",
+      "derived": true,
+      "id": "climate_weather",
+      "label_en": "Climate & Weather",
+      "label_zh": "气候与天气",
+      "level": "topic",
+      "n_event_dates": 1233,
+      "n_unique_events": 64,
+      "parent_id": null,
+      "rules": [
+        "keyword.climate_weather",
+        "review.metaculus.13467",
+        "source.dbnomics"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "high": 687,
+        "medium": 3
+      },
+      "definition": "疾病、疫苗、生物医学、临床研究与一般科学问题。",
+      "derived": true,
+      "id": "health_science",
+      "label_en": "Health & Science",
+      "label_zh": "健康与科学",
+      "level": "topic",
+      "n_event_dates": 690,
+      "n_unique_events": 216,
+      "parent_id": null,
+      "rules": [
+        "keyword.health_science",
+        "override.avian_influenza",
+        "review.infer.1681",
+        "wikipedia.health"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "high": 7,
+        "medium": 258
+      },
+      "definition": "人工智能、模型、科技公司、芯片、网络安全与产品发布。",
+      "derived": true,
+      "id": "technology_ai",
+      "label_en": "Technology & AI",
+      "label_zh": "科技与 AI",
+      "level": "topic",
+      "n_event_dates": 265,
+      "n_unique_events": 122,
+      "parent_id": null,
+      "rules": [
+        "keyword.technology_ai",
+        "review.manifold.KtGRsTouYWiDPaPhRC3o",
+        "review.manifold.tu2ouer9zq",
+        "review.metaculus.17432",
+        "review.polymarket.sha256"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "high": 609,
+        "medium": 146
+      },
+      "definition": "体育赛事、排名、纪录、运动员和比赛结果。",
+      "derived": true,
+      "id": "sports",
+      "label_en": "Sports",
+      "label_zh": "体育",
+      "level": "topic",
+      "n_event_dates": 755,
+      "n_unique_events": 264,
+      "parent_id": null,
+      "rules": [
+        "keyword.sports",
+        "override.president_trophy",
+        "override.super_bowl",
+        "review.metaculus.15796",
+        "wikipedia.chess",
+        "wikipedia.swimming"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "high": 52,
+        "medium": 101
+      },
+      "definition": "影视、音乐、出版、游戏、奖项与文化事件。",
+      "derived": true,
+      "id": "entertainment_culture",
+      "label_en": "Entertainment & Culture",
+      "label_zh": "娱乐与文化",
+      "level": "topic",
+      "n_event_dates": 153,
+      "n_unique_events": 89,
+      "parent_id": null,
+      "rules": [
+        "keyword.entertainment_culture",
+        "override.eurovision",
+        "override.james_bond",
+        "review.manifold.gTpJ2NRBMPIL7IJenUsE",
+        "review.manifold.rF0NagHSV237D4FXYJgK",
+        "review.polymarket.f1_movie"
+      ]
+    },
+    {
+      "confidence_counts": {
+        "low": 727,
+        "unavailable": 5040
+      },
+      "definition": "未能可靠归入单一主题、文本不可恢复或需要人工复核的问题。",
+      "derived": true,
+      "id": "other",
+      "label_en": "Other / Review",
+      "label_zh": "其他 / 待审计",
+      "level": "topic",
+      "n_event_dates": 5767,
+      "n_unique_events": 5280,
+      "parent_id": null,
+      "rules": [
+        "fallback.infer",
+        "fallback.manifold",
+        "fallback.metaculus",
+        "fallback.polymarket",
+        "generic_pair.acled",
+        "generic_pair.dbnomics",
+        "generic_pair.fred",
+        "generic_pair.infer",
+        "generic_pair.manifold",
+        "generic_pair.metaculus",
+        "generic_pair.polymarket",
+        "generic_pair.wikipedia",
+        "generic_pair.yfinance",
+        "review.polymarket.lone_actor",
+        "review.polymarket.trump_divorce"
+      ]
+    }
+  ],
+  "official_dimensions": {
+    "origin_counts": {
+      "Dataset": 10205,
+      "Market": 3456
+    },
+    "origin_type": [
+      "Dataset",
+      "Market"
+    ],
+    "source_counts": {
+      "ACLED": 2155,
+      "DBnomics": 1810,
+      "FRED": 2180,
+      "INFER": 275,
+      "Manifold": 726,
+      "Metaculus": 439,
+      "Polymarket": 2016,
+      "Wikipedia": 1889,
+      "Yahoo Finance": 2171
+    },
+    "sources": [
+      "ACLED",
+      "DBnomics",
+      "FRED",
+      "INFER",
+      "Manifold",
+      "Metaculus",
+      "Polymarket",
+      "Wikipedia",
+      "Yahoo Finance"
+    ]
+  }
+}

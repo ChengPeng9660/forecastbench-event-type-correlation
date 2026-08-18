@@ -1,0 +1,39 @@
+{
+  "input_sha256": "ad757817d32acca985f27e1ec82c190587303f4acd69bcda0380ba752a5505ff",
+  "official_source_counts": {
+    "ACLED": 2155,
+    "DBnomics": 1810,
+    "FRED": 2180,
+    "INFER": 275,
+    "Manifold": 726,
+    "Metaculus": 439,
+    "Polymarket": 2016,
+    "Wikipedia": 1889,
+    "Yahoo Finance": 2171
+  },
+  "origin_counts": {
+    "Dataset": 10205,
+    "Market": 3456
+  },
+  "row_count": 13661,
+  "status_counts": {
+    "fallback": 725,
+    "generic_pair_unrecoverable": 5040,
+    "keyword_rule": 2397,
+    "manual_override": 154,
+    "source_rule": 5345
+  },
+  "taxonomy_version": "forecastbench-topic-v1.1.0",
+  "topic_counts": {
+    "climate_weather": 1233,
+    "entertainment_culture": 153,
+    "finance_economics": 2972,
+    "health_science": 690,
+    "other": 5767,
+    "politics_conflict": 1826,
+    "sports": 755,
+    "technology_ai": 265
+  },
+  "unique_date_source_event_count": 13661,
+  "unique_source_event_count": 8204
+}

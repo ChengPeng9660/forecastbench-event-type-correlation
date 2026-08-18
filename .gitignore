@@ -1,12 +1,13 @@
 .DS_Store
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .venv/
 node_modules/
 site/dist/
 site/playwright-report/
 site/test-results/
+.playwright-cli/
 data/local/
 data/build/
-
