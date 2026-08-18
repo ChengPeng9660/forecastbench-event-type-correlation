@@ -36,91 +36,91 @@
     "keyword": 2397,
     "manual": 154,
     "total_event_dates": 13661,
-    "unresolved": 5765
+    "unresolved": 5767
   },
   "files": [
     {
-      "path": "public/data/manifest.json",
-      "sha256": "f21b459a382086e8368e9bf014868876b7b8900ca23e651a17199fbb7dc86a21"
+      "path": "site/public/data/manifest.json",
+      "sha256": "aa73e5b3c299b92e1aa2cbf3343eb1e5a1f5c6e84b1f1a5dd29486fbd3023d23"
     },
     {
-      "path": "public/data/models.json",
+      "path": "site/public/data/models.json",
       "sha256": "0066b38da3181f8e7d436bed103e451e33ddb8b66161d90a74fa8ba3d8486766"
     },
     {
-      "path": "public/data/taxonomy.json",
+      "path": "site/public/data/taxonomy.json",
       "sha256": "f246fa23ce1cb44d6031a9bf27cdb73272c9d032d9fa9c45f18e2594a4805723"
     },
     {
-      "path": "public/data/event-types/finance_economics.json",
+      "path": "site/public/data/event-types/finance_economics.json",
       "sha256": "adee2653706c1970a7870450ebb48b582a498929f1300e4e223bd20707e21bdb"
     },
     {
-      "path": "public/data/event-types/politics_conflict.json",
+      "path": "site/public/data/event-types/politics_conflict.json",
       "sha256": "086642cac7bd4ff1b9ee13184d989ef72846cd2f1022cb65315b1fc71e01e1a7"
     },
     {
-      "path": "public/data/event-types/climate_weather.json",
+      "path": "site/public/data/event-types/climate_weather.json",
       "sha256": "aeace9438d33a90211106b0e5f811ede66b26937246ed9867194880e4af1bc53"
     },
     {
-      "path": "public/data/event-types/health_science.json",
+      "path": "site/public/data/event-types/health_science.json",
       "sha256": "e31364d1b4331d4904661f98c9b9d085c4abfdfd558a5767a9d2445beec9b9d7"
     },
     {
-      "path": "public/data/event-types/technology_ai.json",
+      "path": "site/public/data/event-types/technology_ai.json",
       "sha256": "6c0aedbb81b14c6406b16c32a7aaae344c7c36253ff6b9f85e2718e980bb86dd"
     },
     {
-      "path": "public/data/event-types/sports.json",
+      "path": "site/public/data/event-types/sports.json",
       "sha256": "8f3f89d8efdc0f33499b1797a2a97bbdf3758ce5f79509721eaad05d431f385d"
     },
     {
-      "path": "public/data/event-types/entertainment_culture.json",
+      "path": "site/public/data/event-types/entertainment_culture.json",
       "sha256": "1f6dbcb5e6d51c558ee760d40c8b0755d14193683fa98dac30fafb12e05eff8d"
     },
     {
-      "path": "public/data/event-types/origin_type_dataset.json",
+      "path": "site/public/data/event-types/origin_type_dataset.json",
       "sha256": "2585679445c728527f51aa1be0354e2f539badb0aecbdd0c0407f0f3d2eabd0d"
     },
     {
-      "path": "public/data/event-types/origin_type_market.json",
+      "path": "site/public/data/event-types/origin_type_market.json",
       "sha256": "f40d94915fb6f2fed8d33741297c26ce634dd26b506cb194758150427fe68f33"
     },
     {
-      "path": "public/data/event-types/official_source_acled.json",
+      "path": "site/public/data/event-types/official_source_acled.json",
       "sha256": "b25ce7251ae84064cf16b37c1bca23d3f2f21c429f192e79e55752f238877f92"
     },
     {
-      "path": "public/data/event-types/official_source_dbnomics.json",
+      "path": "site/public/data/event-types/official_source_dbnomics.json",
       "sha256": "3259af11a18fa3f46d3e7dc15c8745972cc83cc42ca7fd0a8f792b8fc8940462"
     },
     {
-      "path": "public/data/event-types/official_source_fred.json",
+      "path": "site/public/data/event-types/official_source_fred.json",
       "sha256": "837f77221cdfe7ef48f94aafdd98a8ec1ae14ee2dea945b0d37e9046ca7732fc"
     },
     {
-      "path": "public/data/event-types/official_source_infer.json",
+      "path": "site/public/data/event-types/official_source_infer.json",
       "sha256": "80ab4bb66b2f006fc88b2a672d7393e9eb3d025abbf1da1584c40d950fceeee3"
     },
     {
-      "path": "public/data/event-types/official_source_manifold.json",
+      "path": "site/public/data/event-types/official_source_manifold.json",
       "sha256": "d8c1b266d7ded8607f651a99865c017a2cf17a5e379207882bb739315cd35fd7"
     },
     {
-      "path": "public/data/event-types/official_source_metaculus.json",
+      "path": "site/public/data/event-types/official_source_metaculus.json",
       "sha256": "46a89b121bcb289675a47567bb541a2035a6344bdcb29412185d716802b7873a"
     },
     {
-      "path": "public/data/event-types/official_source_polymarket.json",
+      "path": "site/public/data/event-types/official_source_polymarket.json",
       "sha256": "4ab8c25199658ddfbfdaf8024b3cd89a1d14e5d11799b510db2871c5b8116c02"
     },
     {
-      "path": "public/data/event-types/official_source_wikipedia.json",
+      "path": "site/public/data/event-types/official_source_wikipedia.json",
       "sha256": "073080909690583ae1eaa8073480ba3df85b72b57010b320645275958d660394"
     },
     {
-      "path": "public/data/event-types/official_source_yahoo_finance.json",
+      "path": "site/public/data/event-types/official_source_yahoo_finance.json",
       "sha256": "8862b8d9200730001000e7af17e13708ff07a686fd1de29e8df39d3aebbb6214"
     },
     {
@@ -133,11 +133,11 @@
     },
     {
       "path": "data/derived/analysis_audit.json",
-      "sha256": "44c070a0709a9e4998f3e8f27902f5ccfe9634c94ea9896043640f6d0bf59498"
+      "sha256": "2fff92d7c36ad41a271da6543f5955411717839a081c3cf5556eb9723f7bcb7f"
     }
   ],
   "fixture": false,
-  "generated_at": "2026-08-18T18:13:56Z",
+  "generated_at": "2026-08-18T18:40:48Z",
   "status": "pass",
   "thresholds": {
     "high_loss_threshold": 0.25,
