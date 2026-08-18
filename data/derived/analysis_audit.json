@@ -1,0 +1,170 @@
+{
+  "analysis_commit": "b63e7f3d49154670ae33afc00b9a9885e4103887",
+  "built_at": "2026-08-18T18:13:56Z",
+  "export": {
+    "eligible_pair_slice_rows": 156315,
+    "pair_metric_status_counts": {
+      "eligible_all_metrics": 145984,
+      "eligible_partial:BI": 180,
+      "eligible_partial:lift": 10151,
+      "not_estimable": 478095
+    },
+    "scored_scan": {
+      "joined_scored_rows": 1050945,
+      "scored_rows": 1050945
+    }
+  },
+  "metrics": {
+    "high_adjusted_loss_threshold": 0.25,
+    "join_counters": {
+      "joined_unique_rows:official_source": 1050945,
+      "joined_unique_rows:origin_type": 1050945,
+      "joined_unique_rows:topic": 1020377,
+      "joined_unique_scored_rows": 1050945,
+      "scored_input_rows": 1050945
+    },
+    "join_mode": "allow_unclassified_up_to_4_unique_targets",
+    "metric_status_counts": {
+      "official_source:eligible_all_metrics": 71817,
+      "official_source:eligible_partial:lift": 1758,
+      "official_source:not_estimable": 243630,
+      "origin_type:eligible_all_metrics": 23178,
+      "origin_type:eligible_partial:lift": 46,
+      "origin_type:not_estimable": 47266,
+      "topic:eligible_all_metrics": 50989,
+      "topic:eligible_partial:BI": 180,
+      "topic:eligible_partial:lift": 8347,
+      "topic:not_estimable": 187199
+    },
+    "min_overlap": 50,
+    "n_exact_model_names": 266,
+    "n_global_model_pairs": 35245,
+    "n_slices_by_dimension": {
+      "official_source": 9,
+      "origin_type": 2,
+      "topic": 7
+    },
+    "n_topics": 7,
+    "near_bi_gap": 2.0,
+    "pair_rows_by_dimension": {
+      "official_source": 317205,
+      "origin_type": 70490,
+      "topic": 246715
+    },
+    "pair_slice_rows": 634410,
+    "pair_topic_rows": 246715,
+    "schema_version": 1,
+    "scored_panel_file": "scored_panel.csv",
+    "scored_panel_sha256": "160b9cf691896f70df76440e98adbcd161c8501c0eaf6f2941ac6af6ad381534",
+    "slice_ids_by_dimension": {
+      "official_source": [
+        "ACLED",
+        "DBnomics",
+        "FRED",
+        "INFER",
+        "Manifold",
+        "Metaculus",
+        "Polymarket",
+        "Wikipedia",
+        "Yahoo Finance"
+      ],
+      "origin_type": [
+        "Dataset",
+        "Market"
+      ],
+      "topic": [
+        "climate_weather",
+        "entertainment_culture",
+        "finance_economics",
+        "health_science",
+        "politics_conflict",
+        "sports",
+        "technology_ai"
+      ]
+    },
+    "taxonomy_counters": {
+      "eligible_review_required_rows": 11,
+      "review_required_rows": 5778,
+      "topic_analysis_eligible_rows": 7894,
+      "topic_analysis_ineligible_rows": 5767,
+      "unique_taxonomy_keys": 13661
+    },
+    "taxonomy_file": "event_taxonomy.csv",
+    "taxonomy_input_rows": 13661,
+    "taxonomy_sha256": "48cde9451248e3f2c0748d6101e6b20b2054b36f8b11c199e4f62775ca9a9ee1",
+    "taxonomy_unique_keys": 13661,
+    "topics": [
+      "climate_weather",
+      "entertainment_culture",
+      "finance_economics",
+      "health_science",
+      "politics_conflict",
+      "sports",
+      "technology_ai"
+    ],
+    "unclassified_scored_rows": 0,
+    "unclassified_targets": [],
+    "unclassified_unique_targets": 0
+  },
+  "scoring": {
+    "counters": {
+      "excluded:missing_official_fixed_effect": 3293022,
+      "excluded:unresolved": 350837,
+      "excluded_non_clean_before_read": 181,
+      "excluded_non_clean_model_file": 183,
+      "input_forecast_rows": 4694804,
+      "output_scored_rows": 1050945
+    },
+    "date_max": "2025-12-21",
+    "date_min": "2024-07-21",
+    "file_read_errors": [],
+    "fixed_effect_keys": 21433,
+    "fixed_effects_file": "question_fixed_effects_latest_2026-04-14.json",
+    "fixed_effects_sha256": "06904ad631bdd0fc73c527b591466f0df9e4bac31584a7be56650517c5af7f20",
+    "input_json_files_considered": 1063,
+    "max_file_read_errors": 0,
+    "n_dates": 18,
+    "n_exact_model_names": 266,
+    "processed_root_name": "forecastbench-processed-forecast-sets",
+    "schema_version": 1
+  },
+  "taxonomy": {
+    "input_sha256": "ad757817d32acca985f27e1ec82c190587303f4acd69bcda0380ba752a5505ff",
+    "official_source_counts": {
+      "ACLED": 2155,
+      "DBnomics": 1810,
+      "FRED": 2180,
+      "INFER": 275,
+      "Manifold": 726,
+      "Metaculus": 439,
+      "Polymarket": 2016,
+      "Wikipedia": 1889,
+      "Yahoo Finance": 2171
+    },
+    "origin_counts": {
+      "Dataset": 10205,
+      "Market": 3456
+    },
+    "row_count": 13661,
+    "status_counts": {
+      "fallback": 725,
+      "generic_pair_unrecoverable": 5040,
+      "keyword_rule": 2397,
+      "manual_override": 154,
+      "source_rule": 5345
+    },
+    "taxonomy_version": "forecastbench-topic-v1.1.0",
+    "topic_counts": {
+      "climate_weather": 1233,
+      "entertainment_culture": 153,
+      "finance_economics": 2972,
+      "health_science": 690,
+      "other": 5767,
+      "politics_conflict": 1826,
+      "sports": 755,
+      "technology_ai": 265
+    },
+    "unique_date_source_event_count": 13661,
+    "unique_source_event_count": 8204
+  }
+}

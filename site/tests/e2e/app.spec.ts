@@ -15,6 +15,7 @@ test("filters event type and metric through reproducible URL state", async ({ pa
 test("links heatmap selection to the pair inspector", async ({ page }) => {
   await page.goto("/?metric=adjusted_pog&min_n=50");
   const cell = page.getByTestId("heatmap").locator("button.heat-cell").first();
+  await cell.scrollIntoViewIfNeeded();
   await cell.click();
   await expect(page.getByTestId("pair-inspector")).toContainText("AUDIT ID");
 });

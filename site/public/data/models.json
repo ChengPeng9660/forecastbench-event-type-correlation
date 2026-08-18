@@ -1,8 +1,2396 @@
 [
-  { "id": "gpt-3.5-turbo", "name": "GPT-3.5-Turbo", "provider": "OpenAI", "family": "GPT-3.5", "release_order": 1, "n_events": 7110, "n_dates": 9 },
-  { "id": "gpt-4", "name": "GPT-4", "provider": "OpenAI", "family": "GPT-4", "release_order": 2, "n_events": 7620, "n_dates": 10 },
-  { "id": "gpt-4o", "name": "GPT-4o", "provider": "OpenAI", "family": "GPT-4o", "release_order": 3, "n_events": 8040, "n_dates": 11 },
-  { "id": "claude-2.1", "name": "Claude-2.1", "provider": "Anthropic", "family": "Claude 2", "release_order": 4, "n_events": 6870, "n_dates": 8 },
-  { "id": "claude-3-opus", "name": "Claude-3-Opus", "provider": "Anthropic", "family": "Claude 3", "release_order": 5, "n_events": 7790, "n_dates": 10 },
-  { "id": "claude-3.5-sonnet", "name": "Claude-3.5-Sonnet", "provider": "Anthropic", "family": "Claude 3.5", "release_order": 6, "n_events": 8170, "n_dates": 11 }
+  {
+    "family": "OpenAI",
+    "id": "m-1f526d2cc0ff",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-3.5-Turbo-0125 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 0
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b8c33ac459d4",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-3.5-Turbo-0125 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 1
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-89399270fe21",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-3.5-Turbo-0125 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 2
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-47692e6eea61",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-3.5-Turbo-0125 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 3
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-763dbfffda29",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4-0613 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 4
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-7510b15f53e3",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4-0613 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 5
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-33c17932a635",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4-0613 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 6
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-dc8089e46d1b",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4-0613 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 7
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-1e8839504830",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "GPT-4-Turbo-2024-04-09 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 8
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-1b6ce4d86d50",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4-Turbo-2024-04-09 (scratchpad with news with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 9
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-9709703c110c",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4-Turbo-2024-04-09 (scratchpad with news)",
+    "provider": "OpenAI",
+    "release_order": 10
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-3b557e7755ff",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "GPT-4-Turbo-2024-04-09 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 11
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-ec50f81c5c92",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 12
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b4d963e4c174",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "GPT-4-Turbo-2024-04-09 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 13
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-c9b52292e12e",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 14
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-c55c234b2bff",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (scratchpad with news with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 15
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-a9e3b2e74a13",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (scratchpad with news)",
+    "provider": "OpenAI",
+    "release_order": 16
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-c9b010c1b237",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (scratchpad with SECOND news)",
+    "provider": "OpenAI",
+    "release_order": 17
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-14902003ff2e",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 18
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-f6b8afdc1ca4",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 19
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-fc5f47ec9d54",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "GPT-4o (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 20
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-7f9da7f18b07",
+    "n_dates": 2,
+    "n_targets": 3066,
+    "name": "GPT-4.5-Preview-2025-02-27 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 21
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-403e1536080d",
+    "n_dates": 2,
+    "n_targets": 3066,
+    "name": "GPT-4.5-Preview-2025-02-27 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 22
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-9704c0b0eb2e",
+    "n_dates": 2,
+    "n_targets": 3066,
+    "name": "GPT-4.5-Preview-2025-02-27 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 23
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-75ebf1bb3858",
+    "n_dates": 2,
+    "n_targets": 3066,
+    "name": "GPT-4.5-Preview-2025-02-27 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 24
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b6d101a9a2db",
+    "n_dates": 4,
+    "n_targets": 5569,
+    "name": "O3-Mini-2025-01-31 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 25
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-9846a17b566a",
+    "n_dates": 4,
+    "n_targets": 5569,
+    "name": "O3-Mini-2025-01-31 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 26
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b8fee7aa8a13",
+    "n_dates": 4,
+    "n_targets": 5569,
+    "name": "O3-Mini-2025-01-31 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 27
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-21d495634f0c",
+    "n_dates": 4,
+    "n_targets": 5569,
+    "name": "O3-Mini-2025-01-31 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 28
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-9fc9bb8c6dcb",
+    "n_dates": 1,
+    "n_targets": 1532,
+    "name": "GPT-4o-2024-11-20 (scratchpad with freeze values with web search)",
+    "provider": "OpenAI",
+    "release_order": 29
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-d958bba082ce",
+    "n_dates": 1,
+    "n_targets": 1532,
+    "name": "GPT-4o-2024-11-20 (scratchpad with web search)",
+    "provider": "OpenAI",
+    "release_order": 30
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-4d751e510473",
+    "n_dates": 1,
+    "n_targets": 1532,
+    "name": "GPT-4o-2024-11-20 (zero shot with freeze values with web search)",
+    "provider": "OpenAI",
+    "release_order": 31
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-dfcb32780301",
+    "n_dates": 1,
+    "n_targets": 1532,
+    "name": "GPT-4o-2024-11-20 (zero shot with web search)",
+    "provider": "OpenAI",
+    "release_order": 32
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-7e85b32a1bc3",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "GPT-4o-2024-05-13 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 33
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-8a18650dbc23",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "GPT-4o-2024-05-13 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 34
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-f7b9e6c0bbc6",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "GPT-4o-2024-05-13 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 35
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-713964baac89",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "GPT-4o-2024-05-13 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 36
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-255de8a1d2e2",
+    "n_dates": 5,
+    "n_targets": 6171,
+    "name": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 37
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-7d7965052aaf",
+    "n_dates": 5,
+    "n_targets": 6171,
+    "name": "GPT-4.1-2025-04-14 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 38
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-1095729deb9a",
+    "n_dates": 11,
+    "n_targets": 11445,
+    "name": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 39
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b33c5f8fc29b",
+    "n_dates": 11,
+    "n_targets": 11445,
+    "name": "GPT-4.1-2025-04-14 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 40
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-a71d13a87768",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "O3-2025-04-16 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 41
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-5ac0ee60548e",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "O3-2025-04-16 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 42
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b9a5389a2b35",
+    "n_dates": 6,
+    "n_targets": 5327,
+    "name": "O3-2025-04-16 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 43
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-8b80dad89826",
+    "n_dates": 6,
+    "n_targets": 5327,
+    "name": "O3-2025-04-16 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 44
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-a2d6022afc36",
+    "n_dates": 4,
+    "n_targets": 4909,
+    "name": "O4-Mini-2025-04-16 (scratchpad with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 45
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-3d68b412a03e",
+    "n_dates": 4,
+    "n_targets": 4909,
+    "name": "O4-Mini-2025-04-16 (scratchpad)",
+    "provider": "OpenAI",
+    "release_order": 46
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-0c05b2403462",
+    "n_dates": 4,
+    "n_targets": 4909,
+    "name": "O4-Mini-2025-04-16 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 47
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-aa63bafe3e8e",
+    "n_dates": 4,
+    "n_targets": 4909,
+    "name": "O4-Mini-2025-04-16 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 48
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-6956bb711a3b",
+    "n_dates": 3,
+    "n_targets": 2830,
+    "name": "GPT-5-2025-08-07 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 49
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-e14638a8e78b",
+    "n_dates": 3,
+    "n_targets": 2830,
+    "name": "GPT-5-2025-08-07 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 50
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-8e53c89480b8",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 51
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-7f76dfc85597",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "GPT-5-Mini-2025-08-07 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 52
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-7266e298f4b9",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 53
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-b5a9f2c83621",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "GPT-5-Nano-2025-08-07 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 54
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-bd61431744a2",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
+    "provider": "OpenAI",
+    "release_order": 55
+  },
+  {
+    "family": "OpenAI",
+    "id": "m-ff9f1bd24136",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "GPT-5.1-2025-11-13 (zero shot)",
+    "provider": "OpenAI",
+    "release_order": 56
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-47571c2b4d0f",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-2.1 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 57
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-fb804fae2beb",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-2.1 (scratchpad with news with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 58
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-acb685f45f61",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-2.1 (scratchpad with news)",
+    "provider": "Anthropic",
+    "release_order": 59
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-514d06e491f3",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-2.1 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 60
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-9cff12edc7aa",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-2.1 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 61
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-1dbbdedfb4cd",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-2.1 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 62
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-cd72b3e46ff8",
+    "n_dates": 12,
+    "n_targets": 15976,
+    "name": "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 63
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-3badff53e4fe",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-5-Sonnet-20240620 (scratchpad with news with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 64
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-24975dc3a250",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-5-Sonnet-20240620 (scratchpad with news)",
+    "provider": "Anthropic",
+    "release_order": 65
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-88b43c1523e5",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-5-Sonnet-20240620 (scratchpad with SECOND news)",
+    "provider": "Anthropic",
+    "release_order": 66
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-44c1f77946b0",
+    "n_dates": 12,
+    "n_targets": 15976,
+    "name": "Claude-3-5-Sonnet-20240620 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 67
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-7274a3ed3911",
+    "n_dates": 13,
+    "n_targets": 17187,
+    "name": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 68
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-cb38340ca1f0",
+    "n_dates": 13,
+    "n_targets": 17187,
+    "name": "Claude-3-5-Sonnet-20240620 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 69
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-c69cb9c59bcd",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Haiku-20240307 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 70
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-502fb870b393",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-Haiku-20240307 (scratchpad with news with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 71
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-7d891d434148",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-Haiku-20240307 (scratchpad with news)",
+    "provider": "Anthropic",
+    "release_order": 72
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-1241c1c2310f",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Haiku-20240307 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 73
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-c4d44cbc4d0a",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 74
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-cdda43305af7",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Haiku-20240307 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 75
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-63355e374a7c",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Opus-20240229 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 76
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-a3e029225a08",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-Opus-20240229 (scratchpad with news with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 77
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-fbb1de9c1201",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Claude-3-Opus-20240229 (scratchpad with news)",
+    "provider": "Anthropic",
+    "release_order": 78
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-e62e2588793a",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Opus-20240229 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 79
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-022dfde53654",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Opus-20240229 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 80
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-09635265b4d6",
+    "n_dates": 5,
+    "n_targets": 6432,
+    "name": "Claude-3-Opus-20240229 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 81
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-74615c88ac08",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 82
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-6bc052baeed4",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Claude-3-5-Sonnet-20241022 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 83
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-d8a1f9ea6ccd",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 84
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-edd16263b692",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Claude-3-5-Sonnet-20241022 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 85
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-8b257236a33d",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 86
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-8fd8ea6be75b",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Claude-3-7-Sonnet-20250219 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 87
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-5a79bd0508e0",
+    "n_dates": 12,
+    "n_targets": 13630,
+    "name": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 88
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-f824185addf6",
+    "n_dates": 12,
+    "n_targets": 13630,
+    "name": "Claude-3-7-Sonnet-20250219 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 89
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-162eda995e0e",
+    "n_dates": 1,
+    "n_targets": 1234,
+    "name": "claude-3-5-haiku-20241022",
+    "provider": "Anthropic",
+    "release_order": 90
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-b85f19b34a8a",
+    "n_dates": 1,
+    "n_targets": 1234,
+    "name": "Claude-Opus-4-20250514 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 91
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-7c5f8e7fa06e",
+    "n_dates": 1,
+    "n_targets": 1234,
+    "name": "Claude-Opus-4-20250514 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 92
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-62f95aec3d2b",
+    "n_dates": 1,
+    "n_targets": 1234,
+    "name": "Claude-Opus-4-20250514 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 93
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-230b627fa3aa",
+    "n_dates": 1,
+    "n_targets": 1234,
+    "name": "Claude-Opus-4-20250514 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 94
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-d4b332de85cf",
+    "n_dates": 2,
+    "n_targets": 2443,
+    "name": "Claude-Sonnet-4-20250514 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 95
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-a68feda1f366",
+    "n_dates": 2,
+    "n_targets": 2443,
+    "name": "Claude-Sonnet-4-20250514 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 96
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-873c2c44a101",
+    "n_dates": 6,
+    "n_targets": 6091,
+    "name": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 97
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-b583d72bd5bb",
+    "n_dates": 6,
+    "n_targets": 6091,
+    "name": "Claude-Sonnet-4-20250514 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 98
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-f120e581a7b6",
+    "n_dates": 7,
+    "n_targets": 6485,
+    "name": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 99
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-d47777191791",
+    "n_dates": 7,
+    "n_targets": 6485,
+    "name": "Claude-Opus-4-1-20250805 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 100
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-a401198bf84f",
+    "n_dates": 1,
+    "n_targets": 1209,
+    "name": "Claude-Opus-4-1-20250805 (scratchpad with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 101
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-15693de8894b",
+    "n_dates": 1,
+    "n_targets": 1209,
+    "name": "Claude-Opus-4-1-20250805 (scratchpad)",
+    "provider": "Anthropic",
+    "release_order": 102
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-1a4b73d1cc23",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 103
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-a22d9dafad49",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Claude-Haiku-4-5-20251001 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 104
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-6bd3957fc94a",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 105
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-ce63f420055c",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Claude-Sonnet-4-5-20250929 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 106
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-19cfdff3797d",
+    "n_dates": 2,
+    "n_targets": 1628,
+    "name": "Claude-Opus-4-5-20251101 (zero shot with freeze values)",
+    "provider": "Anthropic",
+    "release_order": 107
+  },
+  {
+    "family": "Anthropic",
+    "id": "m-1abc198f1af0",
+    "n_dates": 2,
+    "n_targets": 1628,
+    "name": "Claude-Opus-4-5-20251101 (zero shot)",
+    "provider": "Anthropic",
+    "release_order": 108
+  },
+  {
+    "family": "Google",
+    "id": "m-6bbdd5663fb1",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Flash (scratchpad with freeze values)",
+    "provider": "Google",
+    "release_order": 109
+  },
+  {
+    "family": "Google",
+    "id": "m-586e30c9ca89",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Flash (scratchpad with news with freeze values)",
+    "provider": "Google",
+    "release_order": 110
+  },
+  {
+    "family": "Google",
+    "id": "m-0227cf096665",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Flash (scratchpad with news)",
+    "provider": "Google",
+    "release_order": 111
+  },
+  {
+    "family": "Google",
+    "id": "m-a84a076b8262",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Flash (scratchpad)",
+    "provider": "Google",
+    "release_order": 112
+  },
+  {
+    "family": "Google",
+    "id": "m-7ec31a94b99c",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Flash (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 113
+  },
+  {
+    "family": "Google",
+    "id": "m-5a71b2e8f605",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Flash (zero shot)",
+    "provider": "Google",
+    "release_order": 114
+  },
+  {
+    "family": "Google",
+    "id": "m-5273f631ce96",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Pro (scratchpad with freeze values)",
+    "provider": "Google",
+    "release_order": 115
+  },
+  {
+    "family": "Google",
+    "id": "m-2241387820d5",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Pro (scratchpad with news with freeze values)",
+    "provider": "Google",
+    "release_order": 116
+  },
+  {
+    "family": "Google",
+    "id": "m-06904fda6088",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Pro (scratchpad with news)",
+    "provider": "Google",
+    "release_order": 117
+  },
+  {
+    "family": "Google",
+    "id": "m-303740a4088b",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Pro (scratchpad)",
+    "provider": "Google",
+    "release_order": 118
+  },
+  {
+    "family": "Google",
+    "id": "m-0b9c163a7e21",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Pro (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 119
+  },
+  {
+    "family": "Google",
+    "id": "m-445b1df8fa77",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Gemini-1.5-Pro (zero shot)",
+    "provider": "Google",
+    "release_order": 120
+  },
+  {
+    "family": "Meta",
+    "id": "m-2309c2e5e45c",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Llama-2-70b-Chat-Hf (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 121
+  },
+  {
+    "family": "Meta",
+    "id": "m-7e48725ae32f",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Llama-2-70b-Chat-Hf (scratchpad)",
+    "provider": "Meta",
+    "release_order": 122
+  },
+  {
+    "family": "Meta",
+    "id": "m-f3b960039457",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Llama-2-70b-Chat-Hf (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 123
+  },
+  {
+    "family": "Meta",
+    "id": "m-9ed97a3ee734",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Llama-2-70b-Chat-Hf (zero shot)",
+    "provider": "Meta",
+    "release_order": 124
+  },
+  {
+    "family": "Meta",
+    "id": "m-032a7c54fbe6",
+    "n_dates": 3,
+    "n_targets": 3968,
+    "name": "Llama-3-70b-Chat-Hf (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 125
+  },
+  {
+    "family": "Meta",
+    "id": "m-8ccdfad7b878",
+    "n_dates": 3,
+    "n_targets": 3968,
+    "name": "Llama-3-70b-Chat-Hf (scratchpad)",
+    "provider": "Meta",
+    "release_order": 126
+  },
+  {
+    "family": "Meta",
+    "id": "m-ab303738cfba",
+    "n_dates": 3,
+    "n_targets": 3968,
+    "name": "Llama-3-70b-Chat-Hf (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 127
+  },
+  {
+    "family": "Meta",
+    "id": "m-99a9d64b12d7",
+    "n_dates": 3,
+    "n_targets": 3968,
+    "name": "Llama-3-70b-Chat-Hf (zero shot)",
+    "provider": "Meta",
+    "release_order": 128
+  },
+  {
+    "family": "Meta",
+    "id": "m-fa8d5bb43de3",
+    "n_dates": 2,
+    "n_targets": 2733,
+    "name": "Llama-3-8b-Chat-Hf (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 129
+  },
+  {
+    "family": "Meta",
+    "id": "m-d6bc29a6b3f0",
+    "n_dates": 2,
+    "n_targets": 2733,
+    "name": "Llama-3-8b-Chat-Hf (scratchpad)",
+    "provider": "Meta",
+    "release_order": 130
+  },
+  {
+    "family": "Meta",
+    "id": "m-e4c8fd5149a3",
+    "n_dates": 2,
+    "n_targets": 2733,
+    "name": "Llama-3-8b-Chat-Hf (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 131
+  },
+  {
+    "family": "Meta",
+    "id": "m-144947f50efa",
+    "n_dates": 2,
+    "n_targets": 2733,
+    "name": "Llama-3-8b-Chat-Hf (zero shot)",
+    "provider": "Meta",
+    "release_order": 132
+  },
+  {
+    "family": "ForecastBench",
+    "id": "m-a758d3906b68",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "LLM Crowd (gpt-4o, claude-3.5-sonnet, gemini-1.5-pro) geometric mean log odds with news",
+    "provider": "ForecastBench",
+    "release_order": 133
+  },
+  {
+    "family": "ForecastBench",
+    "id": "m-fe28825e85ee",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "LLM Crowd (gpt-4o, claude-3.5-sonnet, gemini-1.5-pro) geometric mean with news",
+    "provider": "ForecastBench",
+    "release_order": 134
+  },
+  {
+    "family": "ForecastBench",
+    "id": "m-dfaf202ee8b8",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "LLM Crowd (gpt-4o, claude-3.5-sonnet, gemini-1.5-pro) median with news",
+    "provider": "ForecastBench",
+    "release_order": 135
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-24de86c0ec9a",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mistral-Large-Latest (scratchpad with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 136
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-7134f5b8dbae",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mistral-Large-Latest (scratchpad with news with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 137
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-e2f0e761038d",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mistral-Large-Latest (scratchpad with news)",
+    "provider": "Mistral AI",
+    "release_order": 138
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-41785b55c8a3",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mistral-Large-Latest (scratchpad)",
+    "provider": "Mistral AI",
+    "release_order": 139
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-b1220520fde3",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mistral-Large-Latest (zero shot with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 140
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-4795431dc544",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mistral-Large-Latest (zero shot)",
+    "provider": "Mistral AI",
+    "release_order": 141
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-0d072c4241f8",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x22B-Instruct-V0.1 (scratchpad with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 142
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-c1c6ccab297d",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x22B-Instruct-V0.1 (scratchpad with news with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 143
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-86b1016fa3dc",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x22B-Instruct-V0.1 (scratchpad with news)",
+    "provider": "Mistral AI",
+    "release_order": 144
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-5b10ce385a43",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x22B-Instruct-V0.1 (scratchpad)",
+    "provider": "Mistral AI",
+    "release_order": 145
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-65a7606bbd20",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x22B-Instruct-V0.1 (zero shot with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 146
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-af6ca0e666f0",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x22B-Instruct-V0.1 (zero shot)",
+    "provider": "Mistral AI",
+    "release_order": 147
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-8a5a593ff2c1",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x7B-Instruct-V0.1 (scratchpad with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 148
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-c2c00e7e78c5",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x7B-Instruct-V0.1 (scratchpad with news with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 149
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-e8d1019524c0",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x7B-Instruct-V0.1 (scratchpad with news)",
+    "provider": "Mistral AI",
+    "release_order": 150
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-80d62d2dc435",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x7B-Instruct-V0.1 (scratchpad)",
+    "provider": "Mistral AI",
+    "release_order": 151
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-3b465cdcfbf6",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x7B-Instruct-V0.1 (zero shot with freeze values)",
+    "provider": "Mistral AI",
+    "release_order": 152
+  },
+  {
+    "family": "Mistral AI",
+    "id": "m-4784fbdf0541",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Mixtral-8x7B-Instruct-V0.1 (zero shot)",
+    "provider": "Mistral AI",
+    "release_order": 153
+  },
+  {
+    "family": "Qwen",
+    "id": "m-7ad7938edbca",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Qwen1.5-110B-Chat (scratchpad with freeze values)",
+    "provider": "Qwen",
+    "release_order": 154
+  },
+  {
+    "family": "Qwen",
+    "id": "m-545d2596ea97",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Qwen1.5-110B-Chat (scratchpad with news with freeze values)",
+    "provider": "Qwen",
+    "release_order": 155
+  },
+  {
+    "family": "Qwen",
+    "id": "m-b06d5ee81baa",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Qwen1.5-110B-Chat (scratchpad with news)",
+    "provider": "Qwen",
+    "release_order": 156
+  },
+  {
+    "family": "Qwen",
+    "id": "m-b247b09c1075",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Qwen1.5-110B-Chat (scratchpad)",
+    "provider": "Qwen",
+    "release_order": 157
+  },
+  {
+    "family": "Qwen",
+    "id": "m-fa5b8959c831",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Qwen1.5-110B-Chat (zero shot with freeze values)",
+    "provider": "Qwen",
+    "release_order": 158
+  },
+  {
+    "family": "Qwen",
+    "id": "m-74c9511163bf",
+    "n_dates": 1,
+    "n_targets": 1507,
+    "name": "Qwen1.5-110B-Chat (zero shot)",
+    "provider": "Qwen",
+    "release_order": 159
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-44fe5f9af681",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-R1 (scratchpad with freeze values)",
+    "provider": "DeepSeek",
+    "release_order": 160
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-af7dd6bebe25",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-R1 (scratchpad)",
+    "provider": "DeepSeek",
+    "release_order": 161
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-d9bbc125e9fd",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-R1 (zero shot with freeze values)",
+    "provider": "DeepSeek",
+    "release_order": 162
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-84f4d8a892ee",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-R1 (zero shot)",
+    "provider": "DeepSeek",
+    "release_order": 163
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-9a9b6b3bc6a6",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-V3 (scratchpad with freeze values)",
+    "provider": "DeepSeek",
+    "release_order": 164
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-54bf250bc902",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-V3 (scratchpad)",
+    "provider": "DeepSeek",
+    "release_order": 165
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-d1ee98c3e43e",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-V3 (zero shot with freeze values)",
+    "provider": "DeepSeek",
+    "release_order": 166
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-5024ad7ac05d",
+    "n_dates": 5,
+    "n_targets": 7101,
+    "name": "DeepSeek-V3 (zero shot)",
+    "provider": "DeepSeek",
+    "release_order": 167
+  },
+  {
+    "family": "Meta",
+    "id": "m-11abd343d1be",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Llama-3.3-70B-Instruct-Turbo (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 168
+  },
+  {
+    "family": "Meta",
+    "id": "m-1d55c90cb426",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Llama-3.3-70B-Instruct-Turbo (scratchpad)",
+    "provider": "Meta",
+    "release_order": 169
+  },
+  {
+    "family": "Meta",
+    "id": "m-358d88492eb5",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Llama-3.3-70B-Instruct-Turbo (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 170
+  },
+  {
+    "family": "Meta",
+    "id": "m-d833449e88ad",
+    "n_dates": 7,
+    "n_targets": 9565,
+    "name": "Llama-3.3-70B-Instruct-Turbo (zero shot)",
+    "provider": "Meta",
+    "release_order": 171
+  },
+  {
+    "family": "Google",
+    "id": "m-46f71aa4444d",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.0-Flash-Lite-001 (scratchpad with freeze values)",
+    "provider": "Google",
+    "release_order": 172
+  },
+  {
+    "family": "Google",
+    "id": "m-818876f253fa",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.0-Flash-Lite-001 (scratchpad)",
+    "provider": "Google",
+    "release_order": 173
+  },
+  {
+    "family": "Google",
+    "id": "m-437ee8fbe567",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.0-Flash-Lite-001 (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 174
+  },
+  {
+    "family": "Google",
+    "id": "m-29e3e153976c",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.0-Flash-Lite-001 (zero shot)",
+    "provider": "Google",
+    "release_order": 175
+  },
+  {
+    "family": "Google",
+    "id": "m-29c4cbe41c56",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.5-Pro-Exp-03-25 (scratchpad with freeze values)",
+    "provider": "Google",
+    "release_order": 176
+  },
+  {
+    "family": "Google",
+    "id": "m-eeabaa1e9bcc",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.5-Pro-Exp-03-25 (scratchpad)",
+    "provider": "Google",
+    "release_order": 177
+  },
+  {
+    "family": "Google",
+    "id": "m-e574dbbda857",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.5-Pro-Exp-03-25 (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 178
+  },
+  {
+    "family": "Google",
+    "id": "m-99d10c795ec1",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Gemini-2.5-Pro-Exp-03-25 (zero shot)",
+    "provider": "Google",
+    "release_order": 179
+  },
+  {
+    "family": "xAI",
+    "id": "m-2161d237faa1",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Grok-beta (scratchpad with freeze values)",
+    "provider": "xAI",
+    "release_order": 180
+  },
+  {
+    "family": "xAI",
+    "id": "m-152958c19081",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Grok-beta (scratchpad)",
+    "provider": "xAI",
+    "release_order": 181
+  },
+  {
+    "family": "xAI",
+    "id": "m-b47abbf5ed88",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Grok-beta (zero shot with freeze values)",
+    "provider": "xAI",
+    "release_order": 182
+  },
+  {
+    "family": "xAI",
+    "id": "m-35d9439b49f2",
+    "n_dates": 2,
+    "n_targets": 2773,
+    "name": "Grok-beta (zero shot)",
+    "provider": "xAI",
+    "release_order": 183
+  },
+  {
+    "family": "Mistral",
+    "id": "m-17648ebd9d43",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "Mistral-Large-2407 (scratchpad with freeze values)",
+    "provider": "Mistral",
+    "release_order": 184
+  },
+  {
+    "family": "Mistral",
+    "id": "m-37b410c2cd7a",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "Mistral-Large-2407 (scratchpad)",
+    "provider": "Mistral",
+    "release_order": 185
+  },
+  {
+    "family": "Mistral",
+    "id": "m-0187fe9efd49",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "Mistral-Large-2407 (zero shot with freeze values)",
+    "provider": "Mistral",
+    "release_order": 186
+  },
+  {
+    "family": "Mistral",
+    "id": "m-1b0214789312",
+    "n_dates": 7,
+    "n_targets": 8960,
+    "name": "Mistral-Large-2407 (zero shot)",
+    "provider": "Mistral",
+    "release_order": 187
+  },
+  {
+    "family": "Qwen",
+    "id": "m-cc2afed81e99",
+    "n_dates": 3,
+    "n_targets": 4035,
+    "name": "QwQ-32B-Preview (scratchpad with freeze values)",
+    "provider": "Qwen",
+    "release_order": 188
+  },
+  {
+    "family": "Qwen",
+    "id": "m-c093090c56ce",
+    "n_dates": 3,
+    "n_targets": 4035,
+    "name": "QwQ-32B-Preview (scratchpad)",
+    "provider": "Qwen",
+    "release_order": 189
+  },
+  {
+    "family": "Qwen",
+    "id": "m-27a9d25b5973",
+    "n_dates": 3,
+    "n_targets": 4035,
+    "name": "QwQ-32B-Preview (zero shot with freeze values)",
+    "provider": "Qwen",
+    "release_order": 190
+  },
+  {
+    "family": "Qwen",
+    "id": "m-4cd45c5a344b",
+    "n_dates": 3,
+    "n_targets": 4035,
+    "name": "QwQ-32B-Preview (zero shot)",
+    "provider": "Qwen",
+    "release_order": 191
+  },
+  {
+    "family": "Meta",
+    "id": "m-fa3f8ce74d4c",
+    "n_dates": 4,
+    "n_targets": 4964,
+    "name": "Llama-4-Maverick-17B-128E-Instruct-FP8 (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 192
+  },
+  {
+    "family": "Meta",
+    "id": "m-0937464f4f75",
+    "n_dates": 4,
+    "n_targets": 4964,
+    "name": "Llama-4-Maverick-17B-128E-Instruct-FP8 (scratchpad)",
+    "provider": "Meta",
+    "release_order": 193
+  },
+  {
+    "family": "Meta",
+    "id": "m-4677f653e279",
+    "n_dates": 5,
+    "n_targets": 6198,
+    "name": "Llama-4-Maverick-17B-128E-Instruct-FP8 (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 194
+  },
+  {
+    "family": "Meta",
+    "id": "m-7b065b98458a",
+    "n_dates": 5,
+    "n_targets": 6198,
+    "name": "Llama-4-Maverick-17B-128E-Instruct-FP8 (zero shot)",
+    "provider": "Meta",
+    "release_order": 195
+  },
+  {
+    "family": "Meta",
+    "id": "m-c76997cc10a8",
+    "n_dates": 4,
+    "n_targets": 4964,
+    "name": "Llama-4-Scout-17B-16E-Instruct (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 196
+  },
+  {
+    "family": "Meta",
+    "id": "m-ce7f380c0184",
+    "n_dates": 4,
+    "n_targets": 4964,
+    "name": "Llama-4-Scout-17B-16E-Instruct (scratchpad)",
+    "provider": "Meta",
+    "release_order": 197
+  },
+  {
+    "family": "Meta",
+    "id": "m-4d765ee68a8b",
+    "n_dates": 5,
+    "n_targets": 6198,
+    "name": "Llama-4-Scout-17B-16E-Instruct (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 198
+  },
+  {
+    "family": "Meta",
+    "id": "m-c751bbbb83fb",
+    "n_dates": 5,
+    "n_targets": 6198,
+    "name": "Llama-4-Scout-17B-16E-Instruct (zero shot)",
+    "provider": "Meta",
+    "release_order": 199
+  },
+  {
+    "family": "Google",
+    "id": "m-6c7669644d23",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Flash-Preview-04-17 (scratchpad with freeze values)",
+    "provider": "Google",
+    "release_order": 200
+  },
+  {
+    "family": "Google",
+    "id": "m-798c74dd7096",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Flash-Preview-04-17 (scratchpad)",
+    "provider": "Google",
+    "release_order": 201
+  },
+  {
+    "family": "Google",
+    "id": "m-730fe0d84f50",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Flash-Preview-04-17 (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 202
+  },
+  {
+    "family": "Google",
+    "id": "m-f8923e32c783",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Flash-Preview-04-17 (zero shot)",
+    "provider": "Google",
+    "release_order": 203
+  },
+  {
+    "family": "Google",
+    "id": "m-3a3e9bb86bdc",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Pro-Preview-03-25 (scratchpad with freeze values)",
+    "provider": "Google",
+    "release_order": 204
+  },
+  {
+    "family": "Google",
+    "id": "m-6b116113115e",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Pro-Preview-03-25 (scratchpad)",
+    "provider": "Google",
+    "release_order": 205
+  },
+  {
+    "family": "Google",
+    "id": "m-316de2ab63e3",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Pro-Preview-03-25 (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 206
+  },
+  {
+    "family": "Google",
+    "id": "m-8eea15aa69fc",
+    "n_dates": 1,
+    "n_targets": 1262,
+    "name": "Gemini-2.5-Pro-Preview-03-25 (zero shot)",
+    "provider": "Google",
+    "release_order": 207
+  },
+  {
+    "family": "Meta",
+    "id": "m-e4e024879a22",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Llama-3.2-3B-Instruct-Turbo (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 208
+  },
+  {
+    "family": "Meta",
+    "id": "m-abb593f50cc0",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Llama-3.2-3B-Instruct-Turbo (scratchpad)",
+    "provider": "Meta",
+    "release_order": 209
+  },
+  {
+    "family": "Meta",
+    "id": "m-47dd20593235",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Llama-3.2-3B-Instruct-Turbo (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 210
+  },
+  {
+    "family": "Meta",
+    "id": "m-1fffd29f8b54",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Llama-3.2-3B-Instruct-Turbo (zero shot)",
+    "provider": "Meta",
+    "release_order": 211
+  },
+  {
+    "family": "Meta",
+    "id": "m-3891b9319266",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Meta-Llama-3.1-405B-Instruct-Turbo (scratchpad with freeze values)",
+    "provider": "Meta",
+    "release_order": 212
+  },
+  {
+    "family": "Meta",
+    "id": "m-307f986d05e1",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Meta-Llama-3.1-405B-Instruct-Turbo (scratchpad)",
+    "provider": "Meta",
+    "release_order": 213
+  },
+  {
+    "family": "Meta",
+    "id": "m-a107521d3c6c",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Meta-Llama-3.1-405B-Instruct-Turbo (zero shot with freeze values)",
+    "provider": "Meta",
+    "release_order": 214
+  },
+  {
+    "family": "Meta",
+    "id": "m-a9e18145853a",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Meta-Llama-3.1-405B-Instruct-Turbo (zero shot)",
+    "provider": "Meta",
+    "release_order": 215
+  },
+  {
+    "family": "Qwen",
+    "id": "m-3b67e8edc019",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values)",
+    "provider": "Qwen",
+    "release_order": 216
+  },
+  {
+    "family": "Qwen",
+    "id": "m-62a2ea6b73ec",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Qwen2.5-72B-Instruct-Turbo (scratchpad)",
+    "provider": "Qwen",
+    "release_order": 217
+  },
+  {
+    "family": "Qwen",
+    "id": "m-45629bb299dd",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
+    "provider": "Qwen",
+    "release_order": 218
+  },
+  {
+    "family": "Qwen",
+    "id": "m-87e11576ceea",
+    "n_dates": 2,
+    "n_targets": 2464,
+    "name": "Qwen2.5-72B-Instruct-Turbo (zero shot)",
+    "provider": "Qwen",
+    "release_order": 219
+  },
+  {
+    "family": "Qwen",
+    "id": "m-be3423e7e425",
+    "n_dates": 6,
+    "n_targets": 7345,
+    "name": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
+    "provider": "Qwen",
+    "release_order": 220
+  },
+  {
+    "family": "Qwen",
+    "id": "m-e3c66434f745",
+    "n_dates": 6,
+    "n_targets": 7345,
+    "name": "Qwen3-235B-A22B-Fp8-Tput (scratchpad)",
+    "provider": "Qwen",
+    "release_order": 221
+  },
+  {
+    "family": "Qwen",
+    "id": "m-d359c61f93e5",
+    "n_dates": 12,
+    "n_targets": 12644,
+    "name": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
+    "provider": "Qwen",
+    "release_order": 222
+  },
+  {
+    "family": "Qwen",
+    "id": "m-3d17498ddc50",
+    "n_dates": 12,
+    "n_targets": 12644,
+    "name": "Qwen3-235B-A22B-Fp8-Tput (zero shot)",
+    "provider": "Qwen",
+    "release_order": 223
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-8d6bc0896d7b",
+    "n_dates": 5,
+    "n_targets": 5275,
+    "name": "Kimi-K2-Instruct (zero shot with freeze values)",
+    "provider": "Moonshot",
+    "release_order": 224
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-d2f9e832199b",
+    "n_dates": 5,
+    "n_targets": 5275,
+    "name": "Kimi-K2-Instruct (zero shot)",
+    "provider": "Moonshot",
+    "release_order": 225
+  },
+  {
+    "family": "Mistral",
+    "id": "m-c76069520433",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Magistral-Medium-2506 (scratchpad with freeze values)",
+    "provider": "Mistral",
+    "release_order": 226
+  },
+  {
+    "family": "Mistral",
+    "id": "m-e8f2c3e9fbc9",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Magistral-Medium-2506 (scratchpad)",
+    "provider": "Mistral",
+    "release_order": 227
+  },
+  {
+    "family": "Mistral",
+    "id": "m-dee64ef95e43",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Magistral-Medium-2506 (zero shot with freeze values)",
+    "provider": "Mistral",
+    "release_order": 228
+  },
+  {
+    "family": "Mistral",
+    "id": "m-72dede62c26f",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Magistral-Medium-2506 (zero shot)",
+    "provider": "Mistral",
+    "release_order": 229
+  },
+  {
+    "family": "Mistral",
+    "id": "m-e5f418cd17af",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Mistral-Large-2411 (scratchpad with freeze values)",
+    "provider": "Mistral",
+    "release_order": 230
+  },
+  {
+    "family": "Mistral",
+    "id": "m-815c17df55c4",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Mistral-Large-2411 (scratchpad)",
+    "provider": "Mistral",
+    "release_order": 231
+  },
+  {
+    "family": "Mistral",
+    "id": "m-8fa7a5908017",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Mistral-Large-2411 (zero shot with freeze values)",
+    "provider": "Mistral",
+    "release_order": 232
+  },
+  {
+    "family": "Mistral",
+    "id": "m-fae26a3cf2d1",
+    "n_dates": 3,
+    "n_targets": 3654,
+    "name": "Mistral-Large-2411 (zero shot)",
+    "provider": "Mistral",
+    "release_order": 233
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-f81cec453765",
+    "n_dates": 2,
+    "n_targets": 2420,
+    "name": "Kimi-K2-Instruct (scratchpad with freeze values)",
+    "provider": "Moonshot",
+    "release_order": 234
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-98cfa2c97d3c",
+    "n_dates": 2,
+    "n_targets": 2420,
+    "name": "Kimi-K2-Instruct (scratchpad)",
+    "provider": "Moonshot",
+    "release_order": 235
+  },
+  {
+    "family": "Google",
+    "id": "m-154f1cc816e6",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "Gemini-2.5-Flash (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 236
+  },
+  {
+    "family": "Google",
+    "id": "m-d73b3b46d3d4",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "Gemini-2.5-Flash (zero shot)",
+    "provider": "Google",
+    "release_order": 237
+  },
+  {
+    "family": "Google",
+    "id": "m-533fced24b94",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "Gemini-2.5-Pro (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 238
+  },
+  {
+    "family": "Google",
+    "id": "m-7779fa16ecbe",
+    "n_dates": 6,
+    "n_targets": 5274,
+    "name": "Gemini-2.5-Pro (zero shot)",
+    "provider": "Google",
+    "release_order": 239
+  },
+  {
+    "family": "Z.ai",
+    "id": "m-c534f919f5dd",
+    "n_dates": 1,
+    "n_targets": 1209,
+    "name": "GLM-4.5-Air-FP8 (scratchpad with freeze values)",
+    "provider": "Z.ai",
+    "release_order": 240
+  },
+  {
+    "family": "Z.ai",
+    "id": "m-0784d6bae407",
+    "n_dates": 1,
+    "n_targets": 1209,
+    "name": "GLM-4.5-Air-FP8 (scratchpad)",
+    "provider": "Z.ai",
+    "release_order": 241
+  },
+  {
+    "family": "Z.ai",
+    "id": "m-91fcc093a45b",
+    "n_dates": 3,
+    "n_targets": 2830,
+    "name": "GLM-4.5-Air-FP8 (zero shot with freeze values)",
+    "provider": "Z.ai",
+    "release_order": 242
+  },
+  {
+    "family": "Z.ai",
+    "id": "m-90483a7fce3e",
+    "n_dates": 3,
+    "n_targets": 2830,
+    "name": "GLM-4.5-Air-FP8 (zero shot)",
+    "provider": "Z.ai",
+    "release_order": 243
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-6eb8386cf3d5",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "DeepSeek-V3.1 (zero shot with freeze values)",
+    "provider": "DeepSeek",
+    "release_order": 244
+  },
+  {
+    "family": "DeepSeek",
+    "id": "m-b7bfeb56cdae",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "DeepSeek-V3.1 (zero shot)",
+    "provider": "DeepSeek",
+    "release_order": 245
+  },
+  {
+    "family": "xAI",
+    "id": "m-09c80123f936",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Grok-4-0709 (zero shot with freeze values)",
+    "provider": "xAI",
+    "release_order": 246
+  },
+  {
+    "family": "xAI",
+    "id": "m-980c8bc5c04f",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Grok-4-0709 (zero shot)",
+    "provider": "xAI",
+    "release_order": 247
+  },
+  {
+    "family": "xAI",
+    "id": "m-dd6e6d63feff",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Grok-4-Fast-Non-Reasoning (zero shot with freeze values)",
+    "provider": "xAI",
+    "release_order": 248
+  },
+  {
+    "family": "xAI",
+    "id": "m-0a9085d2af81",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Grok-4-Fast-Non-Reasoning (zero shot)",
+    "provider": "xAI",
+    "release_order": 249
+  },
+  {
+    "family": "xAI",
+    "id": "m-6b0fb0a7f32c",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Grok-4-Fast-Reasoning (zero shot with freeze values)",
+    "provider": "xAI",
+    "release_order": 250
+  },
+  {
+    "family": "xAI",
+    "id": "m-7530d11942b1",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Grok-4-Fast-Reasoning (zero shot)",
+    "provider": "xAI",
+    "release_order": 251
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-79dc9868a7a3",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
+    "provider": "Moonshot",
+    "release_order": 252
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-201834172076",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Kimi-K2-Instruct-0905 (zero shot)",
+    "provider": "Moonshot",
+    "release_order": 253
+  },
+  {
+    "family": "Qwen",
+    "id": "m-23aaea6ed7ff",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
+    "provider": "Qwen",
+    "release_order": 254
+  },
+  {
+    "family": "Qwen",
+    "id": "m-0709ebb37ae7",
+    "n_dates": 5,
+    "n_targets": 4065,
+    "name": "Qwen3-235B-A22B-Thinking-2507 (zero shot)",
+    "provider": "Qwen",
+    "release_order": 255
+  },
+  {
+    "family": "Google",
+    "id": "m-6da81f32f179",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Gemini-3-Pro-Preview (zero shot with freeze values)",
+    "provider": "Google",
+    "release_order": 256
+  },
+  {
+    "family": "Google",
+    "id": "m-26535e453bf6",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Gemini-3-Pro-Preview (zero shot)",
+    "provider": "Google",
+    "release_order": 257
+  },
+  {
+    "family": "Z.ai",
+    "id": "m-c7b0de569b85",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "GLM-4.6 (zero shot with freeze values)",
+    "provider": "Z.ai",
+    "release_order": 258
+  },
+  {
+    "family": "Z.ai",
+    "id": "m-179583996e78",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "GLM-4.6 (zero shot)",
+    "provider": "Z.ai",
+    "release_order": 259
+  },
+  {
+    "family": "xAI",
+    "id": "m-d2a08e712a93",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Grok-4-1-Fast-Non-Reasoning (zero shot with freeze values)",
+    "provider": "xAI",
+    "release_order": 260
+  },
+  {
+    "family": "xAI",
+    "id": "m-5948bb179ad2",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Grok-4-1-Fast-Non-Reasoning (zero shot)",
+    "provider": "xAI",
+    "release_order": 261
+  },
+  {
+    "family": "xAI",
+    "id": "m-f248764a334d",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Grok-4-1-Fast-Reasoning (zero shot with freeze values)",
+    "provider": "xAI",
+    "release_order": 262
+  },
+  {
+    "family": "xAI",
+    "id": "m-9656947a63b1",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Grok-4-1-Fast-Reasoning (zero shot)",
+    "provider": "xAI",
+    "release_order": 263
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-5c42d75d6306",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Kimi-K2-Thinking (zero shot with freeze values)",
+    "provider": "Moonshot",
+    "release_order": 264
+  },
+  {
+    "family": "Moonshot",
+    "id": "m-2aafbd9a28ae",
+    "n_dates": 3,
+    "n_targets": 2444,
+    "name": "Kimi-K2-Thinking (zero shot)",
+    "provider": "Moonshot",
+    "release_order": 265
+  }
 ]

@@ -1,47 +1,173 @@
 {
-  "schema_version": "1.0.0",
-  "dataset_version": "fixture-2026-08-19",
-  "taxonomy_version": "0.1.0-derived",
-  "metric_version": "three-adjusted-pair-metrics-v1",
-  "built_at": "2026-08-19T12:00:00+08:00",
-  "commit_sha": "fixture",
-  "fixture": true,
-  "source_snapshot": {
-    "event_rows": 13661,
-    "unique_events": 8204,
-    "sha256": "fixture-not-a-source-checksum"
-  },
+  "built_at": "2026-08-18T18:13:56Z",
+  "commit_sha": "b63e7f3d49154670ae33afc00b9a9885e4103887",
+  "dataset_version": "question_fixed_effects_latest_2026-04-14.json",
   "event_types": [
-    { "id": "finance_economics", "label_zh": "金融与经济", "label_en": "Finance & Economics", "file": "event-types/finance_economics.json", "dimension": "topic" },
-    { "id": "politics_conflict", "label_zh": "政治与冲突", "label_en": "Politics & Conflict", "file": "event-types/politics_conflict.json", "dimension": "topic" },
-    { "id": "science_health_climate", "label_zh": "科学、健康与气候", "label_en": "Science, Health & Climate", "file": "event-types/science_health_climate.json", "dimension": "topic" }
+    {
+      "dimension": "topic",
+      "file": "event-types/finance_economics.json",
+      "id": "finance_economics",
+      "label_en": "Finance & Economics",
+      "label_zh": "金融与经济"
+    },
+    {
+      "dimension": "topic",
+      "file": "event-types/politics_conflict.json",
+      "id": "politics_conflict",
+      "label_en": "Politics & Conflict",
+      "label_zh": "政治与冲突"
+    },
+    {
+      "dimension": "topic",
+      "file": "event-types/climate_weather.json",
+      "id": "climate_weather",
+      "label_en": "Climate & Weather",
+      "label_zh": "气候与天气"
+    },
+    {
+      "dimension": "topic",
+      "file": "event-types/health_science.json",
+      "id": "health_science",
+      "label_en": "Health & Science",
+      "label_zh": "健康与科学"
+    },
+    {
+      "dimension": "topic",
+      "file": "event-types/technology_ai.json",
+      "id": "technology_ai",
+      "label_en": "Technology & AI",
+      "label_zh": "科技与 AI"
+    },
+    {
+      "dimension": "topic",
+      "file": "event-types/sports.json",
+      "id": "sports",
+      "label_en": "Sports",
+      "label_zh": "体育"
+    },
+    {
+      "dimension": "topic",
+      "file": "event-types/entertainment_culture.json",
+      "id": "entertainment_culture",
+      "label_en": "Entertainment & Culture",
+      "label_zh": "娱乐与文化"
+    },
+    {
+      "dimension": "origin_type",
+      "file": "event-types/origin_type_dataset.json",
+      "id": "origin_type_dataset",
+      "label_en": "Official: Dataset",
+      "label_zh": "官方：Dataset"
+    },
+    {
+      "dimension": "origin_type",
+      "file": "event-types/origin_type_market.json",
+      "id": "origin_type_market",
+      "label_en": "Official: Market",
+      "label_zh": "官方：Market"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_acled.json",
+      "id": "official_source_acled",
+      "label_en": "Source: ACLED",
+      "label_zh": "来源：ACLED"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_dbnomics.json",
+      "id": "official_source_dbnomics",
+      "label_en": "Source: DBnomics",
+      "label_zh": "来源：DBnomics"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_fred.json",
+      "id": "official_source_fred",
+      "label_en": "Source: FRED",
+      "label_zh": "来源：FRED"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_infer.json",
+      "id": "official_source_infer",
+      "label_en": "Source: INFER",
+      "label_zh": "来源：INFER"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_manifold.json",
+      "id": "official_source_manifold",
+      "label_en": "Source: Manifold",
+      "label_zh": "来源：Manifold"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_metaculus.json",
+      "id": "official_source_metaculus",
+      "label_en": "Source: Metaculus",
+      "label_zh": "来源：Metaculus"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_polymarket.json",
+      "id": "official_source_polymarket",
+      "label_en": "Source: Polymarket",
+      "label_zh": "来源：Polymarket"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_wikipedia.json",
+      "id": "official_source_wikipedia",
+      "label_en": "Source: Wikipedia",
+      "label_zh": "来源：Wikipedia"
+    },
+    {
+      "dimension": "official_source",
+      "file": "event-types/official_source_yahoo_finance.json",
+      "id": "official_source_yahoo_finance",
+      "label_en": "Source: Yahoo Finance",
+      "label_zh": "来源：Yahoo Finance"
+    }
   ],
+  "fixture": false,
+  "metric_version": "three-adjusted-pair-metrics-v1",
   "metrics": [
     {
-      "id": "adjusted_pog",
-      "label": "Adjusted Pairwise Oracle Gain",
-      "short_label": "Adjusted POG",
+      "description": "衡量两个模型是否会在不同问题上各有所长，即逐题错误的事后互补空间。",
       "direction": "higher",
       "format": ".3f",
-      "description": "衡量两个模型是否会在不同问题上各有所长，即逐题错误的事后互补空间。"
+      "id": "adjusted_pog",
+      "label": "Adjusted Pairwise Oracle Gain",
+      "short_label": "Adjusted POG"
     },
     {
-      "id": "high_loss_lift",
-      "label": "Adjusted High-loss Lift",
-      "short_label": "High-loss lift",
+      "description": "衡量两个模型发生严重错误时的共同出现程度；1 表示近似独立。",
       "direction": "lower",
       "format": ".2f",
-      "reference": 1,
-      "description": "衡量两个模型发生严重错误时的共同出现程度；1 表示近似独立。"
+      "id": "high_loss_lift",
+      "label": "Adjusted High-loss Lift",
+      "reference": 1.0,
+      "short_label": "High-loss lift"
     },
     {
+      "description": "衡量两个模型逐题 difficulty-adjusted Brier loss 的 Pearson 相关性。",
+      "direction": "lower",
+      "domain": [
+        -1.0,
+        1.0
+      ],
+      "format": ".3f",
       "id": "adjusted_loss_corr",
       "label": "Adjusted-loss Correlation",
-      "short_label": "Loss correlation",
-      "direction": "lower",
-      "format": ".3f",
-      "domain": [-1, 1],
-      "description": "衡量两个模型逐题 difficulty-adjusted Brier loss 的 Pearson 相关性。"
+      "short_label": "Loss correlation"
     }
-  ]
+  ],
+  "schema_version": "1.0.0",
+  "source_snapshot": {
+    "official_targets": 21252,
+    "sha256": "06904ad631bdd0fc73c527b591466f0df9e4bac31584a7be56650517c5af7f20",
+    "unique_events": 2857
+  },
+  "taxonomy_version": "forecastbench-topic-v1.1.0"
 }

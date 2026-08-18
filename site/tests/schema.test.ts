@@ -42,7 +42,7 @@ describe("static data contract", () => {
         expect(corr === null || (corr >= -1 && corr <= 1)).toBe(true);
       }
     }
-  });
+  }, 120_000);
 
   it("references declared models and reports missing-value reasons", () => {
     const ids = new Set(models.map((model) => model.id));
