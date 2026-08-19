@@ -24,7 +24,17 @@ The repository separates official provenance dimensions (`Dataset`/`Market` and 
 
 The taxonomy is derived, versioned as `forecastbench-topic-v1.1.0`, and not an official ForecastBench field. All 61 initial multi-topic rows (17 unique events) were manually reviewed. Eleven analysis-eligible rows remain explicitly review-required because their resolution predicates are genuinely cross-domain. Unrecoverable generic-pair templates and unmatched visible questions are excluded from semantic-topic slices but retained in official origin/source slices.
 
-The atlas provides a model selector and a model-pair inspector for all 266 exact model names. The heatmap is limited to 30 models at once for browser performance; the downloadable and archived tables retain the full filtered pair universe.
+The atlas provides model filters, pair rankings, and downloadable results for
+all 266 exact model names. The heatmap is limited to 30 models at once for
+browser performance; the downloadable and archived tables retain the full
+filtered pair universe.
+
+The cross-event-type stability experiment follows every one of the 35,245
+global exact-model pairs across all 21 unordered combinations of the seven
+semantic topics. Its primary view asks whether a pair that is dependent in one
+topic remains dependent in another among pairs that are near-BI in both. A
+complete 740,145-row audit archive retains ineligible and undefined cases
+rather than selecting them away.
 
 ## Interpretation
 
@@ -58,11 +68,17 @@ npm --prefix site run test:e2e
 
 See [`docs/taxonomy.md`](docs/taxonomy.md), [`docs/methodology.md`](docs/methodology.md), [`docs/data-provenance.md`](docs/data-provenance.md), and [`docs/experiment-log.md`](docs/experiment-log.md). Machine-readable audits are in `site/public/data/audit.json` and `data/derived/analysis_audit.json`.
 
+The cross-topic result and its interpretation boundary are summarized in
+[`docs/cross-event-type-stability.md`](docs/cross-event-type-stability.md),
+with a standalone machine-readable audit in
+`data/derived/cross_type_audit.json`.
+
 ## Repository layout
 
 - `analysis/`: taxonomy, official-FX scoring, streaming metrics, and static-data export.
 - `data/raw_manifest/`: upstream relative filenames, sizes, and SHA-256 hashes; no raw forecasts.
 - `data/derived/`: complete and eligible pair tables plus the combined audit.
+- `data/derived/cross_type_*`: cross-topic summaries, all-pair transitions, and a standalone audit.
 - `site/`: React/Vite static explorer deployed by GitHub Pages.
 - `tests/` and `site/tests/`: data invariants, schema, metric direction, URL state, desktop, and mobile checks.
 
