@@ -1,6 +1,6 @@
 {
   "ability_stability_csv": "global-baseline/ability-stability.csv",
-  "analysis_commit": "447d8a780b9c84bcb126d69492b099408b08d547",
+  "analysis_commit": "bc308d3343bffb6ecab97276121403c818e82822",
   "audit_json": "global-baseline/audit.json",
   "comparison_modes": [
     {
@@ -53,8 +53,8 @@
     },
     "audit_json": {
       "path": "audit.json",
-      "sha256": "6a2e55ecde4bf988dd34e526b4db03284c1b9050074f7ee5764b63953940eb20",
-      "size_bytes": 83416
+      "sha256": "4a58969c9416fb928b79008bdf6ca4488d675a15ef3ee68c8f9bd7ec08d44bd1",
+      "size_bytes": 84143
     },
     "model_ability_csv": {
       "path": "model-ability.csv",
@@ -87,7 +87,7 @@
       "size_bytes": 390905
     }
   },
-  "generated_at": "2026-08-19T07:25:00Z",
+  "generated_at": "2026-08-19T08:14:45Z",
   "global_scopes": [
     {
       "description": "All scored official ForecastBench targets.",
@@ -118,6 +118,26 @@
     }
   ],
   "model_ability_csv": "global-baseline/model-ability.csv",
+  "pair_matrix_file_records": {
+    "official_full": {
+      "n_pairs": 34453,
+      "path": "pair-matrices/official_full.json",
+      "semantic_sha256": "39f8658e6039f848dfbbc9b7fef8a1c8a189c54a415aa1655c9c633ff388d20f",
+      "sha256": "af15e76015a1fc446afc592a7e203914c1a88e1cf72f284733c8d53617afe96a",
+      "size_bytes": 5427479
+    },
+    "seven_topic_union": {
+      "n_pairs": 34453,
+      "path": "pair-matrices/seven_topic_union.json",
+      "semantic_sha256": "c4cb80b3938afacf7dd97f79ce6b8a4f7ee85bd6e5406667323ec8c79dc03d0c",
+      "sha256": "07d80ee0b48a299bb3f38d91cc14e7de757c614bf5cd3fe4a90ff34e8c76c5a0",
+      "size_bytes": 5428416
+    }
+  },
+  "pair_matrix_files": {
+    "official_full": "global-baseline/pair-matrices/official_full.json",
+    "seven_topic_union": "global-baseline/pair-matrices/seven_topic_union.json"
+  },
   "pair_metrics_gzip": "global-baseline/pair-metrics.csv.gz",
   "pair_stability_csv": "global-baseline/pair-stability.csv",
   "partner_profile_file_records": {

@@ -74,7 +74,7 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
       <section className="cross-type-section" id="stability">
         <div className="section-heading">
           <div><p className="eyebrow">CROSS-EVENT-TYPE STABILITY</p><h2>Descriptive pair stability across event types</h2></div>
-          <p>Describes whether the same model pairs remain dependent or complementary across the seven semantic event types.</p>
+          <p>Describes whether the same model pairs remain at the high- or low-dependence end across the seven semantic event types.</p>
         </div>
         <div className="cross-type-unavailable" role="status">
           <strong>{error ? "Cross-type data could not be loaded" : "Cross-type dataset not published yet"}</strong>
@@ -183,8 +183,8 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
             <div className="stability-readout">
               <div><span>Spearman</span><strong>{formatCoefficient(selected.cell.spearman)}</strong></div>
               <div><span>Pearson</span><strong>{formatCoefficient(selected.cell.pearson)}</strong></div>
-              <div><span>Dependent top/top</span><strong>{formatCoefficient(selected.cell.dependent_top_jaccard)}</strong></div>
-              <div><span>Complementary top/top</span><strong>{formatCoefficient(selected.cell.complementary_top_jaccard)}</strong></div>
+              <div><span>High-dependence top/top</span><strong>{formatCoefficient(selected.cell.dependent_top_jaccard)}</strong></div>
+              <div><span>Low-dependence top/top</span><strong>{formatCoefficient(selected.cell.complementary_top_jaccard)}</strong></div>
             </div>
             <dl className="cross-type-coverage">
               <div><dt>Common defined pairs</dt><dd>{selected.cell.n_defined_pairs.toLocaleString()}</dd></div>
@@ -197,9 +197,9 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
               {selected.cell.interpretation_status === "limited" && <div className="interpretation-note limited"><strong>Limited evidence</strong><span>Below the {data.manifest.thresholds.headline_min_defined_pairs}-pair headline threshold. Treat directional rates as exploratory.</span></div>}
               <div className="direction-table">
                 <div className="direction-head"><span>Directional statistic</span><b>{topicLabels.get(selected.rowTopic)} → {topicLabels.get(selected.columnTopic)}</b><b>{topicLabels.get(selected.columnTopic)} → {topicLabels.get(selected.rowTopic)}</b></div>
-                <div><span>Dependency persistence</span><strong>{formatRate(directionValue("dependency_persistence_a_to_b", "dependency_persistence_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("dependency_persistence_a_to_b", "dependency_persistence_b_to_a"))}</strong></div>
-                <div><span>Complementarity persistence</span><strong>{formatRate(directionValue("complementarity_persistence_a_to_b", "complementarity_persistence_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("complementarity_persistence_a_to_b", "complementarity_persistence_b_to_a"))}</strong></div>
-                <div><span>Dependency → complementarity flip</span><strong>{formatRate(directionValue("dependency_to_complementarity_a_to_b", "dependency_to_complementarity_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("dependency_to_complementarity_a_to_b", "dependency_to_complementarity_b_to_a"))}</strong></div>
+                <div><span>High-dependence persistence</span><strong>{formatRate(directionValue("dependency_persistence_a_to_b", "dependency_persistence_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("dependency_persistence_a_to_b", "dependency_persistence_b_to_a"))}</strong></div>
+                <div><span>Low-dependence persistence</span><strong>{formatRate(directionValue("complementarity_persistence_a_to_b", "complementarity_persistence_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("complementarity_persistence_a_to_b", "complementarity_persistence_b_to_a"))}</strong></div>
+                <div><span>High-dependence → low-dependence flip</span><strong>{formatRate(directionValue("dependency_to_complementarity_a_to_b", "dependency_to_complementarity_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("dependency_to_complementarity_a_to_b", "dependency_to_complementarity_b_to_a"))}</strong></div>
               </div>
             </>}
           </>

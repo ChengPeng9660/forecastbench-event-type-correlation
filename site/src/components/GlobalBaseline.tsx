@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { globalBaselineAssetUrl, loadGlobalPartnerProfiles } from "../lib/data";
+import { GlobalPairMatrix } from "./GlobalPairMatrix";
 import { colorForScore, textColorForScore } from "../lib/metrics";
 import type {
   GlobalAbilityStabilityRow,
@@ -29,6 +30,8 @@ interface Selection {
   comparison: GlobalBaselineComparisonModeId;
   topic: string;
   model: string;
+  provider: string;
+  minOverlap: number;
 }
 
 const params = new URLSearchParams(window.location.search);
@@ -39,6 +42,8 @@ const querySelection = {
   comparison: params.get("global_comparison"),
   topic: params.get("global_topic"),
   model: params.get("global_model"),
+  provider: params.get("global_provider"),
+  minOverlap: params.get("global_min_n"),
 };
 
 function finite(value: number | null | undefined): value is number {
@@ -140,10 +145,10 @@ function TopicDetail({
         <div>
           <h4>Quartile agreement</h4>
           <dl className="global-stat-grid">
-            <div><dt>Dependent Jaccard</dt><dd>{coefficient(pair.dependent_top_jaccard)}</dd></div>
-            <div><dt>Complementary Jaccard</dt><dd>{coefficient(pair.complementary_top_jaccard)}</dd></div>
-            <div><dt>Dependency retained</dt><dd>{percent(pair.dependency_persistence_global_to_topic)}</dd></div>
-            <div><dt>Complementarity retained</dt><dd>{percent(pair.complementarity_persistence_global_to_topic)}</dd></div>
+            <div><dt>High-dependence Jaccard</dt><dd>{coefficient(pair.dependent_top_jaccard)}</dd></div>
+            <div><dt>Low-dependence Jaccard</dt><dd>{coefficient(pair.complementary_top_jaccard)}</dd></div>
+            <div><dt>High-dependence retained</dt><dd>{percent(pair.dependency_persistence_global_to_topic)}</dd></div>
+            <div><dt>Low-dependence retained</dt><dd>{percent(pair.complementarity_persistence_global_to_topic)}</dd></div>
           </dl>
         </div>
         <div>
@@ -158,7 +163,7 @@ function TopicDetail({
       </div>
       {isInsufficient && <p className="global-detail-note">{pair.reason ?? "This comparison does not meet the reporting threshold, so coefficients remain suppressed."}</p>}
       {!isInsufficient && (
-        <p className="global-detail-note">Global dependency → topic complementarity flip: <strong>{percent(pair.dependency_to_complementarity_global_to_topic)}</strong>. Reverse-direction flip: <strong>{percent(pair.dependency_to_complementarity_topic_to_global)}</strong>.</p>
+        <p className="global-detail-note">Global high-dependence → topic low-dependence flip: <strong>{percent(pair.dependency_to_complementarity_global_to_topic)}</strong>. Reverse-direction flip: <strong>{percent(pair.dependency_to_complementarity_topic_to_global)}</strong>.</p>
       )}
     </div>
   );
@@ -172,6 +177,8 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
     comparison: "leave_topic_out",
     topic: "",
     model: "",
+    provider: "all",
+    minOverlap: 50,
   });
   const [profiles, setProfiles] = useState<GlobalPartnerProfileRow[] | null>(null);
   const [profilesModelId, setProfilesModelId] = useState("");
@@ -199,6 +206,8 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
       comparison: comparison ?? current.comparison,
       topic,
       model: querySelection.model ?? "",
+      provider: querySelection.provider ?? "all",
+      minOverlap: Math.max(50, Number(querySelection.minOverlap ?? 50) || 50),
     }));
   }, [data]);
 
@@ -263,13 +272,19 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
 
   function update<K extends keyof Selection>(key: K, value: Selection[K]) {
     setSelection((current) => ({ ...current, [key]: value, ...(key === "scope" || key === "metric" || key === "sample" || key === "comparison" ? { topic: "" } : {}) }));
-    setQueryValue(`global_${key}`, String(value));
+    const queryKey = key === "minOverlap" ? "global_min_n" : `global_${key}`;
+    setQueryValue(queryKey, String(value));
     if (key === "scope" || key === "metric" || key === "sample" || key === "comparison") setQueryValue("global_topic", "");
   }
 
   function chooseModel(modelId: string) {
     setProfilesError("");
     update("model", modelId);
+  }
+
+  function chooseMatrixModel(modelId: string) {
+    if (!modelId) setModelQuery("");
+    chooseModel(modelId);
   }
 
   function searchModel(value: string) {
@@ -318,6 +333,24 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
         <div className="global-summary-emphasis"><span>Global median · {metric?.label}</span><strong>{metricValue(globalSummary?.median, selection.metric)}</strong><small>{metricValue(globalSummary?.q25, selection.metric)}–{metricValue(globalSummary?.q75, selection.metric)} IQR</small></div>
       </div>
 
+      <div className="global-matrix-heading">
+        <div><p className="eyebrow">GLOBAL PAIRWISE MATRIX · {scope?.label}</p><h3>Model dependence without event-type splits</h3></div>
+        <p>Every cell is recomputed from the active global target set. The compact view keeps 30 high-coverage exact models visible while all clean models remain filterable.</p>
+      </div>
+      <GlobalPairMatrix
+        data={data}
+        models={models}
+        scope={selection.scope}
+        metricId={selection.metric}
+        nearBi={selection.sample === "near_bi_both"}
+        provider={selection.provider}
+        selectedModel={selection.model}
+        minOverlap={selection.minOverlap}
+        onProviderChange={(provider) => update("provider", provider)}
+        onModelChange={chooseMatrixModel}
+        onMinOverlapChange={(value) => update("minOverlap", value)}
+      />
+
       <div className="global-stability-heading">
         <div><p className="eyebrow">GLOBAL → TOPIC ORDERING</p><h3>Does the global ranking survive conditioning?</h3></div>
         <div className="global-rank-legend"><span>Reversal</span><i /><span>Stable</span><small>Spearman −1 to +1</small></div>
@@ -362,7 +395,7 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
         {selection.model && profiles && profileRows.length === 0 && <p className="global-profile-status">No reportable partner-ordering rows are available for this exact model under the active filters.</p>}
         {profileRows.length > 0 && (
           <div className="global-profile-table" data-testid="global-model-profile">
-            <div className="global-profile-row header"><span>Event type</span><span>Partner ρ</span><span>Partners</span><span>Global top complementary partner</span><span>Retained</span><span>Topic percentile</span></div>
+            <div className="global-profile-row header"><span>Event type</span><span>Partner ρ</span><span>Partners</span><span>Global top low-dependence partner</span><span>Retained</span><span>Topic percentile</span></div>
             {profileRows.map((row) => {
               const insufficient = row.interpretation_status === "insufficient";
               return <div className={`global-profile-row ${row.interpretation_status}`} key={row.topic_id}><span>{topicLabels.get(row.topic_id) ?? row.topic_id}</span><strong>{evidenceCoefficient(row.spearman, row.interpretation_status)}</strong><span>{row.n_defined_partners.toLocaleString()}</span><span title={insufficient ? "" : row.global_top_complementary_partner_name ?? ""}>{insufficient ? "—" : row.global_top_complementary_partner_name ?? "—"}</span><span>{insufficient || row.global_top_complementary_partner_retained === null || row.global_top_complementary_partner_retained === undefined ? "—" : row.global_top_complementary_partner_retained ? "Yes" : "No"}</span><span>{evidencePercent(row.global_top_complementary_partner_topic_percentile, row.interpretation_status)}</span></div>;

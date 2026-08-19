@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aggregationScore, colorForScore, findPair, formatMetric, sortPairs } from "../src/lib/metrics";
+import { colorForScore, dependenceScore, findPair, formatMetric, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence, sortPairs } from "../src/lib/metrics";
 import type { MetricDefinition, PairMetrics } from "../src/types/data";
 
 const pair = (id: string, value: number): PairMetrics => ({
@@ -17,10 +17,10 @@ const higher: MetricDefinition = {
 };
 const lower: MetricDefinition = { ...higher, id: "adjusted_loss_corr", direction: "lower" };
 
-describe("aggregation metric helpers", () => {
-  it("normalizes every metric toward aggregation-friendly values", () => {
-    expect(aggregationScore(3, higher, [1, 2, 3])).toBe(1);
-    expect(aggregationScore(1, lower, [1, 2, 3])).toBe(1);
+describe("model-dependence metric helpers", () => {
+  it("normalizes every metric toward higher model dependence", () => {
+    expect(dependenceScore(3, higher, [1, 2, 3])).toBe(1);
+    expect(dependenceScore(1, lower, [1, 2, 3])).toBe(1);
   });
 
   it("sorts in the metric-defined direction", () => {
@@ -35,8 +35,22 @@ describe("aggregation metric helpers", () => {
     expect(formatMetric(1.234, "high_loss_lift")).toBe("1.23");
   });
 
-  it("uses purple at the aggregation-friendly end of the scale", () => {
+  it("uses purple at the higher-dependence end of the scale", () => {
     expect(colorForScore(1)).toBe("rgb(79, 32, 127)");
     expect(colorForScore(0)).toBe("rgb(239, 171, 2)");
+  });
+
+  it("keeps all pair-metric consumers aligned to dependence direction", () => {
+    expect(MODEL_DEPENDENCE_DIRECTION).toEqual({
+      adjusted_pog: "lower",
+      high_loss_lift: "higher",
+      adjusted_loss_corr: "higher",
+    });
+    const pog = orientMetricToDependence(higher);
+    const lift = orientMetricToDependence({ ...higher, id: "high_loss_lift" });
+    const corr = orientMetricToDependence({ ...higher, id: "adjusted_loss_corr" });
+    expect(dependenceScore(1, pog, [1, 3])).toBe(1);
+    expect(dependenceScore(3, lift, [1, 3])).toBe(1);
+    expect(dependenceScore(3, corr, [1, 3])).toBe(1);
   });
 });

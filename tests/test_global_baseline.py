@@ -7,6 +7,9 @@ import pytest
 
 from analysis.export_site import stable_model_id
 from analysis.global_baseline import (
+    GLOBAL_SCOPES,
+    PAIR_FIELDS,
+    PAIR_MATRIX_FIELDS,
     build_partner_summary,
     bool_value,
     comparison_statistics,
@@ -14,8 +17,12 @@ from analysis.global_baseline import (
     is_excluded_llm_crowd,
     metric_value,
     model_id,
+    pair_matrix_values,
     subtract_pair_accumulator,
     write_partner_profile_shards,
+    write_gzip_csv,
+    write_pair_matrix_shards,
+    verify_pair_matrices_against_csv,
 )
 from analysis.metrics import Observation, PairAccumulator, finalize_accumulated_pair_row
 
@@ -159,3 +166,47 @@ def test_partner_shards_remove_stale_and_match_index(tmp_path: Path) -> None:
     assert {path.name for path in directory.glob("*.json")} == set(index.values())
     assert len(records) == 2
     assert not (directory / "stale.json").exists()
+
+
+def matrix_pair_row(scope: str, model_a: str, model_b: str, value: float) -> dict[str, object]:
+    return {
+        "global_scope": scope, "model_a": model_a, "model_b": model_b,
+        "n_overlap": 100, "n_dates": 2, "eligible": 1, "near_bi": 1,
+        "bi_reason": "", "insufficient_overlap_reason": "",
+        "adjusted_pog": value, "pog_reason": "",
+        "adjusted_high_loss_lift_025": value + 1, "lift_reason": "",
+        "adjusted_loss_pearson_corr": value / 10, "corr_reason": "",
+    }
+
+
+def test_pair_matrix_shards_are_complete_deterministic_and_match_csv(tmp_path: Path) -> None:
+    models = ("A", "B", "C")
+    rows = [
+        matrix_pair_row(scope, model_a, model_b, float(index))
+        for scope in GLOBAL_SCOPES
+        for index, (model_a, model_b) in enumerate((("A", "B"), ("A", "C"), ("B", "C")))
+    ]
+    # Numeric zero is a defined metric and blank reasons serialize as null.
+    first = pair_matrix_values(rows[0])
+    assert first[PAIR_MATRIX_FIELDS.index("adjusted_pog")] == 0.0
+    assert first[PAIR_MATRIX_FIELDS.index("pog_reason")] is None
+    directories = []
+    for run in ("one", "two"):
+        directory = tmp_path / run / "pair-matrices"
+        directory.mkdir(parents=True)
+        (directory / "stale.json").write_text("{}", encoding="utf-8")
+        paths, records = write_pair_matrix_shards(directory, rows, models, {})
+        assert set(paths) == set(GLOBAL_SCOPES)
+        assert len(records) == len(GLOBAL_SCOPES)
+        assert {path.name for path in directory.glob("*.json")} == set(paths.values())
+        assert all(record["n_pairs"] == math.comb(len(models), 2) for record in records)
+        directories.append((directory, paths))
+    for scope in GLOBAL_SCOPES:
+        one = directories[0][0] / directories[0][1][scope]
+        two = directories[1][0] / directories[1][1][scope]
+        assert one.read_bytes() == two.read_bytes()
+    archive = tmp_path / "pair-metrics.csv.gz"
+    write_gzip_csv(archive, rows, PAIR_FIELDS)
+    hashes = verify_pair_matrices_against_csv(archive, *directories[0])
+    assert set(hashes) == set(GLOBAL_SCOPES)
+    assert all(len(value) == 64 for value in hashes.values())

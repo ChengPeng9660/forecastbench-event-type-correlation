@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import manifest from "../public/data/manifest.json";
@@ -9,10 +10,11 @@ import type {
   CrossTypeSummary,
   GlobalBaselineManifest,
   GlobalBaselineSummary,
+  GlobalPairMatrixCompact,
   GlobalPartnerProfiles,
 } from "../src/types/data";
 
-const dataRoot = resolve(process.cwd(), "public/data");
+const dataRoot = resolve(process.env.SITE_DATA_ROOT ?? join(process.cwd(), "public/data"));
 const slices = manifest.event_types.map((reference) =>
   JSON.parse(readFileSync(join(dataRoot, reference.file), "utf8")) as EventTypeData
 );
@@ -146,6 +148,15 @@ describe("cross-event-type stability contract", () => {
 
 const globalManifestPath = join(dataRoot, "global-baseline", "manifest.json");
 const globalBaselinePublished = existsSync(globalManifestPath);
+const publishedGlobalManifest = globalBaselinePublished
+  ? JSON.parse(readFileSync(globalManifestPath, "utf8")) as GlobalBaselineManifest
+  : null;
+const globalPairMatrixPublished = Boolean(publishedGlobalManifest?.pair_matrix_files);
+const expectedPairMatrixFields = [
+  "model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi",
+  "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason",
+  "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason",
+];
 
 describe("global-baseline stability contract", () => {
   it("never ships a partial global-baseline release", () => {
@@ -165,6 +176,14 @@ describe("global-baseline stability contract", () => {
       globalManifest.audit_json,
     ]) expect(existsSync(join(dataRoot, path))).toBe(true);
     for (const path of Object.values(globalManifest.partner_profile_files)) expect(existsSync(join(dataRoot, path))).toBe(true);
+    const matrixFiles = globalManifest.pair_matrix_files;
+    const matrixRecords = globalManifest.pair_matrix_file_records;
+    expect(Boolean(matrixFiles)).toBe(Boolean(matrixRecords));
+    if (matrixFiles && matrixRecords) {
+      expect(Object.keys(matrixFiles).sort()).toEqual(globalManifest.global_scopes.map((scope) => scope.id).sort());
+      expect(Object.keys(matrixRecords).sort()).toEqual(Object.keys(matrixFiles).sort());
+      for (const path of Object.values(matrixFiles)) expect(existsSync(join(dataRoot, path))).toBe(true);
+    }
   });
 
   it.skipIf(!globalBaselinePublished)("keeps global, transfer, partner, and ability outputs aligned", () => {
@@ -218,4 +237,76 @@ describe("global-baseline stability contract", () => {
       }
     }
   });
+
+  it.skipIf(!globalPairMatrixPublished)("publishes complete compact pair matrices for both global scopes", () => {
+    const globalManifest = publishedGlobalManifest!;
+    const publishedModelIds = new Set(models.map((model) => model.id));
+    const expectedScopes = globalManifest.global_scopes.map((scope) => scope.id).sort();
+    const matrixFiles = globalManifest.pair_matrix_files!;
+    const matrixRecords = globalManifest.pair_matrix_file_records!;
+    expect(Object.keys(matrixFiles).sort()).toEqual(expectedScopes);
+
+    for (const scope of expectedScopes) {
+      const relativePath = matrixFiles[scope];
+      const record = matrixRecords[scope];
+      const absolutePath = join(dataRoot, relativePath);
+      const bytes = readFileSync(absolutePath);
+      const payload = JSON.parse(bytes.toString("utf8")) as GlobalPairMatrixCompact;
+      expect(payload.schema_version).toBe(globalManifest.schema_version);
+      expect(payload.global_scope).toBe(scope);
+      expect(payload.fields).toEqual(expectedPairMatrixFields);
+      expect(payload.models).toHaveLength(263);
+      expect(payload.pairs).toHaveLength(34_453);
+      expect(new Set(payload.models.map((model) => model.id)).size).toBe(263);
+      expect(payload.models.every((model) => publishedModelIds.has(model.id) && model.name !== "LLM Crowd")).toBe(true);
+      expect(payload.pairs.every((row) => row.length === expectedPairMatrixFields.length)).toBe(true);
+
+      const aIndex = payload.fields.indexOf("model_a_id");
+      const bIndex = payload.fields.indexOf("model_b_id");
+      const overlapIndex = payload.fields.indexOf("n_overlap");
+      const datesIndex = payload.fields.indexOf("n_dates");
+      const eligibleIndex = payload.fields.indexOf("eligible");
+      const nearBiIndex = payload.fields.indexOf("near_bi");
+      const pogIndex = payload.fields.indexOf("adjusted_pog");
+      const pogReasonIndex = payload.fields.indexOf("pog_reason");
+      const liftIndex = payload.fields.indexOf("high_loss_lift");
+      const liftReasonIndex = payload.fields.indexOf("lift_reason");
+      const corrIndex = payload.fields.indexOf("adjusted_loss_corr");
+      const corrReasonIndex = payload.fields.indexOf("corr_reason");
+      const seen = new Set<string>();
+      const matrixModelIds = new Set(payload.models.map((model) => model.id));
+      for (const row of payload.pairs) {
+        const a = row[aIndex] as string;
+        const b = row[bIndex] as string;
+        expect(a).not.toBe(b);
+        expect(matrixModelIds.has(a) && matrixModelIds.has(b)).toBe(true);
+        const key = [a, b].sort().join("::");
+        expect(seen.has(key)).toBe(false);
+        seen.add(key);
+        expect(Number.isInteger(row[overlapIndex]) && Number(row[overlapIndex]) >= 0).toBe(true);
+        expect(Number.isInteger(row[datesIndex]) && Number(row[datesIndex]) >= 0).toBe(true);
+        expect(typeof row[eligibleIndex]).toBe("boolean");
+        expect(row[nearBiIndex] === null || typeof row[nearBiIndex] === "boolean").toBe(true);
+        const pog = row[pogIndex];
+        const lift = row[liftIndex];
+        const corr = row[corrIndex];
+        expect(pog === null || Number.isFinite(pog)).toBe(true);
+        expect(lift === null || (Number.isFinite(lift) && Number(lift) >= 0)).toBe(true);
+        expect(corr === null || (Number(corr) >= -1 && Number(corr) <= 1)).toBe(true);
+        if (pog === null) expect(row[pogReasonIndex]).toEqual(expect.any(String));
+        if (lift === null) expect(row[liftReasonIndex]).toEqual(expect.any(String));
+        if (corr === null) expect(row[corrReasonIndex]).toEqual(expect.any(String));
+      }
+      expect(seen.size).toBe(34_453);
+      expect(record.path).toBe(relativePath.replace("global-baseline/", ""));
+      expect(record.n_pairs).toBe(payload.pairs.length);
+      expect(record.size_bytes).toBe(statSync(absolutePath).size);
+      expect(record.sha256).toBe(createHash("sha256").update(bytes).digest("hex"));
+      expect(record.semantic_sha256).toMatch(/^[0-9a-f]{64}$/);
+    }
+
+    const matrixRoot = join(dataRoot, "global-baseline", "pair-matrices");
+    const expectedFiles = Object.values(matrixFiles).map((path) => path.split("/").at(-1)).sort();
+    expect(readdirSync(matrixRoot).filter((file) => file.endsWith(".json")).sort()).toEqual(expectedFiles);
+  }, 120_000);
 });

@@ -5,6 +5,7 @@ import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
 import { PairRanking } from "./components/PairRanking";
 import { loadAppData, loadCrossTypeData, loadEventType, loadGlobalBaselineData } from "./lib/data";
+import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
 import type { AppData, CrossTypeData, EventTypeData, GlobalBaselineData, MetricId, PairMetrics } from "./types/data";
 
 interface Filters {
@@ -27,9 +28,9 @@ const initialFilters: Filters = {
 };
 
 const METRIC_DESCRIPTIONS: Record<MetricId, string> = {
-  adjusted_pog: "Measures whether two models excel on different questions—the ex post complementarity available at the question level.",
-  high_loss_lift: "Measures how often two models incur severe errors together; 1 indicates approximate independence.",
-  adjusted_loss_corr: "Measures the Pearson correlation between the models’ question-level difficulty-adjusted Brier losses.",
+  adjusted_pog: "Measures whether two models excel on different questions. Lower gain means higher model dependence; larger gain indicates more ex post complementarity.",
+  high_loss_lift: "Measures how often two models incur severe errors together. Higher lift means higher model dependence; 1 indicates approximate independence.",
+  adjusted_loss_corr: "Measures alignment in question-level difficulty-adjusted Brier losses. Higher correlation means higher model dependence.",
 };
 
 const TOPIC_DEFINITIONS: Record<string, string> = {
@@ -43,7 +44,7 @@ const TOPIC_DEFINITIONS: Record<string, string> = {
   other: "Questions that cannot be reliably assigned to one topic, have unrecoverable text, or require manual review.",
 };
 
-function downloadPairs(pairs: PairMetrics[], appData: AppData, eventData: EventTypeData) {
+export function pairCsvRows(pairs: PairMetrics[], appData: AppData, eventData: EventTypeData) {
   const metricIds = appData.manifest.metrics.map((metric) => metric.id);
   const modelNames = new Map(appData.models.map((model) => [model.id, model.name]));
   const eventRef = appData.manifest.event_types.find((item) => item.id === eventData.event_type.id);
@@ -51,7 +52,7 @@ function downloadPairs(pairs: PairMetrics[], appData: AppData, eventData: EventT
     [
       "row_id", "event_type_id", "event_type_dimension", "origin_type", "source", "date_min", "date_max",
       "model_a_id", "model_a_name", "model_b_id", "model_b_name", "n_overlap", "n_dates",
-      ...metricIds.flatMap((metric) => [metric, `${metric}_reason`]),
+      ...metricIds.flatMap((metric) => [metric, `${metric}_dependence_direction`, `${metric}_reason`]),
       "high_loss_rate_a", "high_loss_rate_b", "joint_high_loss_rate", "joint_high_loss_count", "mean_bi_gap", "near_bi",
     ],
     ...pairs.map((pair) => [
@@ -68,7 +69,7 @@ function downloadPairs(pairs: PairMetrics[], appData: AppData, eventData: EventT
       modelNames.get(pair.b) ?? pair.b,
       pair.n_overlap,
       pair.n_dates,
-      ...metricIds.flatMap((metric) => [pair.metrics[metric].value ?? "", pair.metrics[metric].reason ?? ""]),
+      ...metricIds.flatMap((metric) => [pair.metrics[metric].value ?? "", `${MODEL_DEPENDENCE_DIRECTION[metric]}=higher_model_dependence`, pair.metrics[metric].reason ?? ""]),
       pair.diagnostics.high_loss_rate_a ?? "",
       pair.diagnostics.high_loss_rate_b ?? "",
       pair.diagnostics.joint_high_loss_rate ?? "",
@@ -77,6 +78,11 @@ function downloadPairs(pairs: PairMetrics[], appData: AppData, eventData: EventT
       pair.diagnostics.near_bi ?? "",
     ]),
   ];
+  return rows;
+}
+
+function downloadPairs(pairs: PairMetrics[], appData: AppData, eventData: EventTypeData) {
+  const rows = pairCsvRows(pairs, appData, eventData);
   const csv = rows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n");
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   const link = document.createElement("a");
@@ -198,7 +204,8 @@ export default function App() {
     return <main className="loading"><div className="loading-mark">FB</div><p>Loading dependence atlas…</p></main>;
   }
 
-  const metric = appData.manifest.metrics.find((item) => item.id === filters.metric) ?? appData.manifest.metrics[0];
+  const rawMetric = appData.manifest.metrics.find((item) => item.id === filters.metric) ?? appData.manifest.metrics[0];
+  const metric = orientMetricToDependence(rawMetric);
   const eventRef = appData.manifest.event_types.find((item) => item.id === filters.eventType) ?? appData.manifest.event_types[0];
   const providers = [...new Set(appData.models.map((model) => model.provider))];
   const profileModel = filters.model || heatmapModels[0]?.id || "";
@@ -225,7 +232,7 @@ export default function App() {
           <div className="intro-heading">
             <p className="eyebrow">FORECASTBENCH · DEPENDENCE ATLAS</p>
             <h1>Forecast Model<br />Dependence Atlas</h1>
-            <p className="intro-copy">Compare model pairs across event types through three dependence metrics. Purple consistently indicates greater aggregation value; taxonomy, sample thresholds, and missing values remain fully auditable.</p>
+            <p className="intro-copy">Compare model pairs across event types through three dependence metrics. Purple consistently indicates higher model dependence; taxonomy, sample thresholds, and missing values remain fully auditable.</p>
           </div>
           <dl className="dataset-stamp">
             <div><dt>OFFICIAL TARGETS</dt><dd>{appData.manifest.source_snapshot.official_targets.toLocaleString()}</dd></div>
@@ -256,7 +263,7 @@ export default function App() {
           </div>
           <div className="matrix-layout">
             <div>
-              <div className="legend"><span>Less aggregation-friendly</span><i className="legend-gradient" /><span>More aggregation-friendly</span></div>
+              <div className="legend"><span>Lower model dependence</span><i className="legend-gradient" /><span>Higher model dependence</span></div>
               <Heatmap models={heatmapModels} pairs={heatmapPairs} metric={metric} selectedModel={filters.model} selectedPair={selectedPair} onSelectPair={selectPair} />
             </div>
           </div>
@@ -268,7 +275,7 @@ export default function App() {
 
         <section className="ranking-section" id="ranking">
           <div className="section-heading">
-            <div><p className="eyebrow">AGGREGATION-FRIENDLY ORDER</p><h2>Model pair ranking</h2></div>
+            <div><p className="eyebrow">MODEL DEPENDENCE ORDER</p><h2>Model pair ranking</h2></div>
             <button type="button" className="download-button" onClick={() => downloadPairs(visiblePairs, appData, eventData)}>Download current CSV ↓</button>
           </div>
           <PairRanking pairs={visiblePairs} metric={metric} models={appData.models} selectedPair={selectedPair} onSelectPair={selectPair} />
@@ -283,7 +290,7 @@ export default function App() {
           </div>
           <div className="method-list">
             {appData.manifest.metrics.map((item, index) => (
-              <article key={item.id}><span>0{index + 1}</span><h3>{item.label}</h3><p>{METRIC_DESCRIPTIONS[item.id]}</p><small>{item.direction === "higher" ? "HIGHER IS MORE COMPLEMENTARY" : "LOWER IS MORE COMPLEMENTARY"}</small></article>
+              <article key={item.id}><span>0{index + 1}</span><h3>{item.label}</h3><p>{METRIC_DESCRIPTIONS[item.id]}</p><small>{dependenceDirectionLabel(item.id)}</small></article>
             ))}
           </div>
         </section>

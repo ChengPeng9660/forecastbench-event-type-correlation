@@ -15,7 +15,7 @@ export function PairRanking({ pairs, metric, models, selectedPair, onSelectPair 
   const rendered = ranked.slice(0, 200);
   return (
     <div className="ranking-wrap">
-      <p className="scale-note">Showing the top {Math.min(200, ranked.length).toLocaleString()} of {ranked.length.toLocaleString()} model pairs. The CSV download includes every pair under the active filters.</p>
+      <p className="scale-note">Showing the {Math.min(200, ranked.length).toLocaleString()} highest-dependence pairs out of {ranked.length.toLocaleString()}. The CSV download includes every pair under the active filters.</p>
       <table className="ranking-table">
         <thead>
           <tr><th>Rank</th><th>Model pair</th><th>{metric.short_label}</th><th>Overlap</th><th>Near-BI</th></tr>

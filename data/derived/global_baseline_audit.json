@@ -1,9 +1,10 @@
 {
-  "analysis_commit": "447d8a780b9c84bcb126d69492b099408b08d547",
-  "built_at": "2026-08-19T07:25:00Z",
+  "analysis_commit": "bc308d3343bffb6ecab97276121403c818e82822",
+  "built_at": "2026-08-19T08:14:45Z",
   "expected_output_counts": {
     "ability_stability": 28,
     "model_ability": 2367,
+    "pair_matrix_files": 2,
     "pair_metrics": 68906,
     "pair_stability": 168,
     "partner_profile_files": 263,
@@ -251,12 +252,31 @@
   "output_counts": {
     "ability_stability": 28,
     "model_ability": 2367,
+    "pair_matrix_files": 2,
     "pair_metrics": 68906,
     "pair_stability": 168,
     "partner_profile_files": 263,
     "partner_stability": 44184,
     "partner_summary": 168
   },
+  "pair_matrix_files": [
+    {
+      "global_scope": "official_full",
+      "n_pairs": 34453,
+      "path": "official_full.json",
+      "semantic_sha256": "39f8658e6039f848dfbbc9b7fef8a1c8a189c54a415aa1655c9c633ff388d20f",
+      "sha256": "af15e76015a1fc446afc592a7e203914c1a88e1cf72f284733c8d53617afe96a",
+      "size_bytes": 5427479
+    },
+    {
+      "global_scope": "seven_topic_union",
+      "n_pairs": 34453,
+      "path": "seven_topic_union.json",
+      "semantic_sha256": "c4cb80b3938afacf7dd97f79ce6b8a4f7ee85bd6e5406667323ec8c79dc03d0c",
+      "sha256": "07d80ee0b48a299bb3f38d91cc14e7de757c614bf5cd3fe4a90ff34e8c76c5a0",
+      "size_bytes": 5428416
+    }
+  ],
   "partner_profile_files": [
     {
       "model_id": "m-47571c2b4d0f",
