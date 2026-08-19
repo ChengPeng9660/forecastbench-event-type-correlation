@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Heatmap } from "./components/Heatmap";
 import { ModelProfile } from "./components/ModelProfile";
-import { PairInspector } from "./components/PairInspector";
 import { PairRanking } from "./components/PairRanking";
 import { loadAppData, loadEventType } from "./lib/data";
 import type { AppData, EventTypeData, MetricId, PairMetrics } from "./types/data";
@@ -238,7 +237,6 @@ export default function App() {
               <div className="legend"><span>Less aggregation-friendly</span><i className="legend-gradient" /><span>More aggregation-friendly</span></div>
               <Heatmap models={heatmapModels} pairs={heatmapPairs} metric={metric} selectedModel={filters.model} selectedPair={selectedPair} onSelectPair={selectPair} />
             </div>
-            <PairInspector pair={selectedPair} models={appData.models} manifest={appData.manifest} />
           </div>
         </section>
 
