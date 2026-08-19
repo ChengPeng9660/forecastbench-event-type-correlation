@@ -285,13 +285,14 @@ test("renders an English-only interface", async ({ page }) => {
 
 test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(900);
-  const result = await page.evaluate(async () => {
+  const matrix = page.getByTestId("heatmap");
+  await expect(matrix.locator(".heat-cell")).toHaveCount(900);
+  const result = await matrix.evaluate(async (root) => {
     const models = await (await fetch("./data/models.json")).json() as Array<{ name: string; release_order: number }>;
     const releaseOrder = new Map(models.map((model) => [model.name, model.release_order]));
-    const names = [...document.querySelectorAll<HTMLElement>(".row-label span")].map((element) => element.innerText);
+    const names = [...root.querySelectorAll<HTMLElement>(".row-label span")].map((element) => element.innerText);
     const values = names.map((name) => releaseOrder.get(name) ?? Number.MAX_SAFE_INTEGER);
-    const height = Math.round(document.querySelector(".heatmap-grid")?.getBoundingClientRect().height ?? 0);
+    const height = Math.round(root.querySelector(".heatmap-grid")?.getBoundingClientRect().height ?? 0);
     return {
       count: names.length,
       sorted: values.every((value, index) => index === 0 || values[index - 1] <= value),
