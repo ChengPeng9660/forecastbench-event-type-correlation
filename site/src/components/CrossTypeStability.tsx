@@ -173,8 +173,8 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
           </div>
         </div>
 
-        <aside className="cross-type-inspector" data-testid="cross-type-inspector">
-          {!selected ? <div className="cross-type-empty"><p className="eyebrow">CELL DETAIL</p><h3>Select two event types</h3><p>Choose an off-diagonal cell to inspect common-pair coverage, rank correlations, top-quartile overlap, persistence, and flips.</p></div> : <>
+        {selected && <aside className="cross-type-inspector" data-testid="cross-type-inspector">
+          <>
             <header>
               <p className="eyebrow">CELL DETAIL</p>
               <h3>{topicLabels.get(selected.rowTopic)} <span>×</span> {topicLabels.get(selected.columnTopic)}</h3>
@@ -202,8 +202,8 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
                 <div><span>Dependency → complementarity flip</span><strong>{formatRate(directionValue("dependency_to_complementarity_a_to_b", "dependency_to_complementarity_b_to_a"))}</strong><strong>{formatRate(reverseDirectionValue("dependency_to_complementarity_a_to_b", "dependency_to_complementarity_b_to_a"))}</strong></div>
               </div>
             </>}
-          </>}
-        </aside>
+          </>
+        </aside>}
       </div>
       <p className="cross-type-footnote">Top/top and directional statistics use the manifest quartile ({Math.round(data.manifest.thresholds.quartile * 100)}%). Headline cells require at least {data.manifest.thresholds.headline_min_defined_pairs} common defined model pairs; reporting begins at {data.manifest.thresholds.reporting_min_defined_pairs}.</p>
     </section>

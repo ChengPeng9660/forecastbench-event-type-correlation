@@ -160,7 +160,7 @@ button.heat-cell:hover { transform: scale(.93); box-shadow: inset 0 0 0 1px rgba
 .cross-type-downloads { display: flex; gap: 11px; margin-bottom: 9px; }
 .cross-type-downloads a { min-height: 32px; display: inline-flex; align-items: center; padding: 0 10px; border: 1px solid var(--line); border-radius: 5px; color: var(--muted); background: #fff; font-size: 9px; font-weight: 650; text-decoration: none; white-space: nowrap; }
 .cross-type-downloads a:hover { border-color: var(--purple); color: var(--purple-deep); }
-.cross-type-layout { display: grid; grid-template-columns: minmax(0, 1fr) 370px; gap: 38px; align-items: start; }
+.cross-type-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
 .cross-type-layout > div:first-child { min-width: 0; }
 .cross-type-legend { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-height: 22px; color: var(--quiet); font: 8px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .cross-type-legend i { width: 130px; height: 6px; background: linear-gradient(90deg, var(--gold), #faf9fb, var(--purple)); }
@@ -180,10 +180,9 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .cross-type-cell.missing, .cross-type-cell.insufficient { color: var(--quiet); background: repeating-linear-gradient(135deg, #faf9fb, #faf9fb 6px, #f0ecf2 6px, #f0ecf2 7px); }
 .cross-type-cell.limited { box-shadow: inset 0 0 0 2px rgba(239,171,2,.72); }
 .cross-type-cell.active { z-index: 2; box-shadow: inset 0 0 0 3px var(--gold), 0 0 0 1px var(--purple-deep); }
-.cross-type-inspector { min-height: 520px; padding: 21px; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
+.cross-type-inspector { padding: 21px; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
 .cross-type-inspector h3 { margin: 0; font-size: 20px; font-weight: 570; letter-spacing: -.035em; line-height: 1.2; }
 .cross-type-inspector h3 span { color: var(--gold); }
-.cross-type-empty > p:last-child { margin: 16px 0 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
 .interpretation-badge { width: max-content; margin-top: 13px; padding: 4px 7px; border-radius: 4px; font: 7px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; }
 .interpretation-badge.headline { color: var(--green); background: rgba(22,131,104,.09); }
 .interpretation-badge.limited { color: #795600; background: var(--gold-soft); }
