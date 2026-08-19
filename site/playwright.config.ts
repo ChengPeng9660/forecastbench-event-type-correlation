@@ -1,5 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const ciBrowser = process.env.CI ? { channel: "chrome" as const } : {};
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -13,7 +15,10 @@ export default defineConfig({
     reuseExistingServer: true,
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["iPhone 13"], browserName: "chromium", isMobile: false } },
+    { name: "chromium", use: { ...devices["Desktop Chrome"], ...ciBrowser } },
+    {
+      name: "mobile",
+      use: { ...devices["iPhone 13"], browserName: "chromium", isMobile: false, ...ciBrowser },
+    },
   ],
 });
