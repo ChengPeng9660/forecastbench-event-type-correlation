@@ -199,7 +199,7 @@ describe("global-baseline stability contract", () => {
       const payload = JSON.parse(readFileSync(join(dataRoot, path), "utf8")) as GlobalPartnerProfiles;
       expect(payload.schema_version).toBe(globalManifest.schema_version);
       expect(payload.focal_model_id).toBe(modelId);
-      expect(payload.profiles).toHaveLength(topicIds.length * metricIds.length * sampleIds.length * comparisonIds.length);
+      expect(payload.profiles).toHaveLength(scopeIds.length * topicIds.length * metricIds.length * sampleIds.length * comparisonIds.length);
       expect(payload.profiles.every((profile) => profile.focal_model_id === modelId)).toBe(true);
     }
 

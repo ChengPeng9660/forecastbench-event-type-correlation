@@ -55,7 +55,7 @@
 - Suppressed coefficients below 30 defined pairs, labeled 30--99 limited, and
   reserved headline descriptive status for at least 100 pairs. The released
   cells comprise 99 headline, 19 limited, and eight insufficient results.
-- Near-BI median Spearman stability was 0.337 for POG, 0.279 for high-loss
+- Near-BI median Spearman stability was 0.337 for POG, 0.275 for high-loss
   lift, and 0.240 for adjusted-loss correlation. Finance × Sports and Climate
   × Finance were among the most stable comparisons; Health × Technology was
   approximately uncorrelated or reversed.
@@ -64,3 +64,27 @@
   site.
 - Kept the release descriptive: no iid p-values, significance stars, causal
   topic claim, OOS claim, or deployable aggregation-gain claim is made.
+
+## 2026-08-19 — Global dependence and rank-stability baseline
+
+- Rebuilt the complete release on one 263-model exact clean-LLM universe after
+  excluding three `LLM Crowd` aggregate rows at the scoring boundary.
+- Recomputed all three pair diagnostics directly from target-level losses for
+  Official Full and the Seven-topic Union; the release contains 68,906 pooled
+  pair rows across 34,453 unordered pairs.
+- Added a leave-one-topic-out transfer test as the primary global-to-topic
+  comparison, with inclusive global comparisons retained only as sensitivity.
+- Published 168 pair-rank cells, 44,184 focal-model partner rows, 168 partner
+  summaries, 2,367 individual-model ability rows, and 28 BI-rank controls.
+- Under Official Full, near-BI, leave-one-topic-out comparisons, median pair-
+  rank Spearman across topics was 0.426 for POG, 0.389 for high-loss lift, and
+  0.443 for loss correlation. Entertainment lift was suppressed for inadequate
+  support.
+- Individual-model BI ranks were much more stable in Finance (`0.821`),
+  Politics (`0.879`), Sports (`0.802`), and Technology (`0.885`, limited) than
+  in Health (`0.301`); Entertainment was suppressed at 28 models.
+- Replaced a 78 MB browser payload with 263 deterministic per-model profile
+  shards. Every shard has 168 rows and is loaded only after model selection.
+- Validation: 66 Python tests passed with one skipped; 19 Vitest tests passed
+  with one expected skip; 13 Playwright desktop/mobile tests passed with one
+  expected skip; an independent 543-file rerun was byte-identical.

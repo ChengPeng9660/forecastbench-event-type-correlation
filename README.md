@@ -36,6 +36,12 @@ topic remains dependent in another among pairs that are near-BI in both. A
 complete 723,513-row audit archive retains ineligible and undefined cases
 rather than selecting them away.
 
+The global baseline pools targets without an event-type split, then compares
+that ordering with each topic. Its primary transfer view removes the selected
+topic from the global baseline before computing ranks, avoiding mechanical
+self-inclusion. The release also tests each focal model's partner ordering and
+reports individual-model BI rank as a separate ability control.
+
 ## Interpretation
 
 The three statistics are descriptive diagnostics of realized, difficulty-adjusted losses:

@@ -1,29 +1,29 @@
 {
-  "analysis_commit": "54c5cce1ede002524d1fddf9929d56041e29f112",
+  "analysis_commit": "447d8a780b9c84bcb126d69492b099408b08d547",
   "audit_json": "cross-type/audit.json",
   "files": {
     "audit_json": {
       "path": "audit.json",
-      "sha256": "9cf45a1c972784b3456e36bbf4c23e023afea48b32ee8d77f161b41187986278",
+      "sha256": "1b5a7fa0efbe06de8799dc901a2ee0d7bf70f8354372668b0417f2b801ba2ab0",
       "size_bytes": 1497
     },
     "pair_details_gzip": {
       "path": "pair-details.csv.gz",
-      "sha256": "f84f9c2ad1ebf53d83839cbb0fc259acf671c79cc618b3a36856dbb7af12e192",
-      "size_bytes": 22465201
+      "sha256": "57aa99b33449e7f1f83bae46d8a98cc2c9ae1502beb678d678b6fea4f84cbe5f",
+      "size_bytes": 21393777
     },
     "summary_csv": {
       "path": "summary.csv",
-      "sha256": "13cdc2070ffb0362a72c6fed298ad05c6894493fffd7a7c2e5e78aee541fdc2d",
-      "size_bytes": 61644
+      "sha256": "975de4edd25dc837f343040240e33ad710c6de0dfa06e794dfa9c2dd0efe5661",
+      "size_bytes": 61526
     },
     "summary_json": {
       "path": "summary.json",
-      "sha256": "bce063235084b2891c823160d3ca66a6a3e631b8677b03683839d60d4fa86b99",
-      "size_bytes": 158430
+      "sha256": "2d62d0f89aa64e30aa4955c86d2bcf2f25b95a5b76d68d1daf3a1bc41d27717c",
+      "size_bytes": 158312
     }
   },
-  "generated_at": "2026-08-19T04:42:02Z",
+  "generated_at": "2026-08-19T07:25:00Z",
   "metrics": [
     {
       "dependence_direction": "lower",

@@ -19,7 +19,7 @@
       "status": "pass"
     },
     {
-      "detail": "156,315 eligible pair-slice rows at n ≥ 50.",
+      "detail": "152,610 eligible pair-slice rows at n ≥ 50.",
       "id": "pair_metrics",
       "label": "Pair metrics generated",
       "status": "pass"
@@ -41,103 +41,103 @@
   "files": [
     {
       "path": "site/public/data/manifest.json",
-      "sha256": "aa73e5b3c299b92e1aa2cbf3343eb1e5a1f5c6e84b1f1a5dd29486fbd3023d23"
+      "sha256": "b9ec397255c96e239dd0cbe2738b66a47e8e34eb65b08a5c63d3f2ad0c95661d"
     },
     {
       "path": "site/public/data/models.json",
-      "sha256": "0066b38da3181f8e7d436bed103e451e33ddb8b66161d90a74fa8ba3d8486766"
+      "sha256": "778355cf919d5915c185633fb551405d3b4916ca7b7147b78bcd83b044eafed8"
     },
     {
       "path": "site/public/data/taxonomy.json",
-      "sha256": "f246fa23ce1cb44d6031a9bf27cdb73272c9d032d9fa9c45f18e2594a4805723"
+      "sha256": "265da2430c8a468ce22034a8322fe2c134e6afe17d5abe00c96ca3d20b99934f"
     },
     {
       "path": "site/public/data/event-types/finance_economics.json",
-      "sha256": "adee2653706c1970a7870450ebb48b582a498929f1300e4e223bd20707e21bdb"
+      "sha256": "fa5e5690c6d3c3a6a09595450912cc3ec017d1907ccac0b98b25a71eb7e8e506"
     },
     {
       "path": "site/public/data/event-types/politics_conflict.json",
-      "sha256": "086642cac7bd4ff1b9ee13184d989ef72846cd2f1022cb65315b1fc71e01e1a7"
+      "sha256": "f2908e09502db444c49d9e7e0a72207f887d67dc09a5bf67b3f18b19c92ae6a2"
     },
     {
       "path": "site/public/data/event-types/climate_weather.json",
-      "sha256": "aeace9438d33a90211106b0e5f811ede66b26937246ed9867194880e4af1bc53"
+      "sha256": "2fd08efac8e1a47ff0eb0aadaafd8cf61e38d19477a61061146accd8ca582629"
     },
     {
       "path": "site/public/data/event-types/health_science.json",
-      "sha256": "e31364d1b4331d4904661f98c9b9d085c4abfdfd558a5767a9d2445beec9b9d7"
+      "sha256": "05d8244928933cb423e4f575f90dd45f80139e72a61d83cfb18ce89c404506ee"
     },
     {
       "path": "site/public/data/event-types/technology_ai.json",
-      "sha256": "6c0aedbb81b14c6406b16c32a7aaae344c7c36253ff6b9f85e2718e980bb86dd"
+      "sha256": "d7b2c045b99c146c141887936362bd3c4b50d67b73bdcecb52e20df324b6ee19"
     },
     {
       "path": "site/public/data/event-types/sports.json",
-      "sha256": "8f3f89d8efdc0f33499b1797a2a97bbdf3758ce5f79509721eaad05d431f385d"
+      "sha256": "0f2c30283fa401f8e75ac40742a366983e7cd59c01476887c8382ae761685c86"
     },
     {
       "path": "site/public/data/event-types/entertainment_culture.json",
-      "sha256": "1f6dbcb5e6d51c558ee760d40c8b0755d14193683fa98dac30fafb12e05eff8d"
+      "sha256": "2722ae5ac06f69ae35cb2f61aba75163ca1c3047cd49b1350e36f1d10301a21d"
     },
     {
       "path": "site/public/data/event-types/origin_type_dataset.json",
-      "sha256": "2585679445c728527f51aa1be0354e2f539badb0aecbdd0c0407f0f3d2eabd0d"
+      "sha256": "a198b5652e950bd1bc41bb636587257b24eaeef82a1b52613e9c5df1c71ff90f"
     },
     {
       "path": "site/public/data/event-types/origin_type_market.json",
-      "sha256": "f40d94915fb6f2fed8d33741297c26ce634dd26b506cb194758150427fe68f33"
+      "sha256": "bd4495326733ef12ba51fb17619b04106ba17ef032a1bbe6f85ce324bdbea982"
     },
     {
       "path": "site/public/data/event-types/official_source_acled.json",
-      "sha256": "b25ce7251ae84064cf16b37c1bca23d3f2f21c429f192e79e55752f238877f92"
+      "sha256": "11a22cd7bf8c7af6e48d1fdefbdd5b50197b6c106769c460bc8ff957907ebcee"
     },
     {
       "path": "site/public/data/event-types/official_source_dbnomics.json",
-      "sha256": "3259af11a18fa3f46d3e7dc15c8745972cc83cc42ca7fd0a8f792b8fc8940462"
+      "sha256": "41c532f0eb3e69bbc6b7d9902623efef257d48832e523d4e10a86cdfd7fb01f1"
     },
     {
       "path": "site/public/data/event-types/official_source_fred.json",
-      "sha256": "837f77221cdfe7ef48f94aafdd98a8ec1ae14ee2dea945b0d37e9046ca7732fc"
+      "sha256": "d3b248b392b805356ced95e5c5e8d2a1e3e724b9dd0f282f2c91fc4a29d70fe4"
     },
     {
       "path": "site/public/data/event-types/official_source_infer.json",
-      "sha256": "80ab4bb66b2f006fc88b2a672d7393e9eb3d025abbf1da1584c40d950fceeee3"
+      "sha256": "0b629ec9d2931c1824ccec65824c328d410dba7c0730779b43c34d6f4e7ecd77"
     },
     {
       "path": "site/public/data/event-types/official_source_manifold.json",
-      "sha256": "d8c1b266d7ded8607f651a99865c017a2cf17a5e379207882bb739315cd35fd7"
+      "sha256": "f5a71809814858c23a7a5874f87b5853e62e312e065adf2c602f1e3050103578"
     },
     {
       "path": "site/public/data/event-types/official_source_metaculus.json",
-      "sha256": "46a89b121bcb289675a47567bb541a2035a6344bdcb29412185d716802b7873a"
+      "sha256": "b391fa14336ac423bbe7e6492743bbf4295271efe0aa6d4bc3cf749be96183db"
     },
     {
       "path": "site/public/data/event-types/official_source_polymarket.json",
-      "sha256": "4ab8c25199658ddfbfdaf8024b3cd89a1d14e5d11799b510db2871c5b8116c02"
+      "sha256": "02df1c264768edfd099afb718c5eac0c7a0bd058e6dff01c304921f3d330bddc"
     },
     {
       "path": "site/public/data/event-types/official_source_wikipedia.json",
-      "sha256": "073080909690583ae1eaa8073480ba3df85b72b57010b320645275958d660394"
+      "sha256": "ba4aa49952e0ec247bc15206f2d33297d499585e6e5db26ebb61d1f33a5d6085"
     },
     {
       "path": "site/public/data/event-types/official_source_yahoo_finance.json",
-      "sha256": "8862b8d9200730001000e7af17e13708ff07a686fd1de29e8df39d3aebbb6214"
+      "sha256": "57fcb362e9cd10bb8203bbc241bd937f3577e7d4545a4f03e5a596579530d78c"
     },
     {
       "path": "data/derived/pair_metrics_all.csv.gz",
-      "sha256": "4175a196c8c756c48af1001c5d7dbffe49e51c28ccf06091e6d68c5328e7bc2f"
+      "sha256": "7364cad8c6f5897ff0adbd1941818724bb754a4aaa9f018e500b9d508118c98c"
     },
     {
       "path": "data/derived/pair_metrics_eligible.csv.gz",
-      "sha256": "d774625442c69a714494c15c26467abfc877c93138c2bc3744f3bb3e0260f9d2"
+      "sha256": "c177c9eca5282b76c042471a83dfa1947fd3e75f9ad1149b0170020d8bf7a43f"
     },
     {
       "path": "data/derived/analysis_audit.json",
-      "sha256": "2fff92d7c36ad41a271da6543f5955411717839a081c3cf5556eb9723f7bcb7f"
+      "sha256": "70afd7645be341306623efb1304cac65d9fe83ce610578dc615168b7da1bacd9"
     }
   ],
   "fixture": false,
-  "generated_at": "2026-08-18T18:40:48Z",
+  "generated_at": "2026-08-19T07:25:00Z",
   "status": "pass",
   "thresholds": {
     "high_loss_threshold": 0.25,
