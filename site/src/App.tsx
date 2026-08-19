@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Heatmap } from "./components/Heatmap";
 import { CrossTypeStability } from "./components/CrossTypeStability";
+import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
 import { PairRanking } from "./components/PairRanking";
-import { loadAppData, loadCrossTypeData, loadEventType } from "./lib/data";
-import type { AppData, CrossTypeData, EventTypeData, MetricId, PairMetrics } from "./types/data";
+import { loadAppData, loadCrossTypeData, loadEventType, loadGlobalBaselineData } from "./lib/data";
+import type { AppData, CrossTypeData, EventTypeData, GlobalBaselineData, MetricId, PairMetrics } from "./types/data";
 
 interface Filters {
   eventType: string;
@@ -95,6 +96,9 @@ export default function App() {
   const [crossTypeData, setCrossTypeData] = useState<CrossTypeData | null>(null);
   const [crossTypeLoading, setCrossTypeLoading] = useState(true);
   const [crossTypeError, setCrossTypeError] = useState("");
+  const [globalBaselineData, setGlobalBaselineData] = useState<GlobalBaselineData | null>(null);
+  const [globalBaselineLoading, setGlobalBaselineLoading] = useState(true);
+  const [globalBaselineError, setGlobalBaselineError] = useState("");
 
   useEffect(() => {
     loadAppData().then(setAppData).catch((reason: Error) => setError(reason.message));
@@ -105,6 +109,13 @@ export default function App() {
       .then(setCrossTypeData)
       .catch((reason: Error) => setCrossTypeError(reason.message))
       .finally(() => setCrossTypeLoading(false));
+  }, []);
+
+  useEffect(() => {
+    loadGlobalBaselineData()
+      .then(setGlobalBaselineData)
+      .catch((reason: Error) => setGlobalBaselineError(reason.message))
+      .finally(() => setGlobalBaselineLoading(false));
   }, []);
 
   useEffect(() => {
@@ -133,7 +144,7 @@ export default function App() {
   }, [appData, filters.eventType]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
     params.set("type", filters.eventType);
     params.set("metric", filters.metric);
     if (filters.model) params.set("model", filters.model);
@@ -204,7 +215,7 @@ export default function App() {
           <span><strong>ForecastBench</strong><small>DEPENDENCE ATLAS</small></span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#matrix">Matrix</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
+          <a className="active" href="#matrix">Matrix</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
         </nav>
         <div className="build-state"><i /> {appData.manifest.fixture ? "Sample build" : "Verified build"}</div>
       </header>
@@ -250,6 +261,8 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        <GlobalBaseline data={globalBaselineData} models={appData.models} loading={globalBaselineLoading} error={globalBaselineError} />
 
         <CrossTypeStability data={crossTypeData} loading={crossTypeLoading} error={crossTypeError} />
 

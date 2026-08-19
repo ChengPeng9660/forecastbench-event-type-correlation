@@ -20,13 +20,13 @@
   event-level decisions plus the stratified error-audit fixes for sports-title,
   equity-price, cryptography, defense-policy, energy-trade, and entity-word
   ambiguities. Eleven eligible rows remain review-required by design.
-- Generated 1,050,945 scored rows from 266 exact model names across 18 dates.
-  Of 1,063 JSON files considered, 181 filename-identifiable non-clean files
+- Generated 1,046,424 scored rows from 263 exact model names across 18 dates.
+  Of 1,063 JSON files considered, 184 filename-identifiable non-clean files
   were excluded before read and two additional payload-identified non-clean
   files were excluded after read. All remaining clean-candidate reads had zero
   errors; no file-read exception was tolerated.
-- Computed 634,410 rows: 35,245 global unordered model pairs crossed with seven
-  topic, two origin, and nine source slices. Of these, 156,315 meet common
+- Computed 620,154 rows: 34,453 global unordered model pairs crossed with seven
+  topic, two origin, and nine source slices. Of these, 152,610 meet common
   support `n >= 50`.
 - Verified zero scored-row taxonomy misses, 21,252 analytical official targets,
   2,857 unique source-events, explicit null reasons, finite POG/lift, and
@@ -44,8 +44,8 @@
 ## 2026-08-19 — Cross-event-type pair stability release
 
 - Added a prespecified cross-topic experiment over all 21 unordered pairs of
-  the seven semantic topics and all 35,245 exact-model pairs.
-- Published 740,145 auditable pair-topic-pair rows and 126 summary cells: 21
+  the seven semantic topics and all 34,453 exact-model pairs.
+- Published 723,513 auditable pair-topic-pair rows and 126 summary cells: 21
   topic pairs crossed with three metrics and near-BI-both / eligible-both
   samples.
 - Required `n_overlap >= 50` and a finite metric in both topics; the primary

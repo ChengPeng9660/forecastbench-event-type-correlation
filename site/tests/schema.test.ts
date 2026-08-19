@@ -4,7 +4,13 @@ import { describe, expect, it } from "vitest";
 import manifest from "../public/data/manifest.json";
 import models from "../public/data/models.json";
 import type { EventTypeData } from "../src/types/data";
-import type { CrossTypeManifest, CrossTypeSummary } from "../src/types/data";
+import type {
+  CrossTypeManifest,
+  CrossTypeSummary,
+  GlobalBaselineManifest,
+  GlobalBaselineSummary,
+  GlobalPartnerProfiles,
+} from "../src/types/data";
 
 const dataRoot = resolve(process.cwd(), "public/data");
 const slices = manifest.event_types.map((reference) =>
@@ -133,6 +139,82 @@ describe("cross-event-type stability contract", () => {
         expect(cell.n_defined_pairs).toBeLessThan(crossManifest.thresholds.headline_min_defined_pairs);
       } else {
         expect(cell.n_defined_pairs).toBeGreaterThanOrEqual(crossManifest.thresholds.headline_min_defined_pairs);
+      }
+    }
+  });
+});
+
+const globalManifestPath = join(dataRoot, "global-baseline", "manifest.json");
+const globalBaselinePublished = existsSync(globalManifestPath);
+
+describe("global-baseline stability contract", () => {
+  it("never ships a partial global-baseline release", () => {
+    if (!globalBaselinePublished) {
+      expect(existsSync(join(dataRoot, "global-baseline", "summary.json"))).toBe(false);
+      return;
+    }
+    const globalManifest = JSON.parse(readFileSync(globalManifestPath, "utf8")) as GlobalBaselineManifest;
+    for (const path of [
+      globalManifest.summary_json,
+      globalManifest.pair_metrics_gzip,
+      globalManifest.pair_stability_csv,
+      globalManifest.partner_stability_gzip,
+      globalManifest.partner_summary_csv,
+      globalManifest.model_ability_csv,
+      globalManifest.ability_stability_csv,
+      globalManifest.audit_json,
+    ]) expect(existsSync(join(dataRoot, path))).toBe(true);
+    for (const path of Object.values(globalManifest.partner_profile_files)) expect(existsSync(join(dataRoot, path))).toBe(true);
+  });
+
+  it.skipIf(!globalBaselinePublished)("keeps global, transfer, partner, and ability outputs aligned", () => {
+    const globalManifest = JSON.parse(readFileSync(globalManifestPath, "utf8")) as GlobalBaselineManifest;
+    const summary = JSON.parse(readFileSync(join(dataRoot, globalManifest.summary_json), "utf8")) as GlobalBaselineSummary;
+    const scopeIds = globalManifest.global_scopes.map((scope) => scope.id);
+    const topicIds = globalManifest.topics.map((topic) => topic.id);
+    const metricIds = globalManifest.metrics.map((metric) => metric.id);
+    const sampleIds = globalManifest.samples.map((sample) => sample.id);
+    const comparisonIds = globalManifest.comparison_modes.map((mode) => mode.id);
+
+    expect(globalManifest.schema_version).toBe(summary.schema_version);
+    expect(scopeIds).toHaveLength(2);
+    expect(topicIds).toHaveLength(7);
+    expect(metricIds).toHaveLength(3);
+    expect(sampleIds).toHaveLength(2);
+    expect(comparisonIds).toEqual(["leave_topic_out", "inclusive_global"]);
+    expect(globalManifest.comparison_modes.filter((mode) => mode.primary).map((mode) => mode.id)).toEqual(["leave_topic_out"]);
+    expect(summary.global_pair_summary).toHaveLength(scopeIds.length * metricIds.length * sampleIds.length);
+    expect(summary.pair_stability).toHaveLength(scopeIds.length * topicIds.length * metricIds.length * sampleIds.length * comparisonIds.length);
+    expect(summary.partner_summary).toHaveLength(scopeIds.length * topicIds.length * metricIds.length * sampleIds.length * comparisonIds.length);
+    expect(summary.ability_stability).toHaveLength(scopeIds.length * topicIds.length * comparisonIds.length);
+
+    const publishedModelIds = new Set(models.map((model) => model.id));
+    const profileEntries = Object.entries(globalManifest.partner_profile_files);
+    expect(profileEntries).toHaveLength(263);
+    expect(profileEntries.every(([modelId]) => publishedModelIds.has(modelId))).toBe(true);
+    const profileRoot = join(dataRoot, "global-baseline", "partner-profiles");
+    const expectedProfileFiles = profileEntries.map(([, path]) => path.replace("global-baseline/partner-profiles/", "")).sort();
+    expect(readdirSync(profileRoot).filter((file) => file.endsWith(".json")).sort()).toEqual(expectedProfileFiles);
+    for (const [modelId, path] of profileEntries) {
+      const payload = JSON.parse(readFileSync(join(dataRoot, path), "utf8")) as GlobalPartnerProfiles;
+      expect(payload.schema_version).toBe(globalManifest.schema_version);
+      expect(payload.focal_model_id).toBe(modelId);
+      expect(payload.profiles).toHaveLength(topicIds.length * metricIds.length * sampleIds.length * comparisonIds.length);
+      expect(payload.profiles.every((profile) => profile.focal_model_id === modelId)).toBe(true);
+    }
+
+    for (const row of summary.pair_stability) {
+      expect(scopeIds).toContain(row.global_scope);
+      expect(topicIds).toContain(row.topic_id);
+      expect(metricIds).toContain(row.metric_id);
+      expect(sampleIds).toContain(row.sample_id);
+      expect(comparisonIds).toContain(row.comparison_mode);
+      expect(row.n_defined_pairs).toBeLessThanOrEqual(row.n_sample_pairs);
+      expect(row.n_sample_pairs).toBeLessThanOrEqual(row.n_pair_universe);
+      for (const coefficient of [row.spearman, row.pearson]) expect(coefficient === null || (coefficient >= -1 && coefficient <= 1)).toBe(true);
+      if (row.interpretation_status === "insufficient") {
+        expect(row.spearman).toBeNull();
+        expect(row.reason).toBeTruthy();
       }
     }
   });

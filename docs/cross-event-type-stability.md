@@ -10,9 +10,9 @@ aggregation test and does not estimate a causal topic effect.
 ## Released design
 
 - Seven analysis-eligible derived topics form 21 unordered topic pairs.
-- The global universe contains 266 exact model names and 35,245 unordered
+- The global universe contains 263 exact model names and 34,453 unordered
   model pairs.
-- The all-pair detail archive retains all `21 * 35,245 = 740,145` rows,
+- The all-pair detail archive retains all `21 * 34,453 = 723,513` rows,
   including ineligible, non-near-BI, and undefined-metric cases.
 - The primary sample requires eligibility, a finite metric, and near-BI in
   both topics. The sensitivity sample requires eligibility and a finite metric

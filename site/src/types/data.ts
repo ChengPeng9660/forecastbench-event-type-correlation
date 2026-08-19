@@ -214,3 +214,189 @@ export interface CrossTypeData {
   manifest: CrossTypeManifest;
   summary: CrossTypeSummary;
 }
+
+export type GlobalBaselineScopeId = "official_full" | "seven_topic_union";
+export type GlobalBaselineSampleId = "near_bi_both" | "eligible_both";
+export type GlobalBaselineComparisonModeId = "leave_topic_out" | "inclusive_global";
+export type GlobalBaselineInterpretationStatus = "headline" | "limited" | "insufficient";
+
+export interface GlobalBaselineScope {
+  id: GlobalBaselineScopeId;
+  label: string;
+  description: string;
+}
+
+export interface GlobalBaselineMetric {
+  id: MetricId;
+  label: string;
+  dependence_direction: "higher" | "lower";
+}
+
+export interface GlobalBaselineSample {
+  id: GlobalBaselineSampleId;
+  label: string;
+  primary: boolean;
+}
+
+export interface GlobalBaselineComparisonMode {
+  id: GlobalBaselineComparisonModeId;
+  label: string;
+  description: string;
+  primary: boolean;
+}
+
+export interface GlobalBaselineTopic {
+  id: string;
+  label_en: string;
+}
+
+export interface GlobalBaselineManifest {
+  schema_version: string;
+  generated_at: string;
+  global_scopes: GlobalBaselineScope[];
+  topics: GlobalBaselineTopic[];
+  metrics: GlobalBaselineMetric[];
+  samples: GlobalBaselineSample[];
+  comparison_modes: GlobalBaselineComparisonMode[];
+  thresholds: {
+    min_overlap: number;
+    near_bi_gap: number;
+    high_loss_threshold: number;
+    min_partners: number;
+    reporting_min_defined: number;
+    headline_min_defined: number;
+    quartile: number;
+  };
+  summary_json: string;
+  partner_profile_files: Record<string, string>;
+  pair_metrics_gzip: string;
+  pair_stability_csv: string;
+  partner_stability_gzip: string;
+  partner_summary_csv: string;
+  model_ability_csv: string;
+  ability_stability_csv: string;
+  audit_json: string;
+}
+
+export interface GlobalPairSummaryRow {
+  global_scope: GlobalBaselineScopeId;
+  metric_id: MetricId;
+  sample_id: GlobalBaselineSampleId;
+  n_pair_universe: number;
+  n_sample_pairs: number;
+  n_defined_pairs: number;
+  mean: number | null;
+  median: number | null;
+  q25: number | null;
+  q75: number | null;
+  min: number | null;
+  max: number | null;
+  reason: string | null;
+  interpretation_status: GlobalBaselineInterpretationStatus;
+}
+
+export interface GlobalPairStabilityRow {
+  global_scope: GlobalBaselineScopeId;
+  topic_id: string;
+  metric_id: MetricId;
+  sample_id: GlobalBaselineSampleId;
+  comparison_mode: GlobalBaselineComparisonModeId;
+  n_pair_universe: number;
+  n_sample_pairs: number;
+  n_defined_pairs: number;
+  spearman: number | null;
+  pearson: number | null;
+  dependent_top_jaccard: number | null;
+  complementary_top_jaccard: number | null;
+  dependency_persistence_global_to_topic: number | null;
+  dependency_persistence_topic_to_global: number | null;
+  complementarity_persistence_global_to_topic: number | null;
+  complementarity_persistence_topic_to_global: number | null;
+  dependency_to_complementarity_global_to_topic: number | null;
+  dependency_to_complementarity_topic_to_global: number | null;
+  quartile_transition_counts: Record<string, number>;
+  reason: string | null;
+  interpretation_status: GlobalBaselineInterpretationStatus;
+}
+
+export interface GlobalPartnerSummaryRow {
+  global_scope: GlobalBaselineScopeId;
+  topic_id: string;
+  metric_id: MetricId;
+  sample_id: GlobalBaselineSampleId;
+  comparison_mode: GlobalBaselineComparisonModeId;
+  n_focal_model_universe: number;
+  n_reportable_focal_models: number;
+  n_limited_focal_models: number;
+  n_headline_focal_models: number;
+  median_spearman: number | null;
+  q25_spearman: number | null;
+  q75_spearman: number | null;
+  min_spearman: number | null;
+  max_spearman: number | null;
+  fraction_negative_spearman: number | null;
+  median_defined_partners: number | null;
+  mean_dependent_top_jaccard: number | null;
+  mean_complementary_top_jaccard: number | null;
+  reason: string | null;
+  interpretation_status: GlobalBaselineInterpretationStatus;
+}
+
+export interface GlobalAbilityStabilityRow {
+  global_scope: GlobalBaselineScopeId;
+  topic_id: string;
+  comparison_mode: GlobalBaselineComparisonModeId;
+  n_model_universe: number;
+  n_sample_models: number;
+  n_defined_models: number;
+  spearman: number | null;
+  pearson: number | null;
+  top_quartile_jaccard: number | null;
+  global_top_quartile_retained: number | null;
+  topic_top_quartile_retained: number | null;
+  reason: string | null;
+  interpretation_status: GlobalBaselineInterpretationStatus;
+}
+
+export interface GlobalPartnerProfileRow {
+  global_scope: GlobalBaselineScopeId;
+  topic_id: string;
+  metric_id: MetricId;
+  sample_id: GlobalBaselineSampleId;
+  comparison_mode: GlobalBaselineComparisonModeId;
+  focal_model_id: string;
+  focal_model_name: string;
+  n_defined_partners: number;
+  spearman: number | null;
+  pearson: number | null;
+  global_top_complementary_partner_name: string | null;
+  global_top_complementary_partner_retained: boolean | 0 | 1 | null;
+  global_top_complementary_partner_topic_percentile: number | null;
+  reason: string | null;
+  interpretation_status: GlobalBaselineInterpretationStatus;
+}
+
+export interface GlobalPartnerProfiles {
+  schema_version: string;
+  focal_model_id: string;
+  profiles: GlobalPartnerProfileRow[];
+}
+
+export interface GlobalBaselineSummary {
+  schema_version: string;
+  global_scopes: GlobalBaselineScope[];
+  topic_ids: string[];
+  metric_ids: MetricId[];
+  sample_ids: GlobalBaselineSampleId[];
+  comparison_modes: GlobalBaselineComparisonMode[];
+  thresholds: GlobalBaselineManifest["thresholds"];
+  global_pair_summary: GlobalPairSummaryRow[];
+  pair_stability: GlobalPairStabilityRow[];
+  partner_summary: GlobalPartnerSummaryRow[];
+  ability_stability: GlobalAbilityStabilityRow[];
+}
+
+export interface GlobalBaselineData {
+  manifest: GlobalBaselineManifest;
+  summary: GlobalBaselineSummary;
+}
