@@ -145,6 +145,8 @@ test("explores descriptive stability across seven event types without inventing 
   await expect(section.locator("button.cross-type-cell.limited")).toHaveCount(2);
   await expect(section.locator("button.cross-type-cell.insufficient")).toHaveCount(2);
   await expect(section.locator("button.cross-type-cell.insufficient").first()).not.toHaveAttribute("style", /background/);
+  await expect(page.getByTestId("cross-type-inspector")).toHaveCount(0);
+  await expect(section).not.toContainText("Select two event types");
 
   await section.getByRole("button", { name: /Finance & Economics and Politics & Conflict: Spearman/ }).click();
   const inspector = page.getByTestId("cross-type-inspector");
@@ -154,7 +156,7 @@ test("explores descriptive stability across seven event types without inventing 
   await expect(inspector).toContainText("Dependency → complementarity flip");
 
   await section.getByRole("tab", { name: "Adjusted High-loss Lift" }).click();
-  await expect(inspector.getByRole("heading", { name: "Select two event types" })).toBeVisible();
+  await expect(page.getByTestId("cross-type-inspector")).toHaveCount(0);
   await section.getByRole("button", { name: "All eligible pairs" }).click();
   await expect(section.getByRole("button", { name: "All eligible pairs" })).toHaveAttribute("aria-pressed", "true");
   await expect(section.getByRole("link", { name: "Summary CSV ↓" })).toHaveAttribute("href", /data\/cross-type\/summary\.csv$/);
