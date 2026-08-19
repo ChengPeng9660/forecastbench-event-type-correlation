@@ -1,10 +1,26 @@
 import type { MetricDefinition, MetricId, PairMetrics } from "../types/data";
 
+export const MODEL_DEPENDENCE_DIRECTION: Record<MetricId, "higher" | "lower"> = {
+  adjusted_pog: "lower",
+  high_loss_lift: "higher",
+  adjusted_loss_corr: "higher",
+};
+
+export function orientMetricToDependence(metric: MetricDefinition): MetricDefinition {
+  return { ...metric, direction: MODEL_DEPENDENCE_DIRECTION[metric.id] };
+}
+
+export function dependenceDirectionLabel(metricId: MetricId): string {
+  return MODEL_DEPENDENCE_DIRECTION[metricId] === "higher"
+    ? "HIGHER → HIGHER DEPENDENCE"
+    : "LOWER → HIGHER DEPENDENCE";
+}
+
 export function findPair(pairs: PairMetrics[], a: string, b: string): PairMetrics | undefined {
   return pairs.find((pair) => (pair.a === a && pair.b === b) || (pair.a === b && pair.b === a));
 }
 
-export function aggregationScore(value: number | null, metric: MetricDefinition, values: number[]): number {
+export function dependenceScore(value: number | null, metric: MetricDefinition, values: number[]): number {
   if (value === null || values.length === 0) return Number.NEGATIVE_INFINITY;
   const min = Math.min(...values);
   const max = Math.max(...values);

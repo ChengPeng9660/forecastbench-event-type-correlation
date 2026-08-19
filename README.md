@@ -6,9 +6,13 @@ An auditable, reproducible analysis of pairwise model dependence in ForecastBenc
 
 The project reports three outcome-level diagnostics on the official fixed-effect scoring sample:
 
-- Adjusted Pairwise Oracle Gain (higher indicates more complementary realized losses).
-- Adjusted High-Loss Lift at the 0.25 threshold (lower indicates fewer shared severe losses).
-- Adjusted-Loss Pearson Correlation (lower indicates less redundant loss patterns).
+- Adjusted Pairwise Oracle Gain (lower indicates higher model dependence).
+- Adjusted High-Loss Lift at the 0.25 threshold (higher indicates higher model dependence).
+- Adjusted-Loss Pearson Correlation (higher indicates higher model dependence).
+
+The website orients every pairwise view toward model dependence: purple means
+higher dependence and gold means lower dependence. Published metric values keep
+their original formulas and scales; only their display direction is unified.
 
 The repository separates official provenance dimensions (`Dataset`/`Market` and source) from a clearly labeled derived topic taxonomy. Large raw ForecastBench files are not vendored; reproducible commands, source manifests, derived public results, audit reports, and the GitHub Pages explorer are included.
 
@@ -36,11 +40,14 @@ topic remains dependent in another among pairs that are near-BI in both. A
 complete 723,513-row audit archive retains ineligible and undefined cases
 rather than selecting them away.
 
-The global baseline pools targets without an event-type split, then compares
-that ordering with each topic. Its primary transfer view removes the selected
-topic from the global baseline before computing ranks, avoiding mechanical
-self-inclusion. The release also tests each focal model's partner ordering and
-reports individual-model BI rank as a separate ability control.
+The global baseline pools targets without an event-type split and includes a
+three-metric pairwise heatmap over the same 263-model clean universe. Its
+compact browser view displays 30 high-coverage models in release order while
+all models remain filterable. The baseline then compares its pair ordering with
+each topic. Its primary transfer view removes the selected topic before
+computing ranks, avoiding mechanical self-inclusion. The release also tests
+each focal model's partner ordering and reports individual-model BI rank as a
+separate ability control.
 
 ## Interpretation
 

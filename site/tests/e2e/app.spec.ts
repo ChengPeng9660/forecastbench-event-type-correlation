@@ -1,4 +1,12 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
+
+const publishedModels = JSON.parse(readFileSync(new URL("../../public/data/models.json", import.meta.url), "utf8")) as Array<{
+  id: string;
+  name: string;
+  provider: string;
+  release_order: number;
+}>;
 
 const crossTypeTopics = [
   ["finance_economics", "Finance & Economics"],
@@ -11,9 +19,9 @@ const crossTypeTopics = [
 ].map(([id, label_en]) => ({ id, label_en }));
 
 const crossTypeMetrics = [
-  { id: "adjusted_pog", label: "Adjusted Pairwise Oracle Gain", dependence_direction: "higher" },
-  { id: "high_loss_lift", label: "Adjusted High-loss Lift", dependence_direction: "lower" },
-  { id: "adjusted_loss_corr", label: "Adjusted-loss Correlation", dependence_direction: "lower" },
+  { id: "adjusted_pog", label: "Adjusted Pairwise Oracle Gain", dependence_direction: "lower" },
+  { id: "high_loss_lift", label: "Adjusted High-loss Lift", dependence_direction: "higher" },
+  { id: "adjusted_loss_corr", label: "Adjusted-loss Correlation", dependence_direction: "higher" },
 ];
 
 const crossTypeSamples = [
@@ -173,6 +181,10 @@ function globalBaselineFixture() {
     thresholds: { min_overlap: 50, near_bi_gap: .05, high_loss_threshold: .25, min_partners: 20, reporting_min_defined: 30, headline_min_defined: 100, quartile: .25 },
     summary_json: "global-baseline/summary.json",
     partner_profile_files: { "m-1f526d2cc0ff": "global-baseline/partner-profiles/m-1f526d2cc0ff.json" },
+    pair_matrix_files: {
+      official_full: "global-baseline/pair-matrices/official_full.json",
+      seven_topic_union: "global-baseline/pair-matrices/seven_topic_union.json",
+    },
     pair_metrics_gzip: "global-baseline/pair-metrics.csv.gz",
     pair_stability_csv: "global-baseline/pair-stability.csv",
     partner_stability_gzip: "global-baseline/partner-stability.csv.gz",
@@ -181,6 +193,18 @@ function globalBaselineFixture() {
     ability_stability_csv: "global-baseline/ability-stability.csv",
     audit_json: "global-baseline/audit.json",
   };
+  const matrixModels = publishedModels.filter((model) => !model.name.startsWith("LLM Crowd")).slice(0, 35);
+  const matrixFields = ["model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi", "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason", "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason"];
+  const pairMatrix = (globalScope: "official_full" | "seven_topic_union") => ({
+    schema_version: "1.0.0",
+    global_scope: globalScope,
+    models: matrixModels.map((model) => ({ id: model.id, name: model.name, organization: model.provider })),
+    fields: matrixFields,
+    pairs: matrixModels.flatMap((left, leftIndex) => matrixModels.slice(leftIndex + 1).map((right, offset) => {
+      const index = leftIndex * matrixModels.length + offset;
+      return [left.id, right.id, 70 + index % 180, 2 + index % 5, true, index % 4 !== 0, null, null, .01 + (index % 80) / 1000, null, .8 + (index % 90) / 50, null, -.3 + (index % 60) / 100, null];
+    })),
+  });
   const profiles = crossTypeTopics.map((topic, topicIndex) => ({
     global_scope: "official_full",
     comparison_mode: "leave_topic_out",
@@ -216,6 +240,10 @@ function globalBaselineFixture() {
       ability_stability: abilityStability,
     },
     profiles: { schema_version: "1.0.0", focal_model_id: "m-1f526d2cc0ff", profiles },
+    matrices: {
+      official_full: pairMatrix("official_full"),
+      seven_topic_union: pairMatrix("seven_topic_union"),
+    },
   };
 }
 
@@ -295,8 +323,8 @@ test("explores descriptive stability across seven event types without inventing 
   const inspector = page.getByTestId("cross-type-inspector");
   await expect(inspector.getByRole("heading", { name: "Finance & Economics × Politics & Conflict" })).toBeVisible();
   await expect(inspector).toContainText("Common defined pairs");
-  await expect(inspector).toContainText("Dependent top/top");
-  await expect(inspector).toContainText("Dependency → complementarity flip");
+  await expect(inspector).toContainText("High-dependence top/top");
+  await expect(inspector).toContainText("High-dependence → low-dependence flip");
 
   await section.getByRole("tab", { name: "Adjusted High-loss Lift" }).click();
   await expect(page.getByTestId("cross-type-inspector")).toHaveCount(0);
@@ -308,9 +336,13 @@ test("explores descriptive stability across seven event types without inventing 
 
 test("compares the no-topic baseline with topic and focal-model rankings", async ({ page }) => {
   const fixture = globalBaselineFixture();
+  let officialMatrixRequests = 0;
+  let unionMatrixRequests = 0;
   await page.route("**/data/global-baseline/manifest.json", (route) => route.fulfill({ json: fixture.manifest }));
   await page.route("**/data/global-baseline/summary.json", (route) => route.fulfill({ json: fixture.summary }));
   await page.route("**/data/global-baseline/partner-profiles/m-1f526d2cc0ff.json", (route) => route.fulfill({ json: fixture.profiles }));
+  await page.route("**/data/global-baseline/pair-matrices/official_full.json", (route) => { officialMatrixRequests += 1; return route.fulfill({ json: fixture.matrices.official_full }); });
+  await page.route("**/data/global-baseline/pair-matrices/seven_topic_union.json", (route) => { unionMatrixRequests += 1; return route.fulfill({ json: fixture.matrices.seven_topic_union }); });
   await page.goto("/");
 
   const section = page.getByTestId("global-baseline");
@@ -319,6 +351,37 @@ test("compares the no-topic baseline with topic and focal-model rankings", async
   await expect(section.getByRole("tab", { name: "Seven-topic Union" })).toBeVisible();
   await expect(section.getByRole("group", { name: "Global comparison mode" }).getByRole("button", { name: "Transfer test" })).toHaveAttribute("aria-pressed", "true");
   await expect(section.locator("button.global-topic-row")).toHaveCount(7);
+  await expect(section.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
+  await expect(section.getByText("Lower model dependence", { exact: true })).toBeVisible();
+  await expect(section.getByText("Higher model dependence", { exact: true })).toBeVisible();
+  await expect(section.getByLabel("Global matrix provider")).toBeVisible();
+  await expect(section.getByLabel("Global matrix model").locator("option")).toHaveCount(36);
+  await expect(section.getByTestId("global-matrix-selection")).toHaveCount(0);
+  await section.getByTestId("global-pair-heatmap").locator("button.heat-cell").first().click();
+  await expect(section.getByTestId("global-matrix-selection")).toContainText("n=");
+  await expect(section).not.toContainText("PAIR DETAIL");
+  expect(officialMatrixRequests).toBe(1);
+  const releaseOrder = new Map(publishedModels.map((model) => [model.name, model.release_order]));
+  const globalNames = await section.getByTestId("global-pair-heatmap").locator(".row-label span").allTextContents();
+  const globalOrders = globalNames.map((name) => releaseOrder.get(name) ?? Number.MAX_SAFE_INTEGER);
+  expect(globalNames).toHaveLength(30);
+  expect(globalOrders.every((value, index) => index === 0 || globalOrders[index - 1] <= value)).toBe(true);
+
+  await section.getByLabel("Global matrix provider").selectOption({ index: 1 });
+  await expect(page).toHaveURL(/global_provider=/);
+  await section.getByLabel("Global matrix minimum overlap").fill("100");
+  await expect(page).toHaveURL(/global_min_n=100/);
+  expect(officialMatrixRequests).toBe(1);
+  await section.getByRole("button", { name: "All eligible pairs" }).click();
+  await expect(page).toHaveURL(/global_sample=eligible_both/);
+  expect(officialMatrixRequests).toBe(1);
+  await section.getByRole("tab", { name: "Adjusted High-loss Lift" }).click();
+  await expect(page).toHaveURL(/global_metric=high_loss_lift/);
+  expect(officialMatrixRequests).toBe(1);
+  await section.getByLabel("Global matrix provider").selectOption("all");
+  await section.getByRole("tab", { name: "Seven-topic Union" }).click();
+  await expect(section.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
+  expect(unionMatrixRequests).toBe(1);
   await expect(section.getByTestId("global-topic-detail")).toHaveCount(0);
   await expect(section.locator("button.global-topic-row.insufficient .global-pair-score")).not.toHaveAttribute("style", /background/);
   await expect(section.getByRole("button", { name: /Health & Science: pair-rank Spearman/ }).locator(".global-rank-track.unavailable")).toHaveCount(1);
@@ -332,8 +395,18 @@ test("compares the no-topic baseline with topic and focal-model rankings", async
   await expect(page).toHaveURL(/global_comparison=inclusive_global/);
 
   await section.getByRole("button", { name: "Transfer test" }).click();
+  await section.getByRole("tab", { name: "Official Full" }).click();
+  await section.getByRole("tab", { name: "Adjusted Pairwise Oracle Gain" }).click();
+  await section.getByRole("button", { name: "Near-BI in both" }).click();
   await section.getByLabel("Global focal model").fill("GPT-3.5-Turbo-0125 (scratchpad with freeze values)");
   await expect(section.getByTestId("global-model-profile").locator(".global-profile-row")).toHaveCount(8);
   await expect(section.getByRole("link", { name: "Pair stability CSV ↓" })).toHaveAttribute("href", /global-baseline\/pair-stability\.csv$/);
   await expect(section.getByRole("link", { name: "Partner detail ↓" })).toHaveAttribute("href", /global-baseline\/partner-stability\.csv\.gz$/);
+  const retiredPhrases = new RegExp([
+    ["aggregation", "friendly"].join("-"),
+    ["aggregation", "value"].join(" "),
+    ["more", "complementary"].join(" "),
+    ["less", "complementary"].join(" "),
+  ].join("|"), "i");
+  expect(await page.locator("body").innerText()).not.toMatch(retiredPhrases);
 });

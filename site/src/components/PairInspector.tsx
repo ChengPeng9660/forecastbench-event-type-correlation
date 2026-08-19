@@ -1,4 +1,4 @@
-import { formatMetric } from "../lib/metrics";
+import { dependenceDirectionLabel, formatMetric } from "../lib/metrics";
 import type { Manifest, Model, PairMetrics } from "../types/data";
 
 interface PairInspectorProps {
@@ -29,7 +29,7 @@ export function PairInspector({ pair, models, manifest }: PairInspectorProps) {
           <div key={metric.id}>
             <span>{metric.short_label}</span>
             <strong>{formatMetric(pair.metrics[metric.id].value, metric.id)}</strong>
-            <small>{pair.metrics[metric.id].value === null ? (pair.metrics[metric.id].reason ?? "Missing value") : (metric.direction === "higher" ? "Higher is more complementary" : "Lower is more complementary")}</small>
+            <small>{pair.metrics[metric.id].value === null ? (pair.metrics[metric.id].reason ?? "Missing value") : dependenceDirectionLabel(metric.id)}</small>
           </div>
         ))}
       </div>

@@ -269,6 +269,14 @@ export interface GlobalBaselineManifest {
   };
   summary_json: string;
   partner_profile_files: Record<string, string>;
+  pair_matrix_files?: Record<GlobalBaselineScopeId, string>;
+  pair_matrix_file_records?: Record<GlobalBaselineScopeId, {
+    path: string;
+    sha256: string;
+    size_bytes: number;
+    n_pairs: number;
+    semantic_sha256: string;
+  }>;
   pair_metrics_gzip: string;
   pair_stability_csv: string;
   partner_stability_gzip: string;
@@ -399,4 +407,35 @@ export interface GlobalBaselineSummary {
 export interface GlobalBaselineData {
   manifest: GlobalBaselineManifest;
   summary: GlobalBaselineSummary;
+}
+
+export interface GlobalPairMatrixModel {
+  id: string;
+  name: string;
+  organization: string;
+}
+
+export interface GlobalPairMatrixRow {
+  model_a_id: string;
+  model_b_id: string;
+  n_overlap: number;
+  n_dates: number;
+  eligible: boolean;
+  near_bi: boolean | null;
+  bi_reason: string | null;
+  insufficient_overlap_reason: string | null;
+  adjusted_pog: number | null;
+  pog_reason: string | null;
+  high_loss_lift: number | null;
+  lift_reason: string | null;
+  adjusted_loss_corr: number | null;
+  corr_reason: string | null;
+}
+
+export interface GlobalPairMatrixCompact {
+  schema_version: string;
+  global_scope: GlobalBaselineScopeId;
+  models: GlobalPairMatrixModel[];
+  fields: Array<keyof GlobalPairMatrixRow>;
+  pairs: Array<Array<string | number | boolean | null>>;
 }

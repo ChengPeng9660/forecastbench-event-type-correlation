@@ -1,4 +1,4 @@
-import { formatMetric, sortPairs } from "../lib/metrics";
+import { dependenceDirectionLabel, formatMetric, orientMetricToDependence, sortPairs } from "../lib/metrics";
 import type { Manifest, Model, PairMetrics } from "../types/data";
 
 interface ModelProfileProps {
@@ -18,12 +18,13 @@ export function ModelProfile({ modelId, pairs, models, manifest, onSelectPair }:
     <section className="model-profile" id="model-view">
       <div className="section-heading">
         <div><p className="eyebrow">MODEL VIEW</p><h2>{model.name} dependence profile</h2></div>
-        <p>Compare this model with every other model in the selected event type. Rankings are oriented toward greater aggregation value.</p>
+        <p>Compare this model with every other model in the selected event type. Rankings run from higher to lower model dependence.</p>
       </div>
       <div className="profile-columns">
-        {manifest.metrics.map((metric) => (
-          <div className="profile-column" key={metric.id}>
-            <header><span>{metric.short_label}</span><small>{metric.direction === "higher" ? "HIGHER →" : "LOWER →"}</small></header>
+        {manifest.metrics.map((rawMetric) => {
+          const metric = orientMetricToDependence(rawMetric);
+          return <div className="profile-column" key={metric.id}>
+            <header><span>{metric.short_label}</span><small>{dependenceDirectionLabel(metric.id)}</small></header>
             <ol>
               {sortPairs(relevant, metric).slice(0, 20).map((pair) => {
                 const partner = pair.a === modelId ? pair.b : pair.a;
@@ -37,8 +38,8 @@ export function ModelProfile({ modelId, pairs, models, manifest, onSelectPair }:
                 );
               })}
             </ol>
-          </div>
-        ))}
+          </div>;
+        })}
       </div>
     </section>
   );

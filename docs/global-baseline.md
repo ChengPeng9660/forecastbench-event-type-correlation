@@ -66,6 +66,27 @@ Every clean pair is retained in the published global pair archive. Ineligible
 or undefined results are blank and carry explicit reasons; they are never
 silently dropped or imputed.
 
+For browser heatmaps, the same 34,453 canonical pairs are also published in one
+compact JSON matrix per global scope. These matrices are projections of the
+target-level global pair archive, not averages of topic results. Each shard
+contains stable model IDs and metadata plus a fixed field list and array-valued
+pair rows. It preserves overlap and date counts, eligibility, near-BI status,
+all three metrics, BI/overlap reasons, and metric-specific null reasons. JSON
+booleans and nulls are typed rather than encoded as strings.
+Canonical unordered pairs retain the CSV's lexicographic ordering by exact
+`model_name`. Stable model IDs are join and display keys; their two values in a
+pair are not promised to be in stable-ID lexicographic order and must not be
+used to reorder the pair archive.
+
+The build reads the written `pair-metrics.csv.gz` back and compares every
+matrix field for every canonical pair. A semantic SHA-256 is recorded alongside
+the byte-level file SHA-256. Matrix directories are cleared of stale JSON files
+before writing, and the manifest references exactly the two files present.
+Heatmap color and ranking semantics are dependence-oriented: lower Adjusted POG
+means greater dependence, while higher high-loss lift and higher adjusted-loss
+correlation mean greater dependence. The raw metric formulas and values are not
+transformed in the matrix files.
+
 ## Primary leave-topic-out comparison
 
 The primary global-to-topic comparison is `leave_topic_out`. Before comparing
@@ -148,6 +169,8 @@ The CLI writes deterministic derived files and mirrors them under
 `site/public/data/global-baseline/`:
 
 - `pair-metrics.csv.gz`: the two pooled global pair tables.
+- `pair-matrices/{global_scope}.json`: compact, browser-ready matrices covering
+  every clean canonical pair in each pooled scope.
 - `pair-stability.csv`: global-to-topic pair-rank comparisons.
 - `partner-stability.csv.gz` and one compact `partner-profiles/{model_id}.json`
   shard per focal model: full audit rows and lazy browser profiles.

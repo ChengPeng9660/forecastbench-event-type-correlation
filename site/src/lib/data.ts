@@ -10,6 +10,8 @@ import type {
   GlobalBaselineSummary,
   GlobalPartnerProfileRow,
   GlobalPartnerProfiles,
+  GlobalPairMatrixCompact,
+  GlobalPairMatrixRow,
   Manifest,
   Model,
   Taxonomy,
@@ -86,4 +88,24 @@ export async function loadGlobalPartnerProfiles(path: string, expectedSchemaVers
     throw new Error(`Global partner-profile rows do not belong to ${expectedModelId}`);
   }
   return payload.profiles;
+}
+
+export async function loadGlobalPairMatrix(path: string, expectedSchemaVersion?: string): Promise<GlobalPairMatrixCompact> {
+  const payload = await loadJson<GlobalPairMatrixCompact>(path);
+  if (expectedSchemaVersion && payload.schema_version !== expectedSchemaVersion) {
+    throw new Error(`Global pair-matrix schema mismatch (${expectedSchemaVersion} vs ${payload.schema_version})`);
+  }
+  if (!Array.isArray(payload.fields) || !Array.isArray(payload.pairs)) {
+    throw new Error("Global pair-matrix payload is malformed");
+  }
+  if (payload.pairs.some((row) => row.length !== payload.fields.length)) {
+    throw new Error("Global pair-matrix row width does not match its field contract");
+  }
+  return payload;
+}
+
+export function decodeGlobalPairMatrix(payload: GlobalPairMatrixCompact): GlobalPairMatrixRow[] {
+  return payload.pairs.map((values) => Object.fromEntries(
+    payload.fields.map((field, index) => [field, values[index]]),
+  ) as unknown as GlobalPairMatrixRow);
 }

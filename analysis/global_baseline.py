@@ -79,6 +79,11 @@ HEADLINE_MIN = 100
 QUARTILE = 0.25
 
 PAIR_FIELDS = ["global_scope", *OUTPUT_FIELDS]
+PAIR_MATRIX_FIELDS = [
+    "model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi",
+    "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason",
+    "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason",
+]
 PAIR_STABILITY_FIELDS = [
     "global_scope", "comparison_mode", "topic_id", "metric_id", "sample_id", "n_pair_universe",
     "n_sample_pairs", "n_defined_pairs", "spearman", "pearson",
@@ -184,6 +189,17 @@ def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def write_compact_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            payload, sort_keys=True, ensure_ascii=False, allow_nan=False,
+            separators=(",", ":"),
+        ) + "\n",
         encoding="utf-8",
     )
 
@@ -669,6 +685,106 @@ def finalize_global_pairs(
     return rows, by_scope
 
 
+def _null_if_blank(value: Any) -> str | None:
+    if value is None or str(value).strip() == "":
+        return None
+    return str(value)
+
+
+def pair_matrix_values(row: Mapping[str, Any]) -> list[Any]:
+    """Return one compact row with zero-safe typed values."""
+
+    values = [
+        model_id(str(row["model_a"])), model_id(str(row["model_b"])),
+        int(row["n_overlap"]), int(row["n_dates"]),
+        bool_value(row["eligible"]), bool_value(row["near_bi"]),
+        _null_if_blank(row.get("bi_reason")),
+        _null_if_blank(row.get("insufficient_overlap_reason")),
+        metric_value(row, "adjusted_pog"), _null_if_blank(row.get("pog_reason")),
+        metric_value(row, "high_loss_lift"), _null_if_blank(row.get("lift_reason")),
+        metric_value(row, "adjusted_loss_corr"), _null_if_blank(row.get("corr_reason")),
+    ]
+    if values[4] is None:
+        raise ValueError("pair eligible must be explicitly true or false")
+    return values
+
+
+def _semantic_hash(rows: Sequence[Sequence[Any]]) -> str:
+    digest = hashlib.sha256()
+    for row in rows:
+        digest.update(json.dumps(row, separators=(",", ":"), ensure_ascii=False).encode("utf-8"))
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+
+def write_pair_matrix_shards(
+    directory: Path, pair_rows: Sequence[Mapping[str, Any]], models: Sequence[str],
+    organizations: Mapping[str, str],
+) -> tuple[dict[str, str], list[dict[str, Any]]]:
+    directory.mkdir(parents=True, exist_ok=True)
+    for stale in directory.glob("*.json"):
+        stale.unlink()
+    grouped: dict[str, list[list[Any]]] = {scope: [] for scope in GLOBAL_SCOPES}
+    for row in pair_rows:
+        scope = str(row["global_scope"])
+        if scope not in grouped:
+            raise ValueError(f"unknown global scope in pair rows: {scope!r}")
+        grouped[scope].append(pair_matrix_values(row))
+    model_metadata = [
+        {"id": model_id(model), "name": model, "organization": organizations.get(model, "")}
+        for model in models
+    ]
+    if len({row["id"] for row in model_metadata}) != len(model_metadata):
+        raise ValueError("stable model ID collision in matrix metadata")
+    paths: dict[str, str] = {}
+    records: list[dict[str, Any]] = []
+    expected_pairs = math.comb(len(models), 2)
+    for scope in GLOBAL_SCOPES:
+        rows = grouped[scope]
+        if len(rows) != expected_pairs:
+            raise AssertionError(
+                f"pair matrix {scope} has {len(rows)} rows, expected {expected_pairs}"
+            )
+        filename = f"{scope}.json"
+        path = directory / filename
+        write_compact_json(path, {
+            "schema_version": SCHEMA_VERSION, "global_scope": scope,
+            "models": model_metadata, "fields": PAIR_MATRIX_FIELDS, "pairs": rows,
+        })
+        paths[scope] = filename
+        records.append({
+            "global_scope": scope, **file_record(path, filename), "n_pairs": len(rows),
+            "semantic_sha256": _semantic_hash(rows),
+        })
+    return paths, records
+
+
+def verify_pair_matrices_against_csv(
+    pair_metrics_gzip: Path, matrix_directory: Path, matrix_paths: Mapping[str, str]
+) -> dict[str, str]:
+    expected: dict[str, list[list[Any]]] = {scope: [] for scope in GLOBAL_SCOPES}
+    with gzip.open(pair_metrics_gzip, "rt", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            scope = row["global_scope"]
+            if scope not in expected:
+                raise ValueError(f"unknown scope in pair CSV: {scope!r}")
+            expected[scope].append(pair_matrix_values(row))
+    hashes: dict[str, str] = {}
+    for scope in GLOBAL_SCOPES:
+        payload = json.loads((matrix_directory / matrix_paths[scope]).read_text(encoding="utf-8"))
+        if payload.get("schema_version") != SCHEMA_VERSION:
+            raise AssertionError(f"matrix schema mismatch for {scope}")
+        if payload.get("global_scope") != scope:
+            raise AssertionError(f"matrix scope mismatch for {scope}")
+        if payload.get("fields") != PAIR_MATRIX_FIELDS:
+            raise AssertionError(f"matrix fields mismatch for {scope}")
+        if payload.get("pairs") != expected[scope]:
+            raise AssertionError(f"matrix values do not match pair CSV for {scope}")
+        hashes[scope] = _semantic_hash(payload["pairs"])
+    return hashes
+
+
 def build_global_pair_summary(
     global_rows: Mapping[str, Mapping[tuple[str, str], Mapping[str, Any]]],
     all_pairs: Sequence[tuple[str, str]],
@@ -1061,6 +1177,17 @@ def run_analysis(
     if any(record["n_profiles"] != expected_profiles_per_model for record in profile_records):
         raise AssertionError("partner profile shard row count mismatch")
     counts["partner_profile_files"] = len(profile_paths)
+    matrix_paths, matrix_records = write_pair_matrix_shards(
+        derived_dir / "global_pair_matrices", global_pair_rows, models, organizations
+    )
+    verified_matrix_hashes = verify_pair_matrices_against_csv(
+        paths["pair_metrics_gzip"], derived_dir / "global_pair_matrices", matrix_paths
+    )
+    if verified_matrix_hashes != {
+        record["global_scope"]: record["semantic_sha256"] for record in matrix_records
+    }:
+        raise AssertionError("pair matrix semantic hashes do not match CSV verification")
+    counts["pair_matrix_files"] = len(matrix_paths)
     thresholds = {
         "min_overlap": min_overlap, "near_bi_gap": near_bi_gap,
         "high_loss_threshold": high_loss_threshold, "min_partners": min_partners,
@@ -1085,6 +1212,7 @@ def run_analysis(
         "partner_stability": len(COMPARISON_MODES) * len(GLOBAL_SCOPES) * len(TOPICS) * len(METRICS) * len(SAMPLES) * len(models),
         "partner_summary": len(COMPARISON_MODES) * len(GLOBAL_SCOPES) * len(TOPICS) * len(METRICS) * len(SAMPLES),
         "partner_profile_files": len(models),
+        "pair_matrix_files": len(GLOBAL_SCOPES),
         "model_ability": (len(GLOBAL_SCOPES) + len(TOPICS)) * len(models),
         "ability_stability": len(COMPARISON_MODES) * len(GLOBAL_SCOPES) * len(TOPICS),
     }
@@ -1103,6 +1231,7 @@ def run_analysis(
         "stream": stream_audit, "topic_input": topic_input_audit,
         "leave_topic_out_internal_tables": loo_audit,
         "partner_profile_files": profile_records,
+        "pair_matrix_files": matrix_records,
         "output_counts": counts, "expected_output_counts": expected,
         "files": {},
     }
@@ -1133,6 +1262,18 @@ def run_analysis(
     site_profile_names = {path.name for path in site_profile_dir.glob("*.json")}
     if site_profile_names != set(profile_paths.values()):
         raise AssertionError("site partner profile files do not match manifest references")
+    site_matrix_dir = site_dir / "pair-matrices"
+    site_matrix_dir.mkdir(parents=True, exist_ok=True)
+    for stale in site_matrix_dir.glob("*.json"):
+        stale.unlink()
+    for scope, filename in matrix_paths.items():
+        shutil.copyfile(
+            derived_dir / "global_pair_matrices" / filename,
+            site_matrix_dir / filename,
+        )
+    site_matrix_names = {path.name for path in site_matrix_dir.glob("*.json")}
+    if site_matrix_names != set(matrix_paths.values()):
+        raise AssertionError("site pair matrix files do not match manifest references")
     manifest = {
         "schema_version": SCHEMA_VERSION, "generated_at": built_at,
         "analysis_commit": analysis_commit,
@@ -1161,6 +1302,21 @@ def run_analysis(
                 "n_profiles": record["n_profiles"],
             }
             for record in profile_records
+        },
+        "pair_matrix_files": {
+            scope: f"global-baseline/pair-matrices/{filename}"
+            for scope, filename in matrix_paths.items()
+        },
+        "pair_matrix_file_records": {
+            record["global_scope"]: {
+                **file_record(
+                    site_matrix_dir / matrix_paths[record["global_scope"]],
+                    f"pair-matrices/{matrix_paths[record['global_scope']]}",
+                ),
+                "n_pairs": record["n_pairs"],
+                "semantic_sha256": record["semantic_sha256"],
+            }
+            for record in matrix_records
         },
         "universe": {"n_exact_models": len(models), "n_unordered_pairs": len(all_pairs)},
         "excluded_llm_crowd": stream_audit["excluded_llm_crowd"],
