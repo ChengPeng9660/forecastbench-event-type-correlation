@@ -5,7 +5,7 @@
         "high": 2800,
         "medium": 172
       },
-      "definition": "宏观经济、利率、汇率、股票、加密资产与金融市场问题。",
+      "definition": "Macroeconomics, interest rates, exchange rates, equities, crypto assets, and financial markets.",
       "derived": true,
       "id": "finance_economics",
       "label_en": "Finance & Economics",
@@ -31,7 +31,7 @@
         "high": 1379,
         "medium": 447
       },
-      "definition": "选举、公共政策、外交、战争、武装冲突与地缘政治问题。",
+      "definition": "Elections, public policy, diplomacy, war, armed conflict, and geopolitics.",
       "derived": true,
       "id": "politics_conflict",
       "label_en": "Politics & Conflict",
@@ -57,7 +57,7 @@
         "high": 1213,
         "medium": 20
       },
-      "definition": "气温、降水、天气指标与气候相关问题。",
+      "definition": "Temperature, precipitation, weather indicators, and climate-related questions.",
       "derived": true,
       "id": "climate_weather",
       "label_en": "Climate & Weather",
@@ -77,7 +77,7 @@
         "high": 687,
         "medium": 3
       },
-      "definition": "疾病、疫苗、生物医学、临床研究与一般科学问题。",
+      "definition": "Disease, vaccines, biomedicine, clinical research, and general science.",
       "derived": true,
       "id": "health_science",
       "label_en": "Health & Science",
@@ -98,7 +98,7 @@
         "high": 7,
         "medium": 258
       },
-      "definition": "人工智能、模型、科技公司、芯片、网络安全与产品发布。",
+      "definition": "Artificial intelligence, models, technology companies, semiconductors, cybersecurity, and product launches.",
       "derived": true,
       "id": "technology_ai",
       "label_en": "Technology & AI",
@@ -120,7 +120,7 @@
         "high": 609,
         "medium": 146
       },
-      "definition": "体育赛事、排名、纪录、运动员和比赛结果。",
+      "definition": "Sporting events, rankings, records, athletes, and competition outcomes.",
       "derived": true,
       "id": "sports",
       "label_en": "Sports",
@@ -143,7 +143,7 @@
         "high": 52,
         "medium": 101
       },
-      "definition": "影视、音乐、出版、游戏、奖项与文化事件。",
+      "definition": "Film, television, music, publishing, gaming, awards, and cultural events.",
       "derived": true,
       "id": "entertainment_culture",
       "label_en": "Entertainment & Culture",
@@ -166,7 +166,7 @@
         "low": 727,
         "unavailable": 5040
       },
-      "definition": "未能可靠归入单一主题、文本不可恢复或需要人工复核的问题。",
+      "definition": "Questions that cannot be reliably assigned to one topic, have unrecoverable text, or require manual review.",
       "derived": true,
       "id": "other",
       "label_en": "Other / Review",

@@ -10,9 +10,9 @@ aggregation test and does not estimate a causal topic effect.
 ## Released design
 
 - Seven analysis-eligible derived topics form 21 unordered topic pairs.
-- The global universe contains 266 exact model names and 35,245 unordered
+- The global universe contains 263 exact model names and 34,453 unordered
   model pairs.
-- The all-pair detail archive retains all `21 * 35,245 = 740,145` rows,
+- The all-pair detail archive retains all `21 * 34,453 = 723,513` rows,
   including ineligible, non-near-BI, and undefined-metric cases.
 - The primary sample requires eligibility, a finite metric, and near-BI in
   both topics. The sensitivity sample requires eligibility and a finite metric
@@ -35,12 +35,12 @@ association is moderate rather than universal.
 
 | Sample | Metric | Reportable topic pairs | Median Spearman | Range |
 |---|---|---:|---:|---:|
-| Near-BI in both | Adjusted POG | 20 / 21 | 0.337 | -0.016 to 0.557 |
-| Near-BI in both | High-loss lift | 15 / 21 | 0.279 | -0.304 to 0.437 |
-| Near-BI in both | Adjusted-loss correlation | 20 / 21 | 0.240 | -0.089 to 0.474 |
+| Near-BI in both | Adjusted POG | 20 / 21 | 0.337 | -0.016 to 0.562 |
+| Near-BI in both | High-loss lift | 15 / 21 | 0.275 | -0.304 to 0.455 |
+| Near-BI in both | Adjusted-loss correlation | 20 / 21 | 0.240 | -0.089 to 0.459 |
 | Eligible in both | Adjusted POG | 21 / 21 | 0.198 | 0.052 to 0.513 |
-| Eligible in both | High-loss lift | 21 / 21 | 0.221 | 0.057 to 0.556 |
-| Eligible in both | Adjusted-loss correlation | 21 / 21 | 0.160 | -0.066 to 0.429 |
+| Eligible in both | High-loss lift | 21 / 21 | 0.221 | 0.060 to 0.556 |
+| Eligible in both | Adjusted-loss correlation | 21 / 21 | 0.163 | -0.066 to 0.429 |
 
 Thus, a model pair that is relatively dependent in one topic is somewhat more
 likely to be dependent in another, but event type still changes pair ordering
@@ -51,14 +51,11 @@ precede complementarity interpretation.
 
 The strongest near-BI relationships with headline support include:
 
-- Finance × Sports: POG `0.557` (`n=906`) and loss correlation `0.474`
-  (`n=906`).
-- Climate × Politics: POG `0.554` (`n=1,097`) and loss correlation `0.380`
-  (`n=1,097`).
-- Climate × Finance: POG `0.469`, high-loss lift `0.436`, and loss
-  correlation `0.455` (`n=930` for each).
-- Finance × Politics: POG `0.469` and loss correlation `0.423`
-  (`n=1,395`).
+- Finance × Sports: POG `0.562` and loss correlation `0.459` (`n=861`).
+- Climate × Politics: POG `0.554` and loss correlation `0.379` (`n=1,073`).
+- Climate × Finance: POG `0.466`, high-loss lift `0.428`, and loss
+  correlation `0.453` (`n=917` for each).
+- Finance × Politics: POG `0.454` and loss correlation `0.419` (`n=1,370`).
 
 The clearest supported topic-specific example is Health × Technology:
 

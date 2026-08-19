@@ -20,13 +20,13 @@
   event-level decisions plus the stratified error-audit fixes for sports-title,
   equity-price, cryptography, defense-policy, energy-trade, and entity-word
   ambiguities. Eleven eligible rows remain review-required by design.
-- Generated 1,050,945 scored rows from 266 exact model names across 18 dates.
-  Of 1,063 JSON files considered, 181 filename-identifiable non-clean files
+- Generated 1,046,424 scored rows from 263 exact model names across 18 dates.
+  Of 1,063 JSON files considered, 184 filename-identifiable non-clean files
   were excluded before read and two additional payload-identified non-clean
   files were excluded after read. All remaining clean-candidate reads had zero
   errors; no file-read exception was tolerated.
-- Computed 634,410 rows: 35,245 global unordered model pairs crossed with seven
-  topic, two origin, and nine source slices. Of these, 156,315 meet common
+- Computed 620,154 rows: 34,453 global unordered model pairs crossed with seven
+  topic, two origin, and nine source slices. Of these, 152,610 meet common
   support `n >= 50`.
 - Verified zero scored-row taxonomy misses, 21,252 analytical official targets,
   2,857 unique source-events, explicit null reasons, finite POG/lift, and
@@ -44,8 +44,8 @@
 ## 2026-08-19 — Cross-event-type pair stability release
 
 - Added a prespecified cross-topic experiment over all 21 unordered pairs of
-  the seven semantic topics and all 35,245 exact-model pairs.
-- Published 740,145 auditable pair-topic-pair rows and 126 summary cells: 21
+  the seven semantic topics and all 34,453 exact-model pairs.
+- Published 723,513 auditable pair-topic-pair rows and 126 summary cells: 21
   topic pairs crossed with three metrics and near-BI-both / eligible-both
   samples.
 - Required `n_overlap >= 50` and a finite metric in both topics; the primary
@@ -55,7 +55,7 @@
 - Suppressed coefficients below 30 defined pairs, labeled 30--99 limited, and
   reserved headline descriptive status for at least 100 pairs. The released
   cells comprise 99 headline, 19 limited, and eight insufficient results.
-- Near-BI median Spearman stability was 0.337 for POG, 0.279 for high-loss
+- Near-BI median Spearman stability was 0.337 for POG, 0.275 for high-loss
   lift, and 0.240 for adjusted-loss correlation. Finance × Sports and Climate
   × Finance were among the most stable comparisons; Health × Technology was
   approximately uncorrelated or reversed.
@@ -64,3 +64,27 @@
   site.
 - Kept the release descriptive: no iid p-values, significance stars, causal
   topic claim, OOS claim, or deployable aggregation-gain claim is made.
+
+## 2026-08-19 — Global dependence and rank-stability baseline
+
+- Rebuilt the complete release on one 263-model exact clean-LLM universe after
+  excluding three `LLM Crowd` aggregate rows at the scoring boundary.
+- Recomputed all three pair diagnostics directly from target-level losses for
+  Official Full and the Seven-topic Union; the release contains 68,906 pooled
+  pair rows across 34,453 unordered pairs.
+- Added a leave-one-topic-out transfer test as the primary global-to-topic
+  comparison, with inclusive global comparisons retained only as sensitivity.
+- Published 168 pair-rank cells, 44,184 focal-model partner rows, 168 partner
+  summaries, 2,367 individual-model ability rows, and 28 BI-rank controls.
+- Under Official Full, near-BI, leave-one-topic-out comparisons, median pair-
+  rank Spearman across topics was 0.426 for POG, 0.389 for high-loss lift, and
+  0.443 for loss correlation. Entertainment lift was suppressed for inadequate
+  support.
+- Individual-model BI ranks were much more stable in Finance (`0.821`),
+  Politics (`0.879`), Sports (`0.802`), and Technology (`0.885`, limited) than
+  in Health (`0.301`); Entertainment was suppressed at 28 models.
+- Replaced a 78 MB browser payload with 263 deterministic per-model profile
+  shards. Every shard has 168 rows and is loaded only after model selection.
+- Validation: 66 Python tests passed with one skipped; 19 Vitest tests passed
+  with one expected skip; 13 Playwright desktop/mobile tests passed with one
+  expected skip; an independent 543-file rerun was byte-identical.

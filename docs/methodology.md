@@ -277,7 +277,7 @@ eligible for headline descriptive interpretation. These are reporting
 thresholds, not statistical significance thresholds.
 
 The full detail archive enumerates every global exact-model pair for every
-topic combination: `21 * 35,245 = 740,145` rows. Ineligible pairs, insufficient
+topic combination: `21 * 34,453 = 723,513` rows. Ineligible pairs, insufficient
 overlap, non-near-BI status, and undefined metrics remain explicit so that the
 cross-topic intersection is auditable.
 

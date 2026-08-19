@@ -16,25 +16,31 @@ The repository separates official provenance dimensions (`Dataset`/`Market` and 
 
 - 13,661 classified event-date rows and 8,204 unique `(source,event_id)` events.
 - Seven analysis-eligible semantic topics, two official origin slices, and nine official source slices.
-- 1,050,945 scored model-target rows from 266 exact clean-LLM model names.
-- 35,245 global unordered model pairs and 634,410 pair-slice rows.
-- 156,315 pair-slice rows meet the default common-support threshold of 50.
+- 1,046,424 scored model-target rows from 263 exact clean-LLM model names.
+- 34,453 global unordered model pairs and 620,154 pair-slice rows.
+- 152,610 pair-slice rows meet the default common-support threshold of 50.
 - 21,252 distinct official `(date,source,event_id,horizon)` targets appear in the analytical slices.
 - Zero clean-candidate JSON read errors and zero scored rows missing the taxonomy join.
 
 The taxonomy is derived, versioned as `forecastbench-topic-v1.1.0`, and not an official ForecastBench field. All 61 initial multi-topic rows (17 unique events) were manually reviewed. Eleven analysis-eligible rows remain explicitly review-required because their resolution predicates are genuinely cross-domain. Unrecoverable generic-pair templates and unmatched visible questions are excluded from semantic-topic slices but retained in official origin/source slices.
 
 The atlas provides model filters, pair rankings, and downloadable results for
-all 266 exact model names. The heatmap is limited to 30 models at once for
+all 263 exact model names. The heatmap is limited to 30 models at once for
 browser performance; the downloadable and archived tables retain the full
 filtered pair universe.
 
-The cross-event-type stability experiment follows every one of the 35,245
+The cross-event-type stability experiment follows every one of the 34,453
 global exact-model pairs across all 21 unordered combinations of the seven
 semantic topics. Its primary view asks whether a pair that is dependent in one
 topic remains dependent in another among pairs that are near-BI in both. A
-complete 740,145-row audit archive retains ineligible and undefined cases
+complete 723,513-row audit archive retains ineligible and undefined cases
 rather than selecting them away.
+
+The global baseline pools targets without an event-type split, then compares
+that ordering with each topic. Its primary transfer view removes the selected
+topic from the global baseline before computing ranks, avoiding mechanical
+self-inclusion. The release also tests each focal model's partner ordering and
+reports individual-model BI rank as a separate ability control.
 
 ## Interpretation
 
@@ -73,12 +79,17 @@ The cross-topic result and its interpretation boundary are summarized in
 with a standalone machine-readable audit in
 `data/derived/cross_type_audit.json`.
 
+The pooled global baseline, leave-one-topic-out transfer comparisons, focal-
+model partner stability, and individual-model BI control are documented in
+[`docs/global-baseline.md`](docs/global-baseline.md).
+
 ## Repository layout
 
 - `analysis/`: taxonomy, official-FX scoring, streaming metrics, and static-data export.
 - `data/raw_manifest/`: upstream relative filenames, sizes, and SHA-256 hashes; no raw forecasts.
 - `data/derived/`: complete and eligible pair tables plus the combined audit.
 - `data/derived/cross_type_*`: cross-topic summaries, all-pair transitions, and a standalone audit.
+- `data/derived/global_*`: pooled pair metrics, global-to-topic transfer tables, partner profiles, and BI controls.
 - `site/`: React/Vite static explorer deployed by GitHub Pages.
 - `tests/` and `site/tests/`: data invariants, schema, metric direction, URL state, desktop, and mobile checks.
 

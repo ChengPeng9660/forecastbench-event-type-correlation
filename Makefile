@@ -3,12 +3,13 @@ BUILD_DIR ?= data/build
 DERIVED_DIR ?= data/derived
 SITE_DATA_DIR ?= site/public/data
 BUILD_TIMESTAMP ?= 2026-08-19T00:00:00+00:00
+EXCLUSION_REFERENCE_PANEL ?=
 
-.PHONY: help check-inputs taxonomy scoring metrics export cross-type analysis test site-build
+.PHONY: help check-inputs taxonomy scoring metrics export cross-type global-baseline analysis test site-build
 
 help:
 	@echo "Required variables: FORECASTBENCH_EVENTS, FORECASTBENCH_PROCESSED_ROOT, FORECASTBENCH_FIXED_EFFECTS"
-	@echo "Targets: taxonomy scoring metrics export cross-type analysis test site-build"
+	@echo "Targets: taxonomy scoring metrics export cross-type global-baseline analysis test site-build"
 
 check-inputs:
 	@test -f "$(FORECASTBENCH_EVENTS)" || (echo "FORECASTBENCH_EVENTS is missing" && exit 1)
@@ -72,7 +73,20 @@ $(DERIVED_DIR)/cross_type_audit.json: analysis/cross_type.py $(BUILD_DIR)/pair_m
 		--analysis-commit "$$(git rev-parse HEAD)" \
 		--built-at "$(BUILD_TIMESTAMP)"
 
-analysis: export cross-type
+global-baseline: $(DERIVED_DIR)/global_baseline_audit.json
+
+$(DERIVED_DIR)/global_baseline_audit.json: analysis/global_baseline.py $(BUILD_DIR)/scored_panel.csv $(BUILD_DIR)/event_taxonomy.csv $(BUILD_DIR)/pair_metrics.csv
+	$(PYTHON) analysis/global_baseline.py \
+		--scored-panel "$(BUILD_DIR)/scored_panel.csv" \
+		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
+		--pair-metrics "$(BUILD_DIR)/pair_metrics.csv" \
+		--derived-dir "$(DERIVED_DIR)" \
+		--site-data-dir "$(SITE_DATA_DIR)" \
+		--analysis-commit "$$(git rev-parse HEAD)" \
+		--built-at "$(BUILD_TIMESTAMP)" \
+		$(if $(strip $(EXCLUSION_REFERENCE_PANEL)),--exclusion-reference-panel "$(EXCLUSION_REFERENCE_PANEL)",)
+
+analysis: export cross-type global-baseline
 
 test:
 	$(PYTHON) -m pytest

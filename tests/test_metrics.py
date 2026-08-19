@@ -252,6 +252,7 @@ def test_scoring_preserves_official_key_and_adjustment() -> None:
     [
         ({"model": "Always 0"}, "x.json"),
         ({"model": "GPT ensemble"}, "x.json"),
+        ({"model": "LLM Crowd geometric mean"}, "x.json"),
         ({"model": "GPT-4"}, "2025.external.run.json"),
         ({"model": "Public Median"}, "x.json"),
     ],
@@ -267,6 +268,7 @@ def test_clean_llm_filter_matches_audited_exclusions(
     [
         "2025-10-26.external.Anonymous.1.json",
         "2025-10-26.ForecastBench.naive.json",
+        "2025-10-26.ForecastBench.llm_crowd_geometric_mean.json",
         "2025-10-26.OpenAI.superforecaster_with_news.json",
     ],
 )

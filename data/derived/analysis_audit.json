@@ -1,44 +1,44 @@
 {
-  "analysis_commit": "0772d4412b8fce83359a80ee184f6644e2b4e068",
-  "built_at": "2026-08-18T18:40:48Z",
+  "analysis_commit": "447d8a780b9c84bcb126d69492b099408b08d547",
+  "built_at": "2026-08-19T07:25:00Z",
   "export": {
-    "eligible_pair_slice_rows": 156315,
+    "eligible_pair_slice_rows": 152610,
     "pair_metric_status_counts": {
-      "eligible_all_metrics": 145984,
+      "eligible_all_metrics": 142411,
       "eligible_partial:BI": 180,
-      "eligible_partial:lift": 10151,
-      "not_estimable": 478095
+      "eligible_partial:lift": 10019,
+      "not_estimable": 467544
     },
     "scored_scan": {
-      "joined_scored_rows": 1050945,
-      "scored_rows": 1050945
+      "joined_scored_rows": 1046424,
+      "scored_rows": 1046424
     }
   },
   "metrics": {
     "high_adjusted_loss_threshold": 0.25,
     "join_counters": {
-      "joined_unique_rows:official_source": 1050945,
-      "joined_unique_rows:origin_type": 1050945,
-      "joined_unique_rows:topic": 1020377,
-      "joined_unique_scored_rows": 1050945,
-      "scored_input_rows": 1050945
+      "joined_unique_rows:official_source": 1046424,
+      "joined_unique_rows:origin_type": 1046424,
+      "joined_unique_rows:topic": 1015964,
+      "joined_unique_scored_rows": 1046424,
+      "scored_input_rows": 1046424
     },
     "join_mode": "allow_unclassified_up_to_4_unique_targets",
     "metric_status_counts": {
-      "official_source:eligible_all_metrics": 71817,
+      "official_source:eligible_all_metrics": 70107,
       "official_source:eligible_partial:lift": 1758,
-      "official_source:not_estimable": 243630,
-      "origin_type:eligible_all_metrics": 23178,
+      "official_source:not_estimable": 238212,
+      "origin_type:eligible_all_metrics": 22608,
       "origin_type:eligible_partial:lift": 46,
-      "origin_type:not_estimable": 47266,
-      "topic:eligible_all_metrics": 50989,
+      "origin_type:not_estimable": 46252,
+      "topic:eligible_all_metrics": 49696,
       "topic:eligible_partial:BI": 180,
-      "topic:eligible_partial:lift": 8347,
-      "topic:not_estimable": 187199
+      "topic:eligible_partial:lift": 8215,
+      "topic:not_estimable": 183080
     },
     "min_overlap": 50,
-    "n_exact_model_names": 266,
-    "n_global_model_pairs": 35245,
+    "n_exact_model_names": 263,
+    "n_global_model_pairs": 34453,
     "n_slices_by_dimension": {
       "official_source": 9,
       "origin_type": 2,
@@ -47,15 +47,15 @@
     "n_topics": 7,
     "near_bi_gap": 2.0,
     "pair_rows_by_dimension": {
-      "official_source": 317205,
-      "origin_type": 70490,
-      "topic": 246715
+      "official_source": 310077,
+      "origin_type": 68906,
+      "topic": 241171
     },
-    "pair_slice_rows": 634410,
-    "pair_topic_rows": 246715,
+    "pair_slice_rows": 620154,
+    "pair_topic_rows": 241171,
     "schema_version": 1,
     "scored_panel_file": "scored_panel.csv",
-    "scored_panel_sha256": "160b9cf691896f70df76440e98adbcd161c8501c0eaf6f2941ac6af6ad381534",
+    "scored_panel_sha256": "37e649c253882b2f85171efcb7a083e89d8cd2de15b4743805c58958c332d521",
     "slice_ids_by_dimension": {
       "official_source": [
         "ACLED",
@@ -108,12 +108,12 @@
   },
   "scoring": {
     "counters": {
-      "excluded:missing_official_fixed_effect": 3293022,
-      "excluded:unresolved": 350837,
-      "excluded_non_clean_before_read": 181,
-      "excluded_non_clean_model_file": 183,
-      "input_forecast_rows": 4694804,
-      "output_scored_rows": 1050945
+      "excluded:missing_official_fixed_effect": 3275766,
+      "excluded:unresolved": 349877,
+      "excluded_non_clean_before_read": 184,
+      "excluded_non_clean_model_file": 186,
+      "input_forecast_rows": 4672067,
+      "output_scored_rows": 1046424
     },
     "date_max": "2025-12-21",
     "date_min": "2024-07-21",
@@ -124,7 +124,7 @@
     "input_json_files_considered": 1063,
     "max_file_read_errors": 0,
     "n_dates": 18,
-    "n_exact_model_names": 266,
+    "n_exact_model_names": 263,
     "processed_root_name": "forecastbench-processed-forecast-sets",
     "schema_version": 1
   },

@@ -100,6 +100,8 @@ def model_is_clean_llm(payload: Mapping[str, Any], path: Path) -> bool:
     excluded_fragments = (
         "ensemble",
         "crowdadj",
+        "llm crowd",
+        "crowd aggregate",
         "median forecast",
         "public median",
         "superforecaster",
@@ -124,7 +126,15 @@ def path_is_definitely_non_clean(path: Path) -> bool:
         return True
     return any(
         fragment in lowered
-        for fragment in ("ensemble", "crowdadj", "median_forecast", "public_median", "superforecaster")
+        for fragment in (
+            "ensemble",
+            "crowdadj",
+            "llm_crowd",
+            "crowd_aggregate",
+            "median_forecast",
+            "public_median",
+            "superforecaster",
+        )
     )
 
 

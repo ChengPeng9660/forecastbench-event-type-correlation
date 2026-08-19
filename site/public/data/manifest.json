@@ -1,6 +1,6 @@
 {
-  "built_at": "2026-08-18T18:40:48Z",
-  "commit_sha": "0772d4412b8fce83359a80ee184f6644e2b4e068",
+  "built_at": "2026-08-19T07:25:00Z",
+  "commit_sha": "447d8a780b9c84bcb126d69492b099408b08d547",
   "dataset_version": "question_fixed_effects_latest_2026-04-14.json",
   "event_types": [
     {
@@ -134,7 +134,7 @@
   "metric_version": "three-adjusted-pair-metrics-v1",
   "metrics": [
     {
-      "description": "衡量两个模型是否会在不同问题上各有所长，即逐题错误的事后互补空间。",
+      "description": "Measures whether two models excel on different questions—the ex post complementarity available at the question level.",
       "direction": "higher",
       "format": ".3f",
       "id": "adjusted_pog",
@@ -142,7 +142,7 @@
       "short_label": "Adjusted POG"
     },
     {
-      "description": "衡量两个模型发生严重错误时的共同出现程度；1 表示近似独立。",
+      "description": "Measures how often two models incur severe errors together; 1 indicates approximate independence.",
       "direction": "lower",
       "format": ".2f",
       "id": "high_loss_lift",
@@ -151,7 +151,7 @@
       "short_label": "High-loss lift"
     },
     {
-      "description": "衡量两个模型逐题 difficulty-adjusted Brier loss 的 Pearson 相关性。",
+      "description": "Measures the Pearson correlation between the models’ question-level difficulty-adjusted Brier losses.",
       "direction": "lower",
       "domain": [
         -1.0,
