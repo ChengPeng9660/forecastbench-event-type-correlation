@@ -40,3 +40,27 @@
 - Release remains descriptive. Review-excluded sensitivity and clustered or
   block-bootstrap uncertainty are recorded as future robustness work rather
   than claimed as completed.
+
+## 2026-08-19 — Cross-event-type pair stability release
+
+- Added a prespecified cross-topic experiment over all 21 unordered pairs of
+  the seven semantic topics and all 35,245 exact-model pairs.
+- Published 740,145 auditable pair-topic-pair rows and 126 summary cells: 21
+  topic pairs crossed with three metrics and near-BI-both / eligible-both
+  samples.
+- Required `n_overlap >= 50` and a finite metric in both topics; the primary
+  sample additionally requires near-BI in both topic-specific common supports.
+- Used tie-aware Spearman correlation as primary, raw Pearson as secondary,
+  and dependence-oriented quartile persistence/flip diagnostics.
+- Suppressed coefficients below 30 defined pairs, labeled 30--99 limited, and
+  reserved headline descriptive status for at least 100 pairs. The released
+  cells comprise 99 headline, 19 limited, and eight insufficient results.
+- Near-BI median Spearman stability was 0.337 for POG, 0.279 for high-loss
+  lift, and 0.240 for adjusted-loss correlation. Finance × Sports and Climate
+  × Finance were among the most stable comparisons; Health × Technology was
+  approximately uncorrelated or reversed.
+- Added an English 7×7 interactive stability explorer, both sample views, cell
+  diagnostics, and summary/full-detail downloads to the existing GitHub Pages
+  site.
+- Kept the release descriptive: no iid p-values, significance stars, causal
+  topic claim, OOS claim, or deployable aggregation-gain claim is made.

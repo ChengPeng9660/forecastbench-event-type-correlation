@@ -233,6 +233,54 @@ Near-BI is a quality-comparability flag, not a prerequisite for producing the
 three metrics. Published views should make near-BI filtering available and
 should not mix all-pair and near-BI conclusions.
 
+## Cross-event-type dependence stability
+
+The cross-event-type experiment asks whether the dependence of one exact model
+pair is stable across two derived semantic topics. Its observation unit remains
+the canonical unordered exact-model pair, not an event row. With seven topics,
+the release evaluates all 21 unordered topic combinations.
+
+For topics \(s\) and \(t\), metric \(m\), and exact-model pair \((i,j)\), the
+primary sample is the intersection satisfying all of the following in both
+topics:
+
+1. the pair is eligible at `n_overlap >= 50`;
+2. the metric is finite and has no undefined-value reason;
+3. the pair is near-BI on each topic's own common support.
+
+The sensitivity sample drops only the third condition and therefore includes
+all pairs eligible in both topics. Undefined lift or correlation values are
+never imputed. Ranks are recomputed within the exact two-topic intersection so
+that differing model coverage cannot silently change the comparison set.
+
+For every metric and topic pair, the primary stability coefficient is the
+tie-aware Spearman correlation across exact-model pairs. Raw-value Pearson
+correlation is secondary, especially because high-loss lift can be
+heavy-tailed. The cross-topic sign has the same stability interpretation for
+all three raw metrics: a positive coefficient means model-pair ordering tends
+to persist across the two topics. This does not change the within-topic metric
+directions: higher POG is more complementary, while lower lift and lower loss
+correlation are more complementary.
+
+To answer whether highly dependent pairs remain dependent, each metric is also
+converted to a within-intersection dependence percentile. Lift and loss
+correlation retain their order; POG is reversed so that a higher percentile
+always means greater dependence. The audit reports:
+
+- top-dependence and top-complementarity quartile Jaccard overlap;
+- dependence and complementarity persistence in both topic directions;
+- dependence-to-complementarity flip rates in both directions.
+
+Coefficients with fewer than 30 metric-defined common pairs are suppressed.
+Results with 30--99 pairs are labeled limited and results with at least 100 are
+eligible for headline descriptive interpretation. These are reporting
+thresholds, not statistical significance thresholds.
+
+The full detail archive enumerates every global exact-model pair for every
+topic combination: `21 * 35,245 = 740,145` rows. Ineligible pairs, insufficient
+overlap, non-near-BI status, and undefined metrics remain explicit so that the
+cross-topic intersection is auditable.
+
 ## Pair-slice output
 
 `analysis/metrics.py` writes one row per
@@ -331,3 +379,7 @@ The implementation and published artifacts must pass all of the following:
   `source + event_id` and date.
 - Near-BI controls a major quality-gap concern but does not remove selection,
   source, or time-composition differences.
+- Cross-topic coefficients reuse models across many dyads, so ordinary
+  independent-observation p-values are invalid. This release treats them as
+  descriptive stability statistics; a future inferential analysis should use
+  dyadic/model-cluster-aware resampling in addition to event/date blocking.

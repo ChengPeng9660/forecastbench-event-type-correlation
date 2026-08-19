@@ -138,3 +138,79 @@ export interface AppData {
   taxonomy: Taxonomy;
   audit: Audit;
 }
+
+export type CrossTypeInterpretationStatus = "headline" | "limited" | "insufficient";
+export type CrossTypeMetricId = MetricId;
+
+export interface CrossTypeTopic {
+  id: string;
+  label_en: string;
+}
+
+export interface CrossTypeMetric {
+  id: CrossTypeMetricId;
+  label: string;
+  dependence_direction: "higher" | "lower";
+}
+
+export interface CrossTypeSample {
+  id: string;
+  label: string;
+  primary: boolean;
+}
+
+export interface CrossTypeManifest {
+  schema_version: string;
+  generated_at: string;
+  topics: CrossTypeTopic[];
+  metrics: CrossTypeMetric[];
+  samples: CrossTypeSample[];
+  thresholds: {
+    reporting_min_defined_pairs: number;
+    headline_min_defined_pairs: number;
+    quartile: number;
+  };
+  summary_json: string;
+  summary_csv: string;
+  pair_details_gzip: string;
+  audit_json: string;
+}
+
+export interface CrossTypeCell {
+  topic_a: string;
+  topic_b: string;
+  metric_id: CrossTypeMetricId;
+  sample_id: string;
+  n_pair_universe: number;
+  n_sample_pairs: number;
+  n_defined_pairs: number;
+  spearman: number | null;
+  pearson: number | null;
+  dependent_top_jaccard: number | null;
+  complementary_top_jaccard: number | null;
+  dependency_persistence_a_to_b: number | null;
+  dependency_persistence_b_to_a: number | null;
+  complementarity_persistence_a_to_b: number | null;
+  complementarity_persistence_b_to_a: number | null;
+  dependency_to_complementarity_a_to_b: number | null;
+  dependency_to_complementarity_b_to_a: number | null;
+  interpretation_status: CrossTypeInterpretationStatus;
+  reason: string | null;
+}
+
+export interface CrossTypeSummary {
+  schema_version: string;
+  topic_ids: string[];
+  metric_ids: CrossTypeMetricId[];
+  sample_ids: string[];
+  thresholds: {
+    reporting_min_defined_pairs: number;
+    headline_min_defined_pairs: number;
+  };
+  cells: CrossTypeCell[];
+}
+
+export interface CrossTypeData {
+  manifest: CrossTypeManifest;
+  summary: CrossTypeSummary;
+}

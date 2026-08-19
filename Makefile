@@ -4,11 +4,11 @@ DERIVED_DIR ?= data/derived
 SITE_DATA_DIR ?= site/public/data
 BUILD_TIMESTAMP ?= 2026-08-19T00:00:00+00:00
 
-.PHONY: help check-inputs taxonomy scoring metrics export analysis test site-build
+.PHONY: help check-inputs taxonomy scoring metrics export cross-type analysis test site-build
 
 help:
 	@echo "Required variables: FORECASTBENCH_EVENTS, FORECASTBENCH_PROCESSED_ROOT, FORECASTBENCH_FIXED_EFFECTS"
-	@echo "Targets: taxonomy scoring metrics export analysis test site-build"
+	@echo "Targets: taxonomy scoring metrics export cross-type analysis test site-build"
 
 check-inputs:
 	@test -f "$(FORECASTBENCH_EVENTS)" || (echo "FORECASTBENCH_EVENTS is missing" && exit 1)
@@ -62,7 +62,17 @@ $(SITE_DATA_DIR)/manifest.json: analysis/export_site.py $(BUILD_DIR)/pair_metric
 		--analysis-commit "$$(git rev-parse HEAD)" \
 		--built-at "$(BUILD_TIMESTAMP)"
 
-analysis: export
+cross-type: $(DERIVED_DIR)/cross_type_audit.json
+
+$(DERIVED_DIR)/cross_type_audit.json: analysis/cross_type.py $(BUILD_DIR)/pair_metrics.csv
+	$(PYTHON) analysis/cross_type.py \
+		--pair-metrics "$(BUILD_DIR)/pair_metrics.csv" \
+		--derived-dir "$(DERIVED_DIR)" \
+		--site-data-dir "$(SITE_DATA_DIR)" \
+		--analysis-commit "$$(git rev-parse HEAD)" \
+		--built-at "$(BUILD_TIMESTAMP)"
+
+analysis: export cross-type
 
 test:
 	$(PYTHON) -m pytest
