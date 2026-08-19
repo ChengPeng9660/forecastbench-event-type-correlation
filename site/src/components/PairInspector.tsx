@@ -14,8 +14,8 @@ export function PairInspector({ pair, models, manifest }: PairInspectorProps) {
     return (
       <aside className="inspector empty-inspector">
         <p className="eyebrow">PAIR DETAIL</p>
-        <h3>选择一个模型对</h3>
-        <p>点击热力图单元格或下方排名，查看三个指标、样本量与 near-BI 诊断。</p>
+        <h3>Select a model pair</h3>
+        <p>Choose a heatmap cell or a ranking row below to inspect all three metrics, sample size, and near-BI diagnostics.</p>
       </aside>
     );
   }
@@ -29,13 +29,13 @@ export function PairInspector({ pair, models, manifest }: PairInspectorProps) {
           <div key={metric.id}>
             <span>{metric.short_label}</span>
             <strong>{formatMetric(pair.metrics[metric.id].value, metric.id)}</strong>
-            <small>{pair.metrics[metric.id].value === null ? (pair.metrics[metric.id].reason ?? "Missing value") : (metric.direction === "higher" ? "越高越互补" : "越低越互补")}</small>
+            <small>{pair.metrics[metric.id].value === null ? (pair.metrics[metric.id].reason ?? "Missing value") : (metric.direction === "higher" ? "Higher is more complementary" : "Lower is more complementary")}</small>
           </div>
         ))}
       </div>
       <dl className="pair-meta">
-        <div><dt>共同预测目标</dt><dd>{pair.n_overlap.toLocaleString()}</dd></div>
-        <div><dt>日期数</dt><dd>{pair.n_dates}</dd></div>
+        <div><dt>Shared forecast targets</dt><dd>{pair.n_overlap.toLocaleString()}</dd></div>
+        <div><dt>Forecast dates</dt><dd>{pair.n_dates}</dd></div>
         <div><dt>Mean BI gap</dt><dd>{pair.diagnostics.mean_bi_gap?.toFixed(2) ?? "—"}</dd></div>
         <div><dt>Near-BI</dt><dd>{pair.diagnostics.near_bi === null ? "—" : pair.diagnostics.near_bi ? "Yes" : "No"}</dd></div>
         <div><dt>High-loss rate A</dt><dd>{pair.diagnostics.high_loss_rate_a == null ? "—" : `${(pair.diagnostics.high_loss_rate_a * 100).toFixed(1)}%`}</dd></div>

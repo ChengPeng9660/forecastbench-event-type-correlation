@@ -17,8 +17,8 @@ export function ModelProfile({ modelId, pairs, models, manifest, onSelectPair }:
   return (
     <section className="model-profile" id="model-view">
       <div className="section-heading">
-        <div><p className="eyebrow">MODEL VIEW</p><h2>{model.name} 的相关性剖面</h2></div>
-        <p>逐一比较该模型与当前事件类型中其余模型；排名方向已经按“更有利于聚合”校正。</p>
+        <div><p className="eyebrow">MODEL VIEW</p><h2>{model.name} dependence profile</h2></div>
+        <p>Compare this model with every other model in the selected event type. Rankings are oriented toward greater aggregation value.</p>
       </div>
       <div className="profile-columns">
         {manifest.metrics.map((metric) => (

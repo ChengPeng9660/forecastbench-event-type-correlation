@@ -25,42 +25,42 @@ TOPIC_META: dict[str, dict[str, Any]] = {
     "finance_economics": {
         "label_zh": "金融与经济",
         "label_en": "Finance & Economics",
-        "definition": "宏观经济、利率、汇率、股票、加密资产与金融市场问题。",
+        "definition": "Macroeconomics, interest rates, exchange rates, equities, crypto assets, and financial markets.",
     },
     "politics_conflict": {
         "label_zh": "政治与冲突",
         "label_en": "Politics & Conflict",
-        "definition": "选举、公共政策、外交、战争、武装冲突与地缘政治问题。",
+        "definition": "Elections, public policy, diplomacy, war, armed conflict, and geopolitics.",
     },
     "climate_weather": {
         "label_zh": "气候与天气",
         "label_en": "Climate & Weather",
-        "definition": "气温、降水、天气指标与气候相关问题。",
+        "definition": "Temperature, precipitation, weather indicators, and climate-related questions.",
     },
     "health_science": {
         "label_zh": "健康与科学",
         "label_en": "Health & Science",
-        "definition": "疾病、疫苗、生物医学、临床研究与一般科学问题。",
+        "definition": "Disease, vaccines, biomedicine, clinical research, and general science.",
     },
     "technology_ai": {
         "label_zh": "科技与 AI",
         "label_en": "Technology & AI",
-        "definition": "人工智能、模型、科技公司、芯片、网络安全与产品发布。",
+        "definition": "Artificial intelligence, models, technology companies, semiconductors, cybersecurity, and product launches.",
     },
     "sports": {
         "label_zh": "体育",
         "label_en": "Sports",
-        "definition": "体育赛事、排名、纪录、运动员和比赛结果。",
+        "definition": "Sporting events, rankings, records, athletes, and competition outcomes.",
     },
     "entertainment_culture": {
         "label_zh": "娱乐与文化",
         "label_en": "Entertainment & Culture",
-        "definition": "影视、音乐、出版、游戏、奖项与文化事件。",
+        "definition": "Film, television, music, publishing, gaming, awards, and cultural events.",
     },
     "other": {
         "label_zh": "其他 / 待审计",
         "label_en": "Other / Review",
-        "definition": "未能可靠归入单一主题、文本不可恢复或需要人工复核的问题。",
+        "definition": "Questions that cannot be reliably assigned to one topic, have unrecoverable text, or require manual review.",
     },
 }
 
@@ -470,17 +470,17 @@ def build_site_artifacts(
         {
             "id": "adjusted_pog", "label": "Adjusted Pairwise Oracle Gain", "short_label": "Adjusted POG",
             "direction": "higher", "format": ".3f",
-            "description": "衡量两个模型是否会在不同问题上各有所长，即逐题错误的事后互补空间。",
+            "description": "Measures whether two models excel on different questions—the ex post complementarity available at the question level.",
         },
         {
             "id": "high_loss_lift", "label": "Adjusted High-loss Lift", "short_label": "High-loss lift",
             "direction": "lower", "format": ".2f", "reference": 1.0,
-            "description": "衡量两个模型发生严重错误时的共同出现程度；1 表示近似独立。",
+            "description": "Measures how often two models incur severe errors together; 1 indicates approximate independence.",
         },
         {
             "id": "adjusted_loss_corr", "label": "Adjusted-loss Correlation", "short_label": "Loss correlation",
             "direction": "lower", "format": ".3f", "domain": [-1.0, 1.0],
-            "description": "衡量两个模型逐题 difficulty-adjusted Brier loss 的 Pearson 相关性。",
+            "description": "Measures the Pearson correlation between the models’ question-level difficulty-adjusted Brier losses.",
         },
     ]
     analytic_target_keys = set()

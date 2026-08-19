@@ -25,5 +25,31 @@ test("keeps the research workspace usable on mobile", async ({ page }, testInfo)
   await page.goto("/");
   await expect(page.getByLabel("Event type")).toBeVisible();
   await expect(page.getByTestId("heatmap")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "模型对排名" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Model pair ranking" })).toBeVisible();
+});
+
+test("renders an English-only interface", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("heading", { name: "Forecast Model Dependence Atlas" })).toBeVisible();
+  expect(await page.locator("body").innerText()).not.toMatch(/\p{Script=Han}/u);
+});
+
+test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(900);
+  const result = await page.evaluate(async () => {
+    const models = await (await fetch("./data/models.json")).json() as Array<{ name: string; release_order: number }>;
+    const releaseOrder = new Map(models.map((model) => [model.name, model.release_order]));
+    const names = [...document.querySelectorAll<HTMLElement>(".row-label span")].map((element) => element.innerText);
+    const values = names.map((name) => releaseOrder.get(name) ?? Number.MAX_SAFE_INTEGER);
+    const height = Math.round(document.querySelector(".heatmap-grid")?.getBoundingClientRect().height ?? 0);
+    return {
+      count: names.length,
+      sorted: values.every((value, index) => index === 0 || values[index - 1] <= value),
+      height,
+    };
+  });
+  expect(result).toEqual({ count: 30, sorted: true, height: expect.any(Number) });
+  expect(result.height).toBeLessThan(1_000);
 });

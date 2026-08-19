@@ -14,7 +14,7 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
   const values = pairs
     .map((pair) => pair.metrics[metric.id].value)
     .filter((value): value is number => value !== null);
-  const gridTemplate = `minmax(112px, 1.35fr) repeat(${models.length}, minmax(64px, 1fr))`;
+  const gridTemplate = `minmax(100px, 1.35fr) repeat(${models.length}, minmax(30px, 1fr))`;
 
   return (
     <div className="heatmap-scroll" data-testid="heatmap">
