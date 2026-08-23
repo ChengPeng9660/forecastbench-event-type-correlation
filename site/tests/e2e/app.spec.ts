@@ -335,23 +335,23 @@ test("explores descriptive stability across seven event types without inventing 
   await expect(section.getByRole("link", { name: "Full pair detail ↓" })).toHaveAttribute("href", /data\/cross-type\/pair-details\.csv\.gz$/);
 });
 
-test("compares the no-topic baseline with topic and focal-model rankings", async ({ page }) => {
+test("shows the no-topic global dependence baseline without topic-transfer panels", async ({ page }) => {
   const fixture = globalBaselineFixture();
   let officialMatrixRequests = 0;
   let unionMatrixRequests = 0;
   await page.route("**/data/global-baseline/manifest.json", (route) => route.fulfill({ json: fixture.manifest }));
   await page.route("**/data/global-baseline/summary.json", (route) => route.fulfill({ json: fixture.summary }));
-  await page.route("**/data/global-baseline/partner-profiles/m-1f526d2cc0ff.json", (route) => route.fulfill({ json: fixture.profiles }));
   await page.route("**/data/global-baseline/pair-matrices/official_full.json", (route) => { officialMatrixRequests += 1; return route.fulfill({ json: fixture.matrices.official_full }); });
   await page.route("**/data/global-baseline/pair-matrices/seven_topic_union.json", (route) => { unionMatrixRequests += 1; return route.fulfill({ json: fixture.matrices.seven_topic_union }); });
   await page.goto("/");
 
   const section = page.getByTestId("global-baseline");
-  await expect(section.getByRole("heading", { name: "Global dependence and rank stability" })).toBeVisible();
+  await expect(section.getByRole("heading", { name: "Global model dependence" })).toBeVisible();
   await expect(section.getByRole("tab", { name: "Official Full" })).toHaveAttribute("aria-selected", "true");
   await expect(section.getByRole("tab", { name: "Seven-topic Union" })).toBeVisible();
-  await expect(section.getByRole("group", { name: "Global comparison mode" }).getByRole("button", { name: "Transfer test" })).toHaveAttribute("aria-pressed", "true");
-  await expect(section.locator("button.global-topic-row")).toHaveCount(7);
+  await expect(section).not.toContainText("Does the global ranking survive conditioning?");
+  await expect(section).not.toContainText("FOCAL MODEL CHECK");
+  await expect(section).not.toContainText("Does one model keep the same partner ordering?");
   await expect(section.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
   await expect(section.getByText("Lower model dependence", { exact: true })).toBeVisible();
   await expect(section.getByText("Higher model dependence", { exact: true })).toBeVisible();
@@ -383,26 +383,7 @@ test("compares the no-topic baseline with topic and focal-model rankings", async
   await section.getByRole("tab", { name: "Seven-topic Union" }).click();
   await expect(section.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
   expect(unionMatrixRequests).toBe(1);
-  await expect(section.getByTestId("global-topic-detail")).toHaveCount(0);
-  await expect(section.locator("button.global-topic-row.insufficient .global-pair-score")).not.toHaveAttribute("style", /background/);
-  await expect(section.getByRole("button", { name: /Health & Science: pair-rank Spearman/ }).locator(".global-rank-track.unavailable")).toHaveCount(1);
-  await expect(section.getByRole("button", { name: /Technology & AI: pair-rank Spearman/ }).locator(".global-rank-track.unavailable")).toHaveCount(1);
-
-  await section.getByRole("button", { name: /Finance & Economics: pair-rank Spearman/ }).click();
-  await expect(section.getByTestId("global-topic-detail")).toContainText("Global → Finance & Economics");
-  await expect(page).toHaveURL(/global_topic=finance_economics/);
-  await section.getByRole("button", { name: "Inclusive benchmark" }).click();
-  await expect(section.getByTestId("global-topic-detail")).toHaveCount(0);
-  await expect(page).toHaveURL(/global_comparison=inclusive_global/);
-
-  await section.getByRole("button", { name: "Transfer test" }).click();
-  await section.getByRole("tab", { name: "Official Full" }).click();
-  await section.getByRole("tab", { name: "Adjusted Pairwise Oracle Gain" }).click();
-  await section.getByRole("button", { name: "Near-BI in both" }).click();
-  await section.getByLabel("Global focal model").fill("GPT-3.5-Turbo-0125 (scratchpad with freeze values)");
-  await expect(section.getByTestId("global-model-profile").locator(".global-profile-row")).toHaveCount(8);
-  await expect(section.getByRole("link", { name: "Pair stability CSV ↓" })).toHaveAttribute("href", /global-baseline\/pair-stability\.csv$/);
-  await expect(section.getByRole("link", { name: "Partner detail ↓" })).toHaveAttribute("href", /global-baseline\/partner-stability\.csv\.gz$/);
+  await expect(section.getByRole("link", { name: "Global pairs ↓" })).toHaveAttribute("href", /global-baseline\/pair-metrics\.csv\.gz$/);
   const retiredPhrases = new RegExp([
     ["aggregation", "friendly"].join("-"),
     ["aggregation", "value"].join(" "),
