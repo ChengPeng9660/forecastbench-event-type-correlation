@@ -10,9 +10,10 @@ The project reports three outcome-level diagnostics on the official fixed-effect
 - Adjusted High-Loss Lift at the 0.25 threshold (higher indicates higher model dependence).
 - Adjusted-Loss Pearson Correlation (higher indicates higher model dependence).
 
-The website orients every pairwise view toward model dependence: purple means
-higher dependence and gold means lower dependence. Published metric values keep
-their original formulas and scales; only their display direction is unified.
+The website orients every pairwise view toward model dependence: pale purple
+means lower dependence and deep purple means higher dependence. Published
+metric values keep their original formulas and scales; only their display
+direction is unified.
 
 The repository separates official provenance dimensions (`Dataset`/`Market` and source) from a clearly labeled derived topic taxonomy. Large raw ForecastBench files are not vendored; reproducible commands, source manifests, derived public results, audit reports, and the GitHub Pages explorer are included.
 

@@ -35,9 +35,10 @@ describe("model-dependence metric helpers", () => {
     expect(formatMetric(1.234, "high_loss_lift")).toBe("1.23");
   });
 
-  it("uses purple at the higher-dependence end of the scale", () => {
+  it("uses a light-to-dark purple scale for model dependence", () => {
     expect(colorForScore(1)).toBe("rgb(79, 32, 127)");
-    expect(colorForScore(0)).toBe("rgb(239, 171, 2)");
+    expect(colorForScore(0.5)).toBe("rgb(167, 129, 194)");
+    expect(colorForScore(0)).toBe("rgb(244, 239, 248)");
   });
 
   it("keeps all pair-metric consumers aligned to dependence direction", () => {

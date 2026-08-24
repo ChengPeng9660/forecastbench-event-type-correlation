@@ -47,8 +47,8 @@ export function formatMetric(value: number | null, metricId: MetricId): string {
 export function colorForScore(score: number): string {
   const clamped = Math.max(0, Math.min(1, score));
   const stops = [
-    { p: 0, rgb: [239, 171, 2] },
-    { p: 0.5, rgb: [250, 248, 242] },
+    { p: 0, rgb: [244, 239, 248] },
+    { p: 0.5, rgb: [167, 129, 194] },
     { p: 1, rgb: [79, 32, 127] },
   ];
   const [start, end] = clamped <= 0.5 ? [stops[0], stops[1]] : [stops[1], stops[2]];
@@ -58,5 +58,5 @@ export function colorForScore(score: number): string {
 }
 
 export function textColorForScore(score: number): string {
-  return score > 0.82 ? "#ffffff" : "#241d2b";
+  return score >= 0.6 ? "#ffffff" : "#241d2b";
 }
