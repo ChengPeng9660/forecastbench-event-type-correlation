@@ -303,6 +303,29 @@ test("keeps 30 heatmap models in release order within a compact matrix", async (
   expect(result.height).toBeLessThan(1_000);
 });
 
+test("lets the reader choose a custom heatmap model subset", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Heatmap models, default 30" }).click();
+  const picker = page.getByRole("dialog", { name: "Choose heatmap models" });
+  await expect(picker).toBeVisible();
+  const checkboxes = picker.locator('input[type="checkbox"]');
+  await checkboxes.nth(0).check();
+  await checkboxes.nth(1).check();
+  await checkboxes.nth(2).check();
+  await picker.getByRole("button", { name: "Show 3 models" }).click();
+
+  await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(9);
+  await expect(page.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(9);
+  await expect(page.getByRole("button", { name: "Heatmap models, 3 selected" })).toBeVisible();
+  await expect(page).toHaveURL(/heatmap_models=/);
+
+  await page.getByRole("button", { name: "Heatmap models, 3 selected" }).click();
+  await page.getByRole("dialog", { name: "Choose heatmap models" }).getByRole("button", { name: "Use default 30" }).click();
+  await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(900);
+  await expect(page.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
+  await expect(page).not.toHaveURL(/heatmap_models=/);
+});
+
 test("explores descriptive stability across seven event types without inventing sparse estimates", async ({ page }) => {
   const fixture = crossTypeFixture();
   await page.route("**/data/cross-type/manifest.json", (route) => route.fulfill({ json: fixture.manifest }));

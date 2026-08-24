@@ -12,14 +12,20 @@ interface HeatmapProps {
 }
 
 export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, onSelectPair, testId = "heatmap" }: HeatmapProps) {
+  if (models.length < 2) {
+    return <div className="heatmap-empty" data-testid={testId} role="status">Select at least two models available under the active filters.</div>;
+  }
   const values = pairs
     .map((pair) => pair.metrics[metric.id].value)
     .filter((value): value is number => value !== null);
-  const gridTemplate = `minmax(100px, 1.35fr) repeat(${models.length}, minmax(30px, 1fr))`;
+  const compact = models.length < 12;
+  const gridTemplate = compact
+    ? `minmax(130px, 190px) repeat(${models.length}, 44px)`
+    : `minmax(100px, 1.35fr) repeat(${models.length}, minmax(30px, 1fr))`;
 
   return (
     <div className="heatmap-scroll" data-testid={testId}>
-      <div className="heatmap-grid" style={{ gridTemplateColumns: gridTemplate }}>
+      <div className={`heatmap-grid ${compact ? "is-compact" : ""}`} style={{ gridTemplateColumns: gridTemplate }}>
         <div className="corner-label">MODEL PAIR</div>
         {models.map((model) => (
           <div key={`column-${model.id}`} className={`column-label ${model.id === selectedModel ? "is-focus" : ""}`}>

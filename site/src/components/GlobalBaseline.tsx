@@ -12,6 +12,7 @@ import { GlobalPairMatrix } from "./GlobalPairMatrix";
 interface GlobalBaselineProps {
   data: GlobalBaselineData | null;
   models: Model[];
+  heatmapModelIds?: string[];
   loading: boolean;
   error: string;
 }
@@ -60,7 +61,7 @@ function matchesScopeMetricSample(
     && row.sample_id === selection.sample;
 }
 
-export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineProps) {
+export function GlobalBaseline({ data, models, heatmapModelIds = [], loading, error }: GlobalBaselineProps) {
   const [selection, setSelection] = useState<Selection>({
     scope: "official_full",
     metric: "adjusted_pog",
@@ -149,11 +150,12 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
 
       <div className="global-matrix-heading">
         <div><p className="eyebrow">GLOBAL PAIRWISE MATRIX · {scope?.label}</p><h3>Model dependence without event-type splits</h3></div>
-        <p>Every cell is recomputed from the active global target set. The compact view keeps 30 high-coverage model versions visible while all 70 versions remain filterable.</p>
+        <p>Every cell is recomputed from the active global target set. The shared heatmap selector controls the visible models; without a custom selection, the 30 highest-coverage versions are shown.</p>
       </div>
       <GlobalPairMatrix
         data={data}
         models={models}
+        heatmapModelIds={heatmapModelIds}
         scope={selection.scope}
         metricId={selection.metric}
         nearBi={selection.sample === "near_bi_both"}

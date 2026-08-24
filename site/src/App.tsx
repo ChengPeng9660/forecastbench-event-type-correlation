@@ -3,6 +3,7 @@ import { Heatmap } from "./components/Heatmap";
 import { CrossTypeStability } from "./components/CrossTypeStability";
 import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
+import { ModelMultiSelect } from "./components/ModelMultiSelect";
 import { PairRanking } from "./components/PairRanking";
 import { loadAppData, loadCrossTypeData, loadEventType, loadGlobalBaselineData } from "./lib/data";
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
@@ -15,6 +16,7 @@ interface Filters {
   provider: string;
   minOverlap: number;
   nearBi: boolean;
+  heatmapModels: string[];
 }
 
 const query = new URLSearchParams(window.location.search);
@@ -25,6 +27,7 @@ const initialFilters: Filters = {
   provider: query.get("provider") ?? "all",
   minOverlap: Number(query.get("min_n") ?? 50),
   nearBi: query.get("near_bi") !== "0",
+  heatmapModels: [...new Set((query.get("heatmap_models") ?? "").split(",").filter(Boolean))].slice(0, 30),
 };
 
 const METRIC_DESCRIPTIONS: Record<MetricId, string> = {
@@ -157,6 +160,8 @@ export default function App() {
     if (filters.provider !== "all") params.set("provider", filters.provider);
     params.set("min_n", String(filters.minOverlap));
     params.set("near_bi", filters.nearBi ? "1" : "0");
+    if (filters.heatmapModels.length) params.set("heatmap_models", filters.heatmapModels.join(","));
+    else params.delete("heatmap_models");
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}${window.location.hash}`);
   }, [filters]);
 
@@ -168,18 +173,25 @@ export default function App() {
       .sort((a, b) => a.release_order - b.release_order || a.name.localeCompare(b.name));
   }, [appData, eventData, filters.provider]);
 
-  const visiblePairs = useMemo(() => {
+  const eligiblePairs = useMemo(() => {
     if (!eventData) return [];
     const modelIds = new Set(eligibleModels.map((model) => model.id));
     return eventData.pairs.filter((pair) =>
       modelIds.has(pair.a) && modelIds.has(pair.b) &&
       pair.n_overlap >= filters.minOverlap &&
-      (!filters.nearBi || pair.diagnostics.near_bi === true) &&
-      (!filters.model || pair.a === filters.model || pair.b === filters.model)
+      (!filters.nearBi || pair.diagnostics.near_bi === true)
     );
-  }, [eventData, filters.minOverlap, filters.model, filters.nearBi, eligibleModels]);
+  }, [eventData, filters.minOverlap, filters.nearBi, eligibleModels]);
+
+  const visiblePairs = useMemo(() => eligiblePairs.filter((pair) =>
+    !filters.model || pair.a === filters.model || pair.b === filters.model
+  ), [eligiblePairs, filters.model]);
 
   const heatmapModels = useMemo(() => {
+    if (filters.heatmapModels.length) {
+      const selectedIds = new Set(filters.heatmapModels);
+      return eligibleModels.filter((model) => selectedIds.has(model.id));
+    }
     const coverage = new Map<string, number>();
     for (const pair of visiblePairs) {
       coverage.set(pair.a, (coverage.get(pair.a) ?? 0) + pair.n_overlap);
@@ -190,12 +202,13 @@ export default function App() {
     const focus = eligibleModels.find((model) => model.id === filters.model);
     const partners = ranked.filter((model) => model.id !== filters.model).slice(0, 29);
     return [...(focus ? [focus] : []), ...partners].sort((a, b) => a.release_order - b.release_order || a.name.localeCompare(b.name));
-  }, [eligibleModels, filters.model, visiblePairs]);
+  }, [eligibleModels, filters.heatmapModels, filters.model, visiblePairs]);
 
   const heatmapPairs = useMemo(() => {
     const ids = new Set(heatmapModels.map((model) => model.id));
-    return visiblePairs.filter((pair) => ids.has(pair.a) && ids.has(pair.b));
-  }, [heatmapModels, visiblePairs]);
+    const sourcePairs = filters.heatmapModels.length ? eligiblePairs : visiblePairs;
+    return sourcePairs.filter((pair) => ids.has(pair.a) && ids.has(pair.b));
+  }, [eligiblePairs, filters.heatmapModels.length, heatmapModels, visiblePairs]);
 
   if (error) {
     return <main className="fatal"><p className="eyebrow">DATA LOAD ERROR</p><h1>Page data could not be loaded</h1><p>{error}</p></main>;
@@ -250,8 +263,9 @@ export default function App() {
         <section className="filter-dock" aria-label="Analysis filters">
           <label><span>EVENT TYPE</span><select aria-label="Event type" value={filters.eventType} onChange={(event) => setFilters({ ...filters, eventType: event.target.value })}>{appData.manifest.event_types.map((item) => <option value={item.id} key={item.id}>[{item.dimension ?? "topic"}] {item.label_en}</option>)}</select></label>
           <label><span>METRIC</span><select aria-label="Metric" value={filters.metric} onChange={(event) => setFilters({ ...filters, metric: event.target.value as MetricId })}>{appData.manifest.metrics.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
-          <label><span>MODEL</span><select aria-label="Model" value={filters.model} onChange={(event) => setFilters({ ...filters, model: event.target.value })}><option value="">All models</option>{appData.models.filter((model) => eventData.models.includes(model.id)).map((model) => <option value={model.id} key={model.id}>{model.name}</option>)}</select></label>
+          <label><span>FOCAL MODEL</span><select aria-label="Focal model" value={filters.model} onChange={(event) => setFilters({ ...filters, model: event.target.value })}><option value="">All models</option>{appData.models.filter((model) => eventData.models.includes(model.id)).map((model) => <option value={model.id} key={model.id}>{model.name}</option>)}</select></label>
           <label><span>PROVIDER</span><select aria-label="Provider" value={filters.provider} onChange={(event) => setFilters({ ...filters, provider: event.target.value, model: "" })}><option value="all">All providers</option>{providers.map((provider) => <option value={provider} key={provider}>{provider}</option>)}</select></label>
+          <ModelMultiSelect models={appData.models} selectedIds={filters.heatmapModels} onChange={(heatmapModels) => { setFilters({ ...filters, heatmapModels }); setSelectedPair(null); }} />
           <label className="range-label"><span>MIN OVERLAP <b>{filters.minOverlap}</b></span><input aria-label="Minimum overlap" type="range" min="50" max="250" step="25" value={filters.minOverlap} onChange={(event) => setFilters({ ...filters, minOverlap: Number(event.target.value) })} /></label>
           <label className="check-label"><input type="checkbox" checked={filters.nearBi} onChange={(event) => setFilters({ ...filters, nearBi: event.target.checked })} /><span>Near-BI only</span></label>
         </section>
@@ -259,7 +273,7 @@ export default function App() {
         <section className={`matrix-section ${loadingSlice ? "is-loading" : ""}`} id="matrix">
           <div className="section-heading">
             <div><p className="eyebrow">PAIRWISE MATRIX · {eventRef.label_en.toUpperCase()}</p><h2>{metric.label}</h2></div>
-            <p>{METRIC_DESCRIPTIONS[metric.id]} The heatmap shows the {heatmapModels.length} highest-coverage models out of {eligibleModels.length}, ordered from earliest to latest release; {visiblePairs.length.toLocaleString()} model pairs meet the active filters.</p>
+            <p>{METRIC_DESCRIPTIONS[metric.id]} {filters.heatmapModels.length ? `The heatmap shows ${heatmapModels.length} selected models available under the active filters` : `The heatmap shows the ${heatmapModels.length} highest-coverage models out of ${eligibleModels.length}`}, ordered from earliest to latest release; {visiblePairs.length.toLocaleString()} model pairs meet the active filters.</p>
           </div>
           <div className="matrix-layout">
             <div>
@@ -269,7 +283,7 @@ export default function App() {
           </div>
         </section>
 
-        <GlobalBaseline data={globalBaselineData} models={appData.models} loading={globalBaselineLoading} error={globalBaselineError} />
+        <GlobalBaseline data={globalBaselineData} models={appData.models} heatmapModelIds={filters.heatmapModels} loading={globalBaselineLoading} error={globalBaselineError} />
 
         <CrossTypeStability data={crossTypeData} loading={crossTypeLoading} error={crossTypeError} />
 

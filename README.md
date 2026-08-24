@@ -30,10 +30,11 @@ The repository separates official provenance dimensions (`Dataset`/`Market` and 
 
 The taxonomy is derived, versioned as `forecastbench-topic-v1.1.0`, and not an official ForecastBench field. All 61 initial multi-topic rows (17 unique events) were manually reviewed. Eleven analysis-eligible rows remain explicitly review-required because their resolution predicates are genuinely cross-domain. Unrecoverable generic-pair templates and unmatched visible questions are excluded from semantic-topic slices but retained in official origin/source slices.
 
-The atlas provides model filters, pair rankings, and downloadable results for
-all 70 model versions. The heatmap is limited to 30 models at once for
-browser performance; the downloadable and archived tables retain the full
-filtered pair universe.
+The atlas provides focal-model filters, pair rankings, and downloadable results
+for all 70 model versions. A URL-persistent heatmap selector lets readers show
+any 2–30 versions in both the event-type and global matrices; without a custom
+selection, the 30 highest-coverage models are shown. The downloadable and
+archived tables retain the full filtered pair universe.
 
 Prompt, scratchpad, news, web-search, and freeze-value suffixes are not treated
 as separate models. The analysis keeps one actual zero-shot forecast series per
