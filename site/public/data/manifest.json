@@ -1,6 +1,6 @@
 {
-  "built_at": "2026-08-19T07:25:00Z",
-  "commit_sha": "447d8a780b9c84bcb126d69492b099408b08d547",
+  "built_at": "2026-08-24T06:36:28Z",
+  "commit_sha": "439e3a6142d3c00a39fa65fb1da1c234b97d3ffc",
   "dataset_version": "question_fixed_effects_latest_2026-04-14.json",
   "event_types": [
     {
@@ -163,6 +163,7 @@
       "short_label": "Loss correlation"
     }
   ],
+  "model_definition": "exact_model_version_one_zero_shot_representative_v1",
   "schema_version": "1.0.0",
   "source_snapshot": {
     "official_targets": 21252,

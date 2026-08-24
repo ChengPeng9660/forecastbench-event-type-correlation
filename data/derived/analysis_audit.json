@@ -1,44 +1,43 @@
 {
-  "analysis_commit": "447d8a780b9c84bcb126d69492b099408b08d547",
-  "built_at": "2026-08-19T07:25:00Z",
+  "analysis_commit": "439e3a6142d3c00a39fa65fb1da1c234b97d3ffc",
+  "built_at": "2026-08-24T06:36:28Z",
   "export": {
-    "eligible_pair_slice_rows": 152610,
+    "eligible_pair_slice_rows": 11529,
     "pair_metric_status_counts": {
-      "eligible_all_metrics": 142411,
-      "eligible_partial:BI": 180,
-      "eligible_partial:lift": 10019,
-      "not_estimable": 467544
+      "eligible_all_metrics": 10830,
+      "eligible_partial:BI": 9,
+      "eligible_partial:lift": 690,
+      "not_estimable": 31941
     },
     "scored_scan": {
-      "joined_scored_rows": 1046424,
-      "scored_rows": 1046424
+      "joined_scored_rows": 306996,
+      "scored_rows": 306996
     }
   },
   "metrics": {
     "high_adjusted_loss_threshold": 0.25,
     "join_counters": {
-      "joined_unique_rows:official_source": 1046424,
-      "joined_unique_rows:origin_type": 1046424,
-      "joined_unique_rows:topic": 1015964,
-      "joined_unique_scored_rows": 1046424,
-      "scored_input_rows": 1046424
+      "joined_unique_rows:official_source": 306996,
+      "joined_unique_rows:origin_type": 306996,
+      "joined_unique_rows:topic": 297402,
+      "joined_unique_scored_rows": 306996,
+      "scored_input_rows": 306996
     },
     "join_mode": "allow_unclassified_up_to_4_unique_targets",
     "metric_status_counts": {
-      "official_source:eligible_all_metrics": 70107,
-      "official_source:eligible_partial:lift": 1758,
-      "official_source:not_estimable": 238212,
-      "origin_type:eligible_all_metrics": 22608,
-      "origin_type:eligible_partial:lift": 46,
-      "origin_type:not_estimable": 46252,
-      "topic:eligible_all_metrics": 49696,
-      "topic:eligible_partial:BI": 180,
-      "topic:eligible_partial:lift": 8215,
-      "topic:not_estimable": 183080
+      "official_source:eligible_all_metrics": 5374,
+      "official_source:eligible_partial:lift": 162,
+      "official_source:not_estimable": 16199,
+      "origin_type:eligible_all_metrics": 1656,
+      "origin_type:not_estimable": 3174,
+      "topic:eligible_all_metrics": 3800,
+      "topic:eligible_partial:BI": 9,
+      "topic:eligible_partial:lift": 528,
+      "topic:not_estimable": 12568
     },
     "min_overlap": 50,
-    "n_exact_model_names": 263,
-    "n_global_model_pairs": 34453,
+    "n_exact_model_names": 70,
+    "n_global_model_pairs": 2415,
     "n_slices_by_dimension": {
       "official_source": 9,
       "origin_type": 2,
@@ -47,15 +46,15 @@
     "n_topics": 7,
     "near_bi_gap": 2.0,
     "pair_rows_by_dimension": {
-      "official_source": 310077,
-      "origin_type": 68906,
-      "topic": 241171
+      "official_source": 21735,
+      "origin_type": 4830,
+      "topic": 16905
     },
-    "pair_slice_rows": 620154,
-    "pair_topic_rows": 241171,
+    "pair_slice_rows": 43470,
+    "pair_topic_rows": 16905,
     "schema_version": 1,
-    "scored_panel_file": "scored_panel.csv",
-    "scored_panel_sha256": "37e649c253882b2f85171efcb7a083e89d8cd2de15b4743805c58958c332d521",
+    "scored_panel_file": "scored_panel_model_versions.csv",
+    "scored_panel_sha256": "7b9ce08cd0e881ea111d15aa429a5c733d3f8b48c5dce88245afbbeb7df131c5",
     "slice_ids_by_dimension": {
       "official_source": [
         "ACLED",
@@ -105,6 +104,49 @@
     "unclassified_scored_rows": 0,
     "unclassified_targets": [],
     "unclassified_unique_targets": 0
+  },
+  "model_versions": {
+    "configuration_counts": {
+      "no_configuration_suffix": 1,
+      "scratchpad": 48,
+      "scratchpad with SECOND news": 2,
+      "scratchpad with freeze values": 48,
+      "scratchpad with freeze values with web search": 1,
+      "scratchpad with news": 12,
+      "scratchpad with news with freeze values": 12,
+      "scratchpad with web search": 1,
+      "zero shot": 68,
+      "zero shot with freeze values": 68,
+      "zero shot with freeze values with web search": 1,
+      "zero shot with web search": 1
+    },
+    "group_size_counts": {
+      "1": 1,
+      "2": 20,
+      "4": 37,
+      "6": 10,
+      "7": 2
+    },
+    "input_exact_model_names": 263,
+    "input_file": "scored_panel.csv",
+    "input_scored_rows": 1046424,
+    "input_sha256": "37e649c253882b2f85171efcb7a083e89d8cd2de15b4743805c58958c332d521",
+    "mapping_file": "model_version_mapping.csv",
+    "mapping_sha256": "ad8d27911af4a5179a98adf63b07064e164114682326c8c683ffd4da8c3bdc26",
+    "multi_configuration_versions": 69,
+    "output_file": "scored_panel_model_versions.csv",
+    "output_model_versions": 70,
+    "output_scored_rows": 306996,
+    "output_sha256": "7b9ce08cd0e881ea111d15aa429a5c733d3f8b48c5dce88245afbbeb7df131c5",
+    "removed_configuration_variants": 193,
+    "schema_version": 1,
+    "selected_configuration_counts": {
+      "no_configuration_suffix": 1,
+      "zero shot": 68,
+      "zero shot with web search": 1
+    },
+    "selection_rule": "one actual forecast configuration per exact model version; prefer plain zero shot, then least-augmented zero shot; never use outcomes or average configurations",
+    "version_boundary": "remove only recognized trailing scratchpad/zero-shot configuration parentheses; retain dates, Preview, Exp, reasoning, size, and all other version tokens"
   },
   "scoring": {
     "counters": {

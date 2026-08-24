@@ -1,0 +1,264 @@
+canonical_model_version,exact_model_name,model_organization,model_configuration,selected,selection_rank,selection_reason,n_scored_rows,n_dates,date_min,date_max
+Claude-2.1,Claude-2.1 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Claude-2.1,Claude-2.1 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-2.1,Claude-2.1 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-2.1,Claude-2.1 (scratchpad with news),Anthropic,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-2.1,Claude-2.1 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-2.1,Claude-2.1 (scratchpad with news with freeze values),Anthropic,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,17187,13,2024-07-21,2025-08-31
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,17187,13,2024-07-21,2025-08-31
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,15976,12,2024-07-21,2025-08-31
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (scratchpad with news),Anthropic,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,15976,12,2024-07-21,2025-08-31
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (scratchpad with SECOND news),Anthropic,scratchpad with SECOND news,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-5-Sonnet-20240620,Claude-3-5-Sonnet-20240620 (scratchpad with news with freeze values),Anthropic,scratchpad with news with freeze values,0,7,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-5-Sonnet-20241022,Claude-3-5-Sonnet-20241022 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,9565,7,2025-03-02,2025-05-25
+Claude-3-5-Sonnet-20241022,Claude-3-5-Sonnet-20241022 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Claude-3-5-Sonnet-20241022,Claude-3-5-Sonnet-20241022 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Claude-3-5-Sonnet-20241022,Claude-3-5-Sonnet-20241022 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Claude-3-7-Sonnet-20250219,Claude-3-7-Sonnet-20250219 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,13630,12,2025-03-02,2025-12-21
+Claude-3-7-Sonnet-20250219,Claude-3-7-Sonnet-20250219 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,13630,12,2025-03-02,2025-12-21
+Claude-3-7-Sonnet-20250219,Claude-3-7-Sonnet-20250219 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Claude-3-7-Sonnet-20250219,Claude-3-7-Sonnet-20250219 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Claude-3-Haiku-20240307,Claude-3-Haiku-20240307 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Haiku-20240307,Claude-3-Haiku-20240307 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Haiku-20240307,Claude-3-Haiku-20240307 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Haiku-20240307,Claude-3-Haiku-20240307 (scratchpad with news),Anthropic,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-Haiku-20240307,Claude-3-Haiku-20240307 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Haiku-20240307,Claude-3-Haiku-20240307 (scratchpad with news with freeze values),Anthropic,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-Opus-20240229,Claude-3-Opus-20240229 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Opus-20240229,Claude-3-Opus-20240229 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Opus-20240229,Claude-3-Opus-20240229 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Opus-20240229,Claude-3-Opus-20240229 (scratchpad with news),Anthropic,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-3-Opus-20240229,Claude-3-Opus-20240229 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+Claude-3-Opus-20240229,Claude-3-Opus-20240229 (scratchpad with news with freeze values),Anthropic,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Claude-Haiku-4-5-20251001,Claude-Haiku-4-5-20251001 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Claude-Haiku-4-5-20251001,Claude-Haiku-4-5-20251001 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+Claude-Opus-4-1-20250805,Claude-Opus-4-1-20250805 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6485,7,2025-08-17,2025-12-21
+Claude-Opus-4-1-20250805,Claude-Opus-4-1-20250805 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6485,7,2025-08-17,2025-12-21
+Claude-Opus-4-1-20250805,Claude-Opus-4-1-20250805 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1209,1,2025-08-31,2025-08-31
+Claude-Opus-4-1-20250805,Claude-Opus-4-1-20250805 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1209,1,2025-08-31,2025-08-31
+Claude-Opus-4-20250514,Claude-Opus-4-20250514 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1234,1,2025-08-03,2025-08-03
+Claude-Opus-4-20250514,Claude-Opus-4-20250514 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1234,1,2025-08-03,2025-08-03
+Claude-Opus-4-20250514,Claude-Opus-4-20250514 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1234,1,2025-08-03,2025-08-03
+Claude-Opus-4-20250514,Claude-Opus-4-20250514 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1234,1,2025-08-03,2025-08-03
+Claude-Opus-4-5-20251101,Claude-Opus-4-5-20251101 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1628,2,2025-12-07,2025-12-21
+Claude-Opus-4-5-20251101,Claude-Opus-4-5-20251101 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1628,2,2025-12-07,2025-12-21
+Claude-Sonnet-4-20250514,Claude-Sonnet-4-20250514 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6091,6,2025-08-03,2025-11-23
+Claude-Sonnet-4-20250514,Claude-Sonnet-4-20250514 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6091,6,2025-08-03,2025-11-23
+Claude-Sonnet-4-20250514,Claude-Sonnet-4-20250514 (scratchpad),Anthropic,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2443,2,2025-08-03,2025-08-31
+Claude-Sonnet-4-20250514,Claude-Sonnet-4-20250514 (scratchpad with freeze values),Anthropic,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2443,2,2025-08-03,2025-08-31
+Claude-Sonnet-4-5-20250929,Claude-Sonnet-4-5-20250929 (zero shot),Anthropic,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Claude-Sonnet-4-5-20250929,Claude-Sonnet-4-5-20250929 (zero shot with freeze values),Anthropic,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+DeepSeek-R1,DeepSeek-R1 (zero shot),DeepSeek,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-R1,DeepSeek-R1 (zero shot with freeze values),DeepSeek,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-R1,DeepSeek-R1 (scratchpad),DeepSeek,scratchpad,0,3,same_model_version_nonrepresentative_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-R1,DeepSeek-R1 (scratchpad with freeze values),DeepSeek,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-V3,DeepSeek-V3 (zero shot),DeepSeek,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-V3,DeepSeek-V3 (zero shot with freeze values),DeepSeek,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-V3,DeepSeek-V3 (scratchpad),DeepSeek,scratchpad,0,3,same_model_version_nonrepresentative_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-V3,DeepSeek-V3 (scratchpad with freeze values),DeepSeek,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,7101,5,2025-03-02,2025-04-27
+DeepSeek-V3.1,DeepSeek-V3.1 (zero shot),DeepSeek,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+DeepSeek-V3.1,DeepSeek-V3.1 (zero shot with freeze values),DeepSeek,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+GLM-4.5-Air-FP8,GLM-4.5-Air-FP8 (zero shot),Z.ai,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2830,3,2025-08-31,2025-11-09
+GLM-4.5-Air-FP8,GLM-4.5-Air-FP8 (zero shot with freeze values),Z.ai,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2830,3,2025-08-31,2025-11-09
+GLM-4.5-Air-FP8,GLM-4.5-Air-FP8 (scratchpad),Z.ai,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1209,1,2025-08-31,2025-08-31
+GLM-4.5-Air-FP8,GLM-4.5-Air-FP8 (scratchpad with freeze values),Z.ai,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1209,1,2025-08-31,2025-08-31
+GLM-4.6,GLM-4.6 (zero shot),Z.ai,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2444,3,2025-11-23,2025-12-21
+GLM-4.6,GLM-4.6 (zero shot with freeze values),Z.ai,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2444,3,2025-11-23,2025-12-21
+GPT-3.5-Turbo-0125,GPT-3.5-Turbo-0125 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+GPT-3.5-Turbo-0125,GPT-3.5-Turbo-0125 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-3.5-Turbo-0125,GPT-3.5-Turbo-0125 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-3.5-Turbo-0125,GPT-3.5-Turbo-0125 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4-0613,GPT-4-0613 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4-0613,GPT-4-0613 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4-0613,GPT-4-0613 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4-0613,GPT-4-0613 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4-Turbo-2024-04-09,GPT-4-Turbo-2024-04-09 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6432,5,2024-07-21,2025-06-22
+GPT-4-Turbo-2024-04-09,GPT-4-Turbo-2024-04-09 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+GPT-4-Turbo-2024-04-09,GPT-4-Turbo-2024-04-09 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+GPT-4-Turbo-2024-04-09,GPT-4-Turbo-2024-04-09 (scratchpad with news),OpenAI,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4-Turbo-2024-04-09,GPT-4-Turbo-2024-04-09 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,6432,5,2024-07-21,2025-06-22
+GPT-4-Turbo-2024-04-09,GPT-4-Turbo-2024-04-09 (scratchpad with news with freeze values),OpenAI,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4.1-2025-04-14,GPT-4.1-2025-04-14 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,11445,11,2025-04-27,2025-12-21
+GPT-4.1-2025-04-14,GPT-4.1-2025-04-14 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,11445,11,2025-04-27,2025-12-21
+GPT-4.1-2025-04-14,GPT-4.1-2025-04-14 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,6171,5,2025-04-27,2025-08-17
+GPT-4.1-2025-04-14,GPT-4.1-2025-04-14 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,6171,5,2025-04-27,2025-08-17
+GPT-4.5-Preview-2025-02-27,GPT-4.5-Preview-2025-02-27 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,3066,2,2025-03-02,2025-03-16
+GPT-4.5-Preview-2025-02-27,GPT-4.5-Preview-2025-02-27 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,3066,2,2025-03-02,2025-03-16
+GPT-4.5-Preview-2025-02-27,GPT-4.5-Preview-2025-02-27 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,3066,2,2025-03-02,2025-03-16
+GPT-4.5-Preview-2025-02-27,GPT-4.5-Preview-2025-02-27 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,3066,2,2025-03-02,2025-03-16
+GPT-4o,GPT-4o (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o,GPT-4o (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o,GPT-4o (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o,GPT-4o (scratchpad with news),OpenAI,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o,GPT-4o (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o,GPT-4o (scratchpad with SECOND news),OpenAI,scratchpad with SECOND news,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o,GPT-4o (scratchpad with news with freeze values),OpenAI,scratchpad with news with freeze values,0,7,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+GPT-4o-2024-05-13,GPT-4o-2024-05-13 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,8960,7,2025-03-30,2025-06-22
+GPT-4o-2024-05-13,GPT-4o-2024-05-13 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,8960,7,2025-03-30,2025-06-22
+GPT-4o-2024-05-13,GPT-4o-2024-05-13 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,8960,7,2025-03-30,2025-06-22
+GPT-4o-2024-05-13,GPT-4o-2024-05-13 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,8960,7,2025-03-30,2025-06-22
+GPT-4o-2024-11-20,GPT-4o-2024-11-20 (zero shot with web search),OpenAI,zero shot with web search,1,1,preferred_outcome_blind_zero_shot_configuration,1532,1,2025-03-16,2025-03-16
+GPT-4o-2024-11-20,GPT-4o-2024-11-20 (zero shot with freeze values with web search),OpenAI,zero shot with freeze values with web search,0,2,same_model_version_nonrepresentative_configuration,1532,1,2025-03-16,2025-03-16
+GPT-4o-2024-11-20,GPT-4o-2024-11-20 (scratchpad with web search),OpenAI,scratchpad with web search,0,3,same_model_version_nonrepresentative_configuration,1532,1,2025-03-16,2025-03-16
+GPT-4o-2024-11-20,GPT-4o-2024-11-20 (scratchpad with freeze values with web search),OpenAI,scratchpad with freeze values with web search,0,4,same_model_version_nonrepresentative_configuration,1532,1,2025-03-16,2025-03-16
+GPT-5-2025-08-07,GPT-5-2025-08-07 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2830,3,2025-08-31,2025-11-09
+GPT-5-2025-08-07,GPT-5-2025-08-07 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2830,3,2025-08-31,2025-11-09
+GPT-5-Mini-2025-08-07,GPT-5-Mini-2025-08-07 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5274,6,2025-08-31,2025-12-21
+GPT-5-Mini-2025-08-07,GPT-5-Mini-2025-08-07 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5274,6,2025-08-31,2025-12-21
+GPT-5-Nano-2025-08-07,GPT-5-Nano-2025-08-07 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5274,6,2025-08-31,2025-12-21
+GPT-5-Nano-2025-08-07,GPT-5-Nano-2025-08-07 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5274,6,2025-08-31,2025-12-21
+GPT-5.1-2025-11-13,GPT-5.1-2025-11-13 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2444,3,2025-11-23,2025-12-21
+GPT-5.1-2025-11-13,GPT-5.1-2025-11-13 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2444,3,2025-11-23,2025-12-21
+Gemini-1.5-Flash,Gemini-1.5-Flash (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Flash,Gemini-1.5-Flash (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Flash,Gemini-1.5-Flash (scratchpad),Google,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Flash,Gemini-1.5-Flash (scratchpad with news),Google,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Flash,Gemini-1.5-Flash (scratchpad with freeze values),Google,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Flash,Gemini-1.5-Flash (scratchpad with news with freeze values),Google,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Pro,Gemini-1.5-Pro (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Pro,Gemini-1.5-Pro (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Pro,Gemini-1.5-Pro (scratchpad),Google,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Pro,Gemini-1.5-Pro (scratchpad with news),Google,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Pro,Gemini-1.5-Pro (scratchpad with freeze values),Google,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-1.5-Pro,Gemini-1.5-Pro (scratchpad with news with freeze values),Google,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Gemini-2.0-Flash-Lite-001,Gemini-2.0-Flash-Lite-001 (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.0-Flash-Lite-001,Gemini-2.0-Flash-Lite-001 (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.0-Flash-Lite-001,Gemini-2.0-Flash-Lite-001 (scratchpad),Google,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.0-Flash-Lite-001,Gemini-2.0-Flash-Lite-001 (scratchpad with freeze values),Google,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.5-Flash,Gemini-2.5-Flash (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5274,6,2025-08-31,2025-12-21
+Gemini-2.5-Flash,Gemini-2.5-Flash (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5274,6,2025-08-31,2025-12-21
+Gemini-2.5-Flash-Preview-04-17,Gemini-2.5-Flash-Preview-04-17 (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Flash-Preview-04-17,Gemini-2.5-Flash-Preview-04-17 (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Flash-Preview-04-17,Gemini-2.5-Flash-Preview-04-17 (scratchpad),Google,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Flash-Preview-04-17,Gemini-2.5-Flash-Preview-04-17 (scratchpad with freeze values),Google,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Pro,Gemini-2.5-Pro (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5274,6,2025-08-31,2025-12-21
+Gemini-2.5-Pro,Gemini-2.5-Pro (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5274,6,2025-08-31,2025-12-21
+Gemini-2.5-Pro-Exp-03-25,Gemini-2.5-Pro-Exp-03-25 (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.5-Pro-Exp-03-25,Gemini-2.5-Pro-Exp-03-25 (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.5-Pro-Exp-03-25,Gemini-2.5-Pro-Exp-03-25 (scratchpad),Google,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.5-Pro-Exp-03-25,Gemini-2.5-Pro-Exp-03-25 (scratchpad with freeze values),Google,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Gemini-2.5-Pro-Preview-03-25,Gemini-2.5-Pro-Preview-03-25 (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Pro-Preview-03-25,Gemini-2.5-Pro-Preview-03-25 (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Pro-Preview-03-25,Gemini-2.5-Pro-Preview-03-25 (scratchpad),Google,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-2.5-Pro-Preview-03-25,Gemini-2.5-Pro-Preview-03-25 (scratchpad with freeze values),Google,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+Gemini-3-Pro-Preview,Gemini-3-Pro-Preview (zero shot),Google,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2444,3,2025-11-23,2025-12-21
+Gemini-3-Pro-Preview,Gemini-3-Pro-Preview (zero shot with freeze values),Google,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2444,3,2025-11-23,2025-12-21
+Grok-4-0709,Grok-4-0709 (zero shot),xAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Grok-4-0709,Grok-4-0709 (zero shot with freeze values),xAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+Grok-4-1-Fast-Non-Reasoning,Grok-4-1-Fast-Non-Reasoning (zero shot),xAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2444,3,2025-11-23,2025-12-21
+Grok-4-1-Fast-Non-Reasoning,Grok-4-1-Fast-Non-Reasoning (zero shot with freeze values),xAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2444,3,2025-11-23,2025-12-21
+Grok-4-1-Fast-Reasoning,Grok-4-1-Fast-Reasoning (zero shot),xAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2444,3,2025-11-23,2025-12-21
+Grok-4-1-Fast-Reasoning,Grok-4-1-Fast-Reasoning (zero shot with freeze values),xAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2444,3,2025-11-23,2025-12-21
+Grok-4-Fast-Non-Reasoning,Grok-4-Fast-Non-Reasoning (zero shot),xAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Grok-4-Fast-Non-Reasoning,Grok-4-Fast-Non-Reasoning (zero shot with freeze values),xAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+Grok-4-Fast-Reasoning,Grok-4-Fast-Reasoning (zero shot),xAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Grok-4-Fast-Reasoning,Grok-4-Fast-Reasoning (zero shot with freeze values),xAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+Grok-beta,Grok-beta (zero shot),xAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2773,2,2025-03-30,2025-04-13
+Grok-beta,Grok-beta (zero shot with freeze values),xAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Grok-beta,Grok-beta (scratchpad),xAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Grok-beta,Grok-beta (scratchpad with freeze values),xAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2773,2,2025-03-30,2025-04-13
+Kimi-K2-Instruct,Kimi-K2-Instruct (zero shot),Moonshot,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5275,5,2025-08-03,2025-11-09
+Kimi-K2-Instruct,Kimi-K2-Instruct (zero shot with freeze values),Moonshot,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5275,5,2025-08-03,2025-11-09
+Kimi-K2-Instruct,Kimi-K2-Instruct (scratchpad),Moonshot,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2420,2,2025-08-17,2025-08-31
+Kimi-K2-Instruct,Kimi-K2-Instruct (scratchpad with freeze values),Moonshot,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2420,2,2025-08-17,2025-08-31
+Kimi-K2-Instruct-0905,Kimi-K2-Instruct-0905 (zero shot),Moonshot,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Kimi-K2-Instruct-0905,Kimi-K2-Instruct-0905 (zero shot with freeze values),Moonshot,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+Kimi-K2-Thinking,Kimi-K2-Thinking (zero shot),Moonshot,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2444,3,2025-11-23,2025-12-21
+Kimi-K2-Thinking,Kimi-K2-Thinking (zero shot with freeze values),Moonshot,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2444,3,2025-11-23,2025-12-21
+Llama-2-70b-Chat-Hf,Llama-2-70b-Chat-Hf (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Llama-2-70b-Chat-Hf,Llama-2-70b-Chat-Hf (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Llama-2-70b-Chat-Hf,Llama-2-70b-Chat-Hf (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Llama-2-70b-Chat-Hf,Llama-2-70b-Chat-Hf (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Llama-3-70b-Chat-Hf,Llama-3-70b-Chat-Hf (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,3968,3,2024-07-21,2025-06-22
+Llama-3-70b-Chat-Hf,Llama-3-70b-Chat-Hf (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,3968,3,2024-07-21,2025-06-22
+Llama-3-70b-Chat-Hf,Llama-3-70b-Chat-Hf (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,3968,3,2024-07-21,2025-06-22
+Llama-3-70b-Chat-Hf,Llama-3-70b-Chat-Hf (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,3968,3,2024-07-21,2025-06-22
+Llama-3-8b-Chat-Hf,Llama-3-8b-Chat-Hf (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2733,2,2024-07-21,2025-06-08
+Llama-3-8b-Chat-Hf,Llama-3-8b-Chat-Hf (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2733,2,2024-07-21,2025-06-08
+Llama-3-8b-Chat-Hf,Llama-3-8b-Chat-Hf (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2733,2,2024-07-21,2025-06-08
+Llama-3-8b-Chat-Hf,Llama-3-8b-Chat-Hf (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2733,2,2024-07-21,2025-06-08
+Llama-3.2-3B-Instruct-Turbo,Llama-3.2-3B-Instruct-Turbo (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2464,2,2025-05-11,2025-05-25
+Llama-3.2-3B-Instruct-Turbo,Llama-3.2-3B-Instruct-Turbo (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Llama-3.2-3B-Instruct-Turbo,Llama-3.2-3B-Instruct-Turbo (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Llama-3.2-3B-Instruct-Turbo,Llama-3.2-3B-Instruct-Turbo (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Llama-3.3-70B-Instruct-Turbo,Llama-3.3-70B-Instruct-Turbo (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,9565,7,2025-03-02,2025-05-25
+Llama-3.3-70B-Instruct-Turbo,Llama-3.3-70B-Instruct-Turbo (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Llama-3.3-70B-Instruct-Turbo,Llama-3.3-70B-Instruct-Turbo (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Llama-3.3-70B-Instruct-Turbo,Llama-3.3-70B-Instruct-Turbo (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,9565,7,2025-03-02,2025-05-25
+Llama-4-Maverick-17B-128E-Instruct-FP8,Llama-4-Maverick-17B-128E-Instruct-FP8 (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6198,5,2025-04-13,2025-08-03
+Llama-4-Maverick-17B-128E-Instruct-FP8,Llama-4-Maverick-17B-128E-Instruct-FP8 (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6198,5,2025-04-13,2025-08-03
+Llama-4-Maverick-17B-128E-Instruct-FP8,Llama-4-Maverick-17B-128E-Instruct-FP8 (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,4964,4,2025-04-13,2025-05-25
+Llama-4-Maverick-17B-128E-Instruct-FP8,Llama-4-Maverick-17B-128E-Instruct-FP8 (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,4964,4,2025-04-13,2025-05-25
+Llama-4-Scout-17B-16E-Instruct,Llama-4-Scout-17B-16E-Instruct (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,6198,5,2025-04-13,2025-08-03
+Llama-4-Scout-17B-16E-Instruct,Llama-4-Scout-17B-16E-Instruct (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,6198,5,2025-04-13,2025-08-03
+Llama-4-Scout-17B-16E-Instruct,Llama-4-Scout-17B-16E-Instruct (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,4964,4,2025-04-13,2025-05-25
+Llama-4-Scout-17B-16E-Instruct,Llama-4-Scout-17B-16E-Instruct (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,4964,4,2025-04-13,2025-05-25
+Magistral-Medium-2506,Magistral-Medium-2506 (zero shot),Mistral,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,3654,3,2025-08-03,2025-08-31
+Magistral-Medium-2506,Magistral-Medium-2506 (zero shot with freeze values),Mistral,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,3654,3,2025-08-03,2025-08-31
+Magistral-Medium-2506,Magistral-Medium-2506 (scratchpad),Mistral,scratchpad,0,3,same_model_version_nonrepresentative_configuration,3654,3,2025-08-03,2025-08-31
+Magistral-Medium-2506,Magistral-Medium-2506 (scratchpad with freeze values),Mistral,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,3654,3,2025-08-03,2025-08-31
+Meta-Llama-3.1-405B-Instruct-Turbo,Meta-Llama-3.1-405B-Instruct-Turbo (zero shot),Meta,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2464,2,2025-05-11,2025-05-25
+Meta-Llama-3.1-405B-Instruct-Turbo,Meta-Llama-3.1-405B-Instruct-Turbo (zero shot with freeze values),Meta,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Meta-Llama-3.1-405B-Instruct-Turbo,Meta-Llama-3.1-405B-Instruct-Turbo (scratchpad),Meta,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Meta-Llama-3.1-405B-Instruct-Turbo,Meta-Llama-3.1-405B-Instruct-Turbo (scratchpad with freeze values),Meta,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Mistral-Large-2407,Mistral-Large-2407 (zero shot),Mistral,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,8960,7,2025-03-30,2025-06-22
+Mistral-Large-2407,Mistral-Large-2407 (zero shot with freeze values),Mistral,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,8960,7,2025-03-30,2025-06-22
+Mistral-Large-2407,Mistral-Large-2407 (scratchpad),Mistral,scratchpad,0,3,same_model_version_nonrepresentative_configuration,8960,7,2025-03-30,2025-06-22
+Mistral-Large-2407,Mistral-Large-2407 (scratchpad with freeze values),Mistral,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,8960,7,2025-03-30,2025-06-22
+Mistral-Large-2411,Mistral-Large-2411 (zero shot),Mistral,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,3654,3,2025-08-03,2025-08-31
+Mistral-Large-2411,Mistral-Large-2411 (zero shot with freeze values),Mistral,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,3654,3,2025-08-03,2025-08-31
+Mistral-Large-2411,Mistral-Large-2411 (scratchpad),Mistral,scratchpad,0,3,same_model_version_nonrepresentative_configuration,3654,3,2025-08-03,2025-08-31
+Mistral-Large-2411,Mistral-Large-2411 (scratchpad with freeze values),Mistral,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,3654,3,2025-08-03,2025-08-31
+Mistral-Large-Latest,Mistral-Large-Latest (zero shot),Mistral AI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Mistral-Large-Latest,Mistral-Large-Latest (zero shot with freeze values),Mistral AI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mistral-Large-Latest,Mistral-Large-Latest (scratchpad),Mistral AI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mistral-Large-Latest,Mistral-Large-Latest (scratchpad with news),Mistral AI,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mistral-Large-Latest,Mistral-Large-Latest (scratchpad with freeze values),Mistral AI,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mistral-Large-Latest,Mistral-Large-Latest (scratchpad with news with freeze values),Mistral AI,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x22B-Instruct-V0.1,Mixtral-8x22B-Instruct-V0.1 (zero shot),Mistral AI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x22B-Instruct-V0.1,Mixtral-8x22B-Instruct-V0.1 (zero shot with freeze values),Mistral AI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x22B-Instruct-V0.1,Mixtral-8x22B-Instruct-V0.1 (scratchpad),Mistral AI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x22B-Instruct-V0.1,Mixtral-8x22B-Instruct-V0.1 (scratchpad with news),Mistral AI,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x22B-Instruct-V0.1,Mixtral-8x22B-Instruct-V0.1 (scratchpad with freeze values),Mistral AI,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x22B-Instruct-V0.1,Mixtral-8x22B-Instruct-V0.1 (scratchpad with news with freeze values),Mistral AI,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x7B-Instruct-V0.1,Mixtral-8x7B-Instruct-V0.1 (zero shot),Mistral AI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x7B-Instruct-V0.1,Mixtral-8x7B-Instruct-V0.1 (zero shot with freeze values),Mistral AI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x7B-Instruct-V0.1,Mixtral-8x7B-Instruct-V0.1 (scratchpad),Mistral AI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x7B-Instruct-V0.1,Mixtral-8x7B-Instruct-V0.1 (scratchpad with news),Mistral AI,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x7B-Instruct-V0.1,Mixtral-8x7B-Instruct-V0.1 (scratchpad with freeze values),Mistral AI,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Mixtral-8x7B-Instruct-V0.1,Mixtral-8x7B-Instruct-V0.1 (scratchpad with news with freeze values),Mistral AI,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+O3-2025-04-16,O3-2025-04-16 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5327,6,2025-04-27,2025-12-21
+O3-2025-04-16,O3-2025-04-16 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5327,6,2025-04-27,2025-12-21
+O3-2025-04-16,O3-2025-04-16 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+O3-2025-04-16,O3-2025-04-16 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,1262,1,2025-04-27,2025-04-27
+O3-Mini-2025-01-31,O3-Mini-2025-01-31 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,5569,4,2025-03-02,2025-04-27
+O3-Mini-2025-01-31,O3-Mini-2025-01-31 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,5569,4,2025-03-02,2025-04-27
+O3-Mini-2025-01-31,O3-Mini-2025-01-31 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,5569,4,2025-03-02,2025-04-27
+O3-Mini-2025-01-31,O3-Mini-2025-01-31 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,5569,4,2025-03-02,2025-04-27
+O4-Mini-2025-04-16,O4-Mini-2025-04-16 (zero shot),OpenAI,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4909,4,2025-05-11,2025-08-17
+O4-Mini-2025-04-16,O4-Mini-2025-04-16 (zero shot with freeze values),OpenAI,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4909,4,2025-05-11,2025-08-17
+O4-Mini-2025-04-16,O4-Mini-2025-04-16 (scratchpad),OpenAI,scratchpad,0,3,same_model_version_nonrepresentative_configuration,4909,4,2025-05-11,2025-08-17
+O4-Mini-2025-04-16,O4-Mini-2025-04-16 (scratchpad with freeze values),OpenAI,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,4909,4,2025-05-11,2025-08-17
+QwQ-32B-Preview,QwQ-32B-Preview (zero shot),Qwen,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4035,3,2025-03-30,2025-04-27
+QwQ-32B-Preview,QwQ-32B-Preview (zero shot with freeze values),Qwen,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4035,3,2025-03-30,2025-04-27
+QwQ-32B-Preview,QwQ-32B-Preview (scratchpad),Qwen,scratchpad,0,3,same_model_version_nonrepresentative_configuration,4035,3,2025-03-30,2025-04-27
+QwQ-32B-Preview,QwQ-32B-Preview (scratchpad with freeze values),Qwen,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,4035,3,2025-03-30,2025-04-27
+Qwen1.5-110B-Chat,Qwen1.5-110B-Chat (zero shot),Qwen,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,1507,1,2024-07-21,2024-07-21
+Qwen1.5-110B-Chat,Qwen1.5-110B-Chat (zero shot with freeze values),Qwen,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Qwen1.5-110B-Chat,Qwen1.5-110B-Chat (scratchpad),Qwen,scratchpad,0,3,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Qwen1.5-110B-Chat,Qwen1.5-110B-Chat (scratchpad with news),Qwen,scratchpad with news,0,4,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Qwen1.5-110B-Chat,Qwen1.5-110B-Chat (scratchpad with freeze values),Qwen,scratchpad with freeze values,0,5,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Qwen1.5-110B-Chat,Qwen1.5-110B-Chat (scratchpad with news with freeze values),Qwen,scratchpad with news with freeze values,0,6,same_model_version_nonrepresentative_configuration,1507,1,2024-07-21,2024-07-21
+Qwen2.5-72B-Instruct-Turbo,Qwen2.5-72B-Instruct-Turbo (zero shot),Qwen,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,2464,2,2025-05-11,2025-05-25
+Qwen2.5-72B-Instruct-Turbo,Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values),Qwen,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Qwen2.5-72B-Instruct-Turbo,Qwen2.5-72B-Instruct-Turbo (scratchpad),Qwen,scratchpad,0,3,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Qwen2.5-72B-Instruct-Turbo,Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values),Qwen,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,2464,2,2025-05-11,2025-05-25
+Qwen3-235B-A22B-Fp8-Tput,Qwen3-235B-A22B-Fp8-Tput (zero shot),Qwen,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,12644,12,2025-05-11,2025-12-21
+Qwen3-235B-A22B-Fp8-Tput,Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values),Qwen,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,12644,12,2025-05-11,2025-12-21
+Qwen3-235B-A22B-Fp8-Tput,Qwen3-235B-A22B-Fp8-Tput (scratchpad),Qwen,scratchpad,0,3,same_model_version_nonrepresentative_configuration,7345,6,2025-05-11,2025-08-31
+Qwen3-235B-A22B-Fp8-Tput,Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values),Qwen,scratchpad with freeze values,0,4,same_model_version_nonrepresentative_configuration,7345,6,2025-05-11,2025-08-31
+Qwen3-235B-A22B-Thinking-2507,Qwen3-235B-A22B-Thinking-2507 (zero shot),Qwen,zero shot,1,1,preferred_outcome_blind_zero_shot_configuration,4065,5,2025-10-26,2025-12-21
+Qwen3-235B-A22B-Thinking-2507,Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values),Qwen,zero shot with freeze values,0,2,same_model_version_nonrepresentative_configuration,4065,5,2025-10-26,2025-12-21
+claude-3-5-haiku-20241022,claude-3-5-haiku-20241022,Anthropic,,1,1,only_available_configuration,1234,1,2025-08-03,2025-08-03

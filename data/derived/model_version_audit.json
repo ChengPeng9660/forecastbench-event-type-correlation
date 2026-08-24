@@ -1,0 +1,43 @@
+{
+  "configuration_counts": {
+    "no_configuration_suffix": 1,
+    "scratchpad": 48,
+    "scratchpad with SECOND news": 2,
+    "scratchpad with freeze values": 48,
+    "scratchpad with freeze values with web search": 1,
+    "scratchpad with news": 12,
+    "scratchpad with news with freeze values": 12,
+    "scratchpad with web search": 1,
+    "zero shot": 68,
+    "zero shot with freeze values": 68,
+    "zero shot with freeze values with web search": 1,
+    "zero shot with web search": 1
+  },
+  "group_size_counts": {
+    "1": 1,
+    "2": 20,
+    "4": 37,
+    "6": 10,
+    "7": 2
+  },
+  "input_exact_model_names": 263,
+  "input_file": "scored_panel.csv",
+  "input_scored_rows": 1046424,
+  "input_sha256": "37e649c253882b2f85171efcb7a083e89d8cd2de15b4743805c58958c332d521",
+  "mapping_file": "model_version_mapping.csv",
+  "mapping_sha256": "ad8d27911af4a5179a98adf63b07064e164114682326c8c683ffd4da8c3bdc26",
+  "multi_configuration_versions": 69,
+  "output_file": "scored_panel_model_versions.csv",
+  "output_model_versions": 70,
+  "output_scored_rows": 306996,
+  "output_sha256": "7b9ce08cd0e881ea111d15aa429a5c733d3f8b48c5dce88245afbbeb7df131c5",
+  "removed_configuration_variants": 193,
+  "schema_version": 1,
+  "selected_configuration_counts": {
+    "no_configuration_suffix": 1,
+    "zero shot": 68,
+    "zero shot with web search": 1
+  },
+  "selection_rule": "one actual forecast configuration per exact model version; prefer plain zero shot, then least-augmented zero shot; never use outcomes or average configurations",
+  "version_boundary": "remove only recognized trailing scratchpad/zero-shot configuration parentheses; retain dates, Preview, Exp, reasoning, size, and all other version tokens"
+}

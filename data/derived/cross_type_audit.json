@@ -1,38 +1,38 @@
 {
-  "analysis_commit": "447d8a780b9c84bcb126d69492b099408b08d547",
-  "built_at": "2026-08-19T07:25:00Z",
-  "expected_detail_rows": 723513,
+  "analysis_commit": "439e3a6142d3c00a39fa65fb1da1c234b97d3ffc",
+  "built_at": "2026-08-24T06:36:28Z",
+  "expected_detail_rows": 50715,
   "files": [
     {
       "path": "cross_type_summary.csv",
-      "sha256": "975de4edd25dc837f343040240e33ad710c6de0dfa06e794dfa9c2dd0efe5661",
-      "size_bytes": 61526
+      "sha256": "248874f1997933e7b11fc3097be680d35d599d19e4442e8ce2c24322138f18f9",
+      "size_bytes": 57358
     },
     {
       "path": "cross_type_summary.json",
-      "sha256": "2d62d0f89aa64e30aa4955c86d2bcf2f25b95a5b76d68d1daf3a1bc41d27717c",
-      "size_bytes": 158312
+      "sha256": "a10a4556397d7db1624a99172fd803bd1a1b4800dbd02c7911b21ab5443a1262",
+      "size_bytes": 154448
     },
     {
       "path": "cross_type_pair_details.csv.gz",
-      "sha256": "57aa99b33449e7f1f83bae46d8a98cc2c9ae1502beb678d678b6fea4f84cbe5f",
-      "size_bytes": 21393777
+      "sha256": "41c46790eeb05bc5fc08683e1de2241d3894f6b5fcea7b7384a59ec893aa24da",
+      "size_bytes": 1516456
     }
   ],
   "input": {
     "filename": "pair_metrics.csv",
-    "input_rows": 620154,
-    "n_exact_models": 263,
-    "n_pair_universe": 34453,
-    "sha256": "e2c1fe8a1a143687c8dc7f1cb957b960328965d10e07eb9f7ddb9031dfb38a2c",
+    "input_rows": 43470,
+    "n_exact_models": 70,
+    "n_pair_universe": 2415,
+    "sha256": "e99b780af24ae35278603a7f7872ee64bb07c37a0888aea61c1892a66d8fd92c",
     "topic_row_counts": {
-      "climate_weather": 34453,
-      "entertainment_culture": 34453,
-      "finance_economics": 34453,
-      "health_science": 34453,
-      "politics_conflict": 34453,
-      "sports": 34453,
-      "technology_ai": 34453
+      "climate_weather": 2415,
+      "entertainment_culture": 2415,
+      "finance_economics": 2415,
+      "health_science": 2415,
+      "politics_conflict": 2415,
+      "sports": 2415,
+      "technology_ai": 2415
     }
   },
   "metric_orientation": {
@@ -40,7 +40,7 @@
     "adjusted_pog": "inverted",
     "high_loss_lift": "direct"
   },
-  "n_detail_rows": 723513,
+  "n_detail_rows": 50715,
   "n_summary_rows": 126,
   "n_unordered_topic_pairs": 21,
   "schema_version": "1.0.0",

@@ -13,13 +13,19 @@
       "status": "pass"
     },
     {
+      "detail": "263 exact names reduced to 70 distinct versions without outcome-based selection.",
+      "id": "model_version_deduplication",
+      "label": "One configuration per model version",
+      "status": "pass"
+    },
+    {
       "detail": "0 scored model-target rows excluded across 0 explicitly audited targets.",
       "id": "fixed_effect_join",
       "label": "Fixed-effect taxonomy join",
       "status": "pass"
     },
     {
-      "detail": "152,610 eligible pair-slice rows at n ≥ 50.",
+      "detail": "11,529 eligible pair-slice rows at n ≥ 50.",
       "id": "pair_metrics",
       "label": "Pair metrics generated",
       "status": "pass"
@@ -41,103 +47,115 @@
   "files": [
     {
       "path": "site/public/data/manifest.json",
-      "sha256": "b9ec397255c96e239dd0cbe2738b66a47e8e34eb65b08a5c63d3f2ad0c95661d"
+      "sha256": "d6763ef61a05ea53d70b8cbcc9c7c7335a242a7c396aba38091002cd8cad6048"
     },
     {
       "path": "site/public/data/models.json",
-      "sha256": "778355cf919d5915c185633fb551405d3b4916ca7b7147b78bcd83b044eafed8"
+      "sha256": "654cc47da5e40aa90929cb55bdf9d098c08c6dda90a0415b065efc1b3f1df606"
     },
     {
       "path": "site/public/data/taxonomy.json",
       "sha256": "265da2430c8a468ce22034a8322fe2c134e6afe17d5abe00c96ca3d20b99934f"
     },
     {
+      "path": "site/public/data/model-version-mapping.csv",
+      "sha256": "ad8d27911af4a5179a98adf63b07064e164114682326c8c683ffd4da8c3bdc26"
+    },
+    {
       "path": "site/public/data/event-types/finance_economics.json",
-      "sha256": "fa5e5690c6d3c3a6a09595450912cc3ec017d1907ccac0b98b25a71eb7e8e506"
+      "sha256": "4b9aedb9c4605e34451ed855f3ce7e8cfda5168eba53892434fc227ca88c30e5"
     },
     {
       "path": "site/public/data/event-types/politics_conflict.json",
-      "sha256": "f2908e09502db444c49d9e7e0a72207f887d67dc09a5bf67b3f18b19c92ae6a2"
+      "sha256": "f3576808f2b648f34c5242f7232a95eda3ffc89cc241dc4c24fcdedc43605d97"
     },
     {
       "path": "site/public/data/event-types/climate_weather.json",
-      "sha256": "2fd08efac8e1a47ff0eb0aadaafd8cf61e38d19477a61061146accd8ca582629"
+      "sha256": "5c7a4132b5638896f2e05b718deffe486de1f28f274c5623362d85fa84447427"
     },
     {
       "path": "site/public/data/event-types/health_science.json",
-      "sha256": "05d8244928933cb423e4f575f90dd45f80139e72a61d83cfb18ce89c404506ee"
+      "sha256": "edbcfcd6483b2fc16b753cc25341f2d80cf1806e22afa4ea5d224f2246cdb722"
     },
     {
       "path": "site/public/data/event-types/technology_ai.json",
-      "sha256": "d7b2c045b99c146c141887936362bd3c4b50d67b73bdcecb52e20df324b6ee19"
+      "sha256": "e4056d8fa7e1e25461995ab8c82a43cf79e79fcb04dd1048d186f56b5f8c7317"
     },
     {
       "path": "site/public/data/event-types/sports.json",
-      "sha256": "0f2c30283fa401f8e75ac40742a366983e7cd59c01476887c8382ae761685c86"
+      "sha256": "0ae80a764f17b52560bfb6e3f4c1a422952657b229c32ade0e3378b1e2643b35"
     },
     {
       "path": "site/public/data/event-types/entertainment_culture.json",
-      "sha256": "2722ae5ac06f69ae35cb2f61aba75163ca1c3047cd49b1350e36f1d10301a21d"
+      "sha256": "4a4b97ae70bf955819c615eb2616294856ed1671956f3916fe4b0ad762e90e70"
     },
     {
       "path": "site/public/data/event-types/origin_type_dataset.json",
-      "sha256": "a198b5652e950bd1bc41bb636587257b24eaeef82a1b52613e9c5df1c71ff90f"
+      "sha256": "411fbc5408d823a4a7e9ff5f1fe6f07a028068c518c7e726845bc103287f7b6a"
     },
     {
       "path": "site/public/data/event-types/origin_type_market.json",
-      "sha256": "bd4495326733ef12ba51fb17619b04106ba17ef032a1bbe6f85ce324bdbea982"
+      "sha256": "c955fa7ac8294b536dc7779581bf9248f36acb3a9f9296d9c802702b2ebeb3cb"
     },
     {
       "path": "site/public/data/event-types/official_source_acled.json",
-      "sha256": "11a22cd7bf8c7af6e48d1fdefbdd5b50197b6c106769c460bc8ff957907ebcee"
+      "sha256": "5e83d1c333a8b1a0ede4490f8f6cd440e877d07ca8340aedd87cfcdef8c31c70"
     },
     {
       "path": "site/public/data/event-types/official_source_dbnomics.json",
-      "sha256": "41c532f0eb3e69bbc6b7d9902623efef257d48832e523d4e10a86cdfd7fb01f1"
+      "sha256": "f71351ed2c816131278198963bf4a794c5127432091e200ebf203188ac05ad71"
     },
     {
       "path": "site/public/data/event-types/official_source_fred.json",
-      "sha256": "d3b248b392b805356ced95e5c5e8d2a1e3e724b9dd0f282f2c91fc4a29d70fe4"
+      "sha256": "fee1323acfb0b1cede4a6742c31f1cad7b42794b023d854815df7fff065d8f3c"
     },
     {
       "path": "site/public/data/event-types/official_source_infer.json",
-      "sha256": "0b629ec9d2931c1824ccec65824c328d410dba7c0730779b43c34d6f4e7ecd77"
+      "sha256": "b848f8c2dccbd5dc074050b2f047b30c4afe784e97eebcbd21d75059dc326a19"
     },
     {
       "path": "site/public/data/event-types/official_source_manifold.json",
-      "sha256": "f5a71809814858c23a7a5874f87b5853e62e312e065adf2c602f1e3050103578"
+      "sha256": "81468d6c8f5513b59fc06f91c927c674c0f5137a461b098f567555ef0acb3162"
     },
     {
       "path": "site/public/data/event-types/official_source_metaculus.json",
-      "sha256": "b391fa14336ac423bbe7e6492743bbf4295271efe0aa6d4bc3cf749be96183db"
+      "sha256": "9748196361606cfae356e46793a9dd6c14f414dee1aa854f491070ceff838c50"
     },
     {
       "path": "site/public/data/event-types/official_source_polymarket.json",
-      "sha256": "02df1c264768edfd099afb718c5eac0c7a0bd058e6dff01c304921f3d330bddc"
+      "sha256": "250e55c503d3241ca77fe83613645aa5277f16c2f4f16f9da284aa87632d2715"
     },
     {
       "path": "site/public/data/event-types/official_source_wikipedia.json",
-      "sha256": "ba4aa49952e0ec247bc15206f2d33297d499585e6e5db26ebb61d1f33a5d6085"
+      "sha256": "022825f8cac2e1106173c2a558a772107a953875609405caf6d66e0cfaa36d03"
     },
     {
       "path": "site/public/data/event-types/official_source_yahoo_finance.json",
-      "sha256": "57fcb362e9cd10bb8203bbc241bd937f3577e7d4545a4f03e5a596579530d78c"
+      "sha256": "a7d4f4a6c25501f8779c0303648a508a0aacd20f803d86036e1b47af00650e4a"
     },
     {
       "path": "data/derived/pair_metrics_all.csv.gz",
-      "sha256": "7364cad8c6f5897ff0adbd1941818724bb754a4aaa9f018e500b9d508118c98c"
+      "sha256": "4085e3fceec72b091c2ecfac3997fa9c2fa11a6b1306958799578f2f66c9d545"
     },
     {
       "path": "data/derived/pair_metrics_eligible.csv.gz",
-      "sha256": "c177c9eca5282b76c042471a83dfa1947fd3e75f9ad1149b0170020d8bf7a43f"
+      "sha256": "9d37f699d9c9d92db4ff3a56bc3f6e4ba554e7f952d652871d44070b54d4b5b8"
+    },
+    {
+      "path": "data/derived/model_version_mapping.csv",
+      "sha256": "ad8d27911af4a5179a98adf63b07064e164114682326c8c683ffd4da8c3bdc26"
+    },
+    {
+      "path": "data/derived/model_version_audit.json",
+      "sha256": "f55d982c25b45ab40e7ad7807d9c0290138c868f696c202d372319052b33fe3d"
     },
     {
       "path": "data/derived/analysis_audit.json",
-      "sha256": "70afd7645be341306623efb1304cac65d9fe83ce610578dc615168b7da1bacd9"
+      "sha256": "4755f1ccf319ee4988593aa734bca3933034cb261434a785a1c1a65c59f52d0a"
     }
   ],
   "fixture": false,
-  "generated_at": "2026-08-19T07:25:00Z",
+  "generated_at": "2026-08-24T06:36:28Z",
   "status": "pass",
   "thresholds": {
     "high_loss_threshold": 0.25,
