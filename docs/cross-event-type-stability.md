@@ -2,7 +2,7 @@
 
 ## Research question
 
-For the same exact unordered model pair, does high loss dependence in one
+For the same unordered model-version pair, does high loss dependence in one
 derived event type predict high dependence in another event type? This is a
 cross-topic stability analysis of realized pair diagnostics. It is not an OOS
 aggregation test and does not estimate a causal topic effect.
@@ -10,9 +10,9 @@ aggregation test and does not estimate a causal topic effect.
 ## Released design
 
 - Seven analysis-eligible derived topics form 21 unordered topic pairs.
-- The global universe contains 263 exact model names and 34,453 unordered
+- The global universe contains 70 model versions and 2,415 unordered
   model pairs.
-- The all-pair detail archive retains all `21 * 34,453 = 723,513` rows,
+- The all-pair detail archive retains all `21 * 2,415 = 50,715` rows,
   including ineligible, non-near-BI, and undefined-metric cases.
 - The primary sample requires eligibility, a finite metric, and near-BI in
   both topics. The sensitivity sample requires eligibility and a finite metric
@@ -35,12 +35,12 @@ association is moderate rather than universal.
 
 | Sample | Metric | Reportable topic pairs | Median Spearman | Range |
 |---|---|---:|---:|---:|
-| Near-BI in both | Adjusted POG | 20 / 21 | 0.337 | -0.016 to 0.562 |
-| Near-BI in both | High-loss lift | 15 / 21 | 0.275 | -0.304 to 0.455 |
-| Near-BI in both | Adjusted-loss correlation | 20 / 21 | 0.240 | -0.089 to 0.459 |
-| Eligible in both | Adjusted POG | 21 / 21 | 0.198 | 0.052 to 0.513 |
-| Eligible in both | High-loss lift | 21 / 21 | 0.221 | 0.060 to 0.556 |
-| Eligible in both | Adjusted-loss correlation | 21 / 21 | 0.163 | -0.066 to 0.429 |
+| Near-BI in both | Adjusted POG | 11 / 21 | 0.188 | -0.409 to 0.605 |
+| Near-BI in both | High-loss lift | 7 / 21 | 0.298 | -0.008 to 0.313 |
+| Near-BI in both | Adjusted-loss correlation | 11 / 21 | 0.183 | -0.108 to 0.604 |
+| Eligible in both | Adjusted POG | 15 / 21 | 0.191 | -0.118 to 0.435 |
+| Eligible in both | High-loss lift | 15 / 21 | 0.249 | 0.037 to 0.394 |
+| Eligible in both | Adjusted-loss correlation | 15 / 21 | 0.280 | 0.072 to 0.465 |
 
 Thus, a model pair that is relatively dependent in one topic is somewhat more
 likely to be dependent in another, but event type still changes pair ordering
@@ -49,24 +49,17 @@ precede complementarity interpretation.
 
 ## Stable and topic-specific examples
 
-The strongest near-BI relationships with headline support include:
+The strongest near-BI relationships include:
 
-- Finance × Sports: POG `0.562` and loss correlation `0.459` (`n=861`).
-- Climate × Politics: POG `0.554` and loss correlation `0.379` (`n=1,073`).
-- Climate × Finance: POG `0.466`, high-loss lift `0.428`, and loss
-  correlation `0.453` (`n=917` for each).
-- Finance × Politics: POG `0.454` and loss correlation `0.419` (`n=1,370`).
+- Finance × Sports: POG `0.605` and loss correlation `0.604` (`n=79`, limited).
+- Climate × Politics: POG `0.473` and high-loss lift `0.298` (`n=105`, headline).
+- Finance × Politics: POG `0.188`, high-loss lift `0.313`, and loss
+  correlation `0.486` (`n=111`, headline).
 
-The clearest supported topic-specific example is Health × Technology:
+The clearest topic-specific reversal is Health × Sports:
 
-- POG Spearman `-0.016` (`n=154`);
-- loss-correlation Spearman `-0.089` (`n=154`);
-- high-loss-lift Spearman `-0.304`, but with only `n=35`, so it is limited.
-
-For Health × Technology, 15.4% of Health's top-dependence POG quartile moves
-to Technology's top-complementarity quartile, while the reverse directional
-flip is 41.0%. These are descriptive transition rates, not probabilities for
-future forecasts.
+- POG Spearman `-0.409` (`n=68`, limited);
+- loss-correlation Spearman `-0.108` (`n=68`, limited).
 
 ## Coverage warning
 
@@ -80,7 +73,7 @@ loss above the 0.25 threshold.
 
 The release supports this statement:
 
-> Among exact model pairs that have adequate common support and comparable BI
+> Among model-version pairs that have adequate common support and comparable BI
 > in two derived topics, the relative ordering of realized pair dependence is
 > moderately persistent on average, but important topic-specific reversals
 > remain. This motivates event-type-conditioned pair selection.

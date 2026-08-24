@@ -1086,7 +1086,7 @@ def run_analysis(
                 exclusion_reference_panel, exclusion_reference_panel.name
             )
     if len(models) < 2:
-        raise ValueError("fewer than two active exact models")
+        raise ValueError("fewer than two active model versions")
     all_pairs = tuple(itertools.combinations(models, 2))
     global_pair_rows, global_rows = finalize_global_pairs(
         accumulators, target_counts, organizations, models, min_overlap, near_bi_gap

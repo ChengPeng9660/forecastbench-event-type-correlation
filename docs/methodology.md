@@ -111,9 +111,22 @@ prediction,outcome,raw_brier,question_fixed_effect,
 normalization_term,adjusted_brier
 ```
 
-One row represents one exact model and one official target key. Identical
+One row represents one exact configuration name and one official target key. Identical
 duplicates are collapsed and counted in the audit JSON. Conflicting duplicates
 fail instead of being silently overwritten.
+
+### Model-version panel
+
+`analysis/model_versions.py` creates the analysis panel without modifying the
+raw scored panel. It removes only a recognized trailing run-configuration
+suffix beginning with `scratchpad` or `zero shot`. It retains dates, `Preview`,
+`Exp`, reasoning mode, model size, and every other version token.
+
+Exactly one actual configuration is retained for each version. Selection is
+outcome-blind: prefer plain `zero shot`, then the least-augmented zero-shot
+configuration. No probabilities are averaged. The output keeps
+`exact_model_name` and `model_configuration` provenance columns, and the full
+mapping records selected/nonselected status, row/date coverage, and reason.
 
 ## Official adjusted loss
 
@@ -144,7 +157,7 @@ below remain event-weighted, exactly as in the predecessor experiment.
 
 ## Common-support construction
 
-For slice \(s\) and exact models \(i,j\), define common support as the
+For slice \(s\) and model versions \(i,j\), define common support as the
 intersection of their scored target keys after the taxonomy join:
 
 ```text
@@ -161,7 +174,7 @@ with blank metrics and one of these explicit reasons:
 - `no_common_targets`;
 - `n_overlap_N_below_min_50`.
 
-The output enumerates every global exact-model-name pair for every retained
+The output enumerates every global model-version pair for every retained
 topic, both origins, and all nine official sources, so missingness is visible
 rather than selected away.
 
@@ -235,12 +248,12 @@ should not mix all-pair and near-BI conclusions.
 
 ## Cross-event-type dependence stability
 
-The cross-event-type experiment asks whether the dependence of one exact model
+The cross-event-type experiment asks whether the dependence of one model-version
 pair is stable across two derived semantic topics. Its observation unit remains
-the canonical unordered exact-model pair, not an event row. With seven topics,
+the canonical unordered model-version pair, not an event row. With seven topics,
 the release evaluates all 21 unordered topic combinations.
 
-For topics \(s\) and \(t\), metric \(m\), and exact-model pair \((i,j)\), the
+For topics \(s\) and \(t\), metric \(m\), and model-version pair \((i,j)\), the
 primary sample is the intersection satisfying all of the following in both
 topics:
 
@@ -250,11 +263,11 @@ topics:
 
 The sensitivity sample drops only the third condition and therefore includes
 all pairs eligible in both topics. Undefined lift or correlation values are
-never imputed. Ranks are recomputed within the exact two-topic intersection so
+never imputed. Ranks are recomputed within the same two-topic intersection so
 that differing model coverage cannot silently change the comparison set.
 
 For every metric and topic pair, the primary stability coefficient is the
-tie-aware Spearman correlation across exact-model pairs. Raw-value Pearson
+tie-aware Spearman correlation across model-version pairs. Raw-value Pearson
 correlation is secondary, especially because high-loss lift can be
 heavy-tailed. The cross-topic sign has the same stability interpretation for
 all three raw metrics: a positive coefficient means model-pair ordering tends
@@ -276,8 +289,8 @@ Results with 30--99 pairs are labeled limited and results with at least 100 are
 eligible for headline descriptive interpretation. These are reporting
 thresholds, not statistical significance thresholds.
 
-The full detail archive enumerates every global exact-model pair for every
-topic combination: `21 * 34,453 = 723,513` rows. Ineligible pairs, insufficient
+The full detail archive enumerates every global model-version pair for every
+topic combination: `21 * 2,415 = 50,715` rows. Ineligible pairs, insufficient
 overlap, non-near-BI status, and undefined metrics remain explicit so that the
 cross-topic intersection is auditable.
 
@@ -290,7 +303,7 @@ lexicographically ordered so that an unordered pair appears once.
 compatibility, `topic_id` equals `slice_id` on topic rows and is blank on the
 two official dimensions. Core fields include:
 
-- exact model and organization labels;
+- model-version and organization labels, with an auditable exact-name mapping;
 - each model's topic coverage and their common support;
 - date/source/origin coverage;
 - eligibility and insufficiency reason;

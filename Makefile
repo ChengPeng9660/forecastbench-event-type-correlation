@@ -4,12 +4,13 @@ DERIVED_DIR ?= data/derived
 SITE_DATA_DIR ?= site/public/data
 BUILD_TIMESTAMP ?= 2026-08-19T00:00:00+00:00
 EXCLUSION_REFERENCE_PANEL ?=
+MODEL_VERSION_STAMP := $(BUILD_DIR)/.model_versions.stamp
 
-.PHONY: help check-inputs taxonomy scoring metrics export cross-type global-baseline analysis test site-build
+.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline analysis test site-build
 
 help:
 	@echo "Required variables: FORECASTBENCH_EVENTS, FORECASTBENCH_PROCESSED_ROOT, FORECASTBENCH_FIXED_EFFECTS"
-	@echo "Targets: taxonomy scoring metrics export cross-type global-baseline analysis test site-build"
+	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline analysis test site-build"
 
 check-inputs:
 	@test -f "$(FORECASTBENCH_EVENTS)" || (echo "FORECASTBENCH_EVENTS is missing" && exit 1)
@@ -34,11 +35,21 @@ $(BUILD_DIR)/scored_panel.csv: analysis/scoring.py $(FORECASTBENCH_FIXED_EFFECTS
 		--audit-output "$(BUILD_DIR)/scoring_audit.json" \
 		--max-file-read-errors 0
 
+model-versions: $(MODEL_VERSION_STAMP)
+
+$(MODEL_VERSION_STAMP): analysis/model_versions.py $(BUILD_DIR)/scored_panel.csv
+	$(PYTHON) analysis/model_versions.py \
+		--input "$(BUILD_DIR)/scored_panel.csv" \
+		--output "$(BUILD_DIR)/scored_panel_model_versions.csv" \
+		--mapping-output "$(BUILD_DIR)/model_version_mapping.csv" \
+		--audit-output "$(BUILD_DIR)/model_version_audit.json"
+	@touch "$(MODEL_VERSION_STAMP)"
+
 metrics: $(BUILD_DIR)/pair_metrics.csv
 
-$(BUILD_DIR)/pair_metrics.csv: analysis/metrics.py $(BUILD_DIR)/event_taxonomy.csv $(BUILD_DIR)/scored_panel.csv
+$(BUILD_DIR)/pair_metrics.csv: analysis/metrics.py $(BUILD_DIR)/event_taxonomy.csv $(MODEL_VERSION_STAMP)
 	$(PYTHON) analysis/metrics.py \
-		--scored-panel "$(BUILD_DIR)/scored_panel.csv" \
+		--scored-panel "$(BUILD_DIR)/scored_panel_model_versions.csv" \
 		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
 		--output "$(BUILD_DIR)/pair_metrics.csv" \
 		--audit-output "$(BUILD_DIR)/metrics_audit.json" \
@@ -50,13 +61,15 @@ $(BUILD_DIR)/pair_metrics.csv: analysis/metrics.py $(BUILD_DIR)/event_taxonomy.c
 
 export: $(SITE_DATA_DIR)/manifest.json
 
-$(SITE_DATA_DIR)/manifest.json: analysis/export_site.py $(BUILD_DIR)/pair_metrics.csv $(BUILD_DIR)/taxonomy_summary.json $(BUILD_DIR)/scoring_audit.json $(BUILD_DIR)/metrics_audit.json
+$(SITE_DATA_DIR)/manifest.json: analysis/export_site.py $(BUILD_DIR)/pair_metrics.csv $(BUILD_DIR)/taxonomy_summary.json $(BUILD_DIR)/scoring_audit.json $(MODEL_VERSION_STAMP) $(BUILD_DIR)/metrics_audit.json
 	$(PYTHON) analysis/export_site.py \
 		--pair-csv "$(BUILD_DIR)/pair_metrics.csv" \
 		--taxonomy-csv "$(BUILD_DIR)/event_taxonomy.csv" \
 		--taxonomy-summary "$(BUILD_DIR)/taxonomy_summary.json" \
-		--scored-panel "$(BUILD_DIR)/scored_panel.csv" \
+		--scored-panel "$(BUILD_DIR)/scored_panel_model_versions.csv" \
 		--scoring-audit "$(BUILD_DIR)/scoring_audit.json" \
+		--model-version-audit "$(BUILD_DIR)/model_version_audit.json" \
+		--model-version-mapping "$(BUILD_DIR)/model_version_mapping.csv" \
 		--metrics-audit "$(BUILD_DIR)/metrics_audit.json" \
 		--site-data-dir "$(SITE_DATA_DIR)" \
 		--derived-dir "$(DERIVED_DIR)" \
@@ -75,9 +88,9 @@ $(DERIVED_DIR)/cross_type_audit.json: analysis/cross_type.py $(BUILD_DIR)/pair_m
 
 global-baseline: $(DERIVED_DIR)/global_baseline_audit.json
 
-$(DERIVED_DIR)/global_baseline_audit.json: analysis/global_baseline.py $(BUILD_DIR)/scored_panel.csv $(BUILD_DIR)/event_taxonomy.csv $(BUILD_DIR)/pair_metrics.csv
+$(DERIVED_DIR)/global_baseline_audit.json: analysis/global_baseline.py $(MODEL_VERSION_STAMP) $(BUILD_DIR)/event_taxonomy.csv $(BUILD_DIR)/pair_metrics.csv
 	$(PYTHON) analysis/global_baseline.py \
-		--scored-panel "$(BUILD_DIR)/scored_panel.csv" \
+		--scored-panel "$(BUILD_DIR)/scored_panel_model_versions.csv" \
 		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
 		--pair-metrics "$(BUILD_DIR)/pair_metrics.csv" \
 		--derived-dir "$(DERIVED_DIR)" \

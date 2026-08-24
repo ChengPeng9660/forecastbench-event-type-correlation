@@ -16,16 +16,22 @@ event-type results. It asks four separate questions:
 The fourth question is a control. Individual-model BI rank and model-pair
 dependence rank are different estimands and are never combined.
 
-## Clean exact-model universe
+## Clean model-version universe
 
-The analysis uses exact model/configuration names. `LLM Crowd` geometric-mean,
+The raw scoring layer preserves exact model/configuration names. `LLM Crowd` geometric-mean,
 geometric-mean-log-odds, and median aggregates are explicitly excluded before
-the model and unordered-pair universes are constructed. The release audit
-records their exact names, input row counts, and source-file counts. The clean
-release is expected to contain 263 exact models and 34,453 unordered pairs.
+the version and unordered-pair universes are constructed.
 
-No family collapsing is performed in this experiment. Consequently, prompt,
-news, and freeze-value variants remain distinct models.
+The analysis layer removes only recognized trailing scratchpad/zero-shot run
+configurations and keeps one real forecast series per exact version. Plain
+zero shot is preferred; the sole version without plain zero shot uses its
+zero-shot-with-web-search series. This rule is fixed before reading outcomes.
+It does not average configurations. Release dates, `Preview`, `Exp`, reasoning
+mode, parameter/size labels, and other version tokens remain distinct.
+
+The resulting release contains 70 model versions and 2,415 unordered pairs.
+The complete 263-name mapping, selected flag, coverage, and reason are
+published in `data/derived/model_version_mapping.csv`.
 
 ## Global scopes
 
@@ -45,7 +51,7 @@ correlation is nonlinear.
 
 ## Pair metrics and eligibility
 
-For each global scope and every unordered clean exact-model pair, metrics use
+For each global scope and every unordered clean model-version pair, metrics use
 only identical common targets, keyed by date, source, event ID, and horizon.
 
 - Adjusted POG is the better common-support mean adjusted loss minus the mean
@@ -66,14 +72,14 @@ Every clean pair is retained in the published global pair archive. Ineligible
 or undefined results are blank and carry explicit reasons; they are never
 silently dropped or imputed.
 
-For browser heatmaps, the same 34,453 canonical pairs are also published in one
+For browser heatmaps, the same 2,415 canonical pairs are also published in one
 compact JSON matrix per global scope. These matrices are projections of the
 target-level global pair archive, not averages of topic results. Each shard
 contains stable model IDs and metadata plus a fixed field list and array-valued
 pair rows. It preserves overlap and date counts, eligibility, near-BI status,
 all three metrics, BI/overlap reasons, and metric-specific null reasons. JSON
 booleans and nulls are typed rather than encoded as strings.
-Canonical unordered pairs retain the CSV's lexicographic ordering by exact
+Canonical unordered pairs retain the CSV's lexicographic ordering by version
 `model_name`. Stable model IDs are join and display keys; their two values in a
 pair are not promised to be in stable-ID lexicographic order and must not be
 used to reorder the pair archive.
@@ -129,7 +135,7 @@ summaries. Cells with 30--99 pairs are `limited`; cells with at least 100 are
 
 ## Focal-model partner-rank stability
 
-For each focal exact model, only its partners are ranked. The same global/topic
+For each focal model version, only its partners are ranked. The same global/topic
 intersection and metric orientation rules apply. At least 20 defined partners
 are required. Each profile reports Spearman and Pearson correlation, quartile
 overlap/persistence/flips, the globally and topically highest-dependence and

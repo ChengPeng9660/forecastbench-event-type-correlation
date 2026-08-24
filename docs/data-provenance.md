@@ -6,7 +6,7 @@ This repository does not redistribute the multi-gigabyte raw ForecastBench forec
 2. the official question fixed-effect JSON snapshot;
 3. resolved event metadata used to derive topic labels.
 
-The published derived artifacts include input hashes, row counts, excluded-target counts, model/configuration identities, date coverage, and metric eligibility reasons. Local absolute filesystem paths are excluded from public artifacts.
+The published derived artifacts include input hashes, row counts, excluded-target counts, the complete exact-name-to-version mapping, selected configuration, date coverage, and metric eligibility reasons. Local absolute filesystem paths are excluded from public artifacts.
 
 ## Upstream attribution and licensing
 

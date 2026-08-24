@@ -20,28 +20,36 @@ The repository separates official provenance dimensions (`Dataset`/`Market` and 
 
 - 13,661 classified event-date rows and 8,204 unique `(source,event_id)` events.
 - Seven analysis-eligible semantic topics, two official origin slices, and nine official source slices.
-- 1,046,424 scored model-target rows from 263 exact clean-LLM model names.
-- 34,453 global unordered model pairs and 620,154 pair-slice rows.
-- 152,610 pair-slice rows meet the default common-support threshold of 50.
+- 1,046,424 raw scored model-target rows from 263 exact clean-LLM configuration names.
+- An outcome-blind version-selection stage reduces these to 306,996 rows from 70 distinct model versions: 68 plain zero-shot representatives, one zero-shot-with-web-search representative, and one configurationless model.
+- 2,415 global unordered version pairs and 43,470 pair-slice rows.
+- 11,529 pair-slice rows meet the default common-support threshold of 50.
 - 21,252 distinct official `(date,source,event_id,horizon)` targets appear in the analytical slices.
 - Zero clean-candidate JSON read errors and zero scored rows missing the taxonomy join.
 
 The taxonomy is derived, versioned as `forecastbench-topic-v1.1.0`, and not an official ForecastBench field. All 61 initial multi-topic rows (17 unique events) were manually reviewed. Eleven analysis-eligible rows remain explicitly review-required because their resolution predicates are genuinely cross-domain. Unrecoverable generic-pair templates and unmatched visible questions are excluded from semantic-topic slices but retained in official origin/source slices.
 
 The atlas provides model filters, pair rankings, and downloadable results for
-all 263 exact model names. The heatmap is limited to 30 models at once for
+all 70 model versions. The heatmap is limited to 30 models at once for
 browser performance; the downloadable and archived tables retain the full
 filtered pair universe.
 
-The cross-event-type stability experiment follows every one of the 34,453
-global exact-model pairs across all 21 unordered combinations of the seven
+Prompt, scratchpad, news, web-search, and freeze-value suffixes are not treated
+as separate models. The analysis keeps one actual zero-shot forecast series per
+version; it does not average configurations or select them using outcomes.
+Dates and tokens such as `Preview`, `Exp`, reasoning mode, and model size remain
+part of the version identity. The complete 263-to-70 mapping is published in
+`data/derived/model_version_mapping.csv`.
+
+The cross-event-type stability experiment follows every one of the 2,415
+global model-version pairs across all 21 unordered combinations of the seven
 semantic topics. Its primary view asks whether a pair that is dependent in one
 topic remains dependent in another among pairs that are near-BI in both. A
-complete 723,513-row audit archive retains ineligible and undefined cases
+complete 50,715-row audit archive retains ineligible and undefined cases
 rather than selecting them away.
 
 The global baseline pools targets without an event-type split and includes a
-three-metric pairwise heatmap over the same 263-model clean universe. Its
+three-metric pairwise heatmap over the same 70-version clean universe. Its
 compact browser view displays 30 high-coverage models in release order while
 all models remain filterable. The baseline then compares its pair ordering with
 each topic. Its primary transfer view removes the selected topic before
@@ -92,7 +100,7 @@ model partner stability, and individual-model BI control are documented in
 
 ## Repository layout
 
-- `analysis/`: taxonomy, official-FX scoring, streaming metrics, and static-data export.
+- `analysis/`: taxonomy, official-FX scoring, model-version selection, streaming metrics, and static-data export.
 - `data/raw_manifest/`: upstream relative filenames, sizes, and SHA-256 hashes; no raw forecasts.
 - `data/derived/`: complete and eligible pair tables plus the combined audit.
 - `data/derived/cross_type_*`: cross-topic summaries, all-pair transitions, and a standalone audit.

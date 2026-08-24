@@ -149,7 +149,7 @@ export function GlobalBaseline({ data, models, loading, error }: GlobalBaselineP
 
       <div className="global-matrix-heading">
         <div><p className="eyebrow">GLOBAL PAIRWISE MATRIX · {scope?.label}</p><h3>Model dependence without event-type splits</h3></div>
-        <p>Every cell is recomputed from the active global target set. The compact view keeps 30 high-coverage exact models visible while all clean models remain filterable.</p>
+        <p>Every cell is recomputed from the active global target set. The compact view keeps 30 high-coverage model versions visible while all 70 versions remain filterable.</p>
       </div>
       <GlobalPairMatrix
         data={data}

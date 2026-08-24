@@ -5,7 +5,7 @@ derived taxonomy with the required key, provenance, and eligibility columns:
 ``date, source, event_id, topic_id, origin_type, official_source,
 topic_analysis_eligible, review_required``.
 
-The output contains every global exact-model-name pair for every eligible
+The output contains every global model-version pair for every eligible
 semantic topic, official origin, and official source, including rows that are
 not estimable. Such rows retain overlap counts and an explicit reason instead
 of disappearing from the published result.

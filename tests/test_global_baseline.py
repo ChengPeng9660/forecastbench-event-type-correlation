@@ -91,7 +91,7 @@ def test_leave_topic_out_support_is_global_minus_topic() -> None:
 
 
 def test_clean_universe_contract_and_crowd_filter() -> None:
-    assert math.comb(263, 2) == 34_453
+    assert math.comb(70, 2) == 2_415
     assert is_excluded_llm_crowd(
         "LLM Crowd (gpt-4o, claude-3.5-sonnet, gemini-1.5-pro) median with news"
     )
@@ -132,7 +132,7 @@ def test_partner_summary_suppresses_fewer_than_30_focal_models() -> None:
         "dependent_top_jaccard": .2, "complementary_top_jaccard": .3,
         "interpretation_status": "limited",
     }
-    result = build_partner_summary([row], 263)
+    result = build_partner_summary([row], 70)
     target = next(
         value for value in result
         if all(value[key] == row[key] for key in (

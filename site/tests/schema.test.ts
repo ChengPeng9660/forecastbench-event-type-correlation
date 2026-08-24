@@ -209,7 +209,7 @@ describe("global-baseline stability contract", () => {
 
     const publishedModelIds = new Set(models.map((model) => model.id));
     const profileEntries = Object.entries(globalManifest.partner_profile_files);
-    expect(profileEntries).toHaveLength(263);
+    expect(profileEntries).toHaveLength(70);
     expect(profileEntries.every(([modelId]) => publishedModelIds.has(modelId))).toBe(true);
     const profileRoot = join(dataRoot, "global-baseline", "partner-profiles");
     const expectedProfileFiles = profileEntries.map(([, path]) => path.replace("global-baseline/partner-profiles/", "")).sort();
@@ -255,9 +255,9 @@ describe("global-baseline stability contract", () => {
       expect(payload.schema_version).toBe(globalManifest.schema_version);
       expect(payload.global_scope).toBe(scope);
       expect(payload.fields).toEqual(expectedPairMatrixFields);
-      expect(payload.models).toHaveLength(263);
-      expect(payload.pairs).toHaveLength(34_453);
-      expect(new Set(payload.models.map((model) => model.id)).size).toBe(263);
+      expect(payload.models).toHaveLength(70);
+      expect(payload.pairs).toHaveLength(2_415);
+      expect(new Set(payload.models.map((model) => model.id)).size).toBe(70);
       expect(payload.models.every((model) => publishedModelIds.has(model.id) && model.name !== "LLM Crowd")).toBe(true);
       expect(payload.pairs.every((row) => row.length === expectedPairMatrixFields.length)).toBe(true);
 
@@ -297,7 +297,7 @@ describe("global-baseline stability contract", () => {
         if (lift === null) expect(row[liftReasonIndex]).toEqual(expect.any(String));
         if (corr === null) expect(row[corrReasonIndex]).toEqual(expect.any(String));
       }
-      expect(seen.size).toBe(34_453);
+      expect(seen.size).toBe(2_415);
       expect(record.path).toBe(relativePath.replace("global-baseline/", ""));
       expect(record.n_pairs).toBe(payload.pairs.length);
       expect(record.size_bytes).toBe(statSync(absolutePath).size);

@@ -1,5 +1,14 @@
 # Experiment log
 
+## 2026-08-24 — Model-version deduplication
+
+- Preserved the 1,046,424-row exact-configuration scored panel as the immutable input layer.
+- Identified 263 exact names mapping to 70 distinct model versions. Sixty-nine versions had multiple run configurations; 193 nonrepresentative variants were removed from the analysis layer.
+- Applied an outcome-blind representative rule: 68 plain zero-shot series, one zero-shot-with-web-search series for `GPT-4o-2024-11-20`, and one configurationless series.
+- Retained dates, `Preview`, `Exp`, reasoning, size, and other version tokens. No configurations were averaged and no representative was selected using Brier loss or outcomes.
+- Rebuilt 306,996 version-level scored rows, 2,415 global pairs, 43,470 pair-slice rows, and the 50,715-row cross-topic detail archive.
+- Published the complete mapping and model-version audit alongside refreshed global, event-type, and cross-topic artifacts.
+
 ## 2026-08-19 — Project initialization
 
 - Created a standalone repository for the event-type dependence analysis.

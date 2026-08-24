@@ -112,7 +112,7 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
     <section className="cross-type-section" id="stability" data-testid="cross-type-stability">
       <div className="section-heading">
         <div><p className="eyebrow">CROSS-EVENT-TYPE STABILITY</p><h2>Descriptive pair stability across event types</h2></div>
-        <p>Each cell compares the ranking of the same exact model pairs in two topic slices. Color encodes Spearman rank stability; insufficient cells are never colored or interpreted.</p>
+        <p>Each cell compares the ranking of the same model-version pairs in two topic slices. Color encodes Spearman rank stability; insufficient cells are never colored or interpreted.</p>
       </div>
 
       <div className="cross-type-toolbar">

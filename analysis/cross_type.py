@@ -202,7 +202,7 @@ def write_csv(path: Path, rows: Iterable[Mapping[str, Any]]) -> None:
 def model_pair(row: Mapping[str, str]) -> tuple[str, str]:
     model_a, model_b = row["model_a"].strip(), row["model_b"].strip()
     if not model_a or not model_b or model_a == model_b:
-        raise ValueError("rows require two distinct exact model names")
+        raise ValueError("rows require two distinct model versions")
     return (model_a, model_b) if model_a < model_b else (model_b, model_a)
 
 
@@ -243,7 +243,7 @@ def load_pair_archive(path: Path) -> tuple[
                 raise ValueError(f"duplicate pair in topic {topic}: {pair!r}")
             topic_rows[topic][pair] = dict(row)
     if len(models) < 2:
-        raise ValueError("input contains fewer than two exact models")
+        raise ValueError("input contains fewer than two model versions")
     all_pairs = tuple(itertools.combinations(sorted(models), 2))
     return topic_rows, all_pairs, organizations, {
         "input_rows": input_rows, "n_exact_models": len(models),

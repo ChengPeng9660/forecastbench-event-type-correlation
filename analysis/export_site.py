@@ -303,6 +303,8 @@ def build_site_artifacts(
     taxonomy_summary_json: Path,
     scored_panel: Path,
     scoring_audit_json: Path,
+    model_version_audit_json: Path,
+    model_version_mapping_csv: Path,
     metrics_audit_json: Path,
     site_data_dir: Path,
     derived_dir: Path,
@@ -311,6 +313,7 @@ def build_site_artifacts(
 ) -> dict[str, Any]:
     taxonomy_summary = read_json(taxonomy_summary_json)
     scoring_audit = read_json(scoring_audit_json)
+    model_version_audit = read_json(model_version_audit_json)
     metrics_audit = read_json(metrics_audit_json)
     if scoring_audit.get("file_read_errors"):
         raise ValueError("refusing to publish a scoring build with forecast file read errors")
@@ -394,6 +397,7 @@ def build_site_artifacts(
             }
         )
     write_json(site_data_dir / "models.json", model_payload)
+    shutil.copyfile(model_version_mapping_csv, site_data_dir / "model-version-mapping.csv")
 
     event_refs = []
     ordered_slices: list[tuple[str, str]] = [
@@ -493,6 +497,7 @@ def build_site_artifacts(
         "dataset_version": scoring_audit["fixed_effects_file"],
         "taxonomy_version": taxonomy_summary["taxonomy_version"],
         "metric_version": "three-adjusted-pair-metrics-v1",
+        "model_definition": "exact_model_version_one_zero_shot_representative_v1",
         "built_at": built_at,
         "commit_sha": analysis_commit,
         "fixture": False,
@@ -508,10 +513,13 @@ def build_site_artifacts(
 
     full_gzip, eligible_gzip, eligible_rows, status_counts = copy_pair_archives(pair_csv, derived_dir)
     write_json(derived_dir / "taxonomy_summary.json", taxonomy_summary)
+    shutil.copyfile(model_version_mapping_csv, derived_dir / "model_version_mapping.csv")
+    write_json(derived_dir / "model_version_audit.json", model_version_audit)
     combined_audit = {
         "built_at": built_at,
         "analysis_commit": analysis_commit,
         "scoring": scoring_audit,
+        "model_versions": model_version_audit,
         "taxonomy": taxonomy_summary,
         "metrics": metrics_audit,
         "export": {
@@ -545,6 +553,7 @@ def build_site_artifacts(
         "checks": [
             {"id": "taxonomy_keys", "label": "Taxonomy keys unique", "status": "pass", "detail": f"{taxonomy_summary['unique_date_source_event_count']:,} unique date-source-event keys."},
             {"id": "forecast_file_reads", "label": "Clean forecast files readable", "status": "fail" if file_read_errors else "pass", "detail": f"{file_read_errors:,} clean-candidate file read/parse errors."},
+            {"id": "model_version_deduplication", "label": "One configuration per model version", "status": "pass", "detail": f"{model_version_audit['input_exact_model_names']:,} exact names reduced to {model_version_audit['output_model_versions']:,} distinct versions without outcome-based selection."},
             {"id": "fixed_effect_join", "label": "Fixed-effect taxonomy join", "status": "warn" if missing_scored else "pass", "detail": f"{missing_scored:,} scored model-target rows excluded across {metrics_audit.get('unclassified_unique_targets', 0):,} explicitly audited targets."},
             {"id": "pair_metrics", "label": "Pair metrics generated", "status": "pass", "detail": f"{eligible_rows:,} eligible pair-slice rows at n ≥ {metrics_audit['min_overlap']}."},
             {"id": "finite_values", "label": "Undefined metrics explicit", "status": "pass", "detail": "Undefined lift/correlation values are null with audited reasons; NaN/Infinity are never published."},
@@ -559,8 +568,10 @@ def build_site_artifacts(
     }
     hash_targets = [
         site_data_dir / "manifest.json", site_data_dir / "models.json", site_data_dir / "taxonomy.json",
+        site_data_dir / "model-version-mapping.csv",
         *[event_dir / reference["file"].split("/", 1)[1] for reference in event_refs],
-        full_gzip, eligible_gzip, derived_dir / "analysis_audit.json",
+        full_gzip, eligible_gzip, derived_dir / "model_version_mapping.csv",
+        derived_dir / "model_version_audit.json", derived_dir / "analysis_audit.json",
     ]
     repository_root = Path(
         os.path.commonpath([site_data_dir.resolve(), derived_dir.resolve()])
@@ -590,6 +601,8 @@ def main() -> None:
     parser.add_argument("--taxonomy-summary", required=True, type=Path)
     parser.add_argument("--scored-panel", required=True, type=Path)
     parser.add_argument("--scoring-audit", required=True, type=Path)
+    parser.add_argument("--model-version-audit", required=True, type=Path)
+    parser.add_argument("--model-version-mapping", required=True, type=Path)
     parser.add_argument("--metrics-audit", required=True, type=Path)
     parser.add_argument("--site-data-dir", required=True, type=Path)
     parser.add_argument("--derived-dir", required=True, type=Path)
@@ -602,6 +615,8 @@ def main() -> None:
         taxonomy_summary_json=args.taxonomy_summary,
         scored_panel=args.scored_panel,
         scoring_audit_json=args.scoring_audit,
+        model_version_audit_json=args.model_version_audit,
+        model_version_mapping_csv=args.model_version_mapping,
         metrics_audit_json=args.metrics_audit,
         site_data_dir=args.site_data_dir,
         derived_dir=args.derived_dir,

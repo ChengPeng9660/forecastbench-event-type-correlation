@@ -78,12 +78,26 @@ def test_exporter_writes_real_schema_and_explicit_nulls(tmp_path: Path) -> None:
         "min_overlap": 50, "near_bi_gap": 2.0, "high_adjusted_loss_threshold": 0.25,
         "join_counters": {"scored_rows_missing_taxonomy": 0},
     }
+    model_version_audit = {
+        "input_exact_model_names": 2,
+        "output_model_versions": 2,
+        "removed_configuration_variants": 0,
+        "selection_rule": "test fixture",
+    }
     for name, payload in (
         ("taxonomy-summary.json", taxonomy_summary),
         ("scoring-audit.json", scoring_audit),
+        ("model-version-audit.json", model_version_audit),
         ("metrics-audit.json", metrics_audit),
     ):
         (tmp_path / name).write_text(json.dumps(payload), encoding="utf-8")
+    model_version_mapping = tmp_path / "model-version-mapping.csv"
+    model_version_mapping.write_text(
+        "canonical_model_version,exact_model_name,selected\n"
+        "Model A,Model A,1\n"
+        "Model B,Model B,1\n",
+        encoding="utf-8",
+    )
 
     site_data = tmp_path / "site" / "public" / "data"
     derived = tmp_path / "data" / "derived"
@@ -93,6 +107,8 @@ def test_exporter_writes_real_schema_and_explicit_nulls(tmp_path: Path) -> None:
         taxonomy_summary_json=tmp_path / "taxonomy-summary.json",
         scored_panel=scored_csv,
         scoring_audit_json=tmp_path / "scoring-audit.json",
+        model_version_audit_json=tmp_path / "model-version-audit.json",
+        model_version_mapping_csv=model_version_mapping,
         metrics_audit_json=tmp_path / "metrics-audit.json",
         site_data_dir=site_data,
         derived_dir=derived,
