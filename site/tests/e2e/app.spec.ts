@@ -316,6 +316,10 @@ test("lets the reader choose a custom heatmap model subset", async ({ page }) =>
 
   await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(9);
   await expect(page.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(9);
+  await expect(page.getByTestId("heatmap").locator(".heatmap-grid")).toHaveClass(/is-sparse/);
+  const sparseCell = await page.getByTestId("heatmap").locator(".heat-cell").first().boundingBox();
+  expect(sparseCell?.width).toBeGreaterThan(55);
+  expect(sparseCell?.height).toBeGreaterThan(45);
   await expect(page.getByRole("button", { name: "Heatmap models, 3 selected" })).toBeVisible();
   await expect(page).toHaveURL(/heatmap_models=/);
 
