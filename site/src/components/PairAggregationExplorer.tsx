@@ -134,16 +134,16 @@ function focalSampleLabel(focalModel: string, group: PairGroupFilter, fallback: 
 
 export function PairAggregationExplorer({ data }: { data: PairAggregationData }) {
   const modelOptions = [...data.model_scope.gpt_models, ...data.model_scope.claude_models];
-  const [group, setGroup] = useState<PairGroupFilter>("gpt_claude");
-  const [nearBiOnly, setNearBiOnly] = useState(true);
-  const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
-  const [metric, setMetric] = useState<MetricId>("adjusted_pog");
-  const [selectedKey, setSelectedKey] = useState("");
   const [focalModel, setFocalModel] = useState(() => {
     if (typeof window === "undefined") return "";
     const candidate = new URLSearchParams(window.location.search).get("gain_model") ?? "";
     return modelOptions.includes(candidate) ? candidate : "";
   });
+  const [group, setGroup] = useState<PairGroupFilter>(() => focalModel ? "all" : "gpt_claude");
+  const [nearBiOnly, setNearBiOnly] = useState(true);
+  const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
+  const [metric, setMetric] = useState<MetricId>("adjusted_pog");
+  const [selectedKey, setSelectedKey] = useState("");
 
   const focalPoints = useMemo(() => data.points.filter((point) =>
     !focalModel || point.model_a === focalModel || point.model_b === focalModel
