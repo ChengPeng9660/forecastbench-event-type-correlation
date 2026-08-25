@@ -290,7 +290,11 @@ export default function App() {
           </div>
         </section>
 
-        {pairAggregationData ? <PairAggregationExplorer data={pairAggregationData} /> : pairAggregationError ? <section className="pair-aggregation-section" id="gain"><div className="cross-type-unavailable"><strong>Aggregation benchmark unavailable</strong><span>{pairAggregationError}</span></div></section> : null}
+        {pairAggregationData ? <PairAggregationExplorer
+          data={pairAggregationData}
+          nearBiOnly={filters.nearBi}
+          onNearBiOnlyChange={(nearBi) => setFilters((current) => ({ ...current, nearBi }))}
+        /> : pairAggregationError ? <section className="pair-aggregation-section" id="gain"><div className="cross-type-unavailable"><strong>Aggregation benchmark unavailable</strong><span>{pairAggregationError}</span></div></section> : null}
 
         <GlobalBaseline data={globalBaselineData} models={appData.models} heatmapModelIds={filters.heatmapModels} loading={globalBaselineLoading} error={globalBaselineError} />
 

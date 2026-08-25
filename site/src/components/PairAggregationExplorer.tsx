@@ -162,7 +162,13 @@ function focalSampleLabel(focalModel: string, group: PairGroupFilter, fallback: 
   return group === "all" ? `${focalModel} × all eligible partners` : `${focalModel} · ${fallback}`;
 }
 
-export function PairAggregationExplorer({ data }: { data: PairAggregationData }) {
+interface PairAggregationExplorerProps {
+  data: PairAggregationData;
+  nearBiOnly: boolean;
+  onNearBiOnlyChange: (value: boolean) => void;
+}
+
+export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }: PairAggregationExplorerProps) {
   const modelOptions = [
     ...data.model_scope.gpt_models,
     ...data.model_scope.claude_models,
@@ -179,7 +185,6 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
     return new URLSearchParams(window.location.search).get("gain_eval") === "same_sample" ? "same_sample" : "cross_fit";
   });
   const [group, setGroup] = useState<PairGroupFilter>("all");
-  const [nearBiOnly, setNearBiOnly] = useState(true);
   const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
   const [metric, setMetric] = useState<MetricId>("adjusted_pog");
   const [selectedKey, setSelectedKey] = useState("");
@@ -223,8 +228,8 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
 
   useEffect(() => {
     if (!focalModel || !nearBiOnly || focalPoints.length) return;
-    setNearBiOnly(false);
-  }, [evaluation, focalModel, focalPoints.length, nearBiOnly]);
+    onNearBiOnlyChange(false);
+  }, [evaluation, focalModel, focalPoints.length, nearBiOnly, onNearBiOnlyChange]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -256,7 +261,7 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
     setSelectedKey("");
     if (value && nearBiOnly) {
       const source = evaluation === "cross_fit" ? data.cross_fit.near_bi_points : data.points.filter((point) => point.near_bi);
-      if (!source.some((point) => point.model_a === value || point.model_b === value)) setNearBiOnly(false);
+      if (!source.some((point) => point.model_a === value || point.model_b === value)) onNearBiOnlyChange(false);
     }
   }
 
@@ -304,8 +309,8 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
             </select>
           </label>
           <div className="gain-sample-toggle" role="group" aria-label="Aggregation sample">
-            <button type="button" className={!nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(false)}>All eligible</button>
-            <button type="button" className={nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(true)}>Near-BI only</button>
+            <button type="button" className={!nearBiOnly ? "active" : ""} onClick={() => onNearBiOnlyChange(false)}>All eligible</button>
+            <button type="button" className={nearBiOnly ? "active" : ""} onClick={() => onNearBiOnlyChange(true)}>Near-BI only</button>
           </div>
         </div>
       </div>
