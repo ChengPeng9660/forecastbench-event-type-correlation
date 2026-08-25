@@ -366,6 +366,12 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .aggregation-evaluation-toggle { flex: 0 0 auto; display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
 .aggregation-evaluation-toggle button { min-height: 32px; padding: 0 13px; border: 0; border-radius: 5px; color: var(--quiet); background: transparent; cursor: pointer; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .aggregation-evaluation-toggle button.active { color: #fff; background: var(--purple-deep); font-weight: 700; }
+.aggregation-fold-bar { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+.aggregation-fold-bar > span { flex: 0 0 auto; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .07em; }
+.aggregation-fold-bar > small { margin-left: auto; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.45; text-align: right; }
+.aggregation-fold-toggle { flex: 0 0 auto; display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
+.aggregation-fold-toggle button { min-height: 30px; padding: 0 12px; border: 0; border-radius: 5px; color: var(--quiet); background: transparent; cursor: pointer; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.aggregation-fold-toggle button.active { color: var(--purple-deep); background: var(--purple-soft); font-weight: 700; }
 .pair-aggregation-controls { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 11px 0; border-block: 1px solid var(--line-strong); }
 .pair-group-tabs { min-width: 0; display: flex; gap: 25px; overflow-x: auto; scrollbar-width: none; }
 .pair-group-tabs::-webkit-scrollbar { display: none; }
@@ -656,6 +662,8 @@ footer a { color: var(--purple-deep); }
   .pair-aggregation-controls { align-items: stretch; flex-direction: column; gap: 10px; }
   .aggregation-evaluation-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
   .aggregation-evaluation-bar p { text-align: left; }
+  .aggregation-fold-bar { align-items: flex-start; flex-wrap: wrap; }
+  .aggregation-fold-bar > small { width: 100%; margin-left: 0; text-align: left; }
   .pair-group-tabs { width: 100%; gap: 18px; }
   .aggregation-filter-cluster { width: 100%; align-items: stretch; flex-direction: column; justify-content: flex-start; }
   .aggregation-focal-select { width: 100%; }

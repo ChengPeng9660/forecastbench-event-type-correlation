@@ -4,6 +4,7 @@ import type {
   MetricId,
   ModelFamily,
   PairAggregationData,
+  PairAggregationFoldPoint,
   PairAggregationPoint,
   PairAggregationSummary,
   PairGroupId,
@@ -37,6 +38,13 @@ const GROUPS: Array<{ id: PairGroupFilter; label: string; short: string }> = [
 ];
 
 type EvaluationMode = "cross_fit" | "same_sample";
+export type CrossFitFoldView = "combined" | "a_to_b" | "b_to_a";
+
+const FOLD_VIEWS: Array<{ id: CrossFitFoldView; label: string; detail: string }> = [
+  { id: "combined", label: "Combined", detail: "A→B and B→A, support-weighted" },
+  { id: "a_to_b", label: "A→B", detail: "Train on fold A, test on fold B" },
+  { id: "b_to_a", label: "B→A", detail: "Train on fold B, test on fold A" },
+];
 
 const FAMILY_COLORS: Record<ModelFamily, string> = {
   GPT: "#efab02",
@@ -162,6 +170,49 @@ function focalSampleLabel(focalModel: string, group: PairGroupFilter, fallback: 
   return group === "all" ? `${focalModel} × all eligible partners` : `${focalModel} · ${fallback}`;
 }
 
+function directionalPoint(fold: PairAggregationFoldPoint): PairAggregationPoint {
+  return {
+    model_a: fold.model_a,
+    model_b: fold.model_b,
+    family_a: fold.family_a,
+    family_b: fold.family_b,
+    pair_group: fold.pair_group,
+    n_overlap: fold.n_test,
+    n_dates: fold.n_dates,
+    date_min: fold.date_min,
+    date_max: fold.date_max,
+    near_bi: fold.train_near_bi,
+    bi_gap: fold.train_bi_gap,
+    metrics: fold.metrics,
+    adjusted_brier: fold.adjusted_brier,
+    best_single_side: fold.best_single_side,
+    gain_fraction_vs_best_single: fold.gain_fraction_vs_best_single,
+    past_only_diagnostic: fold.past_only_diagnostic,
+    cross_fit: {
+      sample: fold.train_near_bi ? "near_bi" : "eligible",
+      included_fold_count: 1,
+      train_near_bi_fold_count: Number(fold.train_near_bi),
+      train_target_rows: fold.n_train,
+      test_target_rows: fold.n_test,
+      fold_ids: [fold.fold_id],
+    },
+  };
+}
+
+export function selectCrossFitPoints(
+  data: PairAggregationData,
+  foldView: CrossFitFoldView,
+  nearBiOnly: boolean,
+) {
+  if (foldView === "combined") {
+    return nearBiOnly ? data.cross_fit.near_bi_points : data.cross_fit.eligible_points;
+  }
+  const trainFold = foldView === "a_to_b" ? "A" : "B";
+  return data.cross_fit.fold_points
+    .filter((fold) => fold.train_fold === trainFold && (!nearBiOnly || fold.train_near_bi))
+    .map(directionalPoint);
+}
+
 interface PairAggregationExplorerProps {
   data: PairAggregationData;
   nearBiOnly: boolean;
@@ -184,6 +235,11 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
     if (typeof window === "undefined") return "cross_fit";
     return new URLSearchParams(window.location.search).get("gain_eval") === "same_sample" ? "same_sample" : "cross_fit";
   });
+  const [foldView, setFoldView] = useState<CrossFitFoldView>(() => {
+    if (typeof window === "undefined") return "combined";
+    const candidate = new URLSearchParams(window.location.search).get("gain_fold");
+    return candidate === "a_to_b" || candidate === "b_to_a" ? candidate : "combined";
+  });
   const [group, setGroup] = useState<PairGroupFilter>("all");
   const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
   const [metric, setMetric] = useState<MetricId>("adjusted_pog");
@@ -191,10 +247,10 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
 
   const evaluationPoints = useMemo(() => {
     if (evaluation === "cross_fit") {
-      return nearBiOnly ? data.cross_fit.near_bi_points : data.cross_fit.eligible_points;
+      return selectCrossFitPoints(data, foldView, nearBiOnly);
     }
     return data.points.filter((point) => !nearBiOnly || point.near_bi);
-  }, [data.cross_fit.eligible_points, data.cross_fit.near_bi_points, data.points, evaluation, nearBiOnly]);
+  }, [data, evaluation, foldView, nearBiOnly]);
   const focalPoints = useMemo(() => evaluationPoints.filter((point) =>
     !focalModel || point.model_a === focalModel || point.model_b === focalModel
   ), [evaluationPoints, focalModel]);
@@ -220,7 +276,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
 
   useEffect(() => {
     if (selected) setSelectedKey(`${selected.model_a}::${selected.model_b}`);
-  }, [evaluation, focalModel, group, nearBiOnly, method, metric, selected?.model_a, selected?.model_b]);
+  }, [evaluation, focalModel, foldView, group, nearBiOnly, method, metric, selected?.model_a, selected?.model_b]);
 
   useEffect(() => {
     if (group !== "all" && !availableGroups.has(group)) setGroup("all");
@@ -237,9 +293,11 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
     else params.delete("gain_model");
     if (evaluation === "same_sample") params.set("gain_eval", evaluation);
     else params.delete("gain_eval");
+    if (evaluation === "cross_fit" && foldView !== "combined") params.set("gain_fold", foldView);
+    else params.delete("gain_fold");
     const query = params.toString();
     window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
-  }, [evaluation, focalModel]);
+  }, [evaluation, focalModel, foldView]);
 
   const xValues = definedPoints.map((point) => point.metrics[metric].complementarity as number);
   const yValues = definedPoints.map((point) => point.gain_fraction_vs_best_single[method] as number);
@@ -254,6 +312,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   const metricMeta = METRICS.find((item) => item.id === metric) ?? METRICS[0];
   const groupMeta = GROUPS.find((item) => item.id === group) ?? GROUPS[0];
   const activeSampleLabel = focalSampleLabel(focalModel, group, groupMeta.label);
+  const foldViewMeta = FOLD_VIEWS.find((item) => item.id === foldView) ?? FOLD_VIEWS[0];
 
   function chooseFocalModel(value: string) {
     setFocalModel(value);
@@ -281,6 +340,14 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           ? `Seed ${data.cross_fit.split.seed} · ${data.cross_fit.audit.fold_a_events.toLocaleString()} / ${data.cross_fit.audit.fold_b_events.toLocaleString()} disjoint events · Near-BI is train-only`
           : "Dependence, Near-BI, and gain use the same outcomes; retained only as a sensitivity view."}</p>
       </div>
+
+      {evaluation === "cross_fit" && <div className="aggregation-fold-bar">
+        <span>FOLD VIEW</span>
+        <div className="aggregation-fold-toggle" role="group" aria-label="Cross-fit fold view">
+          {FOLD_VIEWS.map((item) => <button type="button" className={foldView === item.id ? "active" : ""} onClick={() => { setFoldView(item.id); setSelectedKey(""); }} key={item.id}>{item.label}</button>)}
+        </div>
+        <small>{foldViewMeta.detail}. Near-BI is evaluated on that view's training fold only.</small>
+      </div>}
 
       <div className="pair-aggregation-controls">
         <div className="pair-group-tabs" role="tablist" aria-label="Model pair group">
@@ -331,7 +398,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
         </div>
 
         <dl className="aggregation-selection-summary">
-          <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{evaluation === "cross_fit" ? "Cross-fit OOS · " : "Same-sample · "}{nearBiOnly ? `train BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "all eligible pairs"}</small></div>
+          <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{evaluation === "cross_fit" ? `${foldViewMeta.label} · Cross-fit OOS · ` : "Same-sample · "}{nearBiOnly ? `train BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "all eligible pairs"}</small></div>
           <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} {evaluation === "cross_fit" ? "test" : "same-sample"} pair-event cells</small></div>
           <div><dt>SELECTED METHOD</dt><dd>{data.methods[method].label}</dd><small>{data.methods[method].formula}</small></div>
           <div><dt>WEIGHTED GAIN</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>pair fractions weighted by common support</small></div>
@@ -348,7 +415,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
           <small>Split color = cross-family pair · area = test support</small>
         </div>
-        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} gain for ${activeSampleLabel}`}>
+        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} gain for ${activeSampleLabel}${evaluation === "cross_fit" ? `, ${foldViewMeta.label}` : ""}`}>
           <defs>
             {(Object.entries(GROUP_FAMILIES) as Array<[PairGroupId, [ModelFamily, ModelFamily]]>).map(([pairGroup, families]) => <linearGradient id={`pair-fill-${pairGroup}`} key={pairGroup}>
               <stop offset="50%" stopColor={FAMILY_COLORS[families[0]]} />

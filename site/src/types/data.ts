@@ -133,11 +133,18 @@ export interface PairAggregationFoldPoint {
   n_test: number;
   n_train_events: number;
   n_test_events: number;
+  n_dates: number;
+  date_min: string;
+  date_max: string;
   train_near_bi: boolean;
   train_bi_gap: number;
+  train_model_a_bi: number;
+  train_model_b_bi: number;
   metrics: Record<MetricId, { raw: number | null; complementarity: number | null; reason: string }>;
   adjusted_brier: Record<"model_a" | "model_b" | AggregationMethodId, number>;
+  best_single_side: "model_a" | "model_b";
   gain_fraction_vs_best_single: Record<AggregationMethodId, number | null>;
+  past_only_diagnostic: PairAggregationPoint["past_only_diagnostic"];
 }
 
 export interface PairAggregationSummary {
