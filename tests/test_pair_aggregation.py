@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-from analysis.pair_aggregation import pair_group, predictions, summarize
+from analysis.pair_aggregation import event_fold, pair_group, predictions, summarize
 
 
 def test_aggregation_formulas_are_symmetric() -> None:
@@ -27,6 +27,16 @@ def test_pair_group_labels() -> None:
     assert pair_group("GPT-A", "GPT-B") == "gpt_gpt"
     assert pair_group("Claude-A", "Claude-B") == "claude_claude"
     assert pair_group("GPT-A", "Claude-B") == "gpt_claude"
+    assert pair_group("GPT-A", "Qwen-B") == "gpt_qwen"
+    assert pair_group("Claude-A", "DeepSeek-B") == "claude_deepseek"
+    assert pair_group("Qwen-A", "DeepSeek-B") == "qwen_deepseek"
+
+
+def test_event_fold_is_deterministic_and_keeps_the_event_together() -> None:
+    first = event_fold("Metaculus", "event-17", 20260825)
+    assert first in {"A", "B"}
+    assert event_fold("metaculus", "event-17", 20260825) == first
+    assert event_fold("Metaculus", "event-17", 20260825) == first
 
 
 def test_summary_weights_pair_gain_by_common_support() -> None:

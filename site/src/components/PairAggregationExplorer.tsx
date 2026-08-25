@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type {
   AggregationMethodId,
   MetricId,
+  ModelFamily,
   PairAggregationData,
   PairAggregationPoint,
   PairAggregationSummary,
@@ -22,11 +23,35 @@ const PRIMARY_METHODS: AggregationMethodId[] = [
 ];
 
 const GROUPS: Array<{ id: PairGroupFilter; label: string; short: string }> = [
-  { id: "all", label: "All GPT / Claude pairs", short: "All pairs" },
+  { id: "all", label: "All four-family pairs", short: "All pairs" },
   { id: "gpt_gpt", label: "GPT × GPT", short: "GPT × GPT" },
   { id: "claude_claude", label: "Claude × Claude", short: "Claude × Claude" },
   { id: "gpt_claude", label: "GPT × Claude", short: "GPT × Claude" },
+  { id: "qwen_any", label: "Every pair involving Qwen", short: "Qwen involved" },
+  { id: "deepseek_any", label: "Every pair involving DeepSeek", short: "DeepSeek involved" },
 ];
+
+type EvaluationMode = "cross_fit" | "same_sample";
+
+const FAMILY_COLORS: Record<ModelFamily, string> = {
+  GPT: "#efab02",
+  Claude: "#4f207f",
+  Qwen: "#267c79",
+  DeepSeek: "#c75b39",
+};
+
+const GROUP_FAMILIES: Record<PairGroupId, [ModelFamily, ModelFamily]> = {
+  gpt_gpt: ["GPT", "GPT"],
+  claude_claude: ["Claude", "Claude"],
+  qwen_qwen: ["Qwen", "Qwen"],
+  deepseek_deepseek: ["DeepSeek", "DeepSeek"],
+  gpt_claude: ["GPT", "Claude"],
+  gpt_qwen: ["GPT", "Qwen"],
+  gpt_deepseek: ["GPT", "DeepSeek"],
+  claude_qwen: ["Claude", "Qwen"],
+  claude_deepseek: ["Claude", "DeepSeek"],
+  qwen_deepseek: ["Qwen", "DeepSeek"],
+};
 
 const METRICS: Array<{ id: MetricId; label: string; axis: string }> = [
   { id: "adjusted_pog", label: "Adjusted POG", axis: "Adjusted pairwise oracle gain" },
@@ -80,6 +105,13 @@ function pairLabel(point: PairAggregationPoint) {
   return `${point.model_a} × ${point.model_b}`;
 }
 
+function matchesGroup(point: PairAggregationPoint, group: PairGroupFilter) {
+  if (group === "all") return true;
+  if (group === "qwen_any") return point.family_a === "Qwen" || point.family_b === "Qwen";
+  if (group === "deepseek_any") return point.family_a === "DeepSeek" || point.family_b === "DeepSeek";
+  return point.pair_group === group;
+}
+
 function quantile(values: number[], probability: number) {
   if (!values.length) return null;
   const ordered = [...values].sort((a, b) => a - b);
@@ -124,33 +156,47 @@ export function summarizeAggregationPoints(
 
 function focalSampleLabel(focalModel: string, group: PairGroupFilter, fallback: string) {
   if (!focalModel) return fallback;
-  if (group === "gpt_gpt") return `${focalModel} × GPT partners`;
-  if (group === "claude_claude") return `${focalModel} × Claude partners`;
-  if (group === "gpt_claude") {
-    return `${focalModel} × ${focalModel.startsWith("GPT") ? "Claude" : "GPT"} partners`;
-  }
-  return `${focalModel} × all eligible partners`;
+  return group === "all" ? `${focalModel} × all eligible partners` : `${focalModel} · ${fallback}`;
 }
 
 export function PairAggregationExplorer({ data }: { data: PairAggregationData }) {
-  const modelOptions = [...data.model_scope.gpt_models, ...data.model_scope.claude_models];
+  const modelOptions = [
+    ...data.model_scope.gpt_models,
+    ...data.model_scope.claude_models,
+    ...data.model_scope.qwen_models,
+    ...data.model_scope.deepseek_models,
+  ];
   const [focalModel, setFocalModel] = useState(() => {
     if (typeof window === "undefined") return "";
     const candidate = new URLSearchParams(window.location.search).get("gain_model") ?? "";
     return modelOptions.includes(candidate) ? candidate : "";
   });
-  const [group, setGroup] = useState<PairGroupFilter>(() => focalModel ? "all" : "gpt_claude");
+  const [evaluation, setEvaluation] = useState<EvaluationMode>(() => {
+    if (typeof window === "undefined") return "cross_fit";
+    return new URLSearchParams(window.location.search).get("gain_eval") === "same_sample" ? "same_sample" : "cross_fit";
+  });
+  const [group, setGroup] = useState<PairGroupFilter>("all");
   const [nearBiOnly, setNearBiOnly] = useState(true);
   const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
   const [metric, setMetric] = useState<MetricId>("adjusted_pog");
   const [selectedKey, setSelectedKey] = useState("");
 
-  const focalPoints = useMemo(() => data.points.filter((point) =>
+  const evaluationPoints = useMemo(() => {
+    if (evaluation === "cross_fit") {
+      return nearBiOnly ? data.cross_fit.near_bi_points : data.cross_fit.eligible_points;
+    }
+    return data.points.filter((point) => !nearBiOnly || point.near_bi);
+  }, [data.cross_fit.eligible_points, data.cross_fit.near_bi_points, data.points, evaluation, nearBiOnly]);
+  const focalPoints = useMemo(() => evaluationPoints.filter((point) =>
     !focalModel || point.model_a === focalModel || point.model_b === focalModel
-  ), [data.points, focalModel]);
-  const samplePoints = useMemo(() => focalPoints.filter((point) => !nearBiOnly || point.near_bi), [focalPoints, nearBiOnly]);
-  const availableGroups = useMemo(() => new Set(samplePoints.map((point) => point.pair_group)), [samplePoints]);
-  const points = useMemo(() => samplePoints.filter((point) => group === "all" || point.pair_group === group), [group, samplePoints]);
+  ), [evaluationPoints, focalModel]);
+  const availableGroups = useMemo(() => new Set(GROUPS.filter((item) =>
+    focalPoints.some((point) => matchesGroup(point, item.id))
+  ).map((item) => item.id)), [focalPoints]);
+  const points = useMemo(() => focalPoints.filter((point) => matchesGroup(point, group)), [focalPoints, group]);
+  const definedPoints = useMemo(() => points.filter((point) =>
+    point.metrics[metric].complementarity !== null && point.gain_fraction_vs_best_single[method] !== null
+  ), [method, metric, points]);
   const sample = nearBiOnly ? "near_bi" : "eligible";
   const summaries = useMemo(() => PRIMARY_METHODS.map((methodId) =>
     summarizeAggregationPoints(points, methodId, group, sample)
@@ -159,34 +205,36 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
     (b.support_weighted_gain_fraction ?? -Infinity) - (a.support_weighted_gain_fraction ?? -Infinity)
   );
   const activeSummary = summaries.find((row) => row.method === method);
-  const selected = points.find((point) => `${point.model_a}::${point.model_b}` === selectedKey)
-    ?? [...points].sort((a, b) =>
+  const selected = definedPoints.find((point) => `${point.model_a}::${point.model_b}` === selectedKey)
+    ?? [...definedPoints].sort((a, b) =>
       (b.gain_fraction_vs_best_single[method] ?? -Infinity) - (a.gain_fraction_vs_best_single[method] ?? -Infinity)
     )[0];
 
   useEffect(() => {
     if (selected) setSelectedKey(`${selected.model_a}::${selected.model_b}`);
-  }, [focalModel, group, nearBiOnly, method, selected?.model_a, selected?.model_b]);
+  }, [evaluation, focalModel, group, nearBiOnly, method, metric, selected?.model_a, selected?.model_b]);
 
   useEffect(() => {
-    if (group !== "all" && !availableGroups.has(group as PairGroupId)) setGroup("all");
+    if (group !== "all" && !availableGroups.has(group)) setGroup("all");
   }, [availableGroups, group]);
 
   useEffect(() => {
-    if (!focalModel || !nearBiOnly || focalPoints.some((point) => point.near_bi)) return;
+    if (!focalModel || !nearBiOnly || focalPoints.length) return;
     setNearBiOnly(false);
-  }, [focalModel, focalPoints, nearBiOnly]);
+  }, [evaluation, focalModel, focalPoints.length, nearBiOnly]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (focalModel) params.set("gain_model", focalModel);
     else params.delete("gain_model");
+    if (evaluation === "same_sample") params.set("gain_eval", evaluation);
+    else params.delete("gain_eval");
     const query = params.toString();
     window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
-  }, [focalModel]);
+  }, [evaluation, focalModel]);
 
-  const xValues = points.map((point) => point.metrics[metric].complementarity);
-  const yValues = points.map((point) => point.gain_fraction_vs_best_single[method] ?? 0);
+  const xValues = definedPoints.map((point) => point.metrics[metric].complementarity as number);
+  const yValues = definedPoints.map((point) => point.gain_fraction_vs_best_single[method] as number);
   const xDomain = extent(xValues.length ? xValues : [0, 1]);
   const yDomain = extent(yValues.length ? yValues : [0], true);
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
@@ -194,7 +242,7 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
   const xScale = (value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth;
   const yScale = (value: number) => MARGIN.top + (1 - (value - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotHeight;
   const correlation = pearson(xValues, yValues);
-  const maxOverlap = Math.max(1, ...points.map((point) => point.n_overlap));
+  const maxOverlap = Math.max(1, ...definedPoints.map((point) => point.n_overlap));
   const metricMeta = METRICS.find((item) => item.id === metric) ?? METRICS[0];
   const groupMeta = GROUPS.find((item) => item.id === group) ?? GROUPS[0];
   const activeSampleLabel = focalSampleLabel(focalModel, group, groupMeta.label);
@@ -204,22 +252,32 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
     setGroup("all");
     setSelectedKey("");
     if (value && nearBiOnly) {
-      const related = data.points.filter((point) => point.model_a === value || point.model_b === value);
-      if (!related.some((point) => point.near_bi)) setNearBiOnly(false);
+      const source = evaluation === "cross_fit" ? data.cross_fit.near_bi_points : data.points.filter((point) => point.near_bi);
+      if (!source.some((point) => point.model_a === value || point.model_b === value)) setNearBiOnly(false);
     }
   }
 
   return (
     <section className="pair-aggregation-section" id="gain">
       <div className="section-heading pair-aggregation-heading">
-        <div><p className="eyebrow">ALL-PAIR AGGREGATION BENCHMARK</p><h2>Can a pool beat its best constituent?</h2></div>
-        <p>Select one exact model version to compare its aggregation result with every eligible GPT or Claude partner. Every method uses identical pair-common targets; positive gain means lower adjusted Brier than the hindsight-better single model.</p>
+        <div><p className="eyebrow">CROSS-FIT AGGREGATION BENCHMARK</p><h2>Does train-fold dependence predict test-fold gain?</h2></div>
+        <p>GPT, Claude, Qwen, and DeepSeek events are split into two disjoint folds. Dependence and Near-BI use one fold; aggregation gain uses the other, then train and test swap.</p>
+      </div>
+
+      <div className="aggregation-evaluation-bar">
+        <div className="aggregation-evaluation-toggle" role="group" aria-label="Aggregation evaluation design">
+          <button type="button" className={evaluation === "cross_fit" ? "active" : ""} onClick={() => { setEvaluation("cross_fit"); setGroup("all"); setSelectedKey(""); }}>Cross-fit OOS</button>
+          <button type="button" className={evaluation === "same_sample" ? "active" : ""} onClick={() => { setEvaluation("same_sample"); setGroup("all"); setSelectedKey(""); }}>Same-sample diagnostic</button>
+        </div>
+        <p>{evaluation === "cross_fit"
+          ? `Seed ${data.cross_fit.split.seed} · ${data.cross_fit.audit.fold_a_events.toLocaleString()} / ${data.cross_fit.audit.fold_b_events.toLocaleString()} disjoint events · Near-BI is train-only`
+          : "Dependence, Near-BI, and gain use the same outcomes; retained only as a sensitivity view."}</p>
       </div>
 
       <div className="pair-aggregation-controls">
         <div className="pair-group-tabs" role="tablist" aria-label="Model pair group">
           {GROUPS.map((item) => {
-            const disabled = item.id !== "all" && !availableGroups.has(item.id as PairGroupId);
+            const disabled = item.id !== "all" && !availableGroups.has(item.id);
             return <button type="button" role="tab" aria-selected={group === item.id} className={group === item.id ? "active" : ""} disabled={disabled} onClick={() => setGroup(item.id)} key={item.id}>{item.short}</button>;
           })}
         </div>
@@ -233,6 +291,12 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
               </optgroup>
               <optgroup label="Claude">
                 {data.model_scope.claude_models.map((model) => <option value={model} key={model}>{model}</option>)}
+              </optgroup>
+              <optgroup label="Qwen">
+                {data.model_scope.qwen_models.map((model) => <option value={model} key={model}>{model}</option>)}
+              </optgroup>
+              <optgroup label="DeepSeek">
+                {data.model_scope.deepseek_models.map((model) => <option value={model} key={model}>{model}</option>)}
               </optgroup>
             </select>
           </label>
@@ -259,11 +323,11 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
         </div>
 
         <dl className="aggregation-selection-summary">
-          <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{nearBiOnly ? `Near-BI · gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "All eligible pairs"}</small></div>
-          <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} duplicated pair-event cells</small></div>
+          <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{evaluation === "cross_fit" ? "Cross-fit OOS · " : "Same-sample · "}{nearBiOnly ? `train BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "all eligible pairs"}</small></div>
+          <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} {evaluation === "cross_fit" ? "test" : "same-sample"} pair-event cells</small></div>
           <div><dt>SELECTED METHOD</dt><dd>{data.methods[method].label}</dd><small>{data.methods[method].formula}</small></div>
           <div><dt>WEIGHTED GAIN</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>pair fractions weighted by common support</small></div>
-          <div><dt>COMPLEMENTARITY r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{metricMeta.label} versus selected-method gain</small></div>
+          <div><dt>COMPLEMENTARITY r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train metric versus opposite-fold gain" : "same-sample descriptive association"}</small></div>
         </dl>
       </div>
 
@@ -272,22 +336,31 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
       </div>
 
       <div className="pair-aggregation-chart-wrap">
-        <div className="pair-group-legend"><span><i className="gpt" /> GPT × GPT</span><span><i className="claude" /> Claude × Claude</span><span><i className="cross" /> GPT × Claude</span><small>Circle area reflects common-event support</small></div>
-        {points.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} gain for ${activeSampleLabel}`}>
-          <defs><linearGradient id="cross-pair-fill"><stop offset="50%" stopColor="#efab02" /><stop offset="50%" stopColor="#4f207f" /></linearGradient></defs>
+        <div className="pair-group-legend">
+          {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
+          <small>Split color = cross-family pair · area = test support</small>
+        </div>
+        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} gain for ${activeSampleLabel}`}>
+          <defs>
+            {(Object.entries(GROUP_FAMILIES) as Array<[PairGroupId, [ModelFamily, ModelFamily]]>).map(([pairGroup, families]) => <linearGradient id={`pair-fill-${pairGroup}`} key={pairGroup}>
+              <stop offset="50%" stopColor={FAMILY_COLORS[families[0]]} />
+              <stop offset="50%" stopColor={FAMILY_COLORS[families[1]]} />
+            </linearGradient>)}
+          </defs>
           <rect x={MARGIN.left} y={MARGIN.top} width={plotWidth} height={Math.max(0, yScale(0) - MARGIN.top)} className="gain-positive-zone" />
           <rect x={MARGIN.left} y={yScale(0)} width={plotWidth} height={Math.max(0, MARGIN.top + plotHeight - yScale(0))} className="gain-negative-zone" />
           {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className={Math.abs(tick) < 1e-10 ? "gain-zero-line" : "gain-grid-line"} /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{percent(tick)}</text></g>)}
           {ticks(xDomain).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
-          {points.map((point) => {
+          {definedPoints.map((point) => {
             const key = `${point.model_a}::${point.model_b}`;
-            const gain = point.gain_fraction_vs_best_single[method] ?? 0;
+            const gain = point.gain_fraction_vs_best_single[method] as number;
+            const complementarity = point.metrics[metric].complementarity as number;
             const radius = 4.5 + 7.5 * Math.sqrt(point.n_overlap / maxOverlap);
             const isSelected = key === `${selected?.model_a}::${selected?.model_b}`;
             return <g className={`aggregation-point ${point.pair_group} ${isSelected ? "selected" : ""}`} key={key} role="button" tabIndex={0} aria-label={`${pairLabel(point)}, ${percent(gain)} gain`} onMouseEnter={() => setSelectedKey(key)} onFocus={() => setSelectedKey(key)} onClick={() => setSelectedKey(key)}>
-              <circle cx={xScale(point.metrics[metric].complementarity)} cy={yScale(gain)} r={radius} />
-              {isSelected && <text x={xScale(point.metrics[metric].complementarity)} y={yScale(gain) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_a)} × {shortModel(point.model_b)}</text>}
-              <title>{`${pairLabel(point)}\n${metricMeta.label}: ${point.metrics[metric].raw.toFixed(4)}\n${data.methods[method].label} gain: ${percent(gain, 2)}\nCommon targets: ${point.n_overlap.toLocaleString()}\nNear-BI: ${point.near_bi ? "Yes" : "No"}`}</title>
+              <circle cx={xScale(complementarity)} cy={yScale(gain)} r={radius} style={{ fill: `url(#pair-fill-${point.pair_group})` }} />
+              {isSelected && <text x={xScale(complementarity)} y={yScale(gain) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_a)} × {shortModel(point.model_b)}</text>}
+              <title>{`${pairLabel(point)}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} gain: ${percent(gain, 2)}\n${evaluation === "cross_fit" ? "Test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included folds: ${point.cross_fit?.included_fold_count ?? 0}/2` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
             </g>;
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · toward lower model dependence →</text>
@@ -296,15 +369,17 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
       </div>
 
       {selected && <div className="aggregation-pair-detail">
-        <div className="aggregation-pair-title"><span>SELECTED PAIR</span><strong>{pairLabel(selected)}</strong><small>{selected.near_bi ? "Near-BI" : "Outside near-BI"} · {selected.n_overlap.toLocaleString()} common targets · BI gap {selected.bi_gap.toFixed(2)}</small></div>
+        <div className="aggregation-pair-title"><span>SELECTED PAIR</span><strong>{pairLabel(selected)}</strong><small>{evaluation === "cross_fit"
+          ? `${selected.cross_fit?.included_fold_count ?? 0}/2 train→test folds · ${(selected.cross_fit?.train_target_rows ?? 0).toLocaleString()} train · ${(selected.cross_fit?.test_target_rows ?? 0).toLocaleString()} test · train BI gap ${selected.bi_gap.toFixed(2)}`
+          : `${selected.near_bi ? "Near-BI" : "Outside near-BI"} · ${selected.n_overlap.toLocaleString()} common targets · BI gap ${selected.bi_gap.toFixed(2)}`}</small></div>
         <div className="aggregation-pair-methods">
           {PRIMARY_METHODS.map((methodId) => <div className={methodId === method ? "active" : ""} key={methodId}><span>{data.methods[methodId].label}</span><strong className={(selected.gain_fraction_vs_best_single[methodId] ?? 0) >= 0 ? "positive" : "negative"}>{percent(selected.gain_fraction_vs_best_single[methodId])}</strong><small>BI {selected.adjusted_brier[methodId].toFixed(4)}</small></div>)}
         </div>
       </div>}
 
       <div className="aggregation-caveats">
-        <p><strong>Best Single is a benchmark, not an algorithm.</strong> It selects the lower adjusted-Brier constituent after observing all pair-common outcomes, so its gain is defined as zero. EC, Simple Mean, Log-odds Mean, and Piecewise Odds never use outcomes to form the current forecast.</p>
-        <p><strong>Past-only diagnostic.</strong> A round-ordered selector is retained in the downloadable artifact, but the merged panel lacks actual resolution timestamps. It therefore uses only earlier forecast dates and is not claimed as resolution-aware OOS evidence.</p>
+        <p><strong>Event-disjoint cross-fit.</strong> SHA-256 with seed {data.cross_fit.split.seed} assigns every (source, event_id)—including every date and horizon—to one fold. Dependence and Near-BI use only the training fold; gain uses only the opposite test fold, then A/B swap.</p>
+        <p><strong>Best Single is a test benchmark, not an algorithm.</strong> It selects the lower adjusted-Brier constituent after observing that test fold, so its gain is zero by definition. EC, Simple Mean, Log-odds Mean, and Piecewise Odds never use test outcomes to form predictions.</p>
       </div>
     </section>
   );

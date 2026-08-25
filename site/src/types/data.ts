@@ -1,4 +1,5 @@
 export type MetricId = "adjusted_pog" | "high_loss_lift" | "adjusted_loss_corr";
+export type ModelFamily = "GPT" | "Claude" | "Qwen" | "DeepSeek";
 
 export interface FocalGainMetricValue {
   raw: number;
@@ -64,8 +65,18 @@ export type AggregationMethodId =
   | "best_single"
   | "past_only_best_single";
 
-export type PairGroupId = "gpt_gpt" | "claude_claude" | "gpt_claude";
-export type PairGroupFilter = "all" | PairGroupId;
+export type PairGroupId =
+  | "gpt_gpt"
+  | "claude_claude"
+  | "qwen_qwen"
+  | "deepseek_deepseek"
+  | "gpt_claude"
+  | "gpt_qwen"
+  | "gpt_deepseek"
+  | "claude_qwen"
+  | "claude_deepseek"
+  | "qwen_deepseek";
+export type PairGroupFilter = "all" | "qwen_any" | "deepseek_any" | PairGroupId;
 
 export interface PairAggregationMethod {
   label: string;
@@ -79,8 +90,8 @@ export interface PairAggregationMethod {
 export interface PairAggregationPoint {
   model_a: string;
   model_b: string;
-  family_a: "GPT" | "Claude";
-  family_b: "GPT" | "Claude";
+  family_a: ModelFamily;
+  family_b: ModelFamily;
   pair_group: PairGroupId;
   n_overlap: number;
   n_dates: number;
@@ -88,9 +99,9 @@ export interface PairAggregationPoint {
   date_max: string;
   near_bi: boolean;
   bi_gap: number;
-  metrics: Record<MetricId, FocalGainMetricValue>;
+  metrics: Record<MetricId, { raw: number | null; complementarity: number | null }>;
   adjusted_brier: Record<"model_a" | "model_b" | AggregationMethodId, number>;
-  best_single_side: "model_a" | "model_b";
+  best_single_side: "model_a" | "model_b" | "mixed";
   gain_fraction_vs_best_single: Record<AggregationMethodId, number | null>;
   past_only_diagnostic: {
     cold_start_rows: number;
@@ -99,6 +110,34 @@ export interface PairAggregationPoint {
     uses_only_prior_forecast_dates: boolean;
     resolution_aware: boolean;
   };
+  cross_fit?: {
+    sample: "eligible" | "near_bi";
+    included_fold_count: number;
+    train_near_bi_fold_count: number;
+    train_target_rows: number;
+    test_target_rows: number;
+    fold_ids: string[];
+  };
+}
+
+export interface PairAggregationFoldPoint {
+  fold_id: string;
+  train_fold: "A" | "B";
+  test_fold: "A" | "B";
+  model_a: string;
+  model_b: string;
+  family_a: ModelFamily;
+  family_b: ModelFamily;
+  pair_group: PairGroupId;
+  n_train: number;
+  n_test: number;
+  n_train_events: number;
+  n_test_events: number;
+  train_near_bi: boolean;
+  train_bi_gap: number;
+  metrics: Record<MetricId, { raw: number | null; complementarity: number | null; reason: string }>;
+  adjusted_brier: Record<"model_a" | "model_b" | AggregationMethodId, number>;
+  gain_fraction_vs_best_single: Record<AggregationMethodId, number | null>;
 }
 
 export interface PairAggregationSummary {
@@ -124,6 +163,8 @@ export interface PairAggregationData {
     definition: string;
     gpt_models: string[];
     claude_models: string[];
+    qwen_models: string[];
+    deepseek_models: string[];
   };
   pair_scope: {
     eligible_pair_count: number;
@@ -154,6 +195,36 @@ export interface PairAggregationData {
   };
   summary: PairAggregationSummary[];
   points: PairAggregationPoint[];
+  cross_fit: {
+    schema_version: string;
+    evaluation: string;
+    split: {
+      seed: number;
+      unit: string;
+      assignment: string;
+      assignment_sha256: string;
+      folds: string[];
+      minimum_train_target_rows: number;
+      minimum_test_target_rows: number;
+    };
+    leakage_controls: Record<string, string | boolean>;
+    audit: {
+      unique_events: number;
+      fold_a_events: number;
+      fold_b_events: number;
+      pair_fold_records: number;
+      eligible_pairs: number;
+      near_bi_pairs_any_train_fold: number;
+      near_bi_fold_records: number;
+      pairs_near_bi_in_both_folds: number;
+      minimum_observed_train_rows: number;
+      minimum_observed_test_rows: number;
+    };
+    summary: PairAggregationSummary[];
+    eligible_points: PairAggregationPoint[];
+    near_bi_points: PairAggregationPoint[];
+    fold_points: PairAggregationFoldPoint[];
+  };
 }
 
 export interface MetricDefinition {

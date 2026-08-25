@@ -46,7 +46,7 @@ export function loadFocalGainData(): Promise<FocalGainData> {
 }
 
 export function loadPairAggregationData(): Promise<PairAggregationData> {
-  return loadJson<PairAggregationData>("pair-aggregation/all-gpt-claude-pairs.json");
+  return loadJson<PairAggregationData>("pair-aggregation/all-four-family-pairs.json");
 }
 
 export function crossTypeAssetUrl(path: string): string {

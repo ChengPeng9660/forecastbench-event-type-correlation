@@ -361,6 +361,11 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 
 .pair-aggregation-section { background: var(--surface-raised); scroll-margin-top: 126px; }
 .pair-aggregation-heading { margin-bottom: 25px; }
+.aggregation-evaluation-bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 10px 0; border-top: 1px solid var(--line-strong); }
+.aggregation-evaluation-bar p { margin: 0; color: var(--quiet); font: 7px ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.45; text-align: right; }
+.aggregation-evaluation-toggle { flex: 0 0 auto; display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
+.aggregation-evaluation-toggle button { min-height: 29px; padding: 0 12px; border: 0; border-radius: 5px; color: var(--quiet); background: transparent; cursor: pointer; font: 8px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.aggregation-evaluation-toggle button.active { color: #fff; background: var(--purple-deep); font-weight: 700; }
 .pair-aggregation-controls { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 11px 0; border-block: 1px solid var(--line-strong); }
 .pair-group-tabs { min-width: 0; display: flex; gap: 25px; overflow-x: auto; scrollbar-width: none; }
 .pair-group-tabs::-webkit-scrollbar { display: none; }
@@ -649,9 +654,11 @@ footer a { color: var(--purple-deep); }
   .global-matrix-selection strong, .global-matrix-selection small { max-width: 100%; white-space: normal; }
   .global-matrix-unavailable { align-items: flex-start; flex-direction: column; gap: 6px; }
   .pair-aggregation-controls { align-items: stretch; flex-direction: column; gap: 10px; }
+  .aggregation-evaluation-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .aggregation-evaluation-bar p { text-align: left; }
   .pair-group-tabs { width: 100%; gap: 18px; }
-  .aggregation-filter-cluster { width: 100%; align-items: flex-end; justify-content: space-between; }
-  .aggregation-focal-select { width: min(100%, 390px); }
+  .aggregation-filter-cluster { width: 100%; align-items: stretch; flex-direction: column; justify-content: flex-start; }
+  .aggregation-focal-select { width: 100%; }
   .gain-sample-toggle { align-self: flex-start; }
   .aggregation-overview { gap: 25px; margin-block: 26px; }
   .aggregation-method-head, .aggregation-method-row { grid-template-columns: minmax(150px, 1.35fr) .72fr .68fr; }
