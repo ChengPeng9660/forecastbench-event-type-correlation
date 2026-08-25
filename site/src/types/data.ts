@@ -76,7 +76,7 @@ export type PairGroupId =
   | "claude_qwen"
   | "claude_deepseek"
   | "qwen_deepseek";
-export type PairGroupFilter = "all" | "qwen_any" | "deepseek_any" | PairGroupId;
+export type PairGroupFilter = "all" | PairGroupId;
 
 export interface PairAggregationMethod {
   label: string;

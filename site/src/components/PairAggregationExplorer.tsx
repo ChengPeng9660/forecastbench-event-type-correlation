@@ -26,9 +26,14 @@ const GROUPS: Array<{ id: PairGroupFilter; label: string; short: string }> = [
   { id: "all", label: "All four-family pairs", short: "All pairs" },
   { id: "gpt_gpt", label: "GPT × GPT", short: "GPT × GPT" },
   { id: "claude_claude", label: "Claude × Claude", short: "Claude × Claude" },
+  { id: "qwen_qwen", label: "Qwen × Qwen", short: "Qwen × Qwen" },
+  { id: "deepseek_deepseek", label: "DeepSeek × DeepSeek", short: "DeepSeek × DeepSeek" },
   { id: "gpt_claude", label: "GPT × Claude", short: "GPT × Claude" },
-  { id: "qwen_any", label: "Every pair involving Qwen", short: "Qwen involved" },
-  { id: "deepseek_any", label: "Every pair involving DeepSeek", short: "DeepSeek involved" },
+  { id: "gpt_qwen", label: "GPT × Qwen", short: "GPT × Qwen" },
+  { id: "gpt_deepseek", label: "GPT × DeepSeek", short: "GPT × DeepSeek" },
+  { id: "claude_qwen", label: "Claude × Qwen", short: "Claude × Qwen" },
+  { id: "claude_deepseek", label: "Claude × DeepSeek", short: "Claude × DeepSeek" },
+  { id: "qwen_deepseek", label: "Qwen × DeepSeek", short: "Qwen × DeepSeek" },
 ];
 
 type EvaluationMode = "cross_fit" | "same_sample";
@@ -107,8 +112,6 @@ function pairLabel(point: PairAggregationPoint) {
 
 function matchesGroup(point: PairAggregationPoint, group: PairGroupFilter) {
   if (group === "all") return true;
-  if (group === "qwen_any") return point.family_a === "Qwen" || point.family_b === "Qwen";
-  if (group === "deepseek_any") return point.family_a === "DeepSeek" || point.family_b === "DeepSeek";
   return point.pair_group === group;
 }
 
