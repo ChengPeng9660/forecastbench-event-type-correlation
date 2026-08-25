@@ -1,5 +1,161 @@
 export type MetricId = "adjusted_pog" | "high_loss_lift" | "adjusted_loss_corr";
 
+export interface FocalGainMetricValue {
+  raw: number;
+  complementarity: number;
+}
+
+export interface FocalGainPoint {
+  partner: string;
+  partner_family: "GPT" | "Claude";
+  n_overlap: number;
+  n_dates: number;
+  date_min: string;
+  date_max: string;
+  near_bi: boolean;
+  bi_gap: number;
+  focal_adjusted_brier: number;
+  partner_adjusted_brier: number;
+  aggregate_adjusted_brier: number;
+  gain_fraction: number;
+  raw_gain_fraction: number;
+  metrics: Record<MetricId, FocalGainMetricValue>;
+}
+
+export interface FocalGainData {
+  schema_version: string;
+  generated_at: string;
+  scope: string;
+  focal_model: string;
+  partner_scope: string;
+  aggregation: {
+    id: string;
+    label: string;
+    weight: number;
+    formula: string;
+  };
+  outcome: {
+    id: string;
+    label: string;
+    formula: string;
+    positive_means: string;
+    weighting: string;
+  };
+  near_bi: {
+    threshold_bi_points: number;
+    definition: string;
+  };
+  metric_orientation: Record<MetricId, string>;
+  provenance: {
+    panel: string;
+    panel_sha256: string;
+    pair_metrics: string;
+    pair_metrics_sha256: string;
+    merged_model_rule: string;
+  };
+  points: FocalGainPoint[];
+}
+
+export type AggregationMethodId =
+  | "ec_w0_56"
+  | "simple_mean"
+  | "log_odds_mean"
+  | "piecewise_odds"
+  | "best_single"
+  | "past_only_best_single";
+
+export type PairGroupId = "gpt_gpt" | "claude_claude" | "gpt_claude";
+export type PairGroupFilter = "all" | PairGroupId;
+
+export interface PairAggregationMethod {
+  label: string;
+  formula: string;
+  outcome_blind: boolean;
+  role?: string;
+  threshold?: number;
+  resolution_aware?: boolean;
+}
+
+export interface PairAggregationPoint {
+  model_a: string;
+  model_b: string;
+  family_a: "GPT" | "Claude";
+  family_b: "GPT" | "Claude";
+  pair_group: PairGroupId;
+  n_overlap: number;
+  n_dates: number;
+  date_min: string;
+  date_max: string;
+  near_bi: boolean;
+  bi_gap: number;
+  metrics: Record<MetricId, FocalGainMetricValue>;
+  adjusted_brier: Record<"model_a" | "model_b" | AggregationMethodId, number>;
+  best_single_side: "model_a" | "model_b";
+  gain_fraction_vs_best_single: Record<AggregationMethodId, number | null>;
+  past_only_diagnostic: {
+    cold_start_rows: number;
+    model_a_choice_dates: number;
+    model_b_choice_dates: number;
+    uses_only_prior_forecast_dates: boolean;
+    resolution_aware: boolean;
+  };
+}
+
+export interface PairAggregationSummary {
+  pair_group: PairGroupFilter;
+  sample: "eligible" | "near_bi";
+  method: AggregationMethodId;
+  pair_count: number;
+  pair_event_cells: number;
+  positive_pairs: number;
+  positive_pair_share: number | null;
+  macro_mean_gain_fraction: number | null;
+  support_weighted_gain_fraction: number | null;
+  median_gain_fraction: number | null;
+  p10_gain_fraction: number | null;
+  p90_gain_fraction: number | null;
+}
+
+export interface PairAggregationData {
+  schema_version: string;
+  generated_at: string;
+  scope: string;
+  model_scope: {
+    definition: string;
+    gpt_models: string[];
+    claude_models: string[];
+  };
+  pair_scope: {
+    eligible_pair_count: number;
+    near_bi_pair_count: number;
+    group_counts: Record<PairGroupId, number>;
+    minimum_overlap: number;
+    common_support: string;
+  };
+  methods: Record<AggregationMethodId, PairAggregationMethod>;
+  outcome: {
+    id: string;
+    formula: string;
+    positive_means: string;
+    pair_summary_weighting: string;
+    score_weighting: string;
+  };
+  near_bi: {
+    threshold_bi_points: number;
+    definition: string;
+  };
+  provenance: {
+    panel: string;
+    panel_sha256: string;
+    pair_metrics: string;
+    pair_metrics_sha256: string;
+    merged_model_rule: string;
+    resolution_time_available: boolean;
+  };
+  summary: PairAggregationSummary[];
+  points: PairAggregationPoint[];
+}
+
 export interface MetricDefinition {
   id: MetricId;
   label: string;

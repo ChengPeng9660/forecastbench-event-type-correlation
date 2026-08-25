@@ -5,6 +5,7 @@ import type {
   CrossTypeManifest,
   CrossTypeSummary,
   EventTypeData,
+  FocalGainData,
   GlobalBaselineData,
   GlobalBaselineManifest,
   GlobalBaselineSummary,
@@ -14,6 +15,7 @@ import type {
   GlobalPairMatrixRow,
   Manifest,
   Model,
+  PairAggregationData,
   Taxonomy,
 } from "../types/data";
 
@@ -37,6 +39,14 @@ export async function loadAppData(): Promise<AppData> {
 
 export function loadEventType(file: string): Promise<EventTypeData> {
   return loadJson<EventTypeData>(file);
+}
+
+export function loadFocalGainData(): Promise<FocalGainData> {
+  return loadJson<FocalGainData>("focal-gain/gpt-4-1-2025-04-14.json");
+}
+
+export function loadPairAggregationData(): Promise<PairAggregationData> {
+  return loadJson<PairAggregationData>("pair-aggregation/all-gpt-claude-pairs.json");
 }
 
 export function crossTypeAssetUrl(path: string): string {

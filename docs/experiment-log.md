@@ -97,3 +97,66 @@
 - Validation: 66 Python tests passed with one skipped; 19 Vitest tests passed
   with one expected skip; 13 Playwright desktop/mobile tests passed with one
   expected skip; an independent 543-file rerun was byte-identical.
+
+## 2026-08-25 — Focal-model complementarity versus EC gain prototype
+
+- Used the post-merge model-version panel: 263 exact configuration names were
+  reduced to 70 distinct model versions by the audited outcome-blind selection
+  rule; configuration variants were not averaged or treated as separate models.
+- Fixed the focal model at `GPT-4.1-2025-04-14` and evaluated every eligible GPT
+  or Claude partner on its exact pair-common event support.
+- Applied the prespecified EC pool
+  `sigmoid(0.56 * (logit(p_focal) + logit(p_partner)))` without fitting the
+  weight to outcomes in this experiment.
+- Defined the vertical outcome as
+  `(BI_focal - BI_EC) / BI_focal`, using the official Dataset / Market
+  equal-stratum adjusted Brier score. The denominator is always the fixed focal
+  model, not the hindsight-better constituent.
+- Plotted the outcome against all three existing pairwise complementarity
+  diagnostics. High-loss lift and adjusted-loss correlation are sign-oriented
+  so moving right consistently means more complementarity.
+- Across 18 GPT/Claude partners, 11 had positive EC gain and the mean gain
+  fraction was `+1.73%`. Under the pair-common near-BI rule (BI gap `<= 2.0`),
+  8 of 9 partners had positive gain and the mean was `+4.06%`.
+- These are in-sample descriptive associations, not OOS or causal estimates.
+  The Site exposes all-pair and near-BI views, common-support sizes, fitted
+  descriptive trends, and exact selected-pair diagnostics.
+- Validation: the production TypeScript/Vite build completed using the bundled
+  workspace Node runtime; Playwright exercised the near-BI and metric controls
+  with zero browser errors. The existing Vitest suite started but did not
+  complete in this environment, so it is not reported as passing.
+
+## 2026-08-25 — All-pair GPT / Claude aggregation benchmark
+
+- Expanded the focal-model prototype to every globally eligible exact-version
+  `GPT × GPT`, `Claude × Claude`, and `GPT × Claude` pair in the post-merge
+  panel. The final universe contains 120 pairs: 19, 34, and 67 respectively;
+  57 pairs satisfy the common-support near-BI rule: 6, 14, and 37.
+- Evaluated EC `w = 0.56`, arithmetic mean, log-odds mean, and threshold-5
+  Piecewise Odds on identical pair-common targets. None of these forecasts uses
+  the current target outcome.
+- Defined Best Single as the lower official adjusted-Brier constituent after
+  observing every common target. It is a hindsight benchmark, not an
+  aggregation algorithm. Every method's pair-level fractional gain is
+  `(BI_best_single - BI_method) / BI_best_single`.
+- Summarized pair gains both as an equal-pair macro mean and as the requested
+  `n_overlap`-weighted mean. Pair-event cells are explicitly labeled duplicated
+  because one ForecastBench target appears in many model-pair comparisons.
+- On all 120 eligible pairs, every pool was negative relative to Best Single:
+  log-odds mean `-0.98%`, EC `-1.02%`, simple mean `-1.49%`, and Piecewise Odds
+  `-1.66%` by support-weighted gain fraction.
+- On the 57 near-BI pairs, all four pools became positive: log-odds mean
+  `+1.41%`, simple mean `+1.35%`, EC `+1.31%`, and Piecewise Odds `+0.55%`.
+  Log-odds mean was the best overall near-BI method by weighted gain.
+- Near-BI cross-provider `GPT × Claude` pairs were strongest: log-odds mean
+  `+1.60%`, EC `+1.49%`, simple mean `+1.47%`, and Piecewise Odds `+0.76%` over
+  37 pairs. Near-BI `GPT × GPT` favored simple mean (`+1.49%`, six pairs), while
+  near-BI `Claude × Claude` favored EC (`+1.28%`, 14 pairs).
+- Retained a past-date-only Best Single diagnostic in the JSON artifact. The
+  compact merged panel has no actual outcome-resolution timestamp, so this
+  diagnostic is not described as resolution-aware OOS evidence and is excluded
+  from the five-method headline table.
+- Added an English interactive Site view with pair-group, near-BI, method, and
+  complementarity controls; a method ranking; a common-support scatter; and
+  selected-pair details. Production TypeScript/Vite build and Playwright
+  desktop interactions passed with zero browser errors.

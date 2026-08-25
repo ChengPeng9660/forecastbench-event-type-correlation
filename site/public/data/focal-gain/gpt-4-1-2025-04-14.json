@@ -1,0 +1,560 @@
+{
+  "aggregation": {
+    "formula": "sigmoid(0.56 * (logit(p_focal) + logit(p_partner)))",
+    "id": "ec_w0.56",
+    "label": "EC odds pool · w = 0.56",
+    "weight": 0.56
+  },
+  "focal_model": "GPT-4.1-2025-04-14",
+  "generated_at": "2026-08-25",
+  "metric_orientation": {
+    "adjusted_loss_corr": "negative raw correlation; higher means less aligned adjusted losses",
+    "adjusted_pog": "raw value; higher means more complementary",
+    "high_loss_lift": "1 - raw lift; higher means fewer joint high-loss errors than independence"
+  },
+  "near_bi": {
+    "definition": "absolute common-support Brier Index gap <= 2.0 points",
+    "threshold_bi_points": 2.0
+  },
+  "outcome": {
+    "formula": "(focal_adjusted_brier - aggregate_adjusted_brier) / focal_adjusted_brier",
+    "id": "adjusted_brier_gain_fraction_vs_focal",
+    "label": "EC gain fraction vs fixed focal model",
+    "positive_means": "EC improves on the fixed focal model",
+    "weighting": "equal-weight mean of Dataset and Market adjusted-Brier strata on pair-common support"
+  },
+  "partner_scope": "GPT and Claude model versions only",
+  "points": [
+    {
+      "aggregate_adjusted_brier": 0.13840305958672844,
+      "bi_gap": 1.9066065665909093,
+      "date_max": "2025-08-31",
+      "date_min": "2025-04-27",
+      "focal_adjusted_brier": 0.13875005503690435,
+      "gain_fraction": 0.0025008671173760637,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.12223589533062107,
+          "raw": 0.12223589533062107
+        },
+        "adjusted_pog": {
+          "complementarity": 0.03735186883468869,
+          "raw": 0.03735186883468869
+        },
+        "high_loss_lift": {
+          "complementarity": -1.2765112591681516,
+          "raw": 2.2765112591681516
+        }
+      },
+      "n_dates": 6,
+      "n_overlap": 7380,
+      "near_bi": true,
+      "partner": "Claude-3-5-Sonnet-20240620",
+      "partner_adjusted_brier": 0.15331747173102653,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.002500867117376064
+    },
+    {
+      "aggregate_adjusted_brier": 0.139872925893962,
+      "bi_gap": 1.6682370061936638,
+      "date_max": "2025-05-25",
+      "date_min": "2025-04-27",
+      "focal_adjusted_brier": 0.1397253704595968,
+      "gain_fraction": -0.0010560389561312452,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.09081585882639734,
+          "raw": 0.09081585882639734
+        },
+        "adjusted_pog": {
+          "complementarity": 0.03941139747718182,
+          "raw": 0.03941139747718182
+        },
+        "high_loss_lift": {
+          "complementarity": -1.1464900008229777,
+          "raw": 2.1464900008229777
+        }
+      },
+      "n_dates": 3,
+      "n_overlap": 3726,
+      "near_bi": true,
+      "partner": "Claude-3-5-Sonnet-20241022",
+      "partner_adjusted_brier": 0.15247536405603143,
+      "partner_family": "Claude",
+      "raw_gain_fraction": -0.0010560389561312452
+    },
+    {
+      "aggregate_adjusted_brier": 0.1409096782397289,
+      "bi_gap": 1.7440874329722575,
+      "date_max": "2025-12-21",
+      "date_min": "2025-04-27",
+      "focal_adjusted_brier": 0.14299950252793944,
+      "gain_fraction": 0.014614206701888463,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.17261015846630318,
+          "raw": 0.17261015846630318
+        },
+        "adjusted_pog": {
+          "complementarity": 0.041949092287225556,
+          "raw": 0.041949092287225556
+        },
+        "high_loss_lift": {
+          "complementarity": -1.1993151927172314,
+          "raw": 2.1993151927172314
+        }
+      },
+      "n_dates": 8,
+      "n_overlap": 7791,
+      "near_bi": true,
+      "partner": "Claude-3-7-Sonnet-20250219",
+      "partner_adjusted_brier": 0.1564943158147139,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.014668981949747112
+    },
+    {
+      "aggregate_adjusted_brier": 0.1417793356268029,
+      "bi_gap": 7.389956233415887,
+      "date_max": "2025-05-25",
+      "date_min": "2025-05-11",
+      "focal_adjusted_brier": 0.1353259351168669,
+      "gain_fraction": -0.04768783237568505,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": 0.19784695112139128,
+          "raw": -0.19784695112139128
+        },
+        "adjusted_pog": {
+          "complementarity": 0.04285527597402598,
+          "raw": 0.04285527597402598
+        },
+        "high_loss_lift": {
+          "complementarity": 0.1776276478346296,
+          "raw": 0.8223723521653704
+        }
+      },
+      "n_dates": 2,
+      "n_overlap": 2464,
+      "near_bi": false,
+      "partner": "Claude-3-Haiku-20240307",
+      "partner_adjusted_brier": 0.1951574619374528,
+      "partner_family": "Claude",
+      "raw_gain_fraction": -0.04768783237568506
+    },
+    {
+      "aggregate_adjusted_brier": 0.13341592997050844,
+      "bi_gap": 2.6027078460099133,
+      "date_max": "2025-05-25",
+      "date_min": "2025-05-11",
+      "focal_adjusted_brier": 0.1353259351168669,
+      "gain_fraction": 0.014114110090641537,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.09697409614457705,
+          "raw": 0.09697409614457705
+        },
+        "adjusted_pog": {
+          "complementarity": 0.04079785763889662,
+          "raw": 0.04079785763889662
+        },
+        "high_loss_lift": {
+          "complementarity": -0.5051775949554165,
+          "raw": 1.5051775949554165
+        }
+      },
+      "n_dates": 2,
+      "n_overlap": 2464,
+      "near_bi": false,
+      "partner": "Claude-3-Opus-20240229",
+      "partner_adjusted_brier": 0.155152336707556,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.01411411009064154
+    },
+    {
+      "aggregate_adjusted_brier": 0.13779378978063403,
+      "bi_gap": 1.499479883911988,
+      "date_max": "2025-12-21",
+      "date_min": "2025-10-26",
+      "focal_adjusted_brier": 0.14825428710167865,
+      "gain_fraction": 0.07055780662767883,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.19690848445794387,
+          "raw": 0.19690848445794387
+        },
+        "adjusted_pog": {
+          "complementarity": 0.03939222189421443,
+          "raw": 0.03939222189421443
+        },
+        "high_loss_lift": {
+          "complementarity": -1.922591468285669,
+          "raw": 2.922591468285669
+        }
+      },
+      "n_dates": 5,
+      "n_overlap": 4065,
+      "near_bi": true,
+      "partner": "Claude-Haiku-4-5-20251001",
+      "partner_adjusted_brier": 0.1369319953838653,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.0709579008706597
+    },
+    {
+      "aggregate_adjusted_brier": 0.13453850815278412,
+      "bi_gap": 0.0713059346751379,
+      "date_max": "2025-12-21",
+      "date_min": "2025-08-17",
+      "focal_adjusted_brier": 0.14355981292067932,
+      "gain_fraction": 0.06284004265789699,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.1324746997965984,
+          "raw": 0.1324746997965984
+        },
+        "adjusted_pog": {
+          "complementarity": 0.04314931596451474,
+          "raw": 0.04314931596451474
+        },
+        "high_loss_lift": {
+          "complementarity": -1.3644996116104688,
+          "raw": 2.364499611610469
+        }
+      },
+      "n_dates": 7,
+      "n_overlap": 6485,
+      "near_bi": true,
+      "partner": "Claude-Opus-4-1-20250805",
+      "partner_adjusted_brier": 0.1430199751583081,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.06310744186352957
+    },
+    {
+      "aggregate_adjusted_brier": 0.1478912337628583,
+      "bi_gap": 10.098961456177037,
+      "date_max": "2025-08-03",
+      "date_min": "2025-08-03",
+      "focal_adjusted_brier": 0.136880934826444,
+      "gain_fraction": -0.08043705246734772,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": 0.16423060294912448,
+          "raw": -0.16423060294912448
+        },
+        "adjusted_pog": {
+          "complementarity": 0.04759891572122933,
+          "raw": 0.04759891572122933
+        },
+        "high_loss_lift": {
+          "complementarity": 0.22856919590529035,
+          "raw": 0.7714308040947097
+        }
+      },
+      "n_dates": 1,
+      "n_overlap": 1234,
+      "near_bi": false,
+      "partner": "Claude-Opus-4-20250514",
+      "partner_adjusted_brier": 0.22180694792833322,
+      "partner_family": "Claude",
+      "raw_gain_fraction": -0.08043705246734793
+    },
+    {
+      "aggregate_adjusted_brier": 0.1417464506578177,
+      "bi_gap": 0.33101299204349743,
+      "date_max": "2025-12-21",
+      "date_min": "2025-12-07",
+      "focal_adjusted_brier": 0.14856727973155154,
+      "gain_fraction": 0.04591070850902355,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.2183833906026633,
+          "raw": 0.2183833906026633
+        },
+        "adjusted_pog": {
+          "complementarity": 0.03840749324324311,
+          "raw": 0.03840749324324311
+        },
+        "high_loss_lift": {
+          "complementarity": -1.3582810236600675,
+          "raw": 2.3582810236600675
+        }
+      },
+      "n_dates": 2,
+      "n_overlap": 1628,
+      "near_bi": true,
+      "partner": "Claude-Opus-4-5-20251101",
+      "partner_adjusted_brier": 0.14602649551768043,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.04663477832657875
+    },
+    {
+      "aggregate_adjusted_brier": 0.13929589506374832,
+      "bi_gap": 3.802152581853875,
+      "date_max": "2025-11-23",
+      "date_min": "2025-08-03",
+      "focal_adjusted_brier": 0.14080633456671376,
+      "gain_fraction": 0.010727070679123502,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.08956754996060261,
+          "raw": 0.08956754996060261
+        },
+        "adjusted_pog": {
+          "complementarity": 0.04361742496100898,
+          "raw": 0.04361742496100898
+        },
+        "high_loss_lift": {
+          "complementarity": -0.7511104223666214,
+          "raw": 1.7511104223666214
+        }
+      },
+      "n_dates": 6,
+      "n_overlap": 6091,
+      "near_bi": false,
+      "partner": "Claude-Sonnet-4-20250514",
+      "partner_adjusted_brier": 0.17078649507807198,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.01072440129621976
+    },
+    {
+      "aggregate_adjusted_brier": 0.13465485639726768,
+      "bi_gap": 3.077931060233972,
+      "date_max": "2025-12-21",
+      "date_min": "2025-10-26",
+      "focal_adjusted_brier": 0.14825428710167865,
+      "gain_fraction": 0.09173043808901082,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.21268609576130393,
+          "raw": 0.21268609576130393
+        },
+        "adjusted_pog": {
+          "complementarity": 0.030057454120536953,
+          "raw": 0.030057454120536953
+        },
+        "high_loss_lift": {
+          "complementarity": -1.9433743409490334,
+          "raw": 2.9433743409490334
+        }
+      },
+      "n_dates": 5,
+      "n_overlap": 4065,
+      "near_bi": false,
+      "partner": "Claude-Sonnet-4-5-20250929",
+      "partner_adjusted_brier": 0.12549924262039314,
+      "partner_family": "Claude",
+      "raw_gain_fraction": 0.09225059059855775
+    },
+    {
+      "aggregate_adjusted_brier": 0.13590916422402943,
+      "bi_gap": 2.8161191170044333,
+      "date_max": "2025-05-25",
+      "date_min": "2025-05-11",
+      "focal_adjusted_brier": 0.1353259351168669,
+      "gain_fraction": -0.004309810286245909,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.07883584264829599,
+          "raw": 0.07883584264829599
+        },
+        "adjusted_pog": {
+          "complementarity": 0.03512016030844187,
+          "raw": 0.03512016030844187
+        },
+        "high_loss_lift": {
+          "complementarity": -0.5755136268343817,
+          "raw": 1.5755136268343817
+        }
+      },
+      "n_dates": 2,
+      "n_overlap": 2464,
+      "near_bi": false,
+      "partner": "GPT-4-Turbo-2024-04-09",
+      "partner_adjusted_brier": 0.15683811873426773,
+      "partner_family": "GPT",
+      "raw_gain_fraction": -0.004309810286245705
+    },
+    {
+      "aggregate_adjusted_brier": 0.1425737839590242,
+      "bi_gap": 3.0280441116808774,
+      "date_max": "2025-05-25",
+      "date_min": "2025-04-27",
+      "focal_adjusted_brier": 0.1397253704595968,
+      "gain_fraction": -0.020385800302823758,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.12275009957593774,
+          "raw": 0.12275009957593774
+        },
+        "adjusted_pog": {
+          "complementarity": 0.03949057971013632,
+          "raw": 0.03949057971013632
+        },
+        "high_loss_lift": {
+          "complementarity": -0.6624813216626788,
+          "raw": 1.6624813216626788
+        }
+      },
+      "n_dates": 3,
+      "n_overlap": 3726,
+      "near_bi": false,
+      "partner": "GPT-4o-2024-05-13",
+      "partner_adjusted_brier": 0.16327984671225643,
+      "partner_family": "GPT",
+      "raw_gain_fraction": -0.020385800302823758
+    },
+    {
+      "aggregate_adjusted_brier": 0.13363440986966277,
+      "bi_gap": 1.567915625503666,
+      "date_max": "2025-11-09",
+      "date_min": "2025-08-31",
+      "focal_adjusted_brier": 0.1420787469605026,
+      "gain_fraction": 0.059434203014102654,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.3051424929458097,
+          "raw": 0.3051424929458097
+        },
+        "adjusted_pog": {
+          "complementarity": 0.0234758630317755,
+          "raw": 0.0234758630317755
+        },
+        "high_loss_lift": {
+          "complementarity": -2.7749010518029342,
+          "raw": 3.7749010518029342
+        }
+      },
+      "n_dates": 3,
+      "n_overlap": 2830,
+      "near_bi": true,
+      "partner": "GPT-5-2025-08-07",
+      "partner_adjusted_brier": 0.13050458925727196,
+      "partner_family": "GPT",
+      "raw_gain_fraction": 0.05943420301410246
+    },
+    {
+      "aggregate_adjusted_brier": 0.1352538110200195,
+      "bi_gap": 1.6411812746684973,
+      "date_max": "2025-12-21",
+      "date_min": "2025-08-31",
+      "focal_adjusted_brier": 0.14503918741226288,
+      "gain_fraction": 0.06746712089905192,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.21400393795674325,
+          "raw": 0.21400393795674325
+        },
+        "adjusted_pog": {
+          "complementarity": 0.031111530423628714,
+          "raw": 0.031111530423628714
+        },
+        "high_loss_lift": {
+          "complementarity": -2.163292847503374,
+          "raw": 3.163292847503374
+        }
+      },
+      "n_dates": 6,
+      "n_overlap": 5274,
+      "near_bi": true,
+      "partner": "GPT-5-Mini-2025-08-07",
+      "partner_adjusted_brier": 0.13280798195140567,
+      "partner_family": "GPT",
+      "raw_gain_fraction": 0.06780097449875828
+    },
+    {
+      "aggregate_adjusted_brier": 0.13876915300884116,
+      "bi_gap": 0.9778915563214312,
+      "date_max": "2025-12-21",
+      "date_min": "2025-08-31",
+      "focal_adjusted_brier": 0.14503918741226288,
+      "gain_fraction": 0.043229933339323144,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.01216420076922401,
+          "raw": 0.01216420076922401
+        },
+        "adjusted_pog": {
+          "complementarity": 0.054810239071623496,
+          "raw": 0.054810239071623496
+        },
+        "high_loss_lift": {
+          "complementarity": -0.5820561767112087,
+          "raw": 1.5820561767112087
+        }
+      },
+      "n_dates": 6,
+      "n_overlap": 5274,
+      "near_bi": true,
+      "partner": "GPT-5-Nano-2025-08-07",
+      "partner_adjusted_brier": 0.15258322110875616,
+      "partner_family": "GPT",
+      "raw_gain_fraction": 0.043443851892065205
+    },
+    {
+      "aggregate_adjusted_brier": 0.14970431714384574,
+      "bi_gap": 2.727531149759166,
+      "date_max": "2025-12-21",
+      "date_min": "2025-11-23",
+      "focal_adjusted_brier": 0.14890660819586424,
+      "gain_fraction": -0.005357109114541383,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": -0.14677897871787918,
+          "raw": 0.14677897871787918
+        },
+        "adjusted_pog": {
+          "complementarity": 0.05757635801964156,
+          "raw": 0.05757635801964156
+        },
+        "high_loss_lift": {
+          "complementarity": -0.9649227287615758,
+          "raw": 1.9649227287615758
+        }
+      },
+      "n_dates": 3,
+      "n_overlap": 2444,
+      "near_bi": false,
+      "partner": "GPT-5.1-2025-11-13",
+      "partner_adjusted_brier": 0.17070077378899134,
+      "partner_family": "GPT",
+      "raw_gain_fraction": -0.005409086872845386
+    },
+    {
+      "aggregate_adjusted_brier": 0.13857939829636134,
+      "bi_gap": 5.547841536750276,
+      "date_max": "2025-08-03",
+      "date_min": "2025-08-03",
+      "focal_adjusted_brier": 0.136880934826444,
+      "gain_fraction": -0.012408327515229772,
+      "metrics": {
+        "adjusted_loss_corr": {
+          "complementarity": 0.05889230725317741,
+          "raw": -0.05889230725317741
+        },
+        "adjusted_pog": {
+          "complementarity": 0.04010388816855662,
+          "raw": 0.04010388816855662
+        },
+        "high_loss_lift": {
+          "complementarity": 0.5330670590708428,
+          "raw": 0.4669329409291571
+        }
+      },
+      "n_dates": 1,
+      "n_overlap": 1234,
+      "near_bi": false,
+      "partner": "claude-3-5-haiku-20241022",
+      "partner_adjusted_brier": 0.18100995800671982,
+      "partner_family": "Claude",
+      "raw_gain_fraction": -0.012408327515229772
+    }
+  ],
+  "provenance": {
+    "merged_model_rule": "one outcome-blind representative configuration per exact model version",
+    "pair_metrics": "data/derived/global_baseline_pair_metrics.csv.gz",
+    "pair_metrics_sha256": "18101c489ecf2000842ea297561914f6f874832ba843f2190ae494979a75ea44",
+    "panel": "data/build/scored_panel_model_versions.csv",
+    "panel_sha256": "7b9ce08cd0e881ea111d15aa429a5c733d3f8b48c5dce88245afbbeb7df131c5"
+  },
+  "schema_version": "1.0.0",
+  "scope": "official_full"
+}
