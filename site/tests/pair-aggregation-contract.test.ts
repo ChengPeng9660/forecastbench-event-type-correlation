@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { summarizeAggregationPoints } from "../src/components/PairAggregationExplorer";
 import type { AggregationMethodId, PairAggregationData } from "../src/types/data";
 
 const dataRoot = resolve(process.env.SITE_DATA_ROOT ?? join(process.cwd(), "public/data"));
@@ -36,5 +37,20 @@ describe("all-pair aggregation contract", () => {
     expect(payload.methods.best_single.outcome_blind).toBe(false);
     expect(payload.methods.best_single.role).toContain("hindsight");
     expect(payload.provenance.merged_model_rule).toContain("one outcome-blind representative");
+  });
+
+  it("recomputes the published summaries after focal-model filtering", () => {
+    for (const published of payload.summary.filter((row) => pools.includes(row.method))) {
+      const points = payload.points.filter((point) =>
+        (published.pair_group === "all" || point.pair_group === published.pair_group)
+        && (published.sample === "eligible" || point.near_bi)
+      );
+      const dynamic = summarizeAggregationPoints(points, published.method, published.pair_group, published.sample);
+      expect(dynamic.pair_count).toBe(published.pair_count);
+      expect(dynamic.pair_event_cells).toBe(published.pair_event_cells);
+      expect(dynamic.positive_pairs).toBe(published.positive_pairs);
+      expect(dynamic.macro_mean_gain_fraction).toBeCloseTo(published.macro_mean_gain_fraction!, 14);
+      expect(dynamic.support_weighted_gain_fraction).toBeCloseTo(published.support_weighted_gain_fraction!, 14);
+    }
   });
 });
