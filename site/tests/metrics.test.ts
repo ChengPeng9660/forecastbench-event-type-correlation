@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { colorForScore, dependenceScore, findPair, formatMetric, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence, sortPairs } from "../src/lib/metrics";
+import { colorForScore, dependenceScore, diversityScore, findPair, formatMetric, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence, sortPairs } from "../src/lib/metrics";
 import type { MetricDefinition, PairMetrics } from "../src/types/data";
 
 const pair = (id: string, value: number): PairMetrics => ({
@@ -23,6 +23,13 @@ describe("model-dependence metric helpers", () => {
     expect(dependenceScore(1, lower, [1, 2, 3])).toBe(1);
   });
 
+  it("normalizes every heatmap metric from lower to higher diversity", () => {
+    expect(diversityScore(1, higher, [1, 2, 3])).toBe(1);
+    expect(diversityScore(3, higher, [1, 2, 3])).toBe(0);
+    expect(diversityScore(3, lower, [1, 2, 3])).toBe(1);
+    expect(diversityScore(1, lower, [1, 2, 3])).toBe(0);
+  });
+
   it("sorts in the metric-defined direction", () => {
     expect(sortPairs([pair("low", 1), pair("high", 3)], higher)[0].row_id).toBe("high");
     expect(sortPairs([pair("low", 1), pair("high", 3)], lower)[0].row_id).toBe("low");
@@ -35,7 +42,7 @@ describe("model-dependence metric helpers", () => {
     expect(formatMetric(1.234, "high_loss_lift")).toBe("1.23");
   });
 
-  it("uses a light-to-dark purple scale for model dependence", () => {
+  it("uses a light-to-dark purple scale for model diversity", () => {
     expect(colorForScore(1)).toBe("rgb(79, 32, 127)");
     expect(colorForScore(0.5)).toBe("rgb(167, 129, 194)");
     expect(colorForScore(0)).toBe("rgb(244, 239, 248)");

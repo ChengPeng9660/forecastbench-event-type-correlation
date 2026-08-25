@@ -1,4 +1,4 @@
-import { colorForScore, dependenceScore, findPair, formatMetric, textColorForScore } from "../lib/metrics";
+import { colorForScore, diversityScore, findPair, formatMetric, textColorForScore } from "../lib/metrics";
 import type { MetricDefinition, Model, PairMetrics } from "../types/data";
 
 interface HeatmapProps {
@@ -54,7 +54,7 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
               if (!pair || value === null) {
                 return <div key={`${rowModel.id}-${columnModel.id}`} className="heat-cell missing" aria-label="Missing pair">·</div>;
               }
-              const score = dependenceScore(value, metric, values);
+              const score = diversityScore(value, metric, values);
               const active = selectedPair?.row_id === pair.row_id;
               const related = !selectedModel || pair.a === selectedModel || pair.b === selectedModel;
               return (

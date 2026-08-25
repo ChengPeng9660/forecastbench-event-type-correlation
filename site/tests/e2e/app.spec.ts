@@ -380,8 +380,8 @@ test("shows the no-topic global dependence baseline without topic-transfer panel
   await expect(section).not.toContainText("FOCAL MODEL CHECK");
   await expect(section).not.toContainText("Does one model keep the same partner ordering?");
   await expect(section.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
-  await expect(section.getByText("Lower model dependence", { exact: true })).toBeVisible();
-  await expect(section.getByText("Higher model dependence", { exact: true })).toBeVisible();
+  await expect(section.getByText("Lower diversity", { exact: true })).toBeVisible();
+  await expect(section.getByText("Higher diversity", { exact: true })).toBeVisible();
   await expect(section.getByLabel("Global matrix provider")).toBeVisible();
   await expect(section.getByLabel("Global matrix model").locator("option")).toHaveCount(36);
   await expect(section.getByTestId("global-matrix-selection")).toHaveCount(0);

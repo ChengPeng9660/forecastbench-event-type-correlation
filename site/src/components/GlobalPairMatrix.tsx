@@ -171,7 +171,7 @@ export function GlobalPairMatrix({
         <label className="global-matrix-range"><span>MIN OVERLAP <b>{minOverlap}</b></span><input aria-label="Global matrix minimum overlap" type="range" min="50" max="250" step="25" value={minOverlap} onChange={(event) => onMinOverlapChange(Number(event.target.value))} /></label>
       </div>
       <div className="global-matrix-copy"><span>{nearBi ? "Near-BI" : "All eligible"} · {visiblePairs.length.toLocaleString()} defined pairs</span><p>{heatmapModelIds.length ? `The matrix shows ${heatmapModels.length} selected models available under the active global filters` : `The matrix shows the ${heatmapModels.length} highest-coverage models out of ${eligibleModels.length}`}, ordered from earliest to latest release.</p></div>
-      <div className="legend"><span>Lower model dependence</span><i className="legend-gradient" /><span>Higher model dependence</span></div>
+      <div className="legend"><span>Lower diversity</span><i className="legend-gradient" /><span>Higher diversity</span></div>
       <Heatmap models={heatmapModels} pairs={heatmapPairs} metric={metric} selectedModel={selectedModel} selectedPair={selectedPair} onSelectPair={setSelectedPair} testId="global-pair-heatmap" />
       {selectedPair && <div className="global-matrix-selection" data-testid="global-matrix-selection"><strong>{modelNames.get(selectedPair.a)} <span>×</span> {modelNames.get(selectedPair.b)}</strong><small>{metric.label} {formatMetric(selectedPair.metrics[metricId].value, metricId)} · n={selectedPair.n_overlap.toLocaleString()} · {selectedPair.n_dates} dates</small></div>}
     </div>

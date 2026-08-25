@@ -252,7 +252,7 @@ export default function App() {
           <div className="intro-heading">
             <p className="eyebrow">FORECASTBENCH · DEPENDENCE ATLAS</p>
             <h1>Forecast Model<br />Dependence Atlas</h1>
-            <p className="intro-copy">Compare model pairs across event types through three dependence metrics. Purple consistently indicates higher model dependence; taxonomy, sample thresholds, and missing values remain fully auditable.</p>
+            <p className="intro-copy">Compare model pairs across event types through three dependence metrics. Purple consistently indicates higher model diversity; taxonomy, sample thresholds, and missing values remain fully auditable.</p>
           </div>
           <dl className="dataset-stamp">
             <div><dt>OFFICIAL TARGETS</dt><dd>{appData.manifest.source_snapshot.official_targets.toLocaleString()}</dd></div>
@@ -284,7 +284,7 @@ export default function App() {
           </div>
           <div className="matrix-layout">
             <div>
-              <div className="legend"><span>Lower model dependence</span><i className="legend-gradient" /><span>Higher model dependence</span></div>
+              <div className="legend"><span>Lower diversity</span><i className="legend-gradient" /><span>Higher diversity</span></div>
               <Heatmap models={heatmapModels} pairs={heatmapPairs} metric={metric} selectedModel={filters.model} selectedPair={selectedPair} onSelectPair={selectPair} />
             </div>
           </div>

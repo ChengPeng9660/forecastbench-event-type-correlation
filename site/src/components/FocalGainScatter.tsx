@@ -149,7 +149,7 @@ export function FocalGainScatter({ data }: { data: FocalGainData }) {
               <title>{`${point.partner}\n${metricMeta.raw}: ${point.metrics[metric].raw.toFixed(4)}\nEC gain: ${formatPercent(point.gain_fraction)}\nCommon events: ${point.n_overlap.toLocaleString()}\nNear-BI: ${point.near_bi ? "Yes" : "No"}`}</title>
             </g>;
           })}
-          <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 23} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · toward lower model dependence →</text>
+          <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 23} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>
           <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">EC adjusted-Brier gain fraction vs fixed focal model</text>
         </svg>
       </div>

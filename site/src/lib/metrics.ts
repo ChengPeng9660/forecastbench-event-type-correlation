@@ -29,6 +29,11 @@ export function dependenceScore(value: number | null, metric: MetricDefinition, 
   return metric.direction === "higher" ? normalized : 1 - normalized;
 }
 
+export function diversityScore(value: number | null, metric: MetricDefinition, values: number[]): number {
+  const dependence = dependenceScore(value, metric, values);
+  return Number.isFinite(dependence) ? 1 - dependence : dependence;
+}
+
 export function sortPairs(pairs: PairMetrics[], metric: MetricDefinition): PairMetrics[] {
   return [...pairs].sort((left, right) => {
     const leftValue = left.metrics[metric.id].value;
