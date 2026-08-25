@@ -9,7 +9,7 @@
   "generated_at": "2026-08-25",
   "metric_orientation": {
     "adjusted_loss_corr": "negative raw correlation; higher means less aligned adjusted losses",
-    "adjusted_pog": "raw value; higher means more complementary",
+    "adjusted_pog": "raw value; higher means lower model dependence",
     "high_loss_lift": "1 - raw lift; higher means fewer joint high-loss errors than independence"
   },
   "near_bi": {

@@ -182,7 +182,7 @@ export function PairAggregationExplorer({ data }: { data: PairAggregationData })
               <title>{`${pairLabel(point)}\n${metricMeta.label}: ${point.metrics[metric].raw.toFixed(4)}\n${data.methods[method].label} gain: ${percent(gain, 2)}\nCommon targets: ${point.n_overlap.toLocaleString()}\nNear-BI: ${point.near_bi ? "Yes" : "No"}`}</title>
             </g>;
           })}
-          <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · more complementary →</text>
+          <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · toward lower model dependence →</text>
           <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Gain fraction versus pair Best Single</text>
         </svg>
       </div>
