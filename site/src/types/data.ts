@@ -171,6 +171,7 @@ export interface PairAggregationData {
     near_bi_pair_count: number;
     group_counts: Record<PairGroupId, number>;
     minimum_overlap: number;
+    fold_ineligible_pair_count: number;
     common_support: string;
   };
   methods: Record<AggregationMethodId, PairAggregationMethod>;
@@ -190,7 +191,13 @@ export interface PairAggregationData {
     panel_sha256: string;
     pair_metrics: string;
     pair_metrics_sha256: string;
+    pair_metrics_role: string;
     merged_model_rule: string;
+    model_alias_audit: {
+      aliases: Record<string, string>;
+      remapped_rows: Record<string, number>;
+      target_collisions: number;
+    };
     resolution_time_available: boolean;
   };
   summary: PairAggregationSummary[];

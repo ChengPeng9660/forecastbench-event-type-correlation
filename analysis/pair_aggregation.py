@@ -17,6 +17,7 @@ import hashlib
 import json
 import math
 from collections import defaultdict
+from itertools import combinations
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
@@ -47,6 +48,11 @@ METHODS = (
     "best_single",
     "past_only_best_single",
 )
+
+# ForecastBench's 2024-07-21 files used OpenAI's moving ``GPT-4o`` alias.
+# At that date the alias resolved to the 2024-05-13 snapshot.  Keep both real
+# forecast histories, but expose and evaluate them as one pinned model version.
+MODEL_ALIASES = {"GPT-4o": "GPT-4o-2024-05-13"}
 
 
 def sha256_file(path: Path) -> str:
@@ -141,8 +147,16 @@ def read_pairs(path: Path) -> list[dict[str, str]]:
     return rows
 
 
-def read_panel(path: Path, models: set[str]) -> dict[str, dict[tuple[str, ...], dict[str, str]]]:
+def resolve_model_alias(model: str) -> str:
+    return MODEL_ALIASES.get(model, model)
+
+
+def read_panel(
+    path: Path,
+) -> tuple[dict[str, dict[tuple[str, ...], dict[str, str]]], dict[str, Any]]:
     output: dict[str, dict[tuple[str, ...], dict[str, str]]] = defaultdict(dict)
+    source_names: dict[tuple[str, tuple[str, ...]], str] = {}
+    remapped_rows: dict[str, int] = defaultdict(int)
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         required = {*KEY, "model_name", "prediction", "outcome", "origin_type", "question_fixed_effect", "normalization_term"}
@@ -150,17 +164,56 @@ def read_panel(path: Path, models: set[str]) -> dict[str, dict[tuple[str, ...], 
         if missing:
             raise ValueError(f"merged panel missing fields: {sorted(missing)}")
         for row in reader:
-            model = row["model_name"].strip()
-            if model not in models:
+            source_model = row["model_name"].strip()
+            if family(source_model) is None:
                 continue
+            model = resolve_model_alias(source_model)
             key = tuple(row[field] for field in KEY)
             if key in output[model]:
-                raise ValueError(f"duplicate model-target row for {model}: {key}")
-            output[model][key] = row
-    absent = models - set(output)
-    if absent:
-        raise ValueError(f"models missing from merged panel: {sorted(absent)}")
-    return dict(output)
+                previous = source_names[(model, key)]
+                raise ValueError(
+                    f"alias merge creates duplicate model-target row for {model}: {key}; "
+                    f"sources={previous!r},{source_model!r}"
+                )
+            resolved_row = dict(row)
+            resolved_row["model_name"] = model
+            output[model][key] = resolved_row
+            source_names[(model, key)] = source_model
+            if model != source_model:
+                remapped_rows[source_model] += 1
+    return dict(output), {
+        "aliases": dict(MODEL_ALIASES),
+        "remapped_rows": dict(sorted(remapped_rows.items())),
+        "target_collisions": 0,
+    }
+
+
+def eligible_pair_rows(
+    panel: Mapping[str, Mapping[tuple[str, ...], Mapping[str, str]]],
+    minimum_overlap: int,
+    minimum_fold_overlap: int,
+    split_seed: int,
+    preferred_orientation: Mapping[frozenset[str], tuple[str, str]],
+) -> tuple[list[dict[str, str]], int]:
+    ordered_models = sorted(panel, key=lambda model: (FAMILY_ORDER[family(model)], model.casefold(), model))
+    rows: list[dict[str, str]] = []
+    fold_ineligible = 0
+    for first_name, second_name in combinations(ordered_models, 2):
+        common = set(panel[first_name]) & set(panel[second_name])
+        if len(common) < minimum_overlap:
+            continue
+        fold_counts = {"A": 0, "B": 0}
+        for key in common:
+            fold_counts[event_fold(key[1], key[2], split_seed)] += 1
+        if min(fold_counts.values()) < minimum_fold_overlap:
+            fold_ineligible += 1
+            continue
+        first_name, second_name = preferred_orientation.get(
+            frozenset((first_name, second_name)),
+            (first_name, second_name),
+        )
+        rows.append({"model_a": first_name, "model_b": second_name})
+    return rows, fold_ineligible
 
 
 def percentile(values: list[float], quantile: float) -> float:
@@ -572,73 +625,47 @@ def build_payload(
     split_seed: int = 20260825,
     minimum_fold_overlap: int = 50,
 ) -> dict[str, Any]:
-    pair_rows = read_pairs(pair_path)
-    models = {row[name] for row in pair_rows for name in ("model_a", "model_b")}
-    panel = read_panel(panel_path, models)
+    archived_pair_rows = read_pairs(pair_path)
+    preferred_orientation: dict[frozenset[str], tuple[str, str]] = {}
+    for row in archived_pair_rows:
+        first_name = resolve_model_alias(row["model_a"])
+        second_name = resolve_model_alias(row["model_b"])
+        if first_name != second_name:
+            preferred_orientation.setdefault(
+                frozenset((first_name, second_name)),
+                (first_name, second_name),
+            )
+    panel, alias_audit = read_panel(panel_path)
+    models = set(panel)
+    pair_rows, fold_ineligible_pairs = eligible_pair_rows(
+        panel,
+        minimum_overlap=50,
+        minimum_fold_overlap=minimum_fold_overlap,
+        split_seed=split_seed,
+        preferred_orientation=preferred_orientation,
+    )
     points: list[dict[str, Any]] = []
 
-    for metric_row in pair_rows:
-        first_name = metric_row["model_a"]
-        second_name = metric_row["model_b"]
+    for pair_row in pair_rows:
+        first_name = pair_row["model_a"]
+        second_name = pair_row["model_b"]
         first_panel = panel[first_name]
         second_panel = panel[second_name]
         common = sorted(set(first_panel) & set(second_panel))
-        if len(common) != int(metric_row["n_overlap"]):
-            raise ValueError(
-                f"pair support mismatch for {first_name} x {second_name}: "
-                f"panel={len(common)}, metrics={metric_row['n_overlap']}"
-            )
-
-        losses: dict[str, list[tuple[str, float]]] = defaultdict(list)
-        by_date: dict[str, list[tuple[dict[str, str], dict[str, str]]]] = defaultdict(list)
-        for key in common:
-            first = first_panel[key]
-            second = second_panel[key]
-            if first["outcome"] != second["outcome"] or first["origin_type"] != second["origin_type"]:
-                raise ValueError(f"misaligned rows for {first_name} x {second_name}: {key}")
-            by_date[first["date"][:10]].append((first, second))
-            first_prediction = float(first["prediction"])
-            second_prediction = float(second["prediction"])
-            origin = first["origin_type"]
-            losses["model_a"].append((origin, adjusted_loss(first, first_prediction)))
-            losses["model_b"].append((origin, adjusted_loss(second, second_prediction)))
-            for method, prediction in predictions(first_prediction, second_prediction, ec_weight, piecewise_threshold).items():
-                losses[method].append((origin, adjusted_loss(first, prediction)))
-
-        first_sums: dict[str, float] = defaultdict(float)
-        second_sums: dict[str, float] = defaultdict(float)
-        history_counts: dict[str, int] = defaultdict(int)
-        cold_start_rows = 0
-        history_choice_dates = {"model_a": 0, "model_b": 0}
-        for date in sorted(by_date):
-            first_history = accumulated_official_mean(first_sums, history_counts)
-            second_history = accumulated_official_mean(second_sums, history_counts)
-            if first_history is None or second_history is None:
-                chosen = "model_a"
-                cold_start_rows += len(by_date[date])
-            else:
-                chosen = "model_a" if first_history <= second_history else "model_b"
-            history_choice_dates[chosen] += 1
-            for first, second in by_date[date]:
-                origin = first["origin_type"]
-                first_prediction = float(first["prediction"])
-                second_prediction = float(second["prediction"])
-                selected_prediction = first_prediction if chosen == "model_a" else second_prediction
-                losses["past_only_best_single"].append((origin, adjusted_loss(first, selected_prediction)))
-            for first, second in by_date[date]:
-                origin = first["origin_type"]
-                first_sums[origin] += adjusted_loss(first, float(first["prediction"]))
-                second_sums[origin] += adjusted_loss(second, float(second["prediction"]))
-                history_counts[origin] += 1
-
-        briers = {method: official_mean(values) for method, values in losses.items()}
-        best_side = "model_a" if briers["model_a"] <= briers["model_b"] else "model_b"
-        best_brier = briers[best_side]
-        briers["best_single"] = best_brier
-        if best_brier <= 0:
-            gains: dict[str, float | None] = {method: None for method in METHODS}
-        else:
-            gains = {method: (best_brier - briers[method]) / best_brier for method in METHODS}
+        dependence = dependence_support(
+            first_panel,
+            second_panel,
+            common,
+            near_bi_gap=2.0,
+            high_loss_threshold=0.25,
+        )
+        aggregation = score_aggregation_support(
+            first_panel,
+            second_panel,
+            common,
+            ec_weight,
+            piecewise_threshold,
+        )
 
         points.append(
             {
@@ -648,39 +675,16 @@ def build_payload(
                 "family_b": family(second_name),
                 "pair_group": pair_group(first_name, second_name),
                 "n_overlap": len(common),
-                "n_dates": len(by_date),
-                "date_min": min(by_date),
-                "date_max": max(by_date),
-                "near_bi": metric_row["near_bi"] == "1",
-                "bi_gap": float(metric_row["bi_gap_common"]),
-                "metrics": {
-                    "adjusted_pog": {
-                        "raw": float(metric_row["adjusted_pog"]),
-                        "complementarity": float(metric_row["adjusted_pog"]),
-                    },
-                    "high_loss_lift": {
-                        "raw": float(metric_row["adjusted_high_loss_lift_025"]),
-                        "complementarity": 1 - float(metric_row["adjusted_high_loss_lift_025"]),
-                    },
-                    "adjusted_loss_corr": {
-                        "raw": float(metric_row["adjusted_loss_pearson_corr"]),
-                        "complementarity": -float(metric_row["adjusted_loss_pearson_corr"]),
-                    },
-                },
-                "adjusted_brier": {
-                    "model_a": briers["model_a"],
-                    "model_b": briers["model_b"],
-                    **{method: briers[method] for method in METHODS},
-                },
-                "best_single_side": best_side,
-                "gain_fraction_vs_best_single": gains,
-                "past_only_diagnostic": {
-                    "cold_start_rows": cold_start_rows,
-                    "model_a_choice_dates": history_choice_dates["model_a"],
-                    "model_b_choice_dates": history_choice_dates["model_b"],
-                    "uses_only_prior_forecast_dates": True,
-                    "resolution_aware": False,
-                },
+                "n_dates": aggregation["n_dates"],
+                "date_min": aggregation["date_min"],
+                "date_max": aggregation["date_max"],
+                "near_bi": dependence["near_bi"],
+                "bi_gap": dependence["bi_gap"],
+                "metrics": dependence["metrics"],
+                "adjusted_brier": aggregation["adjusted_brier"],
+                "best_single_side": aggregation["best_single_side"],
+                "gain_fraction_vs_best_single": aggregation["gain_fraction_vs_best_single"],
+                "past_only_diagnostic": aggregation["past_only_diagnostic"],
             }
         )
 
@@ -697,7 +701,7 @@ def build_payload(
         high_loss_threshold=0.25,
     )
     return {
-        "schema_version": "2.0.0",
+        "schema_version": "2.1.0",
         "generated_at": "2026-08-25",
         "scope": "official_full",
         "model_scope": {
@@ -712,6 +716,7 @@ def build_payload(
             "near_bi_pair_count": sum(point["near_bi"] for point in points),
             "group_counts": group_counts,
             "minimum_overlap": 50,
+            "fold_ineligible_pair_count": fold_ineligible_pairs,
             "common_support": "each pair and every method use the exact same pair-common targets",
         },
         "methods": {
@@ -762,7 +767,9 @@ def build_payload(
             "panel_sha256": sha256_file(panel_path),
             "pair_metrics": str(pair_path),
             "pair_metrics_sha256": sha256_file(pair_path),
-            "merged_model_rule": "one outcome-blind representative configuration per exact model version",
+            "pair_metrics_role": "preserves historical model_a/model_b orientation only; pair eligibility, dependence, and gains are recomputed from the alias-resolved panel",
+            "merged_model_rule": "one outcome-blind representative configuration per exact model version; stitch GPT-4o alias history into GPT-4o-2024-05-13 before pair construction and fold assignment",
+            "model_alias_audit": alias_audit,
             "resolution_time_available": False,
         },
         "summary": summarize(points),

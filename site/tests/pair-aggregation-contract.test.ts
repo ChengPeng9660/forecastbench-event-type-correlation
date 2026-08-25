@@ -12,24 +12,31 @@ const pools: AggregationMethodId[] = ["ec_w0_56", "simple_mean", "log_odds_mean"
 
 describe("all-pair aggregation contract", () => {
   it("publishes the frozen four-family pair universe", () => {
-    expect(payload.points).toHaveLength(196);
-    expect(payload.points.filter((point) => point.near_bi)).toHaveLength(85);
+    expect(payload.points).toHaveLength(192);
+    expect(payload.points.filter((point) => point.near_bi)).toHaveLength(84);
     expect(payload.pair_scope.group_counts).toEqual({
-      gpt_gpt: 19,
+      gpt_gpt: 18,
       claude_claude: 34,
       qwen_qwen: 2,
       deepseek_deepseek: 1,
-      gpt_claude: 67,
+      gpt_claude: 64,
       gpt_qwen: 19,
       gpt_deepseek: 13,
       claude_qwen: 27,
       claude_deepseek: 12,
       qwen_deepseek: 2,
     });
-    expect(payload.model_scope.gpt_models).toHaveLength(12);
+    expect(payload.model_scope.gpt_models).toHaveLength(11);
     expect(payload.model_scope.claude_models).toHaveLength(13);
     expect(payload.model_scope.qwen_models).toHaveLength(4);
     expect(payload.model_scope.deepseek_models).toHaveLength(3);
+    expect(payload.model_scope.gpt_models).not.toContain("GPT-4o");
+    expect(payload.model_scope.gpt_models).toContain("GPT-4o-2024-05-13");
+    expect(payload.provenance.model_alias_audit).toEqual({
+      aliases: { "GPT-4o": "GPT-4o-2024-05-13" },
+      remapped_rows: { "GPT-4o": 1_507 },
+      target_collisions: 0,
+    });
   });
 
   it("uses the same common support and exact Best Single denominator for every method", () => {
@@ -54,9 +61,9 @@ describe("all-pair aggregation contract", () => {
 
   it("cross-fits dependence and gain across disjoint event folds", () => {
     expect(payload.cross_fit.audit.unique_events).toBe(2_857);
-    expect(payload.cross_fit.audit.pair_fold_records).toBe(392);
-    expect(payload.cross_fit.eligible_points).toHaveLength(196);
-    expect(payload.cross_fit.near_bi_points).toHaveLength(107);
+    expect(payload.cross_fit.audit.pair_fold_records).toBe(384);
+    expect(payload.cross_fit.eligible_points).toHaveLength(192);
+    expect(payload.cross_fit.near_bi_points).toHaveLength(106);
     expect(payload.cross_fit.audit.minimum_observed_train_rows).toBeGreaterThanOrEqual(50);
     expect(payload.cross_fit.audit.minimum_observed_test_rows).toBeGreaterThanOrEqual(50);
     expect(payload.cross_fit.leakage_controls.event_disjoint).toBe(true);
@@ -75,7 +82,7 @@ describe("all-pair aggregation contract", () => {
         expect(fold.gain_fraction_vs_best_single[method]).toBeCloseTo(expected, 14);
       }
     }
-    expect(foldsByPair.size).toBe(196);
+    expect(foldsByPair.size).toBe(192);
     for (const folds of foldsByPair.values()) {
       expect(folds).toHaveLength(2);
       expect(new Set(folds.map((fold) => fold.train_fold))).toEqual(new Set(["A", "B"]));
