@@ -80,9 +80,9 @@ main > section, .fixture-notice, footer { padding-left: var(--content-gutter); p
 .fixture-notice { display: flex; gap: 18px; align-items: baseline; padding-top: 12px; padding-bottom: 12px; color: #735100; background: var(--gold-soft); border-bottom: 1px solid #f0d58e; font-size: 11px; }
 .fixture-notice strong { font: 8px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; }
 .filter-dock {
-  position: sticky;
-  top: 68px;
-  z-index: 20;
+  position: relative;
+  top: auto;
+  z-index: 10;
   display: grid;
   grid-template-columns: 1.45fr 1.1fr 1.2fr .9fr 1.1fr 1fr auto;
   gap: 12px;
