@@ -312,6 +312,14 @@ test("explores the Polymarket freeze baseline across models, methods, and folds"
   await section.getByRole("button", { name: "Same-sample diagnostic" }).click();
   await expect(section.getByRole("button", { name: "B→A" })).toHaveCount(0);
   await expect(section.getByText("Aggregation Brier Index (higher is better)")).toBeVisible();
+  const outcomeGroup = section.getByRole("group", { name: "Polymarket chart outcome" });
+  await expect(outcomeGroup.getByRole("button")).toHaveCount(3);
+  await outcomeGroup.getByRole("button", { name: "Gain vs Polymarket" }).click();
+  await expect(section.getByText("Gain vs Polymarket (fractional adjusted-Brier reduction)")).toBeVisible();
+  await expect(section.getByText("DIVERSITY–GAIN r")).toBeVisible();
+  await expect(section.locator("line.gain-zero-line")).toHaveCount(1);
+  await outcomeGroup.getByRole("button", { name: "Gain vs Model" }).click();
+  await expect(section.getByText("Gain vs Model (fractional adjusted-Brier reduction)")).toBeVisible();
 });
 
 test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {

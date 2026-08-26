@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 import { createElement } from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { PolymarketAggregationExplorer } from "../src/components/PolymarketAggregationExplorer";
+import { PolymarketAggregationExplorer, polymarketOutcomeValue } from "../src/components/PolymarketAggregationExplorer";
 import type { PolymarketAggregationData } from "../src/types/data";
 
 const dataRoot = resolve(process.env.SITE_DATA_ROOT ?? join(process.cwd(), "public/data"));
@@ -56,5 +56,24 @@ describe("Polymarket freeze aggregation explorer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Cross-fit OOS" }));
     fireEvent.click(screen.getByRole("button", { name: "B→A" }));
     expect(screen.getByText(/Ten B-train → A-test evaluations averaged/)).toBeInTheDocument();
+  });
+
+  it("switches the chart between absolute BI and both gain denominators", () => {
+    renderExplorer();
+    const point = payload.cross_fit.eligible_points[0];
+    expect(polymarketOutcomeValue(point, "ec_w0_56", "aggregation_bi")).toBe(point.brier_index.ec_w0_56);
+    expect(polymarketOutcomeValue(point, "ec_w0_56", "gain_vs_polymarket")).toBe(point.gain_fraction_vs_polymarket.ec_w0_56);
+    expect(polymarketOutcomeValue(point, "ec_w0_56", "gain_vs_model")).toBe(point.gain_fraction_vs_model.ec_w0_56);
+
+    const outcomeGroup = screen.getByRole("group", { name: "Polymarket chart outcome" });
+    expect(outcomeGroup.querySelectorAll("button")).toHaveLength(3);
+    fireEvent.click(screen.getByRole("button", { name: "Gain vs Polymarket" }));
+    expect(screen.getByText("Gain vs Polymarket (fractional adjusted-Brier reduction)")).toBeInTheDocument();
+    expect(screen.getByText("DIVERSITY–GAIN r")).toBeInTheDocument();
+    expect(document.querySelector("line.gain-zero-line")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Gain vs Model" }));
+    expect(screen.getByText("Gain vs Model (fractional adjusted-Brier reduction)")).toBeInTheDocument();
+    expect(screen.getByRole("img")).toHaveAccessibleName(/Gain vs Model for Polymarket Freeze pairs/);
   });
 });

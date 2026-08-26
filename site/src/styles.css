@@ -462,6 +462,13 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .polymarket-selection-summary dt { color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .05em; }
 .polymarket-selection-summary dd { overflow: hidden; margin: 7px 0 0; font: 15px ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 690; text-overflow: ellipsis; white-space: nowrap; }
 .polymarket-selection-summary small { overflow: hidden; margin-top: 5px; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.45; text-overflow: ellipsis; }
+.polymarket-chart-controls { display: flex; align-items: end; justify-content: space-between; gap: 28px; border-bottom: 1px solid var(--line-strong); }
+.polymarket-chart-controls .aggregation-metric-tabs { min-width: 0; flex: 1 1 auto; border-bottom: 0; }
+.polymarket-y-axis-toggle { flex: 0 0 auto; display: flex; align-items: center; gap: 9px; padding-bottom: 7px; }
+.polymarket-y-axis-toggle > span { color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .07em; }
+.polymarket-y-axis-toggle > div { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
+.polymarket-y-axis-toggle button { min-height: 30px; padding: 0 10px; border: 0; border-radius: 5px; color: var(--quiet); background: transparent; cursor: pointer; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
+.polymarket-y-axis-toggle button.active { color: #fff; background: var(--purple-deep); font-weight: 700; }
 .polymarket-chart-wrap { background: linear-gradient(180deg, #fff, #fdfbfd); }
 .pair-group-legend i.polymarket-baseline-key { background: #fff; border: 2px solid var(--gold); }
 .polymarket-point { cursor: pointer; outline: none; }
@@ -688,6 +695,10 @@ footer a { color: var(--purple-deep); }
   .polymarket-overview { grid-template-columns: 1fr; gap: 26px; }
   .polymarket-method-table { overflow-x: auto; }
   .polymarket-method-head, .polymarket-method-row { min-width: 650px; }
+  .polymarket-chart-controls { align-items: stretch; flex-direction: column; gap: 6px; }
+  .polymarket-chart-controls .aggregation-metric-tabs { width: 100%; }
+  .polymarket-y-axis-toggle { align-items: flex-start; flex-direction: column; padding: 0 0 10px; }
+  .polymarket-y-axis-toggle > div { max-width: 100%; overflow-x: auto; }
   .aggregation-evaluation-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
   .aggregation-evaluation-bar p { text-align: left; }
   .aggregation-fold-bar { align-items: flex-start; flex-wrap: wrap; }
