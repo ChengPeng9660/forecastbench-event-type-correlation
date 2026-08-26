@@ -6,11 +6,11 @@ BUILD_TIMESTAMP ?= 2026-08-19T00:00:00+00:00
 EXCLUSION_REFERENCE_PANEL ?=
 MODEL_VERSION_STAMP := $(BUILD_DIR)/.model_versions.stamp
 
-.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation analysis test site-build
+.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation historical-near-bi-market-aggregation analysis test site-build
 
 help:
 	@echo "Required variables: FORECASTBENCH_EVENTS, FORECASTBENCH_PROCESSED_ROOT, FORECASTBENCH_FIXED_EFFECTS"
-	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation analysis test site-build"
+	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation historical-near-bi-market-aggregation analysis test site-build"
 
 check-inputs:
 	@test -f "$(FORECASTBENCH_EVENTS)" || (echo "FORECASTBENCH_EVENTS is missing" && exit 1)
@@ -116,6 +116,15 @@ $(DERIVED_DIR)/freeze_exposed_market_aggregation/summary.json: analysis/freeze_e
 		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
 		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
 		--output-dir "$(DERIVED_DIR)/freeze_exposed_market_aggregation"
+
+historical-near-bi-market-aggregation: $(DERIVED_DIR)/historical_near_bi_market_aggregation/summary.json
+
+$(DERIVED_DIR)/historical_near_bi_market_aggregation/summary.json: analysis/historical_near_bi_market_aggregation.py analysis/freeze_exposed_market_aggregation.py $(BUILD_DIR)/scored_panel.csv $(BUILD_DIR)/event_taxonomy.csv | check-inputs
+	$(PYTHON) -m analysis.historical_near_bi_market_aggregation \
+		--raw-panel "$(BUILD_DIR)/scored_panel.csv" \
+		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
+		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
+		--output-dir "$(DERIVED_DIR)/historical_near_bi_market_aggregation"
 
 analysis: export cross-type global-baseline polymarket-aggregation
 

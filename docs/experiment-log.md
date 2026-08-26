@@ -1,5 +1,27 @@
 # Experiment log
 
+## 2026-08-26 — Forward-time historical Near-BI market aggregation
+
+- Reconstructed original ForecastBench resolution dates and required
+  `resolution_date < current forecast_due_date`; current and same-day outcomes
+  cannot enter model eligibility.
+- Selected explicit with-freeze models only after at least 50 common historical
+  targets had resolved and the model/Polymarket historical BI gap was at most
+  two points.
+- The primary sample contains 42 model-date decisions, 12 models, 14 forecast
+  dates, and 2,386 test pair-event cells.
+- Piecewise Odds was best by the requested event-count-weighted mean of
+  model-date gain fractions (`+0.695%`) but had lower weighted BI than the
+  market (`77.390` versus `77.396`) and negative pooled adjusted-Brier gain
+  (`-0.986%`). Only six of 14 pooled forecast dates were positive.
+- EC, Simple Mean, and Log-odds Mean were negative by both weighted-mean and
+  pooled gain. Piecewise remained strongly positive versus the selected model
+  alone (`+6.649%`) but did not reliably exceed Polymarket.
+- Piecewise pooled market gain remained negative at every audited historical
+  BI-gap threshold from 0.5 to 5 points; the weighted-mean sign was
+  non-monotonic. Historical Near-BI alone is not a sufficient market-
+  aggregation selection rule.
+
 ## 2026-08-26 — Freeze-exposed LLM × Polymarket aggregation
 
 - Identified 79 exact GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi

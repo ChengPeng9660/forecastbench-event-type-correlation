@@ -104,6 +104,10 @@ The imputation-audited experiment that aggregates explicitly freeze-exposed
 LLM configurations with the same Polymarket freeze probability is documented
 in [`docs/freeze-exposed-market-aggregation.md`](docs/freeze-exposed-market-aggregation.md).
 
+The resolution-aware forward-time experiment that selects only historically
+Near-BI models before market aggregation is documented in
+[`docs/historical-near-bi-market-aggregation.md`](docs/historical-near-bi-market-aggregation.md).
+
 ## Repository layout
 
 - `analysis/`: taxonomy, official-FX scoring, model-version selection, streaming metrics, and static-data export.
@@ -113,6 +117,8 @@ in [`docs/freeze-exposed-market-aggregation.md`](docs/freeze-exposed-market-aggr
 - `data/derived/global_*`: pooled pair metrics, global-to-topic transfer tables, partner profiles, and BI controls.
 - `data/derived/freeze_exposed_market_aggregation/`: repeated OOS model-market
   aggregation results, matched exposure comparisons, and provenance audit.
+- `data/derived/historical_near_bi_market_aggregation/`: resolution-aware
+  historical selection, threshold sensitivity, and model-date results.
 - `site/`: React/Vite static explorer deployed by GitHub Pages.
 - `tests/` and `site/tests/`: data invariants, schema, metric direction, URL state, desktop, and mobile checks.
 
