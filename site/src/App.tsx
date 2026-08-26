@@ -149,6 +149,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!appData || !eventData || !freezeMarketCorrelationData || window.location.hash !== "#freeze-correlation") return;
+    const frame = window.requestAnimationFrame(() => document.getElementById("freeze-correlation")?.scrollIntoView());
+    return () => window.cancelAnimationFrame(frame);
+  }, [appData, eventData, freezeMarketCorrelationData]);
+
+  useEffect(() => {
     if (!appData) return;
     const available = appData.manifest.event_types.find((item) => item.id === filters.eventType) ?? appData.manifest.event_types[0];
     if (!available) return;
