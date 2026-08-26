@@ -794,3 +794,55 @@ export interface GlobalPairMatrixCompact {
   fields: Array<keyof GlobalPairMatrixRow>;
   pairs: Array<Array<string | number | boolean | null>>;
 }
+
+export interface FreezeMarketCorrelationPoint {
+  model: string;
+  exact_configuration: string;
+  family: string;
+  provider: string;
+  n_common: number;
+  prediction_pearson: number;
+  mean_absolute_difference: number;
+  root_mean_squared_difference: number;
+  exact_copy_share: number;
+  market_mean_probability: number;
+  model_mean_probability: number;
+  market_brier_index: number;
+  model_brier_index: number;
+  model_gain_vs_market: number;
+}
+
+export interface FreezeMarketCorrelationData {
+  schema_version: string;
+  generated_at: string;
+  title: string;
+  scope: string;
+  metric: {
+    id: "prediction_pearson";
+    label: string;
+    range: [number, number];
+    higher_means: string;
+    causal_warning: string;
+  };
+  audit: {
+    model_count: number;
+    model_event_cells: number;
+    support_weighted_prediction_pearson: number;
+    support_weighted_exact_copy_share: number;
+    support_weighted_mean_absolute_difference: number;
+    correlation_minimum: number;
+    correlation_maximum: number;
+    imputed_rows_excluded_all_configurations: number;
+    all_configs_explicitly_with_freeze: boolean;
+  };
+  provenance: {
+    summary: string;
+    summary_sha256: string;
+    pair_results: string;
+    pair_results_sha256: string;
+    market_probability: string;
+    imputation_policy: string;
+    configuration_selection: string;
+  };
+  points: FreezeMarketCorrelationPoint[];
+}

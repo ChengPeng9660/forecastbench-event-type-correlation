@@ -1,5 +1,25 @@
 # Experiment log
 
+## 2026-08-26 — With-freeze model/market correlation explorer
+
+- Added a dedicated website module over the 27 outcome-blind canonical model
+  configurations explicitly labeled `with freeze values`.
+- Reused the non-imputed exact common support from the released freeze-exposed
+  aggregation experiment: 9,323 model–event cells in total.
+- Published prediction Pearson correlation, exact-copy share, mean and root-
+  mean-square probability distance, model and market BI, and model gain versus
+  the market for every eligible model. The support-weighted correlation is
+  `0.920`, exact-copy share is `24.81%`, and mean absolute probability distance
+  is `2.92%`; individual-model correlations range from `0.498` to `1.000`.
+- The interface treats correlation as a redundancy diagnostic, not as evidence
+  of forecasting gain or causal market influence. It supports provider filters,
+  four sort orders, an expandable all-model ranking, selected-model inspection,
+  and CSV download.
+- The public JSON is rebuilt from the released experiment summary and pair
+  results by `analysis/export_freeze_correlation_site.py`; Python and browser-
+  side contract tests verify provenance, support-weighted summaries, filtering,
+  sorting, and responsive behavior.
+
 ## 2026-08-26 — Forward-time historical Near-BI market aggregation
 
 - Reconstructed original ForecastBench resolution dates and required

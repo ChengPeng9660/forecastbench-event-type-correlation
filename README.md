@@ -103,6 +103,10 @@ model partner stability, and individual-model BI control are documented in
 The imputation-audited experiment that aggregates explicitly freeze-exposed
 LLM configurations with the same Polymarket freeze probability is documented
 in [`docs/freeze-exposed-market-aggregation.md`](docs/freeze-exposed-market-aggregation.md).
+The website's `Freeze correlation` module reuses that audited canonical sample
+to rank prediction-level model/market similarity, exact-copy share, and
+probability distance; its downloadable payload is generated with
+`make freeze-exposed-correlation-site`.
 
 The resolution-aware forward-time experiment that selects only historically
 Near-BI models before market aggregation is documented in

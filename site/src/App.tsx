@@ -3,13 +3,14 @@ import { Heatmap } from "./components/Heatmap";
 import { CrossTypeStability } from "./components/CrossTypeStability";
 import { PairAggregationExplorer } from "./components/PairAggregationExplorer";
 import { PolymarketAggregationExplorer } from "./components/PolymarketAggregationExplorer";
+import { FreezeMarketCorrelationExplorer } from "./components/FreezeMarketCorrelationExplorer";
 import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
 import { ModelMultiSelect } from "./components/ModelMultiSelect";
 import { PairRanking } from "./components/PairRanking";
-import { loadAppData, loadCrossTypeData, loadEventType, loadGlobalBaselineData, loadPairAggregationData, loadPolymarketAggregationData } from "./lib/data";
+import { loadAppData, loadCrossTypeData, loadEventType, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadPairAggregationData, loadPolymarketAggregationData } from "./lib/data";
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
-import type { AppData, CrossTypeData, EventTypeData, GlobalBaselineData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData } from "./types/data";
+import type { AppData, CrossTypeData, EventTypeData, FreezeMarketCorrelationData, GlobalBaselineData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData } from "./types/data";
 
 interface Filters {
   eventType: string;
@@ -114,6 +115,8 @@ export default function App() {
   const [pairAggregationError, setPairAggregationError] = useState("");
   const [polymarketAggregationData, setPolymarketAggregationData] = useState<PolymarketAggregationData | null>(null);
   const [polymarketAggregationError, setPolymarketAggregationError] = useState("");
+  const [freezeMarketCorrelationData, setFreezeMarketCorrelationData] = useState<FreezeMarketCorrelationData | null>(null);
+  const [freezeMarketCorrelationError, setFreezeMarketCorrelationError] = useState("");
 
   useEffect(() => {
     loadAppData().then(setAppData).catch((reason: Error) => setError(reason.message));
@@ -139,6 +142,10 @@ export default function App() {
 
   useEffect(() => {
     loadPolymarketAggregationData().then(setPolymarketAggregationData).catch((reason: Error) => setPolymarketAggregationError(reason.message));
+  }, []);
+
+  useEffect(() => {
+    loadFreezeMarketCorrelationData().then(setFreezeMarketCorrelationData).catch((reason: Error) => setFreezeMarketCorrelationError(reason.message));
   }, []);
 
   useEffect(() => {
@@ -249,7 +256,7 @@ export default function App() {
           <span><strong>ForecastBench</strong><small>DEPENDENCE ATLAS</small></span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
+          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#freeze-correlation">Freeze correlation</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
         </nav>
         <div className="build-state"><i /> {appData.manifest.fixture ? "Sample build" : "Verified build"}</div>
       </header>
@@ -304,6 +311,8 @@ export default function App() {
         /> : pairAggregationError ? <section className="pair-aggregation-section" id="gain"><div className="cross-type-unavailable"><strong>Aggregation benchmark unavailable</strong><span>{pairAggregationError}</span></div></section> : null}
 
         {polymarketAggregationData ? <PolymarketAggregationExplorer data={polymarketAggregationData} /> : polymarketAggregationError ? <section className="polymarket-aggregation-section" id="polymarket-aggregation"><div className="cross-type-unavailable"><strong>Polymarket freeze benchmark unavailable</strong><span>{polymarketAggregationError}</span></div></section> : null}
+
+        {freezeMarketCorrelationData ? <FreezeMarketCorrelationExplorer data={freezeMarketCorrelationData} /> : freezeMarketCorrelationError ? <section className="freeze-correlation-section" id="freeze-correlation"><div className="cross-type-unavailable"><strong>With-freeze correlation unavailable</strong><span>{freezeMarketCorrelationError}</span></div></section> : null}
 
         <GlobalBaseline data={globalBaselineData} models={appData.models} heatmapModelIds={filters.heatmapModels} loading={globalBaselineLoading} error={globalBaselineError} />
 

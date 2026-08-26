@@ -6,11 +6,11 @@ BUILD_TIMESTAMP ?= 2026-08-19T00:00:00+00:00
 EXCLUSION_REFERENCE_PANEL ?=
 MODEL_VERSION_STAMP := $(BUILD_DIR)/.model_versions.stamp
 
-.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation historical-near-bi-market-aggregation analysis test site-build
+.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation freeze-exposed-correlation-site historical-near-bi-market-aggregation analysis test site-build
 
 help:
 	@echo "Required variables: FORECASTBENCH_EVENTS, FORECASTBENCH_PROCESSED_ROOT, FORECASTBENCH_FIXED_EFFECTS"
-	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation historical-near-bi-market-aggregation analysis test site-build"
+	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation freeze-exposed-market-aggregation freeze-exposed-correlation-site historical-near-bi-market-aggregation analysis test site-build"
 
 check-inputs:
 	@test -f "$(FORECASTBENCH_EVENTS)" || (echo "FORECASTBENCH_EVENTS is missing" && exit 1)
@@ -117,6 +117,14 @@ $(DERIVED_DIR)/freeze_exposed_market_aggregation/summary.json: analysis/freeze_e
 		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
 		--output-dir "$(DERIVED_DIR)/freeze_exposed_market_aggregation"
 
+freeze-exposed-correlation-site: analysis/export_freeze_correlation_site.py
+	@test -f "$(DERIVED_DIR)/freeze_exposed_market_aggregation/summary.json" || (echo "Run freeze-exposed-market-aggregation first" && exit 1)
+	@test -f "$(DERIVED_DIR)/freeze_exposed_market_aggregation/pair_method_results.csv" || (echo "Run freeze-exposed-market-aggregation first" && exit 1)
+	$(PYTHON) -m analysis.export_freeze_correlation_site \
+		--summary "$(DERIVED_DIR)/freeze_exposed_market_aggregation/summary.json" \
+		--pair-results "$(DERIVED_DIR)/freeze_exposed_market_aggregation/pair_method_results.csv" \
+		--output "$(SITE_DATA_DIR)/polymarket-aggregation/freeze-exposed-correlation.json"
+
 historical-near-bi-market-aggregation: $(DERIVED_DIR)/historical_near_bi_market_aggregation/summary.json
 
 $(DERIVED_DIR)/historical_near_bi_market_aggregation/summary.json: analysis/historical_near_bi_market_aggregation.py analysis/freeze_exposed_market_aggregation.py $(BUILD_DIR)/scored_panel.csv $(BUILD_DIR)/event_taxonomy.csv | check-inputs
@@ -126,7 +134,7 @@ $(DERIVED_DIR)/historical_near_bi_market_aggregation/summary.json: analysis/hist
 		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
 		--output-dir "$(DERIVED_DIR)/historical_near_bi_market_aggregation"
 
-analysis: export cross-type global-baseline polymarket-aggregation
+analysis: export cross-type global-baseline polymarket-aggregation freeze-exposed-correlation-site
 
 test:
 	$(PYTHON) -m pytest
