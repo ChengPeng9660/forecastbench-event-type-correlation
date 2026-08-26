@@ -149,10 +149,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!appData || !eventData || !freezeMarketCorrelationData || window.location.hash !== "#freeze-correlation") return;
-    const frame = window.requestAnimationFrame(() => document.getElementById("freeze-correlation")?.scrollIntoView());
-    return () => window.cancelAnimationFrame(frame);
-  }, [appData, eventData, freezeMarketCorrelationData]);
+    if (!appData || !eventData || !pairAggregationData || !polymarketAggregationData || !freezeMarketCorrelationData || window.location.hash !== "#freeze-correlation") return;
+    const scrollToModule = () => {
+      const module = document.getElementById("freeze-correlation");
+      if (module) window.scrollTo({ top: module.getBoundingClientRect().top + window.scrollY - 16 });
+    };
+    const frame = window.requestAnimationFrame(scrollToModule);
+    const timeout = window.setTimeout(scrollToModule, 250);
+    const stabilization = window.setTimeout(scrollToModule, 1_200);
+    return () => { window.cancelAnimationFrame(frame); window.clearTimeout(timeout); window.clearTimeout(stabilization); };
+  }, [appData, eventData, pairAggregationData, polymarketAggregationData, freezeMarketCorrelationData]);
 
   useEffect(() => {
     if (!appData) return;
