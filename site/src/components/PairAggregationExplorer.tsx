@@ -463,19 +463,6 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
         </svg> : <div className="aggregation-empty-state"><strong>No eligible partners in this sample.</strong><span>Choose All eligible or another pair group.</span></div>}
       </div>
 
-      {selected && <div className="aggregation-pair-detail">
-        <div className="aggregation-pair-title"><span>SELECTED PAIR</span><strong>{pairLabel(selected)}</strong><small>{evaluation === "cross_fit"
-          ? `${selected.cross_fit?.included_fold_count ?? 0}/2 train→test folds · ${(selected.cross_fit?.train_target_rows ?? 0).toLocaleString()} train · ${(selected.cross_fit?.test_target_rows ?? 0).toLocaleString()} test · train BI gap ${selected.bi_gap.toFixed(2)}`
-          : `${selected.near_bi ? "Near-BI" : "Outside near-BI"} · ${selected.n_overlap.toLocaleString()} common targets · BI gap ${selected.bi_gap.toFixed(2)}`}</small></div>
-        <div className="aggregation-pair-methods">
-          {PRIMARY_METHODS.map((methodId) => <div className={methodId === method ? "active" : ""} key={methodId}><span>{data.methods[methodId].label}</span><strong className={(selected.gain_fraction_vs_best_single[methodId] ?? 0) >= 0 ? "positive" : "negative"}>{percent(selected.gain_fraction_vs_best_single[methodId])}</strong><small>BI {selected.adjusted_brier[methodId].toFixed(4)}</small></div>)}
-        </div>
-      </div>}
-
-      <div className="aggregation-caveats">
-        <p><strong>Event-disjoint cross-fit.</strong> SHA-256 with seed {data.cross_fit.split.seed} assigns every (source, event_id)—including every date and horizon—to one fold. Dependence and Near-BI use only the training fold; gain uses only the opposite test fold, then A/B swap.</p>
-        <p><strong>Fixed-focal denominator.</strong> Every displayed gain is (focal adjusted Brier − method adjusted Brier) / focal adjusted Brier on identical support. Best Single remains a hindsight benchmark, so its gain versus the focal model is non-negative but is not deployable. EC, Simple Mean, Log-odds Mean, and Piecewise Odds never use test outcomes to form predictions.</p>
-      </div>
     </section>
   );
 }

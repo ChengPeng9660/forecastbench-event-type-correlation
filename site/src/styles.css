@@ -427,23 +427,6 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .aggregation-point.claude_claude circle { fill: var(--purple-deep); }
 .aggregation-point.gpt_claude circle { fill: url(#cross-pair-fill); }
 .aggregation-point:hover circle, .aggregation-point:focus circle, .aggregation-point.selected circle { opacity: 1; stroke: var(--ink); stroke-width: 2.5; transform: scale(1.1); }
-.aggregation-pair-detail { display: grid; grid-template-columns: minmax(260px, 1.1fr) minmax(0, 2fr); border-bottom: 1px solid var(--line-strong); animation: page-enter .18s ease both; }
-.aggregation-pair-title { min-width: 0; padding: 19px 24px 19px 0; }
-.aggregation-pair-title span, .aggregation-pair-title strong, .aggregation-pair-title small { display: block; }
-.aggregation-pair-title span { color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .05em; }
-.aggregation-pair-title strong { margin-top: 8px; font-size: 11px; line-height: 1.45; }
-.aggregation-pair-title small { margin-top: 7px; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.5; }
-.aggregation-pair-methods { display: grid; grid-template-columns: repeat(5, 1fr); border-left: 1px solid var(--line); }
-.aggregation-pair-methods > div { min-width: 0; padding: 19px 12px; border-left: 1px solid var(--line); }
-.aggregation-pair-methods > div:first-child { border-left: 0; }
-.aggregation-pair-methods > div.active { background: var(--purple-soft); }
-.aggregation-pair-methods span, .aggregation-pair-methods strong, .aggregation-pair-methods small { display: block; }
-.aggregation-pair-methods span { overflow: hidden; color: var(--quiet); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-.aggregation-pair-methods strong { margin-top: 8px; font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; }
-.aggregation-pair-methods small { margin-top: 5px; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; }
-.aggregation-caveats { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 19px; }
-.aggregation-caveats p { margin: 0; color: var(--quiet); font-size: 9px; line-height: 1.65; }
-.aggregation-caveats strong { color: var(--muted); }
 .global-scope-tabs { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 27px; border-block: 1px solid var(--line-strong); }
 .global-scope-tabs button { min-width: 0; display: grid; grid-template-columns: 180px 1fr; gap: 18px; align-items: center; padding: 17px 20px 17px 0; border: 0; color: var(--quiet); background: transparent; cursor: pointer; text-align: left; transition: color .18s ease, background .18s ease; }
 .global-scope-tabs button + button { padding-left: 20px; border-left: 1px solid var(--line); }
@@ -592,8 +575,6 @@ footer a { color: var(--purple-deep); }
   .method-list small { display: none; }
   .audit-layout { grid-template-columns: 1fr; }
   .aggregation-overview { grid-template-columns: 1fr; }
-  .aggregation-pair-detail { grid-template-columns: 1fr; }
-  .aggregation-pair-methods { border-top: 1px solid var(--line); border-left: 0; }
   .focal-gain-detail { grid-template-columns: 1.4fr 1fr; }
   .focal-gain-detail > div:nth-child(3) { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .focal-gain-detail > div:nth-child(4) { border-top: 1px solid var(--line); }
@@ -676,11 +657,6 @@ footer a { color: var(--purple-deep); }
   .aggregation-selection-summary > div:last-child { border-bottom: 0; }
   .aggregation-metric-tabs { gap: 20px; overflow-x: auto; scrollbar-width: none; }
   .pair-group-legend small { display: none; }
-  .aggregation-pair-methods { grid-template-columns: 1fr 1fr; }
-  .aggregation-pair-methods > div { border-bottom: 1px solid var(--line); }
-  .aggregation-pair-methods > div:nth-child(odd) { border-left: 0; }
-  .aggregation-pair-methods > div:last-child { grid-column: 1 / -1; border-bottom: 0; }
-  .aggregation-caveats { grid-template-columns: 1fr; gap: 10px; }
   .focal-gain-controls { align-items: stretch; flex-direction: column; gap: 10px; }
   .gain-metric-tabs { width: 100%; justify-content: space-between; gap: 12px; }
   .gain-metric-tabs button::after { bottom: -11px; }
