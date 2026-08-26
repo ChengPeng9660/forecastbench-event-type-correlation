@@ -1,7 +1,8 @@
-"""Build the four-family aggregation benchmark used by the Site.
+"""Build the six-family aggregation benchmark used by the Site.
 
 The input is the post-merge ForecastBench model-version panel. Every eligible
-GPT, Claude, Qwen, and DeepSeek pair is evaluated on exact common support.
+GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi pair is evaluated on exact common
+support.
 Alongside the same-sample diagnostic, a deterministic event-level two-fold
 cross-fit estimates dependence and Near-BI on one half and aggregation gain on
 the other, then swaps the halves. No outcome from a test event is used to form
@@ -26,19 +27,12 @@ from analysis.metrics import adjusted_pog, brier_index, high_loss_lift, pearson_
 
 KEY = ("date", "source", "event_id", "horizon")
 ORIGINS = ("Dataset", "Market")
-FAMILIES = ("GPT", "Claude", "Qwen", "DeepSeek")
+FAMILIES = ("GPT", "Claude", "Gemini", "Qwen", "DeepSeek", "Kimi")
 FAMILY_ORDER = {family: index for index, family in enumerate(FAMILIES)}
-PAIR_GROUPS = (
-    "gpt_gpt",
-    "claude_claude",
-    "qwen_qwen",
-    "deepseek_deepseek",
-    "gpt_claude",
-    "gpt_qwen",
-    "gpt_deepseek",
-    "claude_qwen",
-    "claude_deepseek",
-    "qwen_deepseek",
+PAIR_GROUPS = tuple(
+    f"{first.casefold()}_{second.casefold()}"
+    for first_index, first in enumerate(FAMILIES)
+    for second in FAMILIES[first_index:]
 )
 METHODS = (
     "ec_w0_56",
@@ -192,7 +186,7 @@ def eligible_pair_rows(
     panel: Mapping[str, Mapping[tuple[str, ...], Mapping[str, str]]],
     minimum_overlap: int,
     minimum_fold_overlap: int,
-    split_seed: int,
+    split_seeds: list[int],
     preferred_orientation: Mapping[frozenset[str], tuple[str, str]],
 ) -> tuple[list[dict[str, str]], int]:
     ordered_models = sorted(panel, key=lambda model: (FAMILY_ORDER[family(model)], model.casefold(), model))
@@ -202,10 +196,14 @@ def eligible_pair_rows(
         common = set(panel[first_name]) & set(panel[second_name])
         if len(common) < minimum_overlap:
             continue
-        fold_counts = {"A": 0, "B": 0}
-        for key in common:
-            fold_counts[event_fold(key[1], key[2], split_seed)] += 1
-        if min(fold_counts.values()) < minimum_fold_overlap:
+        fold_counts = [
+            {
+                fold: sum(event_fold(key[1], key[2], seed) == fold for key in common)
+                for fold in ("A", "B")
+            }
+            for seed in split_seeds
+        ]
+        if any(min(counts.values()) < minimum_fold_overlap for counts in fold_counts):
             fold_ineligible += 1
             continue
         first_name, second_name = preferred_orientation.get(
@@ -313,6 +311,12 @@ def score_aggregation_support(
     best_side = "model_a" if briers["model_a"] <= briers["model_b"] else "model_b"
     best_brier = briers[best_side]
     briers["best_single"] = best_brier
+    brier_indices: dict[str, float] = {}
+    for method, value in briers.items():
+        index, reason = brier_index(value)
+        if index is None:
+            raise ValueError(f"undefined aggregation BI for {method}: {reason}")
+        brier_indices[method] = index
     gains: dict[str, float | None]
     if best_brier <= 0:
         gains = {method: None for method in METHODS}
@@ -320,6 +324,7 @@ def score_aggregation_support(
         gains = {method: (best_brier - briers[method]) / best_brier for method in METHODS}
     return {
         "adjusted_brier": briers,
+        "brier_index": brier_indices,
         "best_single_side": best_side,
         "gain_fraction_vs_best_single": gains,
         "n_dates": len(by_date),
@@ -423,6 +428,14 @@ def aggregate_cross_fit_records(
         )
         for method in brier_methods
     }
+    brier_indices = {
+        method: weighted_average(
+            [{"value": record["brier_index"][method], "weight": record["n_test"]} for record in records],
+            "value",
+            "weight",
+        )
+        for method in brier_methods
+    }
     gains = {
         method: weighted_average(
             [{"value": record["gain_fraction_vs_best_single"][method], "weight": record["n_test"]} for record in records],
@@ -443,6 +456,7 @@ def aggregate_cross_fit_records(
         ),
         "metrics": metric_values,
         "adjusted_brier": adjusted_briers,
+        "brier_index": brier_indices,
         "best_single_side": next(iter(best_sides)) if len(best_sides) == 1 else "mixed",
         "gain_fraction_vs_best_single": gains,
         "past_only_diagnostic": {
@@ -503,16 +517,25 @@ def build_cross_fit(
     base_points: list[dict[str, Any]],
     ec_weight: float,
     piecewise_threshold: float,
-    seed: int,
+    split_seeds: list[int],
     minimum_fold_overlap: int,
     near_bi_gap: float,
     high_loss_threshold: float,
 ) -> dict[str, Any]:
+    if not split_seeds:
+        raise ValueError("cross-fit requires at least one split seed")
     base_by_pair = {(point["model_a"], point["model_b"]): point for point in base_points}
-    fold_points: list[dict[str, Any]] = []
     eligible_points: list[dict[str, Any]] = []
     near_bi_points: list[dict[str, Any]] = []
+    directional_points = {
+        "a_to_b": {"eligible_points": [], "near_bi_points": []},
+        "b_to_a": {"eligible_points": [], "near_bi_points": []},
+    }
     all_events: set[tuple[str, str]] = set()
+    pair_fold_records = 0
+    near_bi_fold_records = 0
+    minimum_observed_train_rows: int | None = None
+    minimum_observed_test_rows: int | None = None
 
     for pair_row in pair_rows:
         first_name = pair_row["model_a"]
@@ -520,69 +543,103 @@ def build_cross_fit(
         first_panel = panel[first_name]
         second_panel = panel[second_name]
         common = sorted(set(first_panel) & set(second_panel))
-        split = {"A": [], "B": []}
         for key in common:
-            event = (key[1].casefold(), key[2])
-            all_events.add(event)
-            split[event_fold(*event, seed)].append(key)
+            all_events.add((key[1].casefold(), key[2]))
         records: list[dict[str, Any]] = []
-        for train_fold, test_fold in (("A", "B"), ("B", "A")):
-            train_keys = split[train_fold]
-            test_keys = split[test_fold]
-            if len(train_keys) < minimum_fold_overlap or len(test_keys) < minimum_fold_overlap:
-                raise ValueError(
-                    f"cross-fit support below {minimum_fold_overlap} for {first_name} x {second_name}: "
-                    f"train={len(train_keys)}, test={len(test_keys)}"
+        for repetition, seed in enumerate(split_seeds, start=1):
+            split = {"A": [], "B": []}
+            for key in common:
+                event = (key[1].casefold(), key[2])
+                split[event_fold(*event, seed)].append(key)
+            for train_fold, test_fold in (("A", "B"), ("B", "A")):
+                train_keys = split[train_fold]
+                test_keys = split[test_fold]
+                if len(train_keys) < minimum_fold_overlap or len(test_keys) < minimum_fold_overlap:
+                    raise ValueError(
+                        f"cross-fit support below {minimum_fold_overlap} for {first_name} x {second_name} "
+                        f"at seed {seed}: train={len(train_keys)}, test={len(test_keys)}"
+                    )
+                train = dependence_support(
+                    first_panel,
+                    second_panel,
+                    train_keys,
+                    near_bi_gap,
+                    high_loss_threshold,
                 )
-            train = dependence_support(
-                first_panel,
-                second_panel,
-                train_keys,
-                near_bi_gap,
-                high_loss_threshold,
-            )
-            test = score_aggregation_support(
-                first_panel,
-                second_panel,
-                test_keys,
-                ec_weight,
-                piecewise_threshold,
-            )
-            record = {
-                "fold_id": f"{train_fold}_train__{test_fold}_test",
-                "train_fold": train_fold,
-                "test_fold": test_fold,
-                "model_a": first_name,
-                "model_b": second_name,
-                "family_a": family(first_name),
-                "family_b": family(second_name),
-                "pair_group": pair_group(first_name, second_name),
-                "n_train": len(train_keys),
-                "n_test": len(test_keys),
-                "n_train_events": len({(key[1].casefold(), key[2]) for key in train_keys}),
-                "n_test_events": len({(key[1].casefold(), key[2]) for key in test_keys}),
-                "train_near_bi": train["near_bi"],
-                "train_bi_gap": train["bi_gap"],
-                "train_model_a_bi": train["model_a_bi"],
-                "train_model_b_bi": train["model_b_bi"],
-                "metrics": train["metrics"],
-                **test,
-            }
-            records.append(record)
-            fold_points.append(record)
+                test = score_aggregation_support(
+                    first_panel,
+                    second_panel,
+                    test_keys,
+                    ec_weight,
+                    piecewise_threshold,
+                )
+                record = {
+                    "fold_id": f"split_{repetition:02d}_seed_{seed}__{train_fold}_train__{test_fold}_test",
+                    "split_repetition": repetition,
+                    "split_seed": seed,
+                    "train_fold": train_fold,
+                    "test_fold": test_fold,
+                    "model_a": first_name,
+                    "model_b": second_name,
+                    "family_a": family(first_name),
+                    "family_b": family(second_name),
+                    "pair_group": pair_group(first_name, second_name),
+                    "n_train": len(train_keys),
+                    "n_test": len(test_keys),
+                    "n_train_events": len({(key[1].casefold(), key[2]) for key in train_keys}),
+                    "n_test_events": len({(key[1].casefold(), key[2]) for key in test_keys}),
+                    "train_near_bi": train["near_bi"],
+                    "train_bi_gap": train["bi_gap"],
+                    "train_model_a_bi": train["model_a_bi"],
+                    "train_model_b_bi": train["model_b_bi"],
+                    "metrics": train["metrics"],
+                    **test,
+                }
+                records.append(record)
+                pair_fold_records += 1
+                near_bi_fold_records += int(record["train_near_bi"])
+                minimum_observed_train_rows = min(
+                    minimum_observed_train_rows or record["n_train"], record["n_train"]
+                )
+                minimum_observed_test_rows = min(
+                    minimum_observed_test_rows or record["n_test"], record["n_test"]
+                )
         base = base_by_pair[(first_name, second_name)]
         eligible_points.append(aggregate_cross_fit_records(base, records, "eligible"))
         qualifying = [record for record in records if record["train_near_bi"]]
         if qualifying:
             near_bi_points.append(aggregate_cross_fit_records(base, qualifying, "near_bi"))
 
-    assignment_lines = [f"{source}\t{event_id}\t{event_fold(source, event_id, seed)}" for source, event_id in sorted(all_events)]
+        for direction_id, train_fold in (("a_to_b", "A"), ("b_to_a", "B")):
+            direction_records = [record for record in records if record["train_fold"] == train_fold]
+            directional_points[direction_id]["eligible_points"].append(
+                aggregate_cross_fit_records(base, direction_records, "eligible")
+            )
+            qualifying_direction = [record for record in direction_records if record["train_near_bi"]]
+            if qualifying_direction:
+                directional_points[direction_id]["near_bi_points"].append(
+                    aggregate_cross_fit_records(base, qualifying_direction, "near_bi")
+                )
+
+    assignment_lines = [
+        f"{seed}\t{source}\t{event_id}\t{event_fold(source, event_id, seed)}"
+        for seed in split_seeds
+        for source, event_id in sorted(all_events)
+    ]
     assignment_sha = hashlib.sha256(("\n".join(assignment_lines) + "\n").encode("utf-8")).hexdigest()
+    fold_a_events = [
+        sum(event_fold(source, event_id, seed) == "A" for source, event_id in all_events)
+        for seed in split_seeds
+    ]
+    fold_b_events = [len(all_events) - count for count in fold_a_events]
+    expected_combined_directions = 2 * len(split_seeds)
     return {
-        "schema_version": "1.0.0",
-        "evaluation": "two-fold event-level cross-fit",
+        "schema_version": "2.0.0",
+        "evaluation": "ten-repeat two-fold event-level cross-fit",
         "split": {
-            "seed": seed,
+            "seed": split_seeds[0],
+            "seeds": split_seeds,
+            "repetitions": len(split_seeds),
             "unit": "(source, event_id); every date and horizon for an event stays in one fold",
             "assignment": "SHA-256(seed|lowercase source|event_id) parity",
             "assignment_sha256": assignment_sha,
@@ -600,20 +657,23 @@ def build_cross_fit(
         },
         "audit": {
             "unique_events": len(all_events),
-            "fold_a_events": sum(event_fold(source, event_id, seed) == "A" for source, event_id in all_events),
-            "fold_b_events": sum(event_fold(source, event_id, seed) == "B" for source, event_id in all_events),
-            "pair_fold_records": len(fold_points),
+            "fold_a_events_by_repetition": fold_a_events,
+            "fold_b_events_by_repetition": fold_b_events,
+            "pair_fold_records": pair_fold_records,
             "eligible_pairs": len(eligible_points),
             "near_bi_pairs_any_train_fold": len(near_bi_points),
-            "near_bi_fold_records": sum(record["train_near_bi"] for record in fold_points),
-            "pairs_near_bi_in_both_folds": sum(point["cross_fit"]["included_fold_count"] == 2 for point in near_bi_points),
-            "minimum_observed_train_rows": min(record["n_train"] for record in fold_points),
-            "minimum_observed_test_rows": min(record["n_test"] for record in fold_points),
+            "near_bi_fold_records": near_bi_fold_records,
+            "pairs_near_bi_in_all_directions": sum(
+                point["cross_fit"]["included_fold_count"] == expected_combined_directions
+                for point in near_bi_points
+            ),
+            "minimum_observed_train_rows": minimum_observed_train_rows,
+            "minimum_observed_test_rows": minimum_observed_test_rows,
         },
         "summary": summarize_explicit_samples(eligible_points, near_bi_points),
         "eligible_points": eligible_points,
         "near_bi_points": near_bi_points,
-        "fold_points": fold_points,
+        "directional_points": directional_points,
     }
 
 
@@ -623,8 +683,12 @@ def build_payload(
     ec_weight: float,
     piecewise_threshold: float,
     split_seed: int = 20260825,
+    split_repetitions: int = 10,
     minimum_fold_overlap: int = 50,
 ) -> dict[str, Any]:
+    if split_repetitions < 1:
+        raise ValueError("split_repetitions must be positive")
+    split_seeds = [split_seed + offset for offset in range(split_repetitions)]
     archived_pair_rows = read_pairs(pair_path)
     preferred_orientation: dict[frozenset[str], tuple[str, str]] = {}
     for row in archived_pair_rows:
@@ -641,7 +705,7 @@ def build_payload(
         panel,
         minimum_overlap=50,
         minimum_fold_overlap=minimum_fold_overlap,
-        split_seed=split_seed,
+        split_seeds=split_seeds,
         preferred_orientation=preferred_orientation,
     )
     points: list[dict[str, Any]] = []
@@ -682,6 +746,7 @@ def build_payload(
                 "bi_gap": dependence["bi_gap"],
                 "metrics": dependence["metrics"],
                 "adjusted_brier": aggregation["adjusted_brier"],
+                "brier_index": aggregation["brier_index"],
                 "best_single_side": aggregation["best_single_side"],
                 "gain_fraction_vs_best_single": aggregation["gain_fraction_vs_best_single"],
                 "past_only_diagnostic": aggregation["past_only_diagnostic"],
@@ -695,21 +760,23 @@ def build_payload(
         points,
         ec_weight,
         piecewise_threshold,
-        split_seed,
+        split_seeds,
         minimum_fold_overlap,
         near_bi_gap=2.0,
         high_loss_threshold=0.25,
     )
     return {
-        "schema_version": "2.1.0",
-        "generated_at": "2026-08-25",
+        "schema_version": "2.2.0",
+        "generated_at": "2026-08-26",
         "scope": "official_full",
         "model_scope": {
-            "definition": "exact merged model versions whose names begin with GPT, Claude, Qwen, or DeepSeek",
+            "definition": "exact merged model versions whose names begin with GPT, Claude, Gemini, Qwen, DeepSeek, or Kimi",
             "gpt_models": sorted(model for model in models if family(model) == "GPT"),
             "claude_models": sorted(model for model in models if family(model) == "Claude"),
+            "gemini_models": sorted(model for model in models if family(model) == "Gemini"),
             "qwen_models": sorted(model for model in models if family(model) == "Qwen"),
             "deepseek_models": sorted(model for model in models if family(model) == "DeepSeek"),
+            "kimi_models": sorted(model for model in models if family(model) == "Kimi"),
         },
         "pair_scope": {
             "eligible_pair_count": len(points),
@@ -758,6 +825,11 @@ def build_payload(
             "pair_summary_weighting": "pair gain fractions weighted by n_overlap; pair-event cells are duplicated across pairs",
             "score_weighting": "equal-weight mean of Dataset and Market adjusted-Brier strata within each pair",
         },
+        "brier_index": {
+            "formula": "(1 - sqrt(adjusted_brier)) * 100",
+            "higher_is_better": True,
+            "cross_fit_aggregation": "test-support-weighted mean of fold-level BI across 10 random A/B repetitions and both directions",
+        },
         "near_bi": {
             "threshold_bi_points": 2.0,
             "definition": "absolute common-support Brier Index gap <= 2.0 points",
@@ -785,16 +857,18 @@ def main() -> None:
     parser.add_argument("--ec-weight", type=float, default=0.56)
     parser.add_argument("--piecewise-threshold", type=float, default=5.0)
     parser.add_argument("--split-seed", type=int, default=20260825)
+    parser.add_argument("--split-repetitions", type=int, default=10)
     parser.add_argument("--minimum-fold-overlap", type=int, default=50)
-    parser.add_argument("--output", type=Path, default=Path("site/public/data/pair-aggregation/all-four-family-pairs.json"))
+    parser.add_argument("--output", type=Path, default=Path("site/public/data/pair-aggregation/all-six-family-pairs.json"))
     args = parser.parse_args()
     payload = build_payload(
-        args.panel,
-        args.pair_metrics,
-        args.ec_weight,
-        args.piecewise_threshold,
-        args.split_seed,
-        args.minimum_fold_overlap,
+        panel_path=args.panel,
+        pair_path=args.pair_metrics,
+        ec_weight=args.ec_weight,
+        piecewise_threshold=args.piecewise_threshold,
+        split_seed=args.split_seed,
+        split_repetitions=args.split_repetitions,
+        minimum_fold_overlap=args.minimum_fold_overlap,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")

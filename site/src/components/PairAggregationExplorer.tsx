@@ -4,7 +4,6 @@ import type {
   MetricId,
   ModelFamily,
   PairAggregationData,
-  PairAggregationFoldPoint,
   PairAggregationPoint,
   PairAggregationSummary,
   PairGroupId,
@@ -26,46 +25,70 @@ const PRIMARY_METHODS: AggregationMethodId[] = [
 const ALL_METHODS: AggregationMethodId[] = [...PRIMARY_METHODS, "past_only_best_single"];
 
 const GROUPS: Array<{ id: PairGroupFilter; label: string; short: string }> = [
-  { id: "all", label: "All four-family pairs", short: "All pairs" },
+  { id: "all", label: "All six-family pairs", short: "All pairs" },
   { id: "gpt_gpt", label: "GPT × GPT", short: "GPT × GPT" },
   { id: "claude_claude", label: "Claude × Claude", short: "Claude × Claude" },
+  { id: "gemini_gemini", label: "Gemini × Gemini", short: "Gemini × Gemini" },
   { id: "qwen_qwen", label: "Qwen × Qwen", short: "Qwen × Qwen" },
   { id: "deepseek_deepseek", label: "DeepSeek × DeepSeek", short: "DeepSeek × DeepSeek" },
+  { id: "kimi_kimi", label: "Kimi × Kimi", short: "Kimi × Kimi" },
   { id: "gpt_claude", label: "GPT × Claude", short: "GPT × Claude" },
+  { id: "gpt_gemini", label: "GPT × Gemini", short: "GPT × Gemini" },
   { id: "gpt_qwen", label: "GPT × Qwen", short: "GPT × Qwen" },
   { id: "gpt_deepseek", label: "GPT × DeepSeek", short: "GPT × DeepSeek" },
+  { id: "gpt_kimi", label: "GPT × Kimi", short: "GPT × Kimi" },
+  { id: "claude_gemini", label: "Claude × Gemini", short: "Claude × Gemini" },
   { id: "claude_qwen", label: "Claude × Qwen", short: "Claude × Qwen" },
   { id: "claude_deepseek", label: "Claude × DeepSeek", short: "Claude × DeepSeek" },
+  { id: "claude_kimi", label: "Claude × Kimi", short: "Claude × Kimi" },
+  { id: "gemini_qwen", label: "Gemini × Qwen", short: "Gemini × Qwen" },
+  { id: "gemini_deepseek", label: "Gemini × DeepSeek", short: "Gemini × DeepSeek" },
+  { id: "gemini_kimi", label: "Gemini × Kimi", short: "Gemini × Kimi" },
   { id: "qwen_deepseek", label: "Qwen × DeepSeek", short: "Qwen × DeepSeek" },
+  { id: "qwen_kimi", label: "Qwen × Kimi", short: "Qwen × Kimi" },
+  { id: "deepseek_kimi", label: "DeepSeek × Kimi", short: "DeepSeek × Kimi" },
 ];
 
 type EvaluationMode = "cross_fit" | "same_sample";
 export type CrossFitFoldView = "combined" | "a_to_b" | "b_to_a";
 
 const FOLD_VIEWS: Array<{ id: CrossFitFoldView; label: string; detail: string }> = [
-  { id: "combined", label: "Combined", detail: "A→B and B→A, support-weighted" },
-  { id: "a_to_b", label: "A→B", detail: "Train on fold A, test on fold B" },
-  { id: "b_to_a", label: "B→A", detail: "Train on fold B, test on fold A" },
+  { id: "combined", label: "Combined", detail: "A→B and B→A averaged across 10 splits" },
+  { id: "a_to_b", label: "A→B", detail: "Ten A-train → B-test evaluations averaged" },
+  { id: "b_to_a", label: "B→A", detail: "Ten B-train → A-test evaluations averaged" },
 ];
 
 const FAMILY_COLORS: Record<ModelFamily, string> = {
   GPT: "#efab02",
   Claude: "#4f207f",
+  Gemini: "#4285f4",
   Qwen: "#267c79",
   DeepSeek: "#c75b39",
+  Kimi: "#1f2937",
 };
 
 const GROUP_FAMILIES: Record<PairGroupId, [ModelFamily, ModelFamily]> = {
   gpt_gpt: ["GPT", "GPT"],
   claude_claude: ["Claude", "Claude"],
+  gemini_gemini: ["Gemini", "Gemini"],
   qwen_qwen: ["Qwen", "Qwen"],
   deepseek_deepseek: ["DeepSeek", "DeepSeek"],
+  kimi_kimi: ["Kimi", "Kimi"],
   gpt_claude: ["GPT", "Claude"],
+  gpt_gemini: ["GPT", "Gemini"],
   gpt_qwen: ["GPT", "Qwen"],
   gpt_deepseek: ["GPT", "DeepSeek"],
+  gpt_kimi: ["GPT", "Kimi"],
+  claude_gemini: ["Claude", "Gemini"],
   claude_qwen: ["Claude", "Qwen"],
   claude_deepseek: ["Claude", "DeepSeek"],
+  claude_kimi: ["Claude", "Kimi"],
+  gemini_qwen: ["Gemini", "Qwen"],
+  gemini_deepseek: ["Gemini", "DeepSeek"],
+  gemini_kimi: ["Gemini", "Kimi"],
   qwen_deepseek: ["Qwen", "DeepSeek"],
+  qwen_kimi: ["Qwen", "Kimi"],
+  deepseek_kimi: ["DeepSeek", "Kimi"],
 };
 
 const METRICS: Array<{ id: MetricId; label: string; axis: string }> = [
@@ -187,35 +210,6 @@ function focalSampleLabel(focalModel: string, group: PairGroupFilter, fallback: 
   return group === "all" ? `${focalModel} × all eligible partners` : `${focalModel} · ${fallback}`;
 }
 
-function directionalPoint(fold: PairAggregationFoldPoint): PairAggregationPoint {
-  return {
-    model_a: fold.model_a,
-    model_b: fold.model_b,
-    family_a: fold.family_a,
-    family_b: fold.family_b,
-    pair_group: fold.pair_group,
-    n_overlap: fold.n_test,
-    n_dates: fold.n_dates,
-    date_min: fold.date_min,
-    date_max: fold.date_max,
-    near_bi: fold.train_near_bi,
-    bi_gap: fold.train_bi_gap,
-    metrics: fold.metrics,
-    adjusted_brier: fold.adjusted_brier,
-    best_single_side: fold.best_single_side,
-    gain_fraction_vs_best_single: fold.gain_fraction_vs_best_single,
-    past_only_diagnostic: fold.past_only_diagnostic,
-    cross_fit: {
-      sample: fold.train_near_bi ? "near_bi" : "eligible",
-      included_fold_count: 1,
-      train_near_bi_fold_count: Number(fold.train_near_bi),
-      train_target_rows: fold.n_train,
-      test_target_rows: fold.n_test,
-      fold_ids: [fold.fold_id],
-    },
-  };
-}
-
 export function selectCrossFitPoints(
   data: PairAggregationData,
   foldView: CrossFitFoldView,
@@ -224,10 +218,8 @@ export function selectCrossFitPoints(
   if (foldView === "combined") {
     return nearBiOnly ? data.cross_fit.near_bi_points : data.cross_fit.eligible_points;
   }
-  const trainFold = foldView === "a_to_b" ? "A" : "B";
-  return data.cross_fit.fold_points
-    .filter((fold) => fold.train_fold === trainFold && (!nearBiOnly || fold.train_near_bi))
-    .map(directionalPoint);
+  const direction = data.cross_fit.directional_points[foldView];
+  return nearBiOnly ? direction.near_bi_points : direction.eligible_points;
 }
 
 interface PairAggregationExplorerProps {
@@ -240,8 +232,10 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   const modelOptions = [
     ...data.model_scope.gpt_models,
     ...data.model_scope.claude_models,
+    ...data.model_scope.gemini_models,
     ...data.model_scope.qwen_models,
     ...data.model_scope.deepseek_models,
+    ...data.model_scope.kimi_models,
   ];
   const defaultFocalModel = modelOptions.includes("GPT-5-2025-08-07")
     ? "GPT-5-2025-08-07"
@@ -280,7 +274,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   ).map((item) => item.id)), [focalPoints]);
   const points = useMemo(() => focalPoints.filter((point) => matchesGroup(point, group)), [focalPoints, group]);
   const definedPoints = useMemo(() => points.filter((point) =>
-    point.metrics[metric].complementarity !== null && point.gain_fraction_vs_best_single[method] !== null
+    point.metrics[metric].complementarity !== null && Number.isFinite(point.brier_index[method])
   ), [method, metric, points]);
   const sample = nearBiOnly ? "near_bi" : "eligible";
   const summaries = useMemo(() => PRIMARY_METHODS.map((methodId) =>
@@ -292,7 +286,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   const activeSummary = summaries.find((row) => row.method === method);
   const selected = definedPoints.find((point) => `${point.model_a}::${point.model_b}` === selectedKey)
     ?? [...definedPoints].sort((a, b) =>
-      (b.gain_fraction_vs_best_single[method] ?? -Infinity) - (a.gain_fraction_vs_best_single[method] ?? -Infinity)
+      b.brier_index[method] - a.brier_index[method]
     )[0];
 
   useEffect(() => {
@@ -321,9 +315,9 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   }, [evaluation, focalModel, foldView]);
 
   const xValues = definedPoints.map((point) => point.metrics[metric].complementarity as number);
-  const yValues = definedPoints.map((point) => point.gain_fraction_vs_best_single[method] as number);
+  const yValues = definedPoints.map((point) => point.brier_index[method]);
   const xDomain = extent(xValues.length ? xValues : [0, 1]);
-  const yDomain = extent(yValues.length ? yValues : [0], true);
+  const yDomain = extent(yValues.length ? yValues : [0]);
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
   const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
   const xScale = (value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth;
@@ -340,7 +334,9 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
     setGroup("all");
     setSelectedKey("");
     if (value && nearBiOnly) {
-      const source = evaluation === "cross_fit" ? data.cross_fit.near_bi_points : data.points.filter((point) => point.near_bi);
+      const source = evaluation === "cross_fit"
+        ? selectCrossFitPoints(data, foldView, true)
+        : data.points.filter((point) => point.near_bi);
       if (!source.some((point) => point.model_a === value || point.model_b === value)) onNearBiOnlyChange(false);
     }
   }
@@ -348,8 +344,8 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   return (
     <section className="pair-aggregation-section" id="gain">
       <div className="section-heading pair-aggregation-heading">
-        <div><p className="eyebrow">CROSS-FIT AGGREGATION BENCHMARK</p><h2>Does train-fold dependence predict test-fold gain?</h2></div>
-        <p>GPT, Claude, Qwen, and DeepSeek events are split into two disjoint folds. Dependence and Near-BI use one fold; aggregation gain uses the other, then train and test swap.</p>
+        <div><p className="eyebrow">REPEATED CROSS-FIT AGGREGATION BENCHMARK</p><h2>Does train-fold dependence predict test-fold aggregation BI?</h2></div>
+        <p>GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi are evaluated over 10 reproducible random event-level A/B splits. Both directions are averaged; higher Brier Index is better.</p>
       </div>
 
       <div className="aggregation-evaluation-bar">
@@ -358,7 +354,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           <button type="button" className={evaluation === "same_sample" ? "active" : ""} onClick={() => { setEvaluation("same_sample"); setGroup("all"); setSelectedKey(""); }}>Same-sample diagnostic</button>
         </div>
         <p>{evaluation === "cross_fit"
-          ? `Seed ${data.cross_fit.split.seed} · ${data.cross_fit.audit.fold_a_events.toLocaleString()} / ${data.cross_fit.audit.fold_b_events.toLocaleString()} disjoint events · Near-BI is train-only`
+          ? `${data.cross_fit.split.repetitions} random splits · seeds ${data.cross_fit.split.seeds[0]}–${data.cross_fit.split.seeds.at(-1)} · ${data.cross_fit.audit.unique_events.toLocaleString()} unique events · Near-BI is train-only`
           : "Dependence, Near-BI, and gain use the same outcomes; retained only as a sensitivity view."}</p>
       </div>
 
@@ -387,11 +383,17 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
               <optgroup label="Claude">
                 {data.model_scope.claude_models.map((model) => <option value={model} key={model}>{model}</option>)}
               </optgroup>
+              <optgroup label="Gemini">
+                {data.model_scope.gemini_models.map((model) => <option value={model} key={model}>{model}</option>)}
+              </optgroup>
               <optgroup label="Qwen">
                 {data.model_scope.qwen_models.map((model) => <option value={model} key={model}>{model}</option>)}
               </optgroup>
               <optgroup label="DeepSeek">
                 {data.model_scope.deepseek_models.map((model) => <option value={model} key={model}>{model}</option>)}
+              </optgroup>
+              <optgroup label="Kimi">
+                {data.model_scope.kimi_models.map((model) => <option value={model} key={model}>{model}</option>)}
               </optgroup>
             </select>
           </label>
@@ -422,7 +424,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} {evaluation === "cross_fit" ? "test" : "same-sample"} pair-event cells</small></div>
           <div><dt>SELECTED METHOD</dt><dd>{data.methods[method].label}</dd><small>{data.methods[method].formula}</small></div>
           <div><dt>WEIGHTED GAIN VS FOCAL</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>fractional Brier reduction from the fixed focal model</small></div>
-          <div><dt>COMPLEMENTARITY r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train metric versus opposite-fold gain" : "same-sample descriptive association"}</small></div>
+          <div><dt>DIVERSITY–BI r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train complementarity versus opposite-fold Brier Index; positive is favorable" : "same-sample complementarity versus Brier Index; positive is favorable"}</small></div>
         </dl>
       </div>
 
@@ -435,31 +437,29 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
           <small>Split color = cross-family pair · area = test support</small>
         </div>
-        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} gain for ${activeSampleLabel}${evaluation === "cross_fit" ? `, ${foldViewMeta.label}` : ""}`}>
+        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} Brier Index for ${activeSampleLabel}${evaluation === "cross_fit" ? `, ${foldViewMeta.label}` : ""}`}>
           <defs>
             {(Object.entries(GROUP_FAMILIES) as Array<[PairGroupId, [ModelFamily, ModelFamily]]>).map(([pairGroup, families]) => <linearGradient id={`pair-fill-${pairGroup}`} key={pairGroup}>
               <stop offset="50%" stopColor={FAMILY_COLORS[families[0]]} />
               <stop offset="50%" stopColor={FAMILY_COLORS[families[1]]} />
             </linearGradient>)}
           </defs>
-          <rect x={MARGIN.left} y={MARGIN.top} width={plotWidth} height={Math.max(0, yScale(0) - MARGIN.top)} className="gain-positive-zone" />
-          <rect x={MARGIN.left} y={yScale(0)} width={plotWidth} height={Math.max(0, MARGIN.top + plotHeight - yScale(0))} className="gain-negative-zone" />
-          {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className={Math.abs(tick) < 1e-10 ? "gain-zero-line" : "gain-grid-line"} /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{percent(tick)}</text></g>)}
+          {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className="gain-grid-line" /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{tick.toFixed(2)}</text></g>)}
           {ticks(xDomain).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
           {definedPoints.map((point) => {
             const key = `${point.model_a}::${point.model_b}`;
-            const gain = point.gain_fraction_vs_best_single[method] as number;
+            const aggregationBi = point.brier_index[method];
             const complementarity = point.metrics[metric].complementarity as number;
             const radius = 4.5 + 7.5 * Math.sqrt(point.n_overlap / maxOverlap);
             const isSelected = key === `${selected?.model_a}::${selected?.model_b}`;
-            return <g className={`aggregation-point ${point.pair_group} ${isSelected ? "selected" : ""}`} key={key} role="button" tabIndex={0} aria-label={`${pairLabel(point)}, ${percent(gain)} gain`} onMouseEnter={() => setSelectedKey(key)} onFocus={() => setSelectedKey(key)} onClick={() => setSelectedKey(key)}>
-              <circle cx={xScale(complementarity)} cy={yScale(gain)} r={radius} style={{ fill: `url(#pair-fill-${point.pair_group})` }} />
-              {isSelected && <text x={xScale(complementarity)} y={yScale(gain) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_a)} × {shortModel(point.model_b)}</text>}
-              <title>{`${pairLabel(point)}\nFixed focal: ${focalModel}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} gain vs focal: ${percent(gain, 2)}\n${evaluation === "cross_fit" ? "Test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included folds: ${point.cross_fit?.included_fold_count ?? 0}/2` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
+            return <g className={`aggregation-point ${point.pair_group} ${isSelected ? "selected" : ""}`} key={key} role="button" tabIndex={0} aria-label={`${pairLabel(point)}, aggregation BI ${aggregationBi.toFixed(2)}`} onMouseEnter={() => setSelectedKey(key)} onFocus={() => setSelectedKey(key)} onClick={() => setSelectedKey(key)}>
+              <circle cx={xScale(complementarity)} cy={yScale(aggregationBi)} r={radius} style={{ fill: `url(#pair-fill-${point.pair_group})` }} />
+              {isSelected && <text x={xScale(complementarity)} y={yScale(aggregationBi) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_a)} × {shortModel(point.model_b)}</text>}
+              <title>{`${pairLabel(point)}\nFixed focal: ${focalModel}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} aggregation Brier Index: ${aggregationBi.toFixed(2)}\n${evaluation === "cross_fit" ? "Repeated test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included train→test evaluations: ${point.cross_fit?.included_fold_count ?? 0}/${foldView === "combined" ? data.cross_fit.split.repetitions * 2 : data.cross_fit.split.repetitions}` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
             </g>;
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>
-          <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Gain fraction versus fixed focal model</text>
+          <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Aggregation Brier Index (higher is better)</text>
         </svg> : <div className="aggregation-empty-state"><strong>No eligible partners in this sample.</strong><span>Choose All eligible or another pair group.</span></div>}
       </div>
 

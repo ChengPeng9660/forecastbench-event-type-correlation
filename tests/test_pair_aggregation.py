@@ -30,6 +30,9 @@ def test_pair_group_labels() -> None:
     assert pair_group("GPT-A", "Claude-B") == "gpt_claude"
     assert pair_group("GPT-A", "Qwen-B") == "gpt_qwen"
     assert pair_group("Claude-A", "DeepSeek-B") == "claude_deepseek"
+    assert pair_group("Gemini-A", "Kimi-B") == "gemini_kimi"
+    assert pair_group("GPT-A", "Gemini-B") == "gpt_gemini"
+    assert pair_group("Claude-A", "Kimi-B") == "claude_kimi"
     assert pair_group("Qwen-A", "DeepSeek-B") == "qwen_deepseek"
 
 

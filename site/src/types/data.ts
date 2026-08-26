@@ -1,5 +1,5 @@
 export type MetricId = "adjusted_pog" | "high_loss_lift" | "adjusted_loss_corr";
-export type ModelFamily = "GPT" | "Claude" | "Qwen" | "DeepSeek";
+export type ModelFamily = "GPT" | "Claude" | "Gemini" | "Qwen" | "DeepSeek" | "Kimi";
 
 export interface FocalGainMetricValue {
   raw: number;
@@ -68,14 +68,25 @@ export type AggregationMethodId =
 export type PairGroupId =
   | "gpt_gpt"
   | "claude_claude"
+  | "gemini_gemini"
   | "qwen_qwen"
   | "deepseek_deepseek"
+  | "kimi_kimi"
   | "gpt_claude"
+  | "gpt_gemini"
   | "gpt_qwen"
   | "gpt_deepseek"
+  | "gpt_kimi"
+  | "claude_gemini"
   | "claude_qwen"
   | "claude_deepseek"
-  | "qwen_deepseek";
+  | "claude_kimi"
+  | "gemini_qwen"
+  | "gemini_deepseek"
+  | "gemini_kimi"
+  | "qwen_deepseek"
+  | "qwen_kimi"
+  | "deepseek_kimi";
 export type PairGroupFilter = "all" | PairGroupId;
 
 export interface PairAggregationMethod {
@@ -101,6 +112,7 @@ export interface PairAggregationPoint {
   bi_gap: number;
   metrics: Record<MetricId, { raw: number | null; complementarity: number | null }>;
   adjusted_brier: Record<"model_a" | "model_b" | AggregationMethodId, number>;
+  brier_index: Record<"model_a" | "model_b" | AggregationMethodId, number>;
   best_single_side: "model_a" | "model_b" | "mixed";
   gain_fraction_vs_best_single: Record<AggregationMethodId, number | null>;
   past_only_diagnostic: {
@@ -118,33 +130,6 @@ export interface PairAggregationPoint {
     test_target_rows: number;
     fold_ids: string[];
   };
-}
-
-export interface PairAggregationFoldPoint {
-  fold_id: string;
-  train_fold: "A" | "B";
-  test_fold: "A" | "B";
-  model_a: string;
-  model_b: string;
-  family_a: ModelFamily;
-  family_b: ModelFamily;
-  pair_group: PairGroupId;
-  n_train: number;
-  n_test: number;
-  n_train_events: number;
-  n_test_events: number;
-  n_dates: number;
-  date_min: string;
-  date_max: string;
-  train_near_bi: boolean;
-  train_bi_gap: number;
-  train_model_a_bi: number;
-  train_model_b_bi: number;
-  metrics: Record<MetricId, { raw: number | null; complementarity: number | null; reason: string }>;
-  adjusted_brier: Record<"model_a" | "model_b" | AggregationMethodId, number>;
-  best_single_side: "model_a" | "model_b";
-  gain_fraction_vs_best_single: Record<AggregationMethodId, number | null>;
-  past_only_diagnostic: PairAggregationPoint["past_only_diagnostic"];
 }
 
 export interface PairAggregationSummary {
@@ -170,8 +155,10 @@ export interface PairAggregationData {
     definition: string;
     gpt_models: string[];
     claude_models: string[];
+    gemini_models: string[];
     qwen_models: string[];
     deepseek_models: string[];
+    kimi_models: string[];
   };
   pair_scope: {
     eligible_pair_count: number;
@@ -188,6 +175,11 @@ export interface PairAggregationData {
     positive_means: string;
     pair_summary_weighting: string;
     score_weighting: string;
+  };
+  brier_index: {
+    formula: string;
+    higher_is_better: boolean;
+    cross_fit_aggregation: string;
   };
   near_bi: {
     threshold_bi_points: number;
@@ -214,6 +206,8 @@ export interface PairAggregationData {
     evaluation: string;
     split: {
       seed: number;
+      seeds: number[];
+      repetitions: number;
       unit: string;
       assignment: string;
       assignment_sha256: string;
@@ -224,20 +218,23 @@ export interface PairAggregationData {
     leakage_controls: Record<string, string | boolean>;
     audit: {
       unique_events: number;
-      fold_a_events: number;
-      fold_b_events: number;
+      fold_a_events_by_repetition: number[];
+      fold_b_events_by_repetition: number[];
       pair_fold_records: number;
       eligible_pairs: number;
       near_bi_pairs_any_train_fold: number;
       near_bi_fold_records: number;
-      pairs_near_bi_in_both_folds: number;
+      pairs_near_bi_in_all_directions: number;
       minimum_observed_train_rows: number;
       minimum_observed_test_rows: number;
     };
     summary: PairAggregationSummary[];
     eligible_points: PairAggregationPoint[];
     near_bi_points: PairAggregationPoint[];
-    fold_points: PairAggregationFoldPoint[];
+    directional_points: Record<"a_to_b" | "b_to_a", {
+      eligible_points: PairAggregationPoint[];
+      near_bi_points: PairAggregationPoint[];
+    }>;
   };
 }
 
