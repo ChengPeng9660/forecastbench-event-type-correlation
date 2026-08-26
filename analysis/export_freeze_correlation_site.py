@@ -90,6 +90,10 @@ def prompt_type(configuration: str) -> str:
     raise ValueError(f"unsupported freeze prompt type: {configuration!r}")
 
 
+def optional_float(value: str) -> float | None:
+    return float(value) if value.strip() else None
+
+
 def summarize_aggregation(
     points: list[dict[str, Any]], method: str
 ) -> dict[str, Any]:
@@ -194,6 +198,20 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 "market_brier_index": float(anchor["brier_index"]),
                 "model_brier_index": float(partner["brier_index"]),
                 "model_gain_vs_market": float(partner["gain_vs_anchor"]),
+                "train_diversity": {
+                    "adjusted_pog": optional_float(
+                        anchor["train_adjusted_pog_complementarity"]
+                    ),
+                    "high_loss_lift": optional_float(
+                        anchor["train_high_loss_lift_complementarity"]
+                    ),
+                    "adjusted_loss_corr": optional_float(
+                        anchor["train_adjusted_loss_corr_complementarity"]
+                    ),
+                },
+                "train_bi_gap": float(anchor["train_bi_gap"]),
+                "train_near_bi_share": float(anchor["train_near_bi_share"]),
+                "near_bi": float(anchor["train_bi_gap"]) <= 2.0,
                 "aggregation": aggregation,
             }
         )
@@ -261,7 +279,7 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 )
 
     return {
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "generated_at": summary["generated_at"],
         "title": "Freeze-only prompt ↔ Polymarket correlation",
         "scope": (
@@ -279,13 +297,36 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
         "aggregation": {
             "evaluation": (
                 "ten-repeat, event-disjoint two-fold cross-fit in both directions; "
-                "Directional CF weights use training outcomes only"
+                "Directional CF weights use training outcomes only; displayed points are "
+                "pair-level aggregates across directions rather than directional regressions"
             ),
             "support_weighting": (
                 "support-weighted across prompt/market pairs using repeated "
                 "opposite-fold test target cells"
             ),
             "market_baseline": "ForecastBench freeze_datetime_value",
+            "diversity_metrics": {
+                "adjusted_pog": {
+                    "label": "Adjusted POG",
+                    "axis": "Adjusted pairwise oracle gain",
+                    "orientation": "higher means greater market–model diversity",
+                },
+                "high_loss_lift": {
+                    "label": "High-loss Lift",
+                    "axis": "Complementarity orientation · 1 − high-loss lift",
+                    "orientation": "higher means greater market–model diversity",
+                },
+                "adjusted_loss_corr": {
+                    "label": "Loss Correlation",
+                    "axis": "Complementarity orientation · − adjusted-loss correlation",
+                    "orientation": "higher means greater market–model diversity",
+                },
+            },
+            "near_bi": {
+                "threshold_bi_points": 2.0,
+                "definition": "mean train-fold BI gap at most 2.0 points",
+                "pair_count": sum(row["near_bi"] for row in points),
+            },
             "methods": AGGREGATION_METHOD_METADATA,
             "summary_all": aggregation_summary,
         },

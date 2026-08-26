@@ -812,8 +812,17 @@ export interface FreezeMarketCorrelationPoint {
   market_brier_index: number;
   model_brier_index: number;
   model_gain_vs_market: number;
+  train_diversity: Record<FreezeDiversityMetricId, number | null>;
+  train_bi_gap: number;
+  train_near_bi_share: number;
+  near_bi: boolean;
   aggregation: Record<FreezeAggregationMethodId, FreezeAggregationScore>;
 }
+
+export type FreezeDiversityMetricId =
+  | "adjusted_pog"
+  | "high_loss_lift"
+  | "adjusted_loss_corr";
 
 export type FreezeAggregationMethodId =
   | "ec_w0_56"
@@ -856,6 +865,16 @@ export interface FreezeMarketCorrelationData {
     evaluation: string;
     support_weighting: string;
     market_baseline: string;
+    diversity_metrics: Record<FreezeDiversityMetricId, {
+      label: string;
+      axis: string;
+      orientation: string;
+    }>;
+    near_bi: {
+      threshold_bi_points: number;
+      definition: string;
+      pair_count: number;
+    };
     methods: Record<FreezeAggregationMethodId, {
       label: string;
       role: string;

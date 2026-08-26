@@ -27,6 +27,45 @@ describe("with-freeze model/market correlation contract", () => {
     expect(payload.provenance.imputation_policy).toContain("exclude");
   });
 
+  it("keeps Polymarket fixed and treats every exact freeze prompt as one pair", () => {
+    expect(payload.aggregation.market_baseline).toBe("ForecastBench freeze_datetime_value");
+    expect(payload.scope).toContain("separate observation");
+    expect(new Set(payload.points.map((point) => point.exact_configuration)).size).toBe(payload.points.length);
+    for (const point of payload.points) {
+      expect(point.exact_configuration).toMatch(/\((zero shot|scratchpad) with freeze values\)$/i);
+      expect(point.n_common).toBeGreaterThanOrEqual(50);
+      for (const score of Object.values(point.aggregation)) {
+        expect(score.test_target_cells).toBe(point.n_common * 10);
+      }
+    }
+  });
+
+  it("defines diversity and Near-BI from the aggregated train-fold fields", () => {
+    expect(payload.aggregation.evaluation).toContain("event-disjoint two-fold cross-fit");
+    expect(payload.aggregation.evaluation).toContain("training outcomes only");
+    expect(payload.aggregation.near_bi).toEqual({
+      threshold_bi_points: 2,
+      definition: "mean train-fold BI gap at most 2.0 points",
+      pair_count: 29,
+    });
+    expect(payload.aggregation.near_bi.pair_count).toBe(
+      payload.points.filter((point) => point.near_bi).length,
+    );
+    for (const point of payload.points) {
+      expect(point.near_bi).toBe(point.train_bi_gap <= 2);
+      expect(point.train_near_bi_share).toBeGreaterThanOrEqual(0);
+      expect(point.train_near_bi_share).toBeLessThanOrEqual(1);
+      for (const value of Object.values(point.train_diversity)) {
+        expect(value === null || Number.isFinite(value)).toBe(true);
+      }
+    }
+    expect(payload.aggregation.methods.cf_directional).toMatchObject({
+      role: "Train-fold fitted closed-form pool",
+      outcome_blind_at_test: true,
+    });
+    expect(payload.aggregation.methods.best_single.outcome_blind_at_test).toBe(false);
+  });
+
   it("reproduces every published support-weighted summary", () => {
     const support = payload.points.reduce((sum, point) => sum + point.n_common, 0);
     const weighted = (field: "prediction_pearson" | "exact_copy_share" | "mean_absolute_difference") => (

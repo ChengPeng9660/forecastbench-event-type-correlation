@@ -5,7 +5,10 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import { afterEach, describe, expect, it } from "vitest";
 import {
   FreezeMarketCorrelationExplorer,
+  freezeAggregationOutcomeValue,
+  pearsonCorrelation,
   sortFreezeCorrelationPoints,
+  spearmanCorrelation,
   summarizeFreezeAggregationPoints,
   summarizeFreezeCorrelationPoints,
 } from "../src/components/FreezeMarketCorrelationExplorer";
@@ -72,5 +75,40 @@ describe("with-freeze model/market correlation explorer", () => {
     expect(directional.weightedBi).toBeCloseTo(75.50871279772113, 12);
     expect(directional.gainVsMarket).toBeCloseTo(-0.00860617172400239, 12);
     expect(directional.positiveVsMarket).toBe(13);
+  });
+
+  it("keeps Polymarket fixed while switching diversity, outcome, method, and Near-BI", () => {
+    render(createElement(FreezeMarketCorrelationExplorer, { data: payload }));
+    expect(screen.getByRole("heading", { name: "Does a more diverse model improve market aggregation?" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /Adjusted POG versus fraction gain versus Polymarket/i })).toBeInTheDocument();
+    expect(screen.getAllByText("39").length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "Near-BI" }));
+    const scatterSummary = screen.getByLabelText("Diversity and aggregation summary");
+    expect(within(scatterSummary).getByText("29")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "High-loss Lift" }));
+    expect(within(scatterSummary).getByText("26")).toBeInTheDocument();
+    expect(within(scatterSummary).getByText("3 undefined omitted")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Aggregation BI" }));
+    expect(screen.getByRole("img", { name: /High-loss Lift versus aggregation Brier Index/i })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("row", { name: "Use EC · w = 0.56 in the diversity chart" }));
+    expect(within(scatterSummary).getByText("EC · w = 0.56")).toBeInTheDocument();
+    expect(screen.getAllByText(/fixed Polymarket base/i).length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("computes pair-level diversity associations without support weighting", () => {
+    const xs = payload.points.map((point) => point.train_diversity.adjusted_pog as number);
+    const ys = payload.points.map((point) => freezeAggregationOutcomeValue(
+      point,
+      "cf_directional",
+      "gain_vs_market",
+    ));
+    expect(pearsonCorrelation(xs, ys)).toBeCloseTo(-0.10268175312152283, 12);
+    expect(spearmanCorrelation(xs, ys)).not.toBeNull();
+    expect(freezeAggregationOutcomeValue(payload.points[0], "cf_directional", "aggregation_bi"))
+      .toBe(payload.points[0].aggregation.cf_directional.brier_index);
   });
 });

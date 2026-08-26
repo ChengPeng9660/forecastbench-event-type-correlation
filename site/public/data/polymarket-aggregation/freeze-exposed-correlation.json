@@ -1,6 +1,23 @@
 {
   "aggregation": {
-    "evaluation": "ten-repeat, event-disjoint two-fold cross-fit in both directions; Directional CF weights use training outcomes only",
+    "diversity_metrics": {
+      "adjusted_loss_corr": {
+        "axis": "Complementarity orientation · − adjusted-loss correlation",
+        "label": "Loss Correlation",
+        "orientation": "higher means greater market–model diversity"
+      },
+      "adjusted_pog": {
+        "axis": "Adjusted pairwise oracle gain",
+        "label": "Adjusted POG",
+        "orientation": "higher means greater market–model diversity"
+      },
+      "high_loss_lift": {
+        "axis": "Complementarity orientation · 1 − high-loss lift",
+        "label": "High-loss Lift",
+        "orientation": "higher means greater market–model diversity"
+      }
+    },
+    "evaluation": "ten-repeat, event-disjoint two-fold cross-fit in both directions; Directional CF weights use training outcomes only; displayed points are pair-level aggregates across directions rather than directional regressions",
     "market_baseline": "ForecastBench freeze_datetime_value",
     "methods": {
       "best_single": {
@@ -39,6 +56,11 @@
         "outcome_blind_at_test": true,
         "role": "Outcome-blind fixed pool"
       }
+    },
+    "near_bi": {
+      "definition": "mean train-fold BI gap at most 2.0 points",
+      "pair_count": 29,
+      "threshold_bi_points": 2.0
     },
     "summary_all": [
       {
@@ -178,11 +200,19 @@
       "model_gain_vs_market": 0.0,
       "model_mean_probability": 0.14888590604026847,
       "n_common": 298,
+      "near_bi": true,
       "prediction_pearson": 1.0,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 2.014388820308801e-17
+      "root_mean_squared_difference": 2.014388820308801e-17,
+      "train_bi_gap": 0.0,
+      "train_diversity": {
+        "adjusted_loss_corr": -1.0,
+        "adjusted_pog": 1.3644939019092737e-18,
+        "high_loss_lift": -55.85540827740492
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -234,11 +264,19 @@
       "model_gain_vs_market": 0.05078491857648428,
       "model_mean_probability": 0.066935625,
       "n_common": 160,
+      "near_bi": true,
       "prediction_pearson": 0.9958695221292508,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Google",
-      "root_mean_squared_difference": 0.020361550775910956
+      "root_mean_squared_difference": 0.020361550775910956,
+      "train_bi_gap": 0.4950502523432836,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.9542005286475507,
+        "adjusted_pog": 0.0003740301562499991,
+        "high_loss_lift": -54.88723667905824
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -290,11 +328,19 @@
       "model_gain_vs_market": 0.002857825104605222,
       "model_mean_probability": 0.1162872340425532,
       "n_common": 423,
+      "near_bi": true,
       "prediction_pearson": 0.9957859342482261,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.016689955360308126
+      "root_mean_squared_difference": 0.016689955360308126,
+      "train_bi_gap": 0.07012647641105144,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.9634822734769634,
+        "adjusted_pog": 0.0016540708345153666,
+        "high_loss_lift": -220.17220956719817
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -346,11 +392,19 @@
       "model_gain_vs_market": 0.004287709431540733,
       "model_mean_probability": 0.09417152777777778,
       "n_common": 288,
+      "near_bi": true,
       "prediction_pearson": 0.9949016209570243,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.02285204601221616
+      "root_mean_squared_difference": 0.02285204601221616,
+      "train_bi_gap": 0.1280489104997845,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.9577506993716115,
+        "adjusted_pog": 0.0012460289201388906,
+        "high_loss_lift": -113.22186732186732
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -402,11 +456,19 @@
       "model_gain_vs_market": -0.008805965257840023,
       "model_mean_probability": 0.11430451306413301,
       "n_common": 421,
+      "near_bi": true,
       "prediction_pearson": 0.9893502804283142,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.0260047465062651
+      "root_mean_squared_difference": 0.0260047465062651,
+      "train_bi_gap": 0.15725124103519636,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.9295967616810576,
+        "adjusted_pog": 0.001860586061757717,
+        "high_loss_lift": -144.8937385740402
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -458,11 +520,19 @@
       "model_gain_vs_market": 0.03261110686633105,
       "model_mean_probability": 0.12890391061452514,
       "n_common": 179,
+      "near_bi": true,
       "prediction_pearson": 0.9882105010208349,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.039194122236339154
+      "root_mean_squared_difference": 0.039194122236339154,
+      "train_bi_gap": 0.3610423163550451,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.804139062363568,
+        "adjusted_pog": 0.002277715916201116,
+        "high_loss_lift": null
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -514,11 +584,19 @@
       "model_gain_vs_market": -0.06490646896790972,
       "model_mean_probability": 0.07437793103448276,
       "n_common": 145,
+      "near_bi": true,
       "prediction_pearson": 0.9859530306214992,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.03402272972486239
+      "root_mean_squared_difference": 0.03402272972486239,
+      "train_bi_gap": 0.6605531792274293,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.964622465822961,
+        "adjusted_pog": 0.000968011227586206,
+        "high_loss_lift": -56.90448343079922
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -570,11 +648,19 @@
       "model_gain_vs_market": 0.0096134038787387,
       "model_mean_probability": 0.10981082474226804,
       "n_common": 388,
+      "near_bi": true,
       "prediction_pearson": 0.9842765318754905,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.041170379578517075
+      "root_mean_squared_difference": 0.041170379578517075,
+      "train_bi_gap": 0.2018837760351853,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.8293614690897242,
+        "adjusted_pog": 0.0023587109639175243,
+        "high_loss_lift": -116.80771593561862
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -626,11 +712,19 @@
       "model_gain_vs_market": -0.053352291054470154,
       "model_mean_probability": 0.11698519736842104,
       "n_common": 304,
+      "near_bi": true,
       "prediction_pearson": 0.9722568360342412,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "DeepSeek",
-      "root_mean_squared_difference": 0.04170015540170463
+      "root_mean_squared_difference": 0.04170015540170463,
+      "train_bi_gap": 0.6750871061530695,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.8299784079098133,
+        "adjusted_pog": 0.0016628651315789454,
+        "high_loss_lift": -133.7976493011436
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -682,11 +776,19 @@
       "model_gain_vs_market": -0.03555550490567345,
       "model_mean_probability": 0.12315282392026579,
       "n_common": 301,
+      "near_bi": true,
       "prediction_pearson": 0.9716524020530779,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "DeepSeek",
-      "root_mean_squared_difference": 0.04404676991788769
+      "root_mean_squared_difference": 0.04404676991788769,
+      "train_bi_gap": 0.513496233051934,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.7379245383289433,
+        "adjusted_pog": 0.0030314546511627885,
+        "high_loss_lift": -104.28553054662379
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -738,11 +840,19 @@
       "model_gain_vs_market": 0.012096189039847528,
       "model_mean_probability": 0.1376512605042017,
       "n_common": 119,
+      "near_bi": true,
       "prediction_pearson": 0.9713876020102832,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Qwen",
-      "root_mean_squared_difference": 0.04637128657356183
+      "root_mean_squared_difference": 0.04637128657356183,
+      "train_bi_gap": 0.3006091640044025,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.852487683850504,
+        "adjusted_pog": 0.0014606443277310934,
+        "high_loss_lift": null
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -794,11 +904,19 @@
       "model_gain_vs_market": -0.05227262258067534,
       "model_mean_probability": 0.09482395833333333,
       "n_common": 288,
+      "near_bi": true,
       "prediction_pearson": 0.9661228684807424,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.05740111787529346
+      "root_mean_squared_difference": 0.05740111787529346,
+      "train_bi_gap": 0.9174988741805913,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.6846421908057112,
+        "adjusted_pog": 0.0014949180000000002,
+        "high_loss_lift": -86.96625716625717
+      },
+      "train_near_bi_share": 0.95
     },
     {
       "aggregation": {
@@ -850,11 +968,19 @@
       "model_gain_vs_market": -0.03481459202118793,
       "model_mean_probability": 0.12475460122699387,
       "n_common": 163,
+      "near_bi": true,
       "prediction_pearson": 0.9647039141031185,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "DeepSeek",
-      "root_mean_squared_difference": 0.04820684916843732
+      "root_mean_squared_difference": 0.04820684916843732,
+      "train_bi_gap": 0.4438059841740823,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.7827804141837373,
+        "adjusted_pog": 8.755168711656803e-05,
+        "high_loss_lift": null
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -906,11 +1032,19 @@
       "model_gain_vs_market": -0.08985749241030536,
       "model_mean_probability": 0.13295734720416125,
       "n_common": 769,
+      "near_bi": true,
       "prediction_pearson": 0.9621490261389978,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.05777893366576321
+      "root_mean_squared_difference": 0.05777893366576321,
+      "train_bi_gap": 1.1661284428430667,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.7026559588774366,
+        "adjusted_pog": 0.0021115753446033798,
+        "high_loss_lift": -49.74158710924966
+      },
+      "train_near_bi_share": 0.95
     },
     {
       "aggregation": {
@@ -962,11 +1096,19 @@
       "model_gain_vs_market": -0.05023459977529778,
       "model_mean_probability": 0.12032372881355932,
       "n_common": 295,
+      "near_bi": true,
       "prediction_pearson": 0.9596493119563958,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.05647312995380778
+      "root_mean_squared_difference": 0.05647312995380778,
+      "train_bi_gap": 0.6928885442528913,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.7387284797679993,
+        "adjusted_pog": 0.003066643305084741,
+        "high_loss_lift": -50.8735238545111
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -1018,11 +1160,19 @@
       "model_gain_vs_market": -0.06880199940903046,
       "model_mean_probability": 0.1251032986111111,
       "n_common": 576,
+      "near_bi": true,
       "prediction_pearson": 0.9585376835977377,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Qwen",
-      "root_mean_squared_difference": 0.06415057346890118
+      "root_mean_squared_difference": 0.06415057346890118,
+      "train_bi_gap": 0.8044541344840274,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.6677746833014849,
+        "adjusted_pog": 0.001203870336805558,
+        "high_loss_lift": -62.8076334039684
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -1074,11 +1224,19 @@
       "model_gain_vs_market": -0.07981956821299258,
       "model_mean_probability": 0.11296258790436006,
       "n_common": 711,
+      "near_bi": true,
       "prediction_pearson": 0.9556374592723527,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.06166410235288714
+      "root_mean_squared_difference": 0.06166410235288714,
+      "train_bi_gap": 0.9305258981527026,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.5786453107889916,
+        "adjusted_pog": 0.0014922474824191245,
+        "high_loss_lift": -90.87499068554396
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -1130,11 +1288,19 @@
       "model_gain_vs_market": -0.1070281877956818,
       "model_mean_probability": 0.15455367605633802,
       "n_common": 710,
+      "near_bi": true,
       "prediction_pearson": 0.9553099295039854,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.06740132934389309
+      "root_mean_squared_difference": 0.06740132934389309,
+      "train_bi_gap": 1.402677255920663,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.7098895636285442,
+        "adjusted_pog": 0.003002995295633801,
+        "high_loss_lift": -39.83504394041014
+      },
+      "train_near_bi_share": 0.9
     },
     {
       "aggregation": {
@@ -1186,11 +1352,19 @@
       "model_gain_vs_market": -0.07769583329339412,
       "model_mean_probability": 0.14223472222222222,
       "n_common": 288,
+      "near_bi": true,
       "prediction_pearson": 0.9488228983750843,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Moonshot",
-      "root_mean_squared_difference": 0.07534573713334197
+      "root_mean_squared_difference": 0.07534573713334197,
+      "train_bi_gap": 0.886096881549191,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.5858388941637225,
+        "adjusted_pog": 0.0047420805416666665,
+        "high_loss_lift": -78.91471264367816
+      },
+      "train_near_bi_share": 1.0
     },
     {
       "aggregation": {
@@ -1242,11 +1416,19 @@
       "model_gain_vs_market": -0.11980401068079322,
       "model_mean_probability": 0.11910610932475885,
       "n_common": 311,
+      "near_bi": true,
       "prediction_pearson": 0.9454575454859823,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.07054868219524395
+      "root_mean_squared_difference": 0.07054868219524395,
+      "train_bi_gap": 1.2578382256940353,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.6432014986403605,
+        "adjusted_pog": 0.0026663328778135055,
+        "high_loss_lift": -71.3895498392283
+      },
+      "train_near_bi_share": 0.8
     },
     {
       "aggregation": {
@@ -1298,11 +1480,19 @@
       "model_gain_vs_market": -0.08278481299223923,
       "model_mean_probability": 0.14335803757828808,
       "n_common": 479,
+      "near_bi": true,
       "prediction_pearson": 0.9407974974741425,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.07525822977073982
+      "root_mean_squared_difference": 0.07525822977073982,
+      "train_bi_gap": 1.1237150369518525,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.6668052370450385,
+        "adjusted_pog": 0.0012100908141962417,
+        "high_loss_lift": -48.88628591311264
+      },
+      "train_near_bi_share": 0.95
     },
     {
       "aggregation": {
@@ -1354,11 +1544,19 @@
       "model_gain_vs_market": -0.08187594095618196,
       "model_mean_probability": 0.0993438596491228,
       "n_common": 285,
+      "near_bi": true,
       "prediction_pearson": 0.9403833175934785,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Moonshot",
-      "root_mean_squared_difference": 0.07689938995491835
+      "root_mean_squared_difference": 0.07689938995491835,
+      "train_bi_gap": 1.0963428084326565,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.5540222992819354,
+        "adjusted_pog": 0.0030124070315789477,
+        "high_loss_lift": -42.339337928153725
+      },
+      "train_near_bi_share": 0.8
     },
     {
       "aggregation": {
@@ -1410,11 +1608,19 @@
       "model_gain_vs_market": -0.17483220339320166,
       "model_mean_probability": 0.10831219512195121,
       "n_common": 287,
+      "near_bi": true,
       "prediction_pearson": 0.9355550101822748,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "DeepSeek",
-      "root_mean_squared_difference": 0.0812439150227449
+      "root_mean_squared_difference": 0.0812439150227449,
+      "train_bi_gap": 1.578025043110541,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.48785341104875424,
+        "adjusted_pog": 0.0030525810627177693,
+        "high_loss_lift": -43.80800189393939
+      },
+      "train_near_bi_share": 0.7
     },
     {
       "aggregation": {
@@ -1466,11 +1672,19 @@
       "model_gain_vs_market": -0.0841518260145975,
       "model_mean_probability": 0.10873171091445429,
       "n_common": 339,
+      "near_bi": true,
       "prediction_pearson": 0.9355475136315188,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Google",
-      "root_mean_squared_difference": 0.08446494503359381
+      "root_mean_squared_difference": 0.08446494503359381,
+      "train_bi_gap": 1.074559157319145,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.4766181220878244,
+        "adjusted_pog": 0.003906784373156343,
+        "high_loss_lift": -59.99205783738474
+      },
+      "train_near_bi_share": 0.85
     },
     {
       "aggregation": {
@@ -1522,11 +1736,19 @@
       "model_gain_vs_market": -0.14057515055274317,
       "model_mean_probability": 0.10858885630498535,
       "n_common": 341,
+      "near_bi": true,
       "prediction_pearson": 0.9352009187206624,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.08112694136867098
+      "root_mean_squared_difference": 0.08112694136867098,
+      "train_bi_gap": 1.3515155454098322,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.4738790166089821,
+        "adjusted_pog": 0.003130250158357772,
+        "high_loss_lift": -44.41433138726717
+      },
+      "train_near_bi_share": 0.75
     },
     {
       "aggregation": {
@@ -1578,11 +1800,19 @@
       "model_gain_vs_market": -0.11659100625685635,
       "model_mean_probability": 0.15396733524355302,
       "n_common": 349,
+      "near_bi": true,
       "prediction_pearson": 0.9303514254777435,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Qwen",
-      "root_mean_squared_difference": 0.08035302677046326
+      "root_mean_squared_difference": 0.08035302677046326,
+      "train_bi_gap": 1.4741446891429641,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.6497430072881244,
+        "adjusted_pog": 0.0033114333810888258,
+        "high_loss_lift": 1.0
+      },
+      "train_near_bi_share": 0.8
     },
     {
       "aggregation": {
@@ -1634,11 +1864,19 @@
       "model_gain_vs_market": -0.20959992489659388,
       "model_mean_probability": 0.09374289552238807,
       "n_common": 335,
+      "near_bi": true,
       "prediction_pearson": 0.9198395401998068,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Google",
-      "root_mean_squared_difference": 0.0918971091208865
+      "root_mean_squared_difference": 0.0918971091208865,
+      "train_bi_gap": 1.9669804474046129,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.4682351277092753,
+        "adjusted_pog": 0.0034040147382089557,
+        "high_loss_lift": -38.98270426915465
+      },
+      "train_near_bi_share": 0.55
     },
     {
       "aggregation": {
@@ -1690,11 +1928,19 @@
       "model_gain_vs_market": -0.21257038363756223,
       "model_mean_probability": 0.16828691275167784,
       "n_common": 298,
+      "near_bi": false,
       "prediction_pearson": 0.9181510341739877,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.09275070777059498
+      "root_mean_squared_difference": 0.09275070777059498,
+      "train_bi_gap": 2.8933546228034266,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.6642641880766392,
+        "adjusted_pog": 0.003911563758389263,
+        "high_loss_lift": -23.929695756098862
+      },
+      "train_near_bi_share": 0.3
     },
     {
       "aggregation": {
@@ -1746,11 +1992,19 @@
       "model_gain_vs_market": -0.1026360784428006,
       "model_mean_probability": 0.11091567695961996,
       "n_common": 421,
+      "near_bi": true,
       "prediction_pearson": 0.9169701713689504,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.07294713945312933
+      "root_mean_squared_difference": 0.07294713945312933,
+      "train_bi_gap": 1.3310225297313383,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.5395871730943892,
+        "adjusted_pog": 0.003548518289786222,
+        "high_loss_lift": -39.443279745567025
+      },
+      "train_near_bi_share": 0.9
     },
     {
       "aggregation": {
@@ -1802,11 +2056,19 @@
       "model_gain_vs_market": -0.12209405821479855,
       "model_mean_probability": 0.11759615384615384,
       "n_common": 624,
+      "near_bi": true,
       "prediction_pearson": 0.9151132349768439,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.08858805421364087
+      "root_mean_squared_difference": 0.08858805421364087,
+      "train_bi_gap": 1.4349468897850919,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.5041504267973487,
+        "adjusted_pog": 0.0029845409054487172,
+        "high_loss_lift": -55.93444064308134
+      },
+      "train_near_bi_share": 0.8
     },
     {
       "aggregation": {
@@ -1858,11 +2120,19 @@
       "model_gain_vs_market": -0.1640002812410624,
       "model_mean_probability": 0.14384521452145213,
       "n_common": 303,
+      "near_bi": false,
       "prediction_pearson": 0.8898741769523186,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "DeepSeek",
-      "root_mean_squared_difference": 0.08895188208651165
+      "root_mean_squared_difference": 0.08895188208651165,
+      "train_bi_gap": 2.0123609381870584,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.3961455614326289,
+        "adjusted_pog": 0.004647341551155114,
+        "high_loss_lift": -54.38203821656051
+      },
+      "train_near_bi_share": 0.5
     },
     {
       "aggregation": {
@@ -1914,11 +2184,19 @@
       "model_gain_vs_market": -0.251795628823047,
       "model_mean_probability": 0.18614822546972862,
       "n_common": 479,
+      "near_bi": false,
       "prediction_pearson": 0.8478635132902338,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.12655713637826682
+      "root_mean_squared_difference": 0.12655713637826682,
+      "train_bi_gap": 3.3073198701555873,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.47998109574287373,
+        "adjusted_pog": 0.006537850208768264,
+        "high_loss_lift": -16.10450914359011
+      },
+      "train_near_bi_share": 0.2
     },
     {
       "aggregation": {
@@ -1970,11 +2248,19 @@
       "model_gain_vs_market": -0.3131670072995357,
       "model_mean_probability": 0.2212941176470588,
       "n_common": 119,
+      "near_bi": false,
       "prediction_pearson": 0.8025930021827923,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Qwen",
-      "root_mean_squared_difference": 0.1499408286653116
+      "root_mean_squared_difference": 0.1499408286653116,
+      "train_bi_gap": 4.222134307071594,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.40910812562180243,
+        "adjusted_pog": 0.007061596638655459,
+        "high_loss_lift": null
+      },
+      "train_near_bi_share": 0.05
     },
     {
       "aggregation": {
@@ -2026,11 +2312,19 @@
       "model_gain_vs_market": -0.48467340806311643,
       "model_mean_probability": 0.09361491319444444,
       "n_common": 288,
+      "near_bi": false,
       "prediction_pearson": 0.7997533805771445,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Qwen",
-      "root_mean_squared_difference": 0.13985577532250512
+      "root_mean_squared_difference": 0.13985577532250512,
+      "train_bi_gap": 4.068473170840938,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.21094667408656487,
+        "adjusted_pog": 0.0035399185298611124,
+        "high_loss_lift": -32.52316602316602
+      },
+      "train_near_bi_share": 0.1
     },
     {
       "aggregation": {
@@ -2082,11 +2376,19 @@
       "model_gain_vs_market": -0.3851435314844708,
       "model_mean_probability": 0.20938590604026844,
       "n_common": 298,
+      "near_bi": false,
       "prediction_pearson": 0.7308326680637744,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.1690744842016491
+      "root_mean_squared_difference": 0.1690744842016491,
+      "train_bi_gap": 5.085304737152376,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.2867040102890221,
+        "adjusted_pog": 0.006164035234899326,
+        "high_loss_lift": -9.308812742921383
+      },
+      "train_near_bi_share": 0.0
     },
     {
       "aggregation": {
@@ -2138,11 +2440,19 @@
       "model_gain_vs_market": -0.5401857232330842,
       "model_mean_probability": 0.2523677966101695,
       "n_common": 295,
+      "near_bi": false,
       "prediction_pearson": 0.7009090045318234,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.19784098434031752
+      "root_mean_squared_difference": 0.19784098434031752,
+      "train_bi_gap": 6.917218905661947,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.30456062503483944,
+        "adjusted_pog": 0.011400922881355932,
+        "high_loss_lift": -5.86753507723568
+      },
+      "train_near_bi_share": 0.0
     },
     {
       "aggregation": {
@@ -2194,11 +2504,19 @@
       "model_gain_vs_market": -0.8796055053587154,
       "model_mean_probability": 0.326506711409396,
       "n_common": 298,
+      "near_bi": false,
       "prediction_pearson": 0.6084380284413665,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.25235769463257596
+      "root_mean_squared_difference": 0.25235769463257596,
+      "train_bi_gap": 10.667643021622892,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.17771930243219655,
+        "adjusted_pog": 0.014192566275167785,
+        "high_loss_lift": -0.9352018095729268
+      },
+      "train_near_bi_share": 0.0
     },
     {
       "aggregation": {
@@ -2250,11 +2568,19 @@
       "model_gain_vs_market": -1.61499664047702,
       "model_mean_probability": 0.1935733137829912,
       "n_common": 341,
+      "near_bi": false,
       "prediction_pearson": 0.49847987237017616,
       "prompt_label": "Zero shot",
       "prompt_type": "zero_shot",
       "provider": "OpenAI",
-      "root_mean_squared_difference": 0.24224994666024488
+      "root_mean_squared_difference": 0.24224994666024488,
+      "train_bi_gap": 12.217847024722694,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.1677518847178444,
+        "adjusted_pog": 0.004520497800586512,
+        "high_loss_lift": -6.5265666570082566
+      },
+      "train_near_bi_share": 0.0
     },
     {
       "aggregation": {
@@ -2306,11 +2632,19 @@
       "model_gain_vs_market": -2.042763502070582,
       "model_mean_probability": 0.4724664429530202,
       "n_common": 298,
+      "near_bi": false,
       "prediction_pearson": 0.3191569978682468,
       "prompt_label": "Scratchpad",
       "prompt_type": "scratchpad",
       "provider": "Anthropic",
-      "root_mean_squared_difference": 0.3958360513270631
+      "root_mean_squared_difference": 0.3958360513270631,
+      "train_bi_gap": 21.39820941998527,
+      "train_diversity": {
+        "adjusted_loss_corr": -0.044671430998276904,
+        "adjusted_pog": 0.022730695469798657,
+        "high_loss_lift": -0.3858264313409089
+      },
+      "train_near_bi_share": 0.0
     }
   ],
   "provenance": {
@@ -2323,7 +2657,7 @@
     "summary": "data/derived/freeze_exposed_market_aggregation/summary.json",
     "summary_sha256": "86c508aa8c2c84749c7c35d394b1a346fa474a8a6a0dd0fa7a870d0a27ffe48f"
   },
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "scope": "Every eligible zero-shot and scratchpad with-freeze configuration is kept as a separate observation; news-augmented configurations are excluded. Correlations use identical non-imputed Polymarket event support.",
   "title": "Freeze-only prompt ↔ Polymarket correlation"
 }
