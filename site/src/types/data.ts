@@ -812,6 +812,32 @@ export interface FreezeMarketCorrelationPoint {
   market_brier_index: number;
   model_brier_index: number;
   model_gain_vs_market: number;
+  aggregation: Record<FreezeAggregationMethodId, FreezeAggregationScore>;
+}
+
+export type FreezeAggregationMethodId =
+  | "ec_w0_56"
+  | "simple_mean"
+  | "log_odds_mean"
+  | "piecewise_odds"
+  | "cf_directional"
+  | "best_single";
+
+export interface FreezeAggregationScore {
+  brier_index: number;
+  gain_vs_market: number;
+  gain_vs_model: number;
+  test_target_cells: number;
+}
+
+export interface FreezeAggregationSummary {
+  method: FreezeAggregationMethodId;
+  pair_count: number;
+  test_target_cells: number;
+  support_weighted_brier_index: number;
+  support_weighted_gain_vs_market: number;
+  support_weighted_gain_vs_model: number;
+  positive_vs_market_pairs: number;
 }
 
 export interface FreezeMarketCorrelationData {
@@ -825,6 +851,18 @@ export interface FreezeMarketCorrelationData {
     range: [number, number];
     higher_means: string;
     causal_warning: string;
+  };
+  aggregation: {
+    evaluation: string;
+    support_weighting: string;
+    market_baseline: string;
+    methods: Record<FreezeAggregationMethodId, {
+      label: string;
+      role: string;
+      outcome_blind_at_test: boolean;
+      formula: string;
+    }>;
+    summary_all: FreezeAggregationSummary[];
   };
   audit: {
     model_count: number;

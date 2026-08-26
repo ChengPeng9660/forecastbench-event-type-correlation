@@ -36,6 +36,26 @@ describe("with-freeze model/market correlation contract", () => {
     expect(weighted("prediction_pearson")).toBeCloseTo(payload.audit.support_weighted_prediction_pearson, 12);
     expect(weighted("exact_copy_share")).toBeCloseTo(payload.audit.support_weighted_exact_copy_share, 12);
     expect(weighted("mean_absolute_difference")).toBeCloseTo(payload.audit.support_weighted_mean_absolute_difference, 12);
+
+    expect(payload.aggregation.summary_all).toHaveLength(6);
+    for (const summary of payload.aggregation.summary_all) {
+      const pairSupport = payload.points.reduce(
+        (sum, point) => sum + point.aggregation[summary.method].test_target_cells,
+        0,
+      );
+      const aggregationWeighted = (field: "brier_index" | "gain_vs_market" | "gain_vs_model") => (
+        payload.points.reduce(
+          (sum, point) => sum + point.aggregation[summary.method][field] * point.aggregation[summary.method].test_target_cells,
+          0,
+        ) / pairSupport
+      );
+      expect(summary.pair_count).toBe(39);
+      expect(summary.test_target_cells).toBe(pairSupport);
+      expect(summary.support_weighted_brier_index).toBeCloseTo(aggregationWeighted("brier_index"), 12);
+      expect(summary.support_weighted_gain_vs_market).toBeCloseTo(aggregationWeighted("gain_vs_market"), 12);
+      expect(summary.support_weighted_gain_vs_model).toBeCloseTo(aggregationWeighted("gain_vs_model"), 12);
+      expect(summary.positive_vs_market_pairs).toBe(payload.points.filter((point) => point.aggregation[summary.method].gain_vs_market > 0).length);
+    }
   });
 
   it("keeps correlation, probability-distance, support, and BI fields in valid ranges", () => {
@@ -50,6 +70,12 @@ describe("with-freeze model/market correlation contract", () => {
       expect(Number.isFinite(point.market_brier_index)).toBe(true);
       expect(Number.isFinite(point.model_brier_index)).toBe(true);
       expect(Number.isFinite(point.model_gain_vs_market)).toBe(true);
+      for (const score of Object.values(point.aggregation)) {
+        expect(Number.isFinite(score.brier_index)).toBe(true);
+        expect(Number.isFinite(score.gain_vs_market)).toBe(true);
+        expect(Number.isFinite(score.gain_vs_model)).toBe(true);
+        expect(score.test_target_cells).toBe(point.n_common * 10);
+      }
     }
     expect(payload.audit.correlation_minimum).toBe(Math.min(...payload.points.map((point) => point.prediction_pearson)));
     expect(payload.audit.correlation_maximum).toBe(Math.max(...payload.points.map((point) => point.prediction_pearson)));

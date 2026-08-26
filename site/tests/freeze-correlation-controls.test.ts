@@ -1,11 +1,12 @@
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createElement } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   FreezeMarketCorrelationExplorer,
   sortFreezeCorrelationPoints,
+  summarizeFreezeAggregationPoints,
   summarizeFreezeCorrelationPoints,
 } from "../src/components/FreezeMarketCorrelationExplorer";
 import type { FreezeMarketCorrelationData } from "../src/types/data";
@@ -26,6 +27,10 @@ describe("with-freeze model/market correlation explorer", () => {
     expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(12);
     expect(screen.getByRole("button", { name: "Show all 39" })).toBeInTheDocument();
     expect(screen.getByText(/Correlation measures similarity/)).toBeInTheDocument();
+    const aggregationTable = screen.getByRole("table", { name: "With-freeze prompt and Polymarket aggregation method comparison" });
+    expect(within(aggregationTable).getAllByRole("row")).toHaveLength(7);
+    expect(within(aggregationTable).getByText("Directional CF")).toBeInTheDocument();
+    expect(within(aggregationTable).getByText("75.51")).toBeInTheDocument();
   });
 
   it("shows every row on demand and filters to one provider", () => {
@@ -39,6 +44,8 @@ describe("with-freeze model/market correlation explorer", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Scratchpad" }));
     expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(3);
+    const filteredTable = screen.getByRole("table", { name: "With-freeze prompt and Polymarket aggregation method comparison" });
+    expect(within(filteredTable).getAllByText(/\/3$/)).toHaveLength(6);
   });
 
   it("sorts by common support and updates the selected-model ledger", () => {
@@ -58,5 +65,12 @@ describe("with-freeze model/market correlation explorer", () => {
     expect(summary.configurations).toBe(10);
     expect(summary.support).toBe(openAi.reduce((sum, point) => sum + point.n_common, 0));
     expect(summary.correlation).toBeGreaterThan(0.8);
+
+    const directional = summarizeFreezeAggregationPoints(payload.points, "cf_directional");
+    expect(directional.pairCount).toBe(39);
+    expect(directional.support).toBe(136_140);
+    expect(directional.weightedBi).toBeCloseTo(75.50871279772113, 12);
+    expect(directional.gainVsMarket).toBeCloseTo(-0.00860617172400239, 12);
+    expect(directional.positiveVsMarket).toBe(13);
   });
 });

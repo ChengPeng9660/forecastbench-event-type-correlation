@@ -1,4 +1,103 @@
 {
+  "aggregation": {
+    "evaluation": "ten-repeat, event-disjoint two-fold cross-fit in both directions; Directional CF weights use training outcomes only",
+    "market_baseline": "ForecastBench freeze_datetime_value",
+    "methods": {
+      "best_single": {
+        "formula": "lower test-fold adjusted Brier of market and model on identical support",
+        "label": "Best Single",
+        "outcome_blind_at_test": false,
+        "role": "Hindsight benchmark; not deployable"
+      },
+      "cf_directional": {
+        "formula": "direction-specific clipped C / D weight fitted on the training fold",
+        "label": "Directional CF",
+        "outcome_blind_at_test": true,
+        "role": "Train-fold fitted closed-form pool"
+      },
+      "ec_w0_56": {
+        "formula": "sigmoid(0.56 × (logit(p_market) + logit(p_model)))",
+        "label": "EC · w = 0.56",
+        "outcome_blind_at_test": true,
+        "role": "Outcome-blind fixed pool"
+      },
+      "log_odds_mean": {
+        "formula": "sigmoid((logit(p_market) + logit(p_model)) / 2)",
+        "label": "Log-odds Mean",
+        "outcome_blind_at_test": true,
+        "role": "Outcome-blind fixed pool"
+      },
+      "piecewise_odds": {
+        "formula": "threshold-5 piecewise transform of the summed market/model logits",
+        "label": "Piecewise Odds",
+        "outcome_blind_at_test": true,
+        "role": "Outcome-blind fixed pool"
+      },
+      "simple_mean": {
+        "formula": "(p_market + p_model) / 2",
+        "label": "Simple Mean",
+        "outcome_blind_at_test": true,
+        "role": "Outcome-blind fixed pool"
+      }
+    },
+    "summary_all": [
+      {
+        "method": "ec_w0_56",
+        "pair_count": 39,
+        "positive_vs_market_pairs": 19,
+        "support_weighted_brier_index": 75.40272185918165,
+        "support_weighted_gain_vs_market": -0.015719607746274886,
+        "support_weighted_gain_vs_model": 0.12048592916918757,
+        "test_target_cells": 136140
+      },
+      {
+        "method": "simple_mean",
+        "pair_count": 39,
+        "positive_vs_market_pairs": 8,
+        "support_weighted_brier_index": 74.92997878307368,
+        "support_weighted_gain_vs_market": -0.055819511476054545,
+        "support_weighted_gain_vs_model": 0.09499141375382154,
+        "test_target_cells": 136140
+      },
+      {
+        "method": "log_odds_mean",
+        "pair_count": 39,
+        "positive_vs_market_pairs": 9,
+        "support_weighted_brier_index": 75.20064215356669,
+        "support_weighted_gain_vs_market": -0.03315650796451717,
+        "support_weighted_gain_vs_model": 0.10611251564437292,
+        "test_target_cells": 136140
+      },
+      {
+        "method": "piecewise_odds",
+        "pair_count": 39,
+        "positive_vs_market_pairs": 18,
+        "support_weighted_brier_index": 75.46812528104377,
+        "support_weighted_gain_vs_market": -0.009800906194945294,
+        "support_weighted_gain_vs_model": 0.12434889765656701,
+        "test_target_cells": 136140
+      },
+      {
+        "method": "cf_directional",
+        "pair_count": 39,
+        "positive_vs_market_pairs": 13,
+        "support_weighted_brier_index": 75.50871279772113,
+        "support_weighted_gain_vs_market": -0.00860617172400239,
+        "support_weighted_gain_vs_model": 0.12133688565627199,
+        "test_target_cells": 136140
+      },
+      {
+        "method": "best_single",
+        "pair_count": 39,
+        "positive_vs_market_pairs": 20,
+        "support_weighted_brier_index": 75.6400823053746,
+        "support_weighted_gain_vs_market": 0.0036321803868117944,
+        "support_weighted_gain_vs_model": 0.13185803466399146,
+        "test_target_cells": 136140
+      }
+    ],
+    "support_weighting": "support-weighted across prompt/market pairs using repeated opposite-fold test target cells"
+  },
   "audit": {
     "all_configs_exclude_news": true,
     "all_configs_explicitly_with_freeze": true,
@@ -30,6 +129,44 @@
   },
   "points": [
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.0,
+          "test_target_cells": 2980
+        },
+        "cf_directional": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.0,
+          "test_target_cells": 2980
+        },
+        "ec_w0_56": {
+          "brier_index": 71.24692108293515,
+          "gain_vs_market": 0.0009581830783730046,
+          "gain_vs_model": 0.0009581830783730046,
+          "test_target_cells": 2980
+        },
+        "log_odds_mean": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.0,
+          "test_target_cells": 2980
+        },
+        "piecewise_odds": {
+          "brier_index": 71.0604758323641,
+          "gain_vs_market": -0.012148712485684504,
+          "gain_vs_model": -0.012148712485684504,
+          "test_target_cells": 2980
+        },
+        "simple_mean": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.0,
+          "test_target_cells": 2980
+        }
+      },
       "exact_configuration": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
       "exact_copy_share": 1.0,
       "family": "GPT",
@@ -48,6 +185,44 @@
       "root_mean_squared_difference": 2.014388820308801e-17
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 81.11768934994198,
+          "gain_vs_market": 0.050820805773481345,
+          "gain_vs_model": 3.780723431326474e-05,
+          "test_target_cells": 1600
+        },
+        "cf_directional": {
+          "brier_index": 81.07619237098139,
+          "gain_vs_market": 0.04664098277958142,
+          "gain_vs_model": -0.004365644707928895,
+          "test_target_cells": 1600
+        },
+        "ec_w0_56": {
+          "brier_index": 80.98525273325451,
+          "gain_vs_market": 0.03712108078979067,
+          "gain_vs_model": -0.014394880627267606,
+          "test_target_cells": 1600
+        },
+        "log_odds_mean": {
+          "brier_index": 80.89622708186242,
+          "gain_vs_market": 0.028238735278584833,
+          "gain_vs_model": -0.023752449512377604,
+          "test_target_cells": 1600
+        },
+        "piecewise_odds": {
+          "brier_index": 81.03798564282158,
+          "gain_vs_market": 0.04226026073655403,
+          "gain_vs_model": -0.00898074420303776,
+          "test_target_cells": 1600
+        },
+        "simple_mean": {
+          "brier_index": 80.89514878139086,
+          "gain_vs_market": 0.02814870737306425,
+          "gain_vs_model": -0.023847294092159847,
+          "test_target_cells": 1600
+        }
+      },
       "exact_configuration": "Gemini-3-Pro-Preview (zero shot with freeze values)",
       "exact_copy_share": 0.2625,
       "family": "Gemini",
@@ -66,6 +241,44 @@
       "root_mean_squared_difference": 0.020361550775910956
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 73.38682997249634,
+          "gain_vs_market": 0.00404784534796075,
+          "gain_vs_model": 0.0011934308600279266,
+          "test_target_cells": 4230
+        },
+        "cf_directional": {
+          "brier_index": 73.41413355765016,
+          "gain_vs_market": 0.006097549911355304,
+          "gain_vs_model": 0.0032490099088326543,
+          "test_target_cells": 4230
+        },
+        "ec_w0_56": {
+          "brier_index": 73.52861664956018,
+          "gain_vs_market": 0.014628990493963233,
+          "gain_vs_model": 0.01180490173389052,
+          "test_target_cells": 4230
+        },
+        "log_odds_mean": {
+          "brier_index": 73.37211714423066,
+          "gain_vs_market": 0.002956296883682181,
+          "gain_vs_model": 9.875400073945229e-05,
+          "test_target_cells": 4230
+        },
+        "piecewise_odds": {
+          "brier_index": 73.51819653603556,
+          "gain_vs_market": 0.013668974140081088,
+          "gain_vs_model": 0.010842133958088784,
+          "test_target_cells": 4230
+        },
+        "simple_mean": {
+          "brier_index": 73.36479550851374,
+          "gain_vs_market": 0.002408032737792186,
+          "gain_vs_model": -0.00045108147878733745,
+          "test_target_cells": 4230
+        }
+      },
       "exact_configuration": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
       "exact_copy_share": 0.054373522458628844,
       "family": "Claude",
@@ -84,6 +297,44 @@
       "root_mean_squared_difference": 0.016689955360308126
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 81.25329091609014,
+          "gain_vs_market": 0.008927421202732691,
+          "gain_vs_model": 0.004659691172982422,
+          "test_target_cells": 2880
+        },
+        "cf_directional": {
+          "brier_index": 81.16122942042485,
+          "gain_vs_market": -0.0008316666851091675,
+          "gain_vs_model": -0.0051414210361179855,
+          "test_target_cells": 2880
+        },
+        "ec_w0_56": {
+          "brier_index": 81.45801292694006,
+          "gain_vs_market": 0.030324351227228777,
+          "gain_vs_model": 0.02614876008091006,
+          "test_target_cells": 2880
+        },
+        "log_odds_mean": {
+          "brier_index": 81.24948346734695,
+          "gain_vs_market": 0.008541149885260235,
+          "gain_vs_model": 0.004271756504372546,
+          "test_target_cells": 2880
+        },
+        "piecewise_odds": {
+          "brier_index": 81.53633064206151,
+          "gain_vs_market": 0.03822469184563349,
+          "gain_vs_model": 0.034083120933174275,
+          "test_target_cells": 2880
+        },
+        "simple_mean": {
+          "brier_index": 81.22380360976892,
+          "gain_vs_market": 0.005823467816634438,
+          "gain_vs_model": 0.0015423716264634326,
+          "test_target_cells": 2880
+        }
+      },
       "exact_configuration": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
       "exact_copy_share": 0.08333333333333333,
       "family": "Claude",
@@ -102,6 +353,44 @@
       "root_mean_squared_difference": 0.02285204601221616
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 73.34974033421997,
+          "gain_vs_market": 0.0015345698427191219,
+          "gain_vs_model": 0.010250271565271933,
+          "test_target_cells": 4210
+        },
+        "cf_directional": {
+          "brier_index": 73.25188342121314,
+          "gain_vs_market": -0.005843416010855896,
+          "gain_vs_model": 0.0029366888668495633,
+          "test_target_cells": 4210
+        },
+        "ec_w0_56": {
+          "brier_index": 73.44919029205245,
+          "gain_vs_market": 0.008912950052880056,
+          "gain_vs_model": 0.017564245177903278,
+          "test_target_cells": 4210
+        },
+        "log_odds_mean": {
+          "brier_index": 73.31936014114848,
+          "gain_vs_market": -0.0007713109582299047,
+          "gain_vs_model": 0.007964519021808664,
+          "test_target_cells": 4210
+        },
+        "piecewise_odds": {
+          "brier_index": 73.40781587367708,
+          "gain_vs_market": 0.005596765870639641,
+          "gain_vs_model": 0.014277008289496464,
+          "test_target_cells": 4210
+        },
+        "simple_mean": {
+          "brier_index": 73.30259741448326,
+          "gain_vs_market": -0.002026606870317286,
+          "gain_vs_model": 0.006720180709667002,
+          "test_target_cells": 4210
+        }
+      },
       "exact_configuration": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
       "exact_copy_share": 0.09263657957244656,
       "family": "Claude",
@@ -120,6 +409,44 @@
       "root_mean_squared_difference": 0.0260047465062651
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 79.8980648551062,
+          "gain_vs_market": 0.03383865116135484,
+          "gain_vs_model": 0.0012689253553939347,
+          "test_target_cells": 1790
+        },
+        "cf_directional": {
+          "brier_index": 79.7894184151001,
+          "gain_vs_market": 0.023425013571421273,
+          "gain_vs_model": -0.009495760557218317,
+          "test_target_cells": 1790
+        },
+        "ec_w0_56": {
+          "brier_index": 80.24597351869244,
+          "gain_vs_market": 0.06694252228984067,
+          "gain_vs_model": 0.0354887426010233,
+          "test_target_cells": 1790
+        },
+        "log_odds_mean": {
+          "brier_index": 79.86139946527916,
+          "gain_vs_market": 0.030356053411014754,
+          "gain_vs_model": -0.0023310723033127746,
+          "test_target_cells": 1790
+        },
+        "piecewise_odds": {
+          "brier_index": 80.49717086233592,
+          "gain_vs_market": 0.09035223298066773,
+          "gain_vs_model": 0.0596876049788989,
+          "test_target_cells": 1790
+        },
+        "simple_mean": {
+          "brier_index": 79.81089792266104,
+          "gain_vs_market": 0.025481510311360506,
+          "gain_vs_model": -0.007369938403857004,
+          "test_target_cells": 1790
+        }
+      },
       "exact_configuration": "GPT-5-2025-08-07 (zero shot with freeze values)",
       "exact_copy_share": 0.13966480446927373,
       "family": "GPT",
@@ -138,6 +465,44 @@
       "root_mean_squared_difference": 0.039194122236339154
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 80.78745999510623,
+          "gain_vs_market": 0.0032005989218948337,
+          "gain_vs_model": 0.06395591526062644,
+          "test_target_cells": 1450
+        },
+        "cf_directional": {
+          "brier_index": 80.87047970365562,
+          "gain_vs_market": 0.01122857811663672,
+          "gain_vs_model": 0.07149458595958695,
+          "test_target_cells": 1450
+        },
+        "ec_w0_56": {
+          "brier_index": 80.62453164623759,
+          "gain_vs_market": -0.015106514924099913,
+          "gain_vs_model": 0.04676462721845903,
+          "test_target_cells": 1450
+        },
+        "log_odds_mean": {
+          "brier_index": 80.55685844618867,
+          "gain_vs_market": -0.02176883590974366,
+          "gain_vs_model": 0.04050837732254022,
+          "test_target_cells": 1450
+        },
+        "piecewise_odds": {
+          "brier_index": 80.5871125120099,
+          "gain_vs_market": -0.020001198027713378,
+          "gain_vs_model": 0.042168276979026906,
+          "test_target_cells": 1450
+        },
+        "simple_mean": {
+          "brier_index": 80.52796687654788,
+          "gain_vs_market": -0.024658789599647103,
+          "gain_vs_model": 0.037794567448979834,
+          "test_target_cells": 1450
+        }
+      },
       "exact_configuration": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
       "exact_copy_share": 0.08275862068965517,
       "family": "GPT",
@@ -156,6 +521,44 @@
       "root_mean_squared_difference": 0.03402272972486239
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 79.99675297946148,
+          "gain_vs_market": 0.014779739793418343,
+          "gain_vs_model": 0.0052164840829965016,
+          "test_target_cells": 3880
+        },
+        "cf_directional": {
+          "brier_index": 80.05370283471753,
+          "gain_vs_market": 0.020343252555948835,
+          "gain_vs_model": 0.010834000297694244,
+          "test_target_cells": 3880
+        },
+        "ec_w0_56": {
+          "brier_index": 80.34157827010462,
+          "gain_vs_market": 0.04842446575294344,
+          "gain_vs_model": 0.03918778992587736,
+          "test_target_cells": 3880
+        },
+        "log_odds_mean": {
+          "brier_index": 80.05916957963318,
+          "gain_vs_market": 0.020930602106750722,
+          "gain_vs_model": 0.011427051085237389,
+          "test_target_cells": 3880
+        },
+        "piecewise_odds": {
+          "brier_index": 80.50118951712248,
+          "gain_vs_market": 0.0637032806586723,
+          "gain_vs_model": 0.054614911986663156,
+          "test_target_cells": 3880
+        },
+        "simple_mean": {
+          "brier_index": 80.00117853264526,
+          "gain_vs_market": 0.01523797730697065,
+          "gain_vs_model": 0.005679169579091605,
+          "test_target_cells": 3880
+        }
+      },
       "exact_configuration": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
       "exact_copy_share": 0.15721649484536082,
       "family": "Claude",
@@ -174,6 +577,44 @@
       "root_mean_squared_difference": 0.041170379578517075
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 74.33703490639563,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.05064999763855001,
+          "test_target_cells": 3040
+        },
+        "cf_directional": {
+          "brier_index": 74.31017296744852,
+          "gain_vs_market": -0.002094302908258012,
+          "gain_vs_model": 0.04866177116764967,
+          "test_target_cells": 3040
+        },
+        "ec_w0_56": {
+          "brier_index": 74.37781634664913,
+          "gain_vs_market": 0.0031272817007825214,
+          "gain_vs_model": 0.05361888252857282,
+          "test_target_cells": 3040
+        },
+        "log_odds_mean": {
+          "brier_index": 74.14152231335821,
+          "gain_vs_market": -0.015297062960835758,
+          "gain_vs_model": 0.03612773088055733,
+          "test_target_cells": 3040
+        },
+        "piecewise_odds": {
+          "brier_index": 74.55401893701806,
+          "gain_vs_market": 0.01665545081618107,
+          "gain_vs_model": 0.06646184991022253,
+          "test_target_cells": 3040
+        },
+        "simple_mean": {
+          "brier_index": 74.08064448658673,
+          "gain_vs_market": -0.020076328219963527,
+          "gain_vs_model": 0.03159053539551839,
+          "test_target_cells": 3040
+        }
+      },
       "exact_configuration": "DeepSeek-V3 (zero shot with freeze values)",
       "exact_copy_share": 0.45723684210526316,
       "family": "DeepSeek",
@@ -192,6 +633,44 @@
       "root_mean_squared_difference": 0.04170015540170463
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 74.30418855594067,
+          "gain_vs_market": 0.002376070022155764,
+          "gain_vs_model": 0.03662920504805227,
+          "test_target_cells": 3010
+        },
+        "cf_directional": {
+          "brier_index": 74.48421948177902,
+          "gain_vs_market": 0.016368523011041577,
+          "gain_vs_model": 0.05014123112738865,
+          "test_target_cells": 3010
+        },
+        "ec_w0_56": {
+          "brier_index": 74.45034850793986,
+          "gain_vs_market": 0.013723836934743154,
+          "gain_vs_model": 0.04758734959832535,
+          "test_target_cells": 3010
+        },
+        "log_odds_mean": {
+          "brier_index": 74.19197620531426,
+          "gain_vs_market": -0.006315679263774006,
+          "gain_vs_model": 0.028235884511630147,
+          "test_target_cells": 3010
+        },
+        "piecewise_odds": {
+          "brier_index": 74.66289959036996,
+          "gain_vs_market": 0.0299903645790043,
+          "gain_vs_model": 0.06329537062395142,
+          "test_target_cells": 3010
+        },
+        "simple_mean": {
+          "brier_index": 74.1391421147323,
+          "gain_vs_market": -0.010450613510431306,
+          "gain_vs_model": 0.024242922060975277,
+          "test_target_cells": 3010
+        }
+      },
       "exact_configuration": "DeepSeek-R1 (scratchpad with freeze values)",
       "exact_copy_share": 0.09966777408637874,
       "family": "DeepSeek",
@@ -210,6 +689,44 @@
       "root_mean_squared_difference": 0.04404676991788769
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.16661948679311,
+          "gain_vs_market": 0.01639786382455012,
+          "gain_vs_model": 0.004354345774333794,
+          "test_target_cells": 1190
+        },
+        "cf_directional": {
+          "brier_index": 70.95383666442893,
+          "gain_vs_market": 0.001828302718388711,
+          "gain_vs_model": -0.010393609385390839,
+          "test_target_cells": 1190
+        },
+        "ec_w0_56": {
+          "brier_index": 71.22818457513605,
+          "gain_vs_market": 0.02047779544401734,
+          "gain_vs_model": 0.008484233293951617,
+          "test_target_cells": 1190
+        },
+        "log_odds_mean": {
+          "brier_index": 71.18948053018566,
+          "gain_vs_market": 0.01793649423944901,
+          "gain_vs_model": 0.0059118156391412624,
+          "test_target_cells": 1190
+        },
+        "piecewise_odds": {
+          "brier_index": 70.96089849860553,
+          "gain_vs_market": 0.0016814118702761223,
+          "gain_vs_model": -0.010542298808878156,
+          "test_target_cells": 1190
+        },
+        "simple_mean": {
+          "brier_index": 71.10844795101444,
+          "gain_vs_market": 0.012406414154658827,
+          "gain_vs_model": 0.00031402360368443824,
+          "test_target_cells": 1190
+        }
+      },
       "exact_configuration": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
       "exact_copy_share": 0.44537815126050423,
       "family": "Qwen",
@@ -228,6 +745,44 @@
       "root_mean_squared_difference": 0.04637128657356183
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 81.39322000087174,
+          "gain_vs_market": 0.023604447617843426,
+          "gain_vs_model": 0.072107806066865,
+          "test_target_cells": 2880
+        },
+        "cf_directional": {
+          "brier_index": 80.51393622372382,
+          "gain_vs_market": -0.07161222675182874,
+          "gain_vs_model": -0.01837889132164576,
+          "test_target_cells": 2880
+        },
+        "ec_w0_56": {
+          "brier_index": 81.0721549395448,
+          "gain_vs_market": -0.011560602312915232,
+          "gain_vs_model": 0.03868961274305016,
+          "test_target_cells": 2880
+        },
+        "log_odds_mean": {
+          "brier_index": 80.86006844560497,
+          "gain_vs_market": -0.033957805705942166,
+          "gain_vs_model": 0.01740501128863021,
+          "test_target_cells": 2880
+        },
+        "piecewise_odds": {
+          "brier_index": 81.11716813920872,
+          "gain_vs_market": -0.007585929474186046,
+          "gain_vs_model": 0.042466840006628856,
+          "test_target_cells": 2880
+        },
+        "simple_mean": {
+          "brier_index": 81.14293766112105,
+          "gain_vs_market": -0.0029200289167734357,
+          "gain_vs_model": 0.04690095760817739,
+          "test_target_cells": 2880
+        }
+      },
       "exact_configuration": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
       "exact_copy_share": 0.013888888888888888,
       "family": "Claude",
@@ -246,6 +801,44 @@
       "root_mean_squared_difference": 0.05740111787529346
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 74.4416809864901,
+          "gain_vs_market": 5.079340421192402e-05,
+          "gain_vs_model": 0.0336923983235501,
+          "test_target_cells": 1630
+        },
+        "cf_directional": {
+          "brier_index": 74.45898990017709,
+          "gain_vs_market": 0.0013904761875710445,
+          "gain_vs_model": 0.03498700973866599,
+          "test_target_cells": 1630
+        },
+        "ec_w0_56": {
+          "brier_index": 74.64602204280636,
+          "gain_vs_market": 0.015785030053613397,
+          "gain_vs_model": 0.04889728311230201,
+          "test_target_cells": 1630
+        },
+        "log_odds_mean": {
+          "brier_index": 74.44376405730276,
+          "gain_vs_market": 0.00020906887846772507,
+          "gain_vs_model": 0.03384534888636219,
+          "test_target_cells": 1630
+        },
+        "piecewise_odds": {
+          "brier_index": 74.75253311928769,
+          "gain_vs_market": 0.023693288023445634,
+          "gain_vs_model": 0.0565394810778196,
+          "test_target_cells": 1630
+        },
+        "simple_mean": {
+          "brier_index": 74.33145114945599,
+          "gain_vs_market": -0.00851743525026248,
+          "gain_vs_model": 0.025412433274217893,
+          "test_target_cells": 1630
+        }
+      },
       "exact_configuration": "DeepSeek-R1 (zero shot with freeze values)",
       "exact_copy_share": 0.8773006134969326,
       "family": "DeepSeek",
@@ -264,6 +857,44 @@
       "root_mean_squared_difference": 0.04820684916843732
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 73.3692378794972,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.08244884586844328,
+          "test_target_cells": 7690
+        },
+        "cf_directional": {
+          "brier_index": 73.36007658401076,
+          "gain_vs_market": -0.0006888622579616148,
+          "gain_vs_model": 0.08181677950861294,
+          "test_target_cells": 7690
+        },
+        "ec_w0_56": {
+          "brier_index": 72.9478437469883,
+          "gain_vs_market": -0.03211110304235128,
+          "gain_vs_model": 0.052985266211496525,
+          "test_target_cells": 7690
+        },
+        "log_odds_mean": {
+          "brier_index": 72.83395209422244,
+          "gain_vs_market": -0.040766884319420583,
+          "gain_vs_model": 0.04504314411081127,
+          "test_target_cells": 7690
+        },
+        "piecewise_odds": {
+          "brier_index": 72.84627275517789,
+          "gain_vs_market": -0.04003839338412463,
+          "gain_vs_model": 0.04571157180926644,
+          "test_target_cells": 7690
+        },
+        "simple_mean": {
+          "brier_index": 72.93236446680206,
+          "gain_vs_market": -0.03316255186815253,
+          "gain_vs_model": 0.052020508127872324,
+          "test_target_cells": 7690
+        }
+      },
       "exact_configuration": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
       "exact_copy_share": 0.03901170351105332,
       "family": "Claude",
@@ -282,6 +913,44 @@
       "root_mean_squared_difference": 0.05777893366576321
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 72.93831603436101,
+          "gain_vs_market": 0.0012321175502823737,
+          "gain_vs_model": 0.049004972162021404,
+          "test_target_cells": 2950
+        },
+        "cf_directional": {
+          "brier_index": 72.7201281221247,
+          "gain_vs_market": -0.01537473609289641,
+          "gain_vs_model": 0.03319245403823088,
+          "test_target_cells": 2950
+        },
+        "ec_w0_56": {
+          "brier_index": 72.85583562948946,
+          "gain_vs_market": -0.005210735214245547,
+          "gain_vs_model": 0.0428702925714743,
+          "test_target_cells": 2950
+        },
+        "log_odds_mean": {
+          "brier_index": 72.74339805022693,
+          "gain_vs_market": -0.013486442457746974,
+          "gain_vs_model": 0.034990427210656774,
+          "test_target_cells": 2950
+        },
+        "piecewise_odds": {
+          "brier_index": 72.70667261761737,
+          "gain_vs_market": -0.016654402275774225,
+          "gain_vs_model": 0.031973996578200894,
+          "test_target_cells": 2950
+        },
+        "simple_mean": {
+          "brier_index": 72.73274237736861,
+          "gain_vs_market": -0.014248307610428206,
+          "gain_vs_model": 0.034265003431203846,
+          "test_target_cells": 2950
+        }
+      },
       "exact_configuration": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
       "exact_copy_share": 0.2135593220338983,
       "family": "GPT",
@@ -300,6 +969,44 @@
       "root_mean_squared_difference": 0.05647312995380778
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 76.86376503330698,
+          "gain_vs_market": 0.0012031567851301735,
+          "gain_vs_model": 0.06549871373076434,
+          "test_target_cells": 5760
+        },
+        "cf_directional": {
+          "brier_index": 76.57531737543816,
+          "gain_vs_market": -0.024218817511012083,
+          "gain_vs_model": 0.04171322838343269,
+          "test_target_cells": 5760
+        },
+        "ec_w0_56": {
+          "brier_index": 76.87190678667034,
+          "gain_vs_market": 0.0014644938114551748,
+          "gain_vs_model": 0.06574322770666399,
+          "test_target_cells": 5760
+        },
+        "log_odds_mean": {
+          "brier_index": 76.70825441449489,
+          "gain_vs_market": -0.012661465068600586,
+          "gain_vs_model": 0.052526599287306255,
+          "test_target_cells": 5760
+        },
+        "piecewise_odds": {
+          "brier_index": 76.80938512578957,
+          "gain_vs_market": -0.0041374958664997085,
+          "gain_vs_model": 0.060501854953757116,
+          "test_target_cells": 5760
+        },
+        "simple_mean": {
+          "brier_index": 76.67615917450881,
+          "gain_vs_market": -0.01520854953583062,
+          "gain_vs_model": 0.05014347830826769,
+          "test_target_cells": 5760
+        }
+      },
       "exact_configuration": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
       "exact_copy_share": 0.5920138888888888,
       "family": "Qwen",
@@ -318,6 +1025,44 @@
       "root_mean_squared_difference": 0.06415057346890118
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 76.19229123451171,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.07391935705062931,
+          "test_target_cells": 7110
+        },
+        "cf_directional": {
+          "brier_index": 76.21449823689939,
+          "gain_vs_market": 0.0018716307962685372,
+          "gain_vs_model": 0.07565263810180152,
+          "test_target_cells": 7110
+        },
+        "ec_w0_56": {
+          "brier_index": 76.02211317967304,
+          "gain_vs_market": -0.014361697960383318,
+          "gain_vs_model": 0.06061926656963286,
+          "test_target_cells": 7110
+        },
+        "log_odds_mean": {
+          "brier_index": 75.88992454223614,
+          "gain_vs_market": -0.02558260086784203,
+          "gain_vs_model": 0.05022780559062103,
+          "test_target_cells": 7110
+        },
+        "piecewise_odds": {
+          "brier_index": 76.0111271774013,
+          "gain_vs_market": -0.015357207459665699,
+          "gain_vs_model": 0.05969734449247523,
+          "test_target_cells": 7110
+        },
+        "simple_mean": {
+          "brier_index": 75.91830343580826,
+          "gain_vs_market": -0.023139908451811093,
+          "gain_vs_model": 0.052489935753786514,
+          "test_target_cells": 7110
+        }
+      },
       "exact_configuration": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
       "exact_copy_share": 0.12376933895921238,
       "family": "Claude",
@@ -336,6 +1081,44 @@
       "root_mean_squared_difference": 0.06166410235288714
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 73.02250184774691,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.09668063467182049,
+          "test_target_cells": 7100
+        },
+        "cf_directional": {
+          "brier_index": 72.99933282884436,
+          "gain_vs_market": -0.0017214553173094012,
+          "gain_vs_model": 0.09512561074714775,
+          "test_target_cells": 7100
+        },
+        "ec_w0_56": {
+          "brier_index": 72.7752722645384,
+          "gain_vs_market": -0.018493772687840325,
+          "gain_vs_model": 0.07997485166491694,
+          "test_target_cells": 7100
+        },
+        "log_odds_mean": {
+          "brier_index": 72.60061340747768,
+          "gain_vs_market": -0.03159104285505991,
+          "gain_vs_model": 0.06814383388993245,
+          "test_target_cells": 7100
+        },
+        "piecewise_odds": {
+          "brier_index": 72.79381894946033,
+          "gain_vs_market": -0.017196652745962167,
+          "gain_vs_model": 0.08114656522756886,
+          "test_target_cells": 7100
+        },
+        "simple_mean": {
+          "brier_index": 72.51688304035434,
+          "gain_vs_market": -0.03791139253815148,
+          "gain_vs_model": 0.06243453962555001,
+          "test_target_cells": 7100
+        }
+      },
       "exact_configuration": "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
       "exact_copy_share": 0.014084507042253521,
       "family": "Claude",
@@ -354,6 +1137,44 @@
       "root_mean_squared_difference": 0.06740132934389309
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 78.09380996990949,
+          "gain_vs_market": 0.0025910879207962476,
+          "gain_vs_model": 0.07449868389008876,
+          "test_target_cells": 2880
+        },
+        "cf_directional": {
+          "brier_index": 78.07368144295273,
+          "gain_vs_market": 0.0006533627950864898,
+          "gain_vs_model": 0.07270065789254161,
+          "test_target_cells": 2880
+        },
+        "ec_w0_56": {
+          "brier_index": 78.43408104416964,
+          "gain_vs_market": 0.03329813682843679,
+          "gain_vs_model": 0.10299192656488046,
+          "test_target_cells": 2880
+        },
+        "log_odds_mean": {
+          "brier_index": 78.03105125835265,
+          "gain_vs_market": -0.0031691540548784013,
+          "gain_vs_model": 0.06915372309714259,
+          "test_target_cells": 2880
+        },
+        "piecewise_odds": {
+          "brier_index": 78.67519102315963,
+          "gain_vs_market": 0.054696424834707574,
+          "gain_vs_model": 0.12284751785994792,
+          "test_target_cells": 2880
+        },
+        "simple_mean": {
+          "brier_index": 77.96325636385703,
+          "gain_vs_market": -0.009359537657193098,
+          "gain_vs_model": 0.06340963147956888,
+          "test_target_cells": 2880
+        }
+      },
       "exact_configuration": "Kimi-K2-Instruct (zero shot with freeze values)",
       "exact_copy_share": 0.05555555555555555,
       "family": "Kimi",
@@ -372,6 +1193,44 @@
       "root_mean_squared_difference": 0.07534573713334197
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 78.70929994918636,
+          "gain_vs_market": 0.0016538382840339024,
+          "gain_vs_model": 0.10846348808037035,
+          "test_target_cells": 3110
+        },
+        "cf_directional": {
+          "brier_index": 78.40336196860225,
+          "gain_vs_market": -0.027940143937764277,
+          "gain_vs_model": 0.0820356650510473,
+          "test_target_cells": 3110
+        },
+        "ec_w0_56": {
+          "brier_index": 78.81538750053431,
+          "gain_vs_market": 0.011260732751463179,
+          "gain_vs_model": 0.11704257368445628,
+          "test_target_cells": 3110
+        },
+        "log_odds_mean": {
+          "brier_index": 78.45444653493401,
+          "gain_vs_market": -0.022656596663735498,
+          "gain_vs_model": 0.08675394362804276,
+          "test_target_cells": 3110
+        },
+        "piecewise_odds": {
+          "brier_index": 79.02474757825274,
+          "gain_vs_market": 0.03065324861636398,
+          "gain_vs_model": 0.13436035043818567,
+          "test_target_cells": 3110
+        },
+        "simple_mean": {
+          "brier_index": 78.3510511151046,
+          "gain_vs_market": -0.03250966338652176,
+          "gain_vs_model": 0.07795502289833756,
+          "test_target_cells": 3110
+        }
+      },
       "exact_configuration": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
       "exact_copy_share": 0.24115755627009647,
       "family": "Claude",
@@ -390,6 +1249,44 @@
       "root_mean_squared_difference": 0.07054868219524395
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 72.06864155709802,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.07645546187840056,
+          "test_target_cells": 4790
+        },
+        "cf_directional": {
+          "brier_index": 72.0521286406994,
+          "gain_vs_market": -0.0012108986294291479,
+          "gain_vs_model": 0.07533714306297234,
+          "test_target_cells": 4790
+        },
+        "ec_w0_56": {
+          "brier_index": 71.88277337942417,
+          "gain_vs_market": -0.013512936839436182,
+          "gain_vs_model": 0.06397566286635713,
+          "test_target_cells": 4790
+        },
+        "log_odds_mean": {
+          "brier_index": 71.81705629250314,
+          "gain_vs_market": -0.01820557843469234,
+          "gain_vs_model": 0.05964179935169608,
+          "test_target_cells": 4790
+        },
+        "piecewise_odds": {
+          "brier_index": 71.80402792496955,
+          "gain_vs_market": -0.019331509920413166,
+          "gain_vs_model": 0.05860195147775947,
+          "test_target_cells": 4790
+        },
+        "simple_mean": {
+          "brier_index": 71.7474047287175,
+          "gain_vs_market": -0.02324837273698646,
+          "gain_vs_model": 0.05498455421694162,
+          "test_target_cells": 4790
+        }
+      },
       "exact_configuration": "GPT-4o-2024-05-13 (zero shot with freeze values)",
       "exact_copy_share": 0.7599164926931107,
       "family": "GPT",
@@ -408,6 +1305,44 @@
       "root_mean_squared_difference": 0.07525822977073982
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 81.38650342009703,
+          "gain_vs_market": 0.01925250727328622,
+          "gain_vs_model": 0.09347508748562149,
+          "test_target_cells": 2850
+        },
+        "cf_directional": {
+          "brier_index": 81.32926887481553,
+          "gain_vs_market": 0.013362594906062612,
+          "gain_vs_model": 0.08803092134396759,
+          "test_target_cells": 2850
+        },
+        "ec_w0_56": {
+          "brier_index": 81.53627633306063,
+          "gain_vs_market": 0.03472977910566579,
+          "gain_vs_model": 0.10778104554094203,
+          "test_target_cells": 2850
+        },
+        "log_odds_mean": {
+          "brier_index": 81.31291403501034,
+          "gain_vs_market": 0.011416024826376594,
+          "gain_vs_model": 0.0862316669137733,
+          "test_target_cells": 2850
+        },
+        "piecewise_odds": {
+          "brier_index": 81.67608287916161,
+          "gain_vs_market": 0.04896097451762772,
+          "gain_vs_model": 0.12093522974378522,
+          "test_target_cells": 2850
+        },
+        "simple_mean": {
+          "brier_index": 81.21280129682438,
+          "gain_vs_market": 0.0008745016679657768,
+          "gain_vs_model": 0.07648792203569234,
+          "test_target_cells": 2850
+        }
+      },
       "exact_configuration": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
       "exact_copy_share": 0.10877192982456141,
       "family": "Kimi",
@@ -426,6 +1361,44 @@
       "root_mean_squared_difference": 0.07689938995491835
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 81.19844192572747,
+          "gain_vs_market": 0.0010640865751023233,
+          "gain_vs_model": 0.14972035109377546,
+          "test_target_cells": 2870
+        },
+        "cf_directional": {
+          "brier_index": 81.3451523390278,
+          "gain_vs_market": 0.016662410727155814,
+          "gain_vs_model": 0.162997416624497,
+          "test_target_cells": 2870
+        },
+        "ec_w0_56": {
+          "brier_index": 81.21298108130433,
+          "gain_vs_market": 0.0024137560805489395,
+          "gain_vs_model": 0.15086917004983444,
+          "test_target_cells": 2870
+        },
+        "log_odds_mean": {
+          "brier_index": 80.93242446943388,
+          "gain_vs_market": -0.02745437303626567,
+          "gain_vs_model": 0.12544585510277376,
+          "test_target_cells": 2870
+        },
+        "piecewise_odds": {
+          "brier_index": 81.38371850529317,
+          "gain_vs_market": 0.020188483861074517,
+          "gain_vs_model": 0.165998758538461,
+          "test_target_cells": 2870
+        },
+        "simple_mean": {
+          "brier_index": 80.80859795481713,
+          "gain_vs_market": -0.040814028797243704,
+          "gain_vs_model": 0.11407431138581392,
+          "test_target_cells": 2870
+        }
+      },
       "exact_configuration": "DeepSeek-V3.1 (zero shot with freeze values)",
       "exact_copy_share": 0.4564459930313589,
       "family": "DeepSeek",
@@ -444,6 +1417,44 @@
       "root_mean_squared_difference": 0.0812439150227449
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 80.27901239736234,
+          "gain_vs_market": 0.01369565459608526,
+          "gain_vs_model": 0.09025256266031996,
+          "test_target_cells": 3390
+        },
+        "cf_directional": {
+          "brier_index": 79.7945346189474,
+          "gain_vs_market": -0.03721364589408411,
+          "gain_vs_model": 0.04329484025596374,
+          "test_target_cells": 3390
+        },
+        "ec_w0_56": {
+          "brier_index": 80.25094739084665,
+          "gain_vs_market": 0.0106257233197394,
+          "gain_vs_model": 0.08742091934000097,
+          "test_target_cells": 3390
+        },
+        "log_odds_mean": {
+          "brier_index": 80.0243027684357,
+          "gain_vs_market": -0.01206562279072056,
+          "gain_vs_model": 0.06649087470420988,
+          "test_target_cells": 3390
+        },
+        "piecewise_odds": {
+          "brier_index": 80.36522751169399,
+          "gain_vs_market": 0.021938881517507502,
+          "gain_vs_model": 0.09785595060250957,
+          "test_target_cells": 3390
+        },
+        "simple_mean": {
+          "brier_index": 80.17363983252385,
+          "gain_vs_market": 0.0031332866181780126,
+          "gain_vs_model": 0.08051004530762121,
+          "test_target_cells": 3390
+        }
+      },
       "exact_configuration": "Gemini-2.5-Pro (zero shot with freeze values)",
       "exact_copy_share": 0.20058997050147492,
       "family": "Gemini",
@@ -462,6 +1473,44 @@
       "root_mean_squared_difference": 0.08446494503359381
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 80.13594381743674,
+          "gain_vs_market": 0.0006449543964485405,
+          "gain_vs_model": 0.12381481823512806,
+          "test_target_cells": 3410
+        },
+        "cf_directional": {
+          "brier_index": 79.93010922131856,
+          "gain_vs_market": -0.020946974761070474,
+          "gain_vs_model": 0.1048840803989976,
+          "test_target_cells": 3410
+        },
+        "ec_w0_56": {
+          "brier_index": 80.42105483643012,
+          "gain_vs_market": 0.0290554383367497,
+          "gain_vs_model": 0.14872372838149844,
+          "test_target_cells": 3410
+        },
+        "log_odds_mean": {
+          "brier_index": 80.14354575985104,
+          "gain_vs_market": 0.0013976640334692665,
+          "gain_vs_model": 0.1244747568955977,
+          "test_target_cells": 3410
+        },
+        "piecewise_odds": {
+          "brier_index": 80.62861141325186,
+          "gain_vs_market": 0.04945846408316429,
+          "gain_vs_model": 0.16661209438397265,
+          "test_target_cells": 3410
+        },
+        "simple_mean": {
+          "brier_index": 79.8479819285341,
+          "gain_vs_market": -0.028624725240145473,
+          "gain_vs_model": 0.09815260770703668,
+          "test_target_cells": 3410
+        }
+      },
       "exact_configuration": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
       "exact_copy_share": 0.10850439882697947,
       "family": "GPT",
@@ -480,6 +1529,44 @@
       "root_mean_squared_difference": 0.08112694136867098
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 73.85018543386305,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.10441693118029306,
+          "test_target_cells": 3490
+        },
+        "cf_directional": {
+          "brier_index": 73.7441069757275,
+          "gain_vs_market": -0.008271194684853215,
+          "gain_vs_model": 0.09700938926162697,
+          "test_target_cells": 3490
+        },
+        "ec_w0_56": {
+          "brier_index": 73.88795926150017,
+          "gain_vs_market": 0.0029316068639256647,
+          "gain_vs_model": 0.10704242865206053,
+          "test_target_cells": 3490
+        },
+        "log_odds_mean": {
+          "brier_index": 73.62934865918581,
+          "gain_vs_market": -0.01700236406029016,
+          "gain_vs_model": 0.08918990179798851,
+          "test_target_cells": 3490
+        },
+        "piecewise_odds": {
+          "brier_index": 73.9390059848446,
+          "gain_vs_market": 0.006768249161818087,
+          "gain_vs_model": 0.11047846053517052,
+          "test_target_cells": 3490
+        },
+        "simple_mean": {
+          "brier_index": 73.40161573899536,
+          "gain_vs_market": -0.034696080412479915,
+          "gain_vs_model": 0.07334370900846898,
+          "test_target_cells": 3490
+        }
+      },
       "exact_configuration": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
       "exact_copy_share": 0.07736389684813753,
       "family": "Qwen",
@@ -498,6 +1585,44 @@
       "root_mean_squared_difference": 0.08035302677046326
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 80.21365199377547,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.17328037194985121,
+          "test_target_cells": 3350
+        },
+        "cf_directional": {
+          "brier_index": 80.00538051158269,
+          "gain_vs_market": -0.021601366870442205,
+          "gain_vs_model": 0.15542209796534442,
+          "test_target_cells": 3350
+        },
+        "ec_w0_56": {
+          "brier_index": 79.86928811687014,
+          "gain_vs_market": -0.03533788087673941,
+          "gain_vs_model": 0.14406585221535273,
+          "test_target_cells": 3350
+        },
+        "log_odds_mean": {
+          "brier_index": 79.7181632808996,
+          "gain_vs_market": -0.05082278813646814,
+          "gain_vs_model": 0.13126417544519875,
+          "test_target_cells": 3350
+        },
+        "piecewise_odds": {
+          "brier_index": 80.01625729386419,
+          "gain_vs_market": -0.02038294368344676,
+          "gain_vs_model": 0.15642939232930497,
+          "test_target_cells": 3350
+        },
+        "simple_mean": {
+          "brier_index": 79.71625030748976,
+          "gain_vs_market": -0.050885489117715704,
+          "gain_vs_model": 0.1312123393133034,
+          "test_target_cells": 3350
+        }
+      },
       "exact_configuration": "Gemini-2.5-Flash (zero shot with freeze values)",
       "exact_copy_share": 0.1701492537313433,
       "family": "Gemini",
@@ -516,6 +1641,44 @@
       "root_mean_squared_difference": 0.0918971091208865
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.1753056041166676,
+          "test_target_cells": 2980
+        },
+        "cf_directional": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.1753056041166676,
+          "test_target_cells": 2980
+        },
+        "ec_w0_56": {
+          "brier_index": 70.01817596351067,
+          "gain_vs_market": -0.08661866478261182,
+          "gain_vs_model": 0.10387167669155066,
+          "test_target_cells": 2980
+        },
+        "log_odds_mean": {
+          "brier_index": 70.01992051820504,
+          "gain_vs_market": -0.08640672204217127,
+          "gain_vs_model": 0.10404646468184013,
+          "test_target_cells": 2980
+        },
+        "piecewise_odds": {
+          "brier_index": 69.61387934407549,
+          "gain_vs_market": -0.1163844541781334,
+          "gain_vs_model": 0.07932399698802049,
+          "test_target_cells": 2980
+        },
+        "simple_mean": {
+          "brier_index": 70.10300452154574,
+          "gain_vs_market": -0.08030644472663635,
+          "gain_vs_model": 0.109077329197296,
+          "test_target_cells": 2980
+        }
+      },
       "exact_configuration": "Claude-3-Opus-20240229 (zero shot with freeze values)",
       "exact_copy_share": 0.09731543624161074,
       "family": "Claude",
@@ -534,6 +1697,44 @@
       "root_mean_squared_difference": 0.09275070777059498
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 73.31786591062574,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.09308245979738713,
+          "test_target_cells": 4210
+        },
+        "cf_directional": {
+          "brier_index": 73.15853287885663,
+          "gain_vs_market": -0.012212409137159366,
+          "gain_vs_model": 0.08200681174276665,
+          "test_target_cells": 4210
+        },
+        "ec_w0_56": {
+          "brier_index": 73.0366509817669,
+          "gain_vs_market": -0.021420028112009024,
+          "gain_vs_model": 0.07365626059097309,
+          "test_target_cells": 4210
+        },
+        "log_odds_mean": {
+          "brier_index": 72.94266817379012,
+          "gain_vs_market": -0.028500224163764024,
+          "gain_vs_model": 0.06723510660356319,
+          "test_target_cells": 4210
+        },
+        "piecewise_odds": {
+          "brier_index": 72.92625986135238,
+          "gain_vs_market": -0.030070414623762604,
+          "gain_vs_model": 0.06581107333393167,
+          "test_target_cells": 4210
+        },
+        "simple_mean": {
+          "brier_index": 72.88756153280215,
+          "gain_vs_market": -0.03263421040615426,
+          "gain_vs_model": 0.0634859219693832,
+          "test_target_cells": 4210
+        }
+      },
       "exact_configuration": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
       "exact_copy_share": 0.030878859857482184,
       "family": "Claude",
@@ -552,6 +1753,44 @@
       "root_mean_squared_difference": 0.07294713945312933
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 76.58333644613184,
+          "gain_vs_market": 0.002703451486578966,
+          "gain_vs_model": 0.11121840347316764,
+          "test_target_cells": 6240
+        },
+        "cf_directional": {
+          "brier_index": 75.81130360851824,
+          "gain_vs_market": -0.06589185884411786,
+          "gain_vs_model": 0.050086887956697565,
+          "test_target_cells": 6240
+        },
+        "ec_w0_56": {
+          "brier_index": 76.52083936277224,
+          "gain_vs_market": -0.0030926084629911334,
+          "gain_vs_model": 0.10605300766063533,
+          "test_target_cells": 6240
+        },
+        "log_odds_mean": {
+          "brier_index": 76.328085299533,
+          "gain_vs_market": -0.019578831616389365,
+          "gain_vs_model": 0.09136063581114254,
+          "test_target_cells": 6240
+        },
+        "piecewise_odds": {
+          "brier_index": 76.54829609628405,
+          "gain_vs_market": -0.0008682965594398049,
+          "gain_vs_model": 0.1080352941608331,
+          "test_target_cells": 6240
+        },
+        "simple_mean": {
+          "brier_index": 76.25992406580454,
+          "gain_vs_market": -0.025373291369481524,
+          "gain_vs_model": 0.08619666607913015,
+          "test_target_cells": 6240
+        }
+      },
       "exact_configuration": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
       "exact_copy_share": 0.14262820512820512,
       "family": "GPT",
@@ -570,6 +1809,44 @@
       "root_mean_squared_difference": 0.08858805421364087
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 74.34320464471142,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.14089367836423936,
+          "test_target_cells": 3030
+        },
+        "cf_directional": {
+          "brier_index": 74.50586815453678,
+          "gain_vs_market": 0.012670924017785438,
+          "gain_vs_model": 0.15177934928888523,
+          "test_target_cells": 3030
+        },
+        "ec_w0_56": {
+          "brier_index": 74.20630690904942,
+          "gain_vs_market": -0.010793944084100216,
+          "gain_vs_model": 0.13162053276620594,
+          "test_target_cells": 3030
+        },
+        "log_odds_mean": {
+          "brier_index": 73.91959274607358,
+          "gain_vs_market": -0.03342119723201297,
+          "gain_vs_model": 0.11218131654558143,
+          "test_target_cells": 3030
+        },
+        "piecewise_odds": {
+          "brier_index": 74.5593234193519,
+          "gain_vs_market": 0.01664925095911762,
+          "gain_vs_model": 0.15519715511371757,
+          "test_target_cells": 3030
+        },
+        "simple_mean": {
+          "brier_index": 73.68679630346628,
+          "gain_vs_market": -0.05195491609948584,
+          "gain_vs_model": 0.09625888150311551,
+          "test_target_cells": 3030
+        }
+      },
       "exact_configuration": "DeepSeek-V3 (scratchpad with freeze values)",
       "exact_copy_share": 0.0627062706270627,
       "family": "DeepSeek",
@@ -588,6 +1865,44 @@
       "root_mean_squared_difference": 0.08895188208651165
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 72.06864155709802,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.2011475539819453,
+          "test_target_cells": 4790
+        },
+        "cf_directional": {
+          "brier_index": 72.02285374055678,
+          "gain_vs_market": -0.0032093074660207647,
+          "gain_vs_model": 0.1985837908626906,
+          "test_target_cells": 4790
+        },
+        "ec_w0_56": {
+          "brier_index": 71.70277737840925,
+          "gain_vs_market": -0.02632233992718183,
+          "gain_vs_model": 0.18011988834619738,
+          "test_target_cells": 4790
+        },
+        "log_odds_mean": {
+          "brier_index": 71.5199087300524,
+          "gain_vs_market": -0.03964339894157871,
+          "gain_vs_model": 0.1694783277689956,
+          "test_target_cells": 4790
+        },
+        "piecewise_odds": {
+          "brier_index": 71.86853907037946,
+          "gain_vs_market": -0.014407354921798862,
+          "gain_vs_model": 0.18963820326201603,
+          "test_target_cells": 4790
+        },
+        "simple_mean": {
+          "brier_index": 71.04537240196021,
+          "gain_vs_market": -0.0745881555805998,
+          "gain_vs_model": 0.14156262345240794,
+          "test_target_cells": 4790
+        }
+      },
       "exact_configuration": "GPT-4o-2024-05-13 (scratchpad with freeze values)",
       "exact_copy_share": 0.05010438413361169,
       "family": "GPT",
@@ -606,6 +1921,44 @@
       "root_mean_squared_difference": 0.12655713637826682
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 70.92962948462855,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.2384822384043508,
+          "test_target_cells": 1190
+        },
+        "cf_directional": {
+          "brier_index": 70.86973324412628,
+          "gain_vs_market": -0.0041050820139414065,
+          "gain_vs_model": 0.23535614553792755,
+          "test_target_cells": 1190
+        },
+        "ec_w0_56": {
+          "brier_index": 70.59322446240913,
+          "gain_vs_market": -0.023489073192582772,
+          "gain_vs_model": 0.22059489196477877,
+          "test_target_cells": 1190
+        },
+        "log_odds_mean": {
+          "brier_index": 70.37852480968141,
+          "gain_vs_market": -0.03848469641307353,
+          "gain_vs_model": 0.20917545853617892,
+          "test_target_cells": 1190
+        },
+        "piecewise_odds": {
+          "brier_index": 70.58405804740929,
+          "gain_vs_market": -0.024191188336518444,
+          "gain_vs_model": 0.22006021881198648,
+          "test_target_cells": 1190
+        },
+        "simple_mean": {
+          "brier_index": 69.65215504165953,
+          "gain_vs_market": -0.09010459542455924,
+          "gain_vs_model": 0.16986598858715884,
+          "test_target_cells": 1190
+        }
+      },
       "exact_configuration": "Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values)",
       "exact_copy_share": 0.01680672268907563,
       "family": "Qwen",
@@ -624,6 +1977,44 @@
       "root_mean_squared_difference": 0.1499408286653116
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 81.16926214115475,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.3264511948761946,
+          "test_target_cells": 2880
+        },
+        "cf_directional": {
+          "brier_index": 80.74593122946587,
+          "gain_vs_market": -0.04803303078990708,
+          "gain_vs_model": 0.29409860438117774,
+          "test_target_cells": 2880
+        },
+        "ec_w0_56": {
+          "brier_index": 79.72358432528759,
+          "gain_vs_market": -0.16148044376214035,
+          "gain_vs_model": 0.21768623492934314,
+          "test_target_cells": 2880
+        },
+        "log_odds_mean": {
+          "brier_index": 79.62974554828546,
+          "gain_vs_market": -0.17193646368072824,
+          "gain_vs_model": 0.21064359520682754,
+          "test_target_cells": 2880
+        },
+        "piecewise_odds": {
+          "brier_index": 79.6094160596918,
+          "gain_vs_market": -0.1750907584185953,
+          "gain_vs_model": 0.20851902375512887,
+          "test_target_cells": 2880
+        },
+        "simple_mean": {
+          "brier_index": 80.2121147283598,
+          "gain_vs_market": -0.10451653215820944,
+          "gain_vs_model": 0.25605420952534885,
+          "test_target_cells": 2880
+        }
+      },
       "exact_configuration": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
       "exact_copy_share": 0.3819444444444444,
       "family": "Qwen",
@@ -642,6 +2033,44 @@
       "root_mean_squared_difference": 0.13985577532250512
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.2780531567524334,
+          "test_target_cells": 2980
+        },
+        "cf_directional": {
+          "brier_index": 71.13512203714596,
+          "gain_vs_market": -0.006682549439191161,
+          "gain_vs_model": 0.27322871127996357,
+          "test_target_cells": 2980
+        },
+        "ec_w0_56": {
+          "brier_index": 70.69709742698497,
+          "gain_vs_market": -0.03750298364699758,
+          "gain_vs_model": 0.2509779960961184,
+          "test_target_cells": 2980
+        },
+        "log_odds_mean": {
+          "brier_index": 70.49871292589214,
+          "gain_vs_market": -0.05157726327389386,
+          "gain_vs_model": 0.24081711434849712,
+          "test_target_cells": 2980
+        },
+        "piecewise_odds": {
+          "brier_index": 70.64978197111752,
+          "gain_vs_market": -0.04099673826948611,
+          "gain_vs_model": 0.24845569097533124,
+          "test_target_cells": 2980
+        },
+        "simple_mean": {
+          "brier_index": 69.7415364867523,
+          "gain_vs_market": -0.10624611125602187,
+          "gain_vs_model": 0.20134911212381867,
+          "test_target_cells": 2980
+        }
+      },
       "exact_configuration": "GPT-4-Turbo-2024-04-09 (scratchpad with freeze values)",
       "exact_copy_share": 0.23825503355704697,
       "family": "GPT",
@@ -660,6 +2089,44 @@
       "root_mean_squared_difference": 0.1690744842016491
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.22923022859945,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.35072765257111477,
+          "test_target_cells": 2950
+        },
+        "cf_directional": {
+          "brier_index": 71.04541711063108,
+          "gain_vs_market": -0.013240353762045673,
+          "gain_vs_model": 0.3421310570032425,
+          "test_target_cells": 2950
+        },
+        "ec_w0_56": {
+          "brier_index": 70.39236255675654,
+          "gain_vs_market": -0.059110549250082196,
+          "gain_vs_model": 0.31234880750170313,
+          "test_target_cells": 2950
+        },
+        "log_odds_mean": {
+          "brier_index": 70.16853245957849,
+          "gain_vs_market": -0.07522995235322397,
+          "gain_vs_model": 0.30188292480977386,
+          "test_target_cells": 2950
+        },
+        "piecewise_odds": {
+          "brier_index": 70.60216486930959,
+          "gain_vs_market": -0.04417956464246874,
+          "gain_vs_model": 0.3220430829273129,
+          "test_target_cells": 2950
+        },
+        "simple_mean": {
+          "brier_index": 69.1235166050821,
+          "gain_vs_market": -0.15192459843943185,
+          "gain_vs_model": 0.2520872119101541,
+          "test_target_cells": 2950
+        }
+      },
       "exact_configuration": "Claude-3-Opus-20240229 (scratchpad with freeze values)",
       "exact_copy_share": 0.013559322033898305,
       "family": "Claude",
@@ -678,6 +2145,44 @@
       "root_mean_squared_difference": 0.19784098434031752
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.4679734672254251,
+          "test_target_cells": 2980
+        },
+        "cf_directional": {
+          "brier_index": 71.10336079810055,
+          "gain_vs_market": -0.009080618880778072,
+          "gain_vs_model": 0.46314233704683744,
+          "test_target_cells": 2980
+        },
+        "ec_w0_56": {
+          "brier_index": 70.19637998406685,
+          "gain_vs_market": -0.0734520154163633,
+          "gain_vs_model": 0.4288950461381527,
+          "test_target_cells": 2980
+        },
+        "log_odds_mean": {
+          "brier_index": 69.78579553669599,
+          "gain_vs_market": -0.1032278807476862,
+          "gain_vs_model": 0.4130534957455663,
+          "test_target_cells": 2980
+        },
+        "piecewise_odds": {
+          "brier_index": 70.49661238328798,
+          "gain_vs_market": -0.052121528006139485,
+          "gain_vs_model": 0.44024343139740585,
+          "test_target_cells": 2980
+        },
+        "simple_mean": {
+          "brier_index": 67.86985215685954,
+          "gain_vs_market": -0.24748612276717213,
+          "gain_vs_model": 0.33630428341978374,
+          "test_target_cells": 2980
+        }
+      },
       "exact_configuration": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
       "exact_copy_share": 0.013422818791946308,
       "family": "Claude",
@@ -696,6 +2201,44 @@
       "root_mean_squared_difference": 0.25235769463257596
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 80.12938369899274,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.6175903308932806,
+          "test_target_cells": 3410
+        },
+        "cf_directional": {
+          "brier_index": 80.04523365599862,
+          "gain_vs_market": -0.008434521848854865,
+          "gain_vs_model": 0.6143648881839866,
+          "test_target_cells": 3410
+        },
+        "ec_w0_56": {
+          "brier_index": 78.76512992705486,
+          "gain_vs_market": -0.1427935826882573,
+          "gain_vs_model": 0.5629846841869012,
+          "test_target_cells": 3410
+        },
+        "log_odds_mean": {
+          "brier_index": 78.33263223397728,
+          "gain_vs_market": -0.18979625218159035,
+          "gain_vs_model": 0.5450104088988232,
+          "test_target_cells": 3410
+        },
+        "piecewise_odds": {
+          "brier_index": 79.26186394999864,
+          "gain_vs_market": -0.09005421511297036,
+          "gain_vs_model": 0.5831527282902643,
+          "test_target_cells": 3410
+        },
+        "simple_mean": {
+          "brier_index": 76.19650470684164,
+          "gain_vs_market": -0.4360091561122392,
+          "gain_vs_model": 0.4508562137768993,
+          "test_target_cells": 3410
+        }
+      },
       "exact_configuration": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
       "exact_copy_share": 0.08504398826979472,
       "family": "GPT",
@@ -714,6 +2257,44 @@
       "root_mean_squared_difference": 0.24224994666024488
     },
     {
+      "aggregation": {
+        "best_single": {
+          "brier_index": 71.23292767871378,
+          "gain_vs_market": 0.0,
+          "gain_vs_model": 0.6713513885257575,
+          "test_target_cells": 2980
+        },
+        "cf_directional": {
+          "brier_index": 71.07539105366509,
+          "gain_vs_market": -0.011056072297896525,
+          "gain_vs_model": 0.667717825716695,
+          "test_target_cells": 2980
+        },
+        "ec_w0_56": {
+          "brier_index": 69.17528002052846,
+          "gain_vs_market": -0.14862146168216053,
+          "gain_vs_model": 0.6225071515086431,
+          "test_target_cells": 2980
+        },
+        "log_odds_mean": {
+          "brier_index": 68.5557789450574,
+          "gain_vs_market": -0.19526947595821578,
+          "gain_vs_model": 0.6071763463887869,
+          "test_target_cells": 2980
+        },
+        "piecewise_odds": {
+          "brier_index": 69.84833425808925,
+          "gain_vs_market": -0.09911144352722442,
+          "gain_vs_model": 0.6387785502293274,
+          "test_target_cells": 2980
+        },
+        "simple_mean": {
+          "brier_index": 64.21004394045647,
+          "gain_vs_market": -0.5482147722617063,
+          "gain_vs_model": 0.4911813648322797,
+          "test_target_cells": 2980
+        }
+      },
       "exact_configuration": "Claude-3-Haiku-20240307 (scratchpad with freeze values)",
       "exact_copy_share": 0.0,
       "family": "Claude",
@@ -742,7 +2323,7 @@
     "summary": "data/derived/freeze_exposed_market_aggregation/summary.json",
     "summary_sha256": "86c508aa8c2c84749c7c35d394b1a346fa474a8a6a0dd0fa7a870d0a27ffe48f"
   },
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "scope": "Every eligible zero-shot and scratchpad with-freeze configuration is kept as a separate observation; news-augmented configurations are excluded. Correlations use identical non-imputed Polymarket event support.",
   "title": "Freeze-only prompt ↔ Polymarket correlation"
 }

@@ -1,10 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
-import type { FreezeMarketCorrelationData, FreezeMarketCorrelationPoint } from "../types/data";
+import type {
+  FreezeAggregationMethodId,
+  FreezeMarketCorrelationData,
+  FreezeMarketCorrelationPoint,
+} from "../types/data";
 
 export type FreezeCorrelationSort = "correlation" | "exact_copy" | "mad" | "support";
 
 const percent = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const decimal = (value: number, digits = 3) => value.toFixed(digits);
+const signedPercent = (value: number | null, digits = 1) => (
+  value === null ? "—" : `${value >= 0 ? "+" : ""}${(value * 100).toFixed(digits)}%`
+);
+
+const AGGREGATION_METHODS: FreezeAggregationMethodId[] = [
+  "ec_w0_56",
+  "simple_mean",
+  "log_odds_mean",
+  "piecewise_odds",
+  "cf_directional",
+  "best_single",
+];
 
 export function sortFreezeCorrelationPoints(
   points: FreezeMarketCorrelationPoint[],
@@ -32,6 +48,37 @@ export function summarizeFreezeCorrelationPoints(points: FreezeMarketCorrelation
     correlation: weighted("prediction_pearson"),
     exactCopy: weighted("exact_copy_share"),
     mad: weighted("mean_absolute_difference"),
+  };
+}
+
+export function summarizeFreezeAggregationPoints(
+  points: FreezeMarketCorrelationPoint[],
+  method: FreezeAggregationMethodId,
+) {
+  const valid = points.filter((point) => {
+    const score = point.aggregation[method];
+    return score && Number.isFinite(score.brier_index) && score.test_target_cells > 0;
+  });
+  const support = valid.reduce(
+    (sum, point) => sum + point.aggregation[method].test_target_cells,
+    0,
+  );
+  const weighted = (field: "brier_index" | "gain_vs_market" | "gain_vs_model") => (
+    support
+      ? valid.reduce(
+        (sum, point) => sum + point.aggregation[method][field] * point.aggregation[method].test_target_cells,
+        0,
+      ) / support
+      : null
+  );
+  return {
+    method,
+    pairCount: valid.length,
+    support,
+    weightedBi: weighted("brier_index"),
+    gainVsMarket: weighted("gain_vs_market"),
+    gainVsModel: weighted("gain_vs_model"),
+    positiveVsMarket: valid.filter((point) => point.aggregation[method].gain_vs_market > 0).length,
   };
 }
 
@@ -70,6 +117,13 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   );
   const ranked = useMemo(() => sortFreezeCorrelationPoints(filtered, sort), [filtered, sort]);
   const summary = useMemo(() => summarizeFreezeCorrelationPoints(filtered), [filtered]);
+  const aggregationSummaries = useMemo(
+    () => AGGREGATION_METHODS.map((method) => summarizeFreezeAggregationPoints(filtered, method)),
+    [filtered],
+  );
+  const bestDeployable = [...aggregationSummaries]
+    .filter((row) => row.method !== "best_single" && row.weightedBi !== null)
+    .sort((a, b) => (b.weightedBi as number) - (a.weightedBi as number))[0];
   const displayed = showAll || ranked.length <= 12 ? ranked : ranked.slice(0, 12);
   const selected = ranked.find((point) => point.exact_configuration === selectedConfiguration) ?? ranked[0];
 
@@ -164,6 +218,42 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
           <p className="freeze-correlation-note"><strong>Read this as redundancy.</strong> {data.metric.causal_warning} A high correlation means the model stays close to the market input it saw; it does not by itself imply better BI or positive aggregation gain.</p>
         </aside>}
       </div>
+
+      <section className="freeze-aggregation-block" aria-labelledby="freeze-aggregation-title">
+        <div className="freeze-aggregation-heading">
+          <div>
+            <p className="eyebrow">WITH-FREEZE PROMPT × MARKET</p>
+            <h3 id="freeze-aggregation-title">Aggregation benchmark</h3>
+          </div>
+          <p>Every displayed prompt is paired with the same freeze-time Polymarket probability. Results are ten-repeat, event-disjoint cross-fit OOS and follow the active provider and prompt filters above.</p>
+        </div>
+
+        <div className="freeze-aggregation-overview">
+          <div className="freeze-aggregation-table" role="table" aria-label="With-freeze prompt and Polymarket aggregation method comparison">
+            <div className="freeze-aggregation-head" role="row"><span>METHOD</span><span>BI ↑</span><span>GAIN VS PM</span><span>GAIN VS MODEL</span><span>POSITIVE VS PM</span></div>
+            {aggregationSummaries.map((row, index) => {
+              const metadata = data.aggregation.methods[row.method];
+              const benchmark = row.method === "best_single";
+              return <div className={`freeze-aggregation-row ${benchmark ? "benchmark" : ""}`} role="row" key={row.method}>
+                <span><i>{benchmark ? "B" : String(index + 1).padStart(2, "0")}</i><strong>{metadata.label}</strong><small>{metadata.role}</small></span>
+                <strong>{row.weightedBi?.toFixed(2) ?? "—"}</strong>
+                <strong className={(row.gainVsMarket ?? 0) >= 0 ? "positive" : "negative"}>{signedPercent(row.gainVsMarket)}</strong>
+                <strong className={(row.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{signedPercent(row.gainVsModel)}</strong>
+                <strong>{row.positiveVsMarket}/{row.pairCount}</strong>
+              </div>;
+            })}
+          </div>
+
+          <dl className="freeze-aggregation-summary">
+            <div><dt>PROMPT–MARKET PAIRS</dt><dd>{filtered.length}</dd><small>{prompt === "all" ? "zero-shot + scratchpad" : prompt === "zero_shot" ? "zero-shot only" : "scratchpad only"}{provider === "all" ? " · all providers" : ` · ${provider}`}</small></div>
+            <div><dt>OOS TARGET CELLS</dt><dd>{(aggregationSummaries[0]?.support ?? 0).toLocaleString()}</dd><small>10 repeated opposite-fold evaluations</small></div>
+            <div><dt>BEST DEPLOYABLE BI ↑</dt><dd>{bestDeployable?.weightedBi?.toFixed(2) ?? "—"}</dd><small>{bestDeployable ? data.aggregation.methods[bestDeployable.method].label : "no eligible pairs"}</small></div>
+            <div><dt>GAIN VS MARKET</dt><dd className={(bestDeployable?.gainVsMarket ?? 0) >= 0 ? "positive" : "negative"}>{signedPercent(bestDeployable?.gainVsMarket ?? null)}</dd><small>support-weighted adjusted-Brier reduction</small></div>
+          </dl>
+        </div>
+
+        <p className="freeze-aggregation-caveat"><strong>Leakage boundary.</strong> Fixed pools never use outcomes. Directional CF estimates its two direction-specific weights on the training fold only. Best Single uses test outcomes to select the better constituent and is shown only as a non-deployable upper-reference benchmark.</p>
+      </section>
 
       <div className="freeze-correlation-audit">
         <p><strong>Freeze-only scope.</strong> Zero-shot and scratchpad configurations are retained as separate rows. Every displayed configuration explicitly includes <code>with freeze values</code>, and configurations containing <code>news</code> are excluded.</p>

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,54 @@ PROVIDERS = {
     "Qwen": "Qwen",
     "DeepSeek": "DeepSeek",
     "Kimi": "Moonshot",
+}
+
+AGGREGATION_METHODS = (
+    "ec_w0_56",
+    "simple_mean",
+    "log_odds_mean",
+    "piecewise_odds",
+    "cf_directional",
+    "best_single",
+)
+
+AGGREGATION_METHOD_METADATA = {
+    "ec_w0_56": {
+        "label": "EC · w = 0.56",
+        "role": "Outcome-blind fixed pool",
+        "outcome_blind_at_test": True,
+        "formula": "sigmoid(0.56 × (logit(p_market) + logit(p_model)))",
+    },
+    "simple_mean": {
+        "label": "Simple Mean",
+        "role": "Outcome-blind fixed pool",
+        "outcome_blind_at_test": True,
+        "formula": "(p_market + p_model) / 2",
+    },
+    "log_odds_mean": {
+        "label": "Log-odds Mean",
+        "role": "Outcome-blind fixed pool",
+        "outcome_blind_at_test": True,
+        "formula": "sigmoid((logit(p_market) + logit(p_model)) / 2)",
+    },
+    "piecewise_odds": {
+        "label": "Piecewise Odds",
+        "role": "Outcome-blind fixed pool",
+        "outcome_blind_at_test": True,
+        "formula": "threshold-5 piecewise transform of the summed market/model logits",
+    },
+    "cf_directional": {
+        "label": "Directional CF",
+        "role": "Train-fold fitted closed-form pool",
+        "outcome_blind_at_test": True,
+        "formula": "direction-specific clipped C / D weight fitted on the training fold",
+    },
+    "best_single": {
+        "label": "Best Single",
+        "role": "Hindsight benchmark; not deployable",
+        "outcome_blind_at_test": False,
+        "formula": "lower test-fold adjusted Brier of market and model on identical support",
+    },
 }
 
 
@@ -39,6 +88,32 @@ def prompt_type(configuration: str) -> str:
     if "zero shot" in normalized:
         return "zero_shot"
     raise ValueError(f"unsupported freeze prompt type: {configuration!r}")
+
+
+def summarize_aggregation(
+    points: list[dict[str, Any]], method: str
+) -> dict[str, Any]:
+    scores = [(row, row["aggregation"][method]) for row in points]
+    support = sum(score["test_target_cells"] for _, score in scores)
+    if not support:
+        raise ValueError(f"aggregation summary has no support for {method}")
+
+    def weighted(field: str) -> float:
+        return sum(
+            score[field] * score["test_target_cells"] for _, score in scores
+        ) / support
+
+    return {
+        "method": method,
+        "pair_count": len(scores),
+        "test_target_cells": support,
+        "support_weighted_brier_index": weighted("brier_index"),
+        "support_weighted_gain_vs_market": weighted("gain_vs_market"),
+        "support_weighted_gain_vs_model": weighted("gain_vs_model"),
+        "positive_vs_market_pairs": sum(
+            score["gain_vs_market"] > 0 for _, score in scores
+        ),
+    }
 
 
 def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
@@ -88,6 +163,19 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
         if int(anchor["test_target_cells"]) != int(row["n"]) * 10:
             raise ValueError(f"cross-fit support mismatch for {exact_configuration}")
         prompt = prompt_type(anchor["model_configuration"])
+        aggregation: dict[str, dict[str, Any]] = {}
+        for method in AGGREGATION_METHODS:
+            method_row = pair_index[(exact_configuration, method)]
+            if method_row["test_target_cells"] != anchor["test_target_cells"]:
+                raise ValueError(
+                    f"aggregation support mismatch for {exact_configuration}: {method}"
+                )
+            aggregation[method] = {
+                "brier_index": float(method_row["brier_index"]),
+                "gain_vs_market": float(method_row["gain_vs_anchor"]),
+                "gain_vs_model": float(method_row["gain_vs_model"]),
+                "test_target_cells": int(method_row["test_target_cells"]),
+            }
         points.append(
             {
                 "model": canonical,
@@ -106,6 +194,7 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 "market_brier_index": float(anchor["brier_index"]),
                 "model_brier_index": float(partner["brier_index"]),
                 "model_gain_vs_market": float(partner["gain_vs_anchor"]),
+                "aggregation": aggregation,
             }
         )
     points.sort(
@@ -135,8 +224,44 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
     def support_weighted(field: str) -> float:
         return sum(float(row[field]) * int(row["n_common"]) for row in points) / model_event_cells
 
+    aggregation_summary = [
+        summarize_aggregation(points, method) for method in AGGREGATION_METHODS
+    ]
+    source_summary = {
+        row["method"]: row
+        for row in summary["method_summary"]
+        if row["sample"] == "all_configurations"
+    }
+    for derived in aggregation_summary:
+        source = source_summary[derived["method"]]
+        comparisons = {
+            "pair_count": source["pair_count"],
+            "test_target_cells": source["pair_event_cells"],
+            "support_weighted_brier_index": source["support_weighted_brier_index"],
+            "support_weighted_gain_vs_market": source[
+                "support_weighted_gain_vs_market"
+            ],
+            "support_weighted_gain_vs_model": source[
+                "support_weighted_gain_vs_model"
+            ],
+            "positive_vs_market_pairs": round(
+                source["positive_vs_market_share"] * source["pair_count"]
+            ),
+        }
+        for field, expected in comparisons.items():
+            observed = derived[field]
+            if isinstance(expected, float):
+                matches = math.isclose(observed, expected, rel_tol=1e-12, abs_tol=1e-12)
+            else:
+                matches = observed == expected
+            if not matches:
+                raise ValueError(
+                    f"aggregation summary mismatch for {derived['method']} {field}: "
+                    f"{observed} != {expected}"
+                )
+
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "generated_at": summary["generated_at"],
         "title": "Freeze-only prompt ↔ Polymarket correlation",
         "scope": (
@@ -150,6 +275,19 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
             "range": [-1, 1],
             "higher_means": "closer linear alignment with the same freeze-time market probability",
             "causal_warning": "Correlation measures similarity, not incremental forecasting value.",
+        },
+        "aggregation": {
+            "evaluation": (
+                "ten-repeat, event-disjoint two-fold cross-fit in both directions; "
+                "Directional CF weights use training outcomes only"
+            ),
+            "support_weighting": (
+                "support-weighted across prompt/market pairs using repeated "
+                "opposite-fold test target cells"
+            ),
+            "market_baseline": "ForecastBench freeze_datetime_value",
+            "methods": AGGREGATION_METHOD_METADATA,
+            "summary_all": aggregation_summary,
         },
         "audit": {
             "model_count": model_count,
