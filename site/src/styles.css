@@ -133,7 +133,7 @@ main > section, .fixture-notice, footer { padding-left: var(--content-gutter); p
 .model-picker-apply:disabled { border-color: var(--line); color: var(--quiet); background: var(--surface-soft); cursor: not-allowed; }
 .model-picker-hint { margin: 9px 0 0; color: var(--quiet); font-size: 9px; }
 
-.matrix-section, .focal-gain-section, .pair-aggregation-section, .polymarket-aggregation-section, .freeze-correlation-section, .global-baseline-section, .cross-type-section, .ranking-section, .model-profile, .method-section, .audit-section { padding-top: 64px; padding-bottom: 78px; border-bottom: 1px solid var(--line); }
+.matrix-section, .focal-gain-section, .pair-aggregation-section, .polymarket-aggregation-section, .freeze-correlation-section, .without-freeze-base-section, .global-baseline-section, .cross-type-section, .ranking-section, .model-profile, .method-section, .audit-section { padding-top: 64px; padding-bottom: 78px; border-bottom: 1px solid var(--line); }
 .matrix-section { transition: opacity 180ms ease; }
 .matrix-section.is-loading { opacity: .55; }
 .section-heading { display: flex; justify-content: space-between; gap: 48px; align-items: end; margin-bottom: 27px; }
@@ -476,6 +476,9 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .polymarket-point:hover circle, .polymarket-point:focus circle, .polymarket-point.selected circle { opacity: 1; stroke: var(--ink); stroke-width: 3; transform: scale(1.1); }
 
 .freeze-correlation-section { background: var(--surface-soft); scroll-margin-top: 16px; }
+.without-freeze-base-section { background: linear-gradient(180deg, #fff 0%, var(--surface-soft) 100%); scroll-margin-top: 16px; }
+.exposure-base-overview { margin-top: 28px; }
+.exposure-diversity-explorer { margin-top: 42px; }
 .freeze-correlation-heading { margin-bottom: 29px; }
 .freeze-correlation-kpis { display: grid; grid-template-columns: .65fr .9fr .9fr .9fr 1.25fr; border-block: 1px solid var(--line-strong); background: rgba(255, 255, 255, .58); }
 .freeze-correlation-kpis > div { min-width: 0; padding: 16px 18px 15px 0; }
@@ -805,7 +808,7 @@ footer a { color: var(--purple-deep); }
     --heatmap-cell-height: 46px;
   }
   .range-label { grid-column: 1 / -1; }
-  .matrix-section, .focal-gain-section, .pair-aggregation-section, .polymarket-aggregation-section, .freeze-correlation-section, .global-baseline-section, .cross-type-section, .ranking-section, .model-profile, .method-section, .audit-section { padding-top: 48px; padding-bottom: 56px; }
+  .matrix-section, .focal-gain-section, .pair-aggregation-section, .polymarket-aggregation-section, .freeze-correlation-section, .without-freeze-base-section, .global-baseline-section, .cross-type-section, .ranking-section, .model-profile, .method-section, .audit-section { padding-top: 48px; padding-bottom: 56px; }
   .section-heading { align-items: start; flex-direction: column; gap: 13px; margin-bottom: 22px; }
   .section-heading h2 { font-size: 30px; }
   .matrix-layout { gap: 24px; }

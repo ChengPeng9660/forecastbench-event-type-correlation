@@ -4,20 +4,25 @@
       "adjusted_loss_corr": {
         "axis": "Complementarity orientation · − adjusted-loss correlation",
         "label": "Loss Correlation",
-        "orientation": "higher means greater market–model diversity"
+        "orientation": "higher means greater base–partner diversity"
       },
       "adjusted_pog": {
         "axis": "Adjusted pairwise oracle gain",
         "label": "Adjusted POG",
-        "orientation": "higher means greater market–model diversity"
+        "orientation": "higher means greater base–partner diversity"
       },
       "high_loss_lift": {
         "axis": "Complementarity orientation · 1 − high-loss lift",
         "label": "High-loss Lift",
-        "orientation": "higher means greater market–model diversity"
+        "orientation": "higher means greater base–partner diversity"
       }
     },
     "evaluation": "ten-repeat, event-disjoint two-fold cross-fit in both directions; Directional CF weights use training outcomes only; displayed points are pair-level aggregates across directions rather than directional regressions",
+    "fold_views": {
+      "a_to_b": "A-train diversity and B-test aggregation outcome",
+      "b_to_a": "B-train diversity and A-test aggregation outcome",
+      "combined": "ten A→B and ten B→A evaluations pooled"
+    },
     "market_baseline": "ForecastBench freeze_datetime_value",
     "methods": {
       "best_single": {
@@ -189,6 +194,118 @@
           "test_target_cells": 2980
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1457
+            },
+            "cf_directional": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1457
+            },
+            "ec_w0_56": {
+              "brier_index": 71.20673025258208,
+              "gain_vs_market": -0.0036986490674483534,
+              "gain_vs_model": -0.0036986490674483534,
+              "test_target_cells": 1457
+            },
+            "log_odds_mean": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1457
+            },
+            "piecewise_odds": {
+              "brier_index": 70.86246417752047,
+              "gain_vs_market": -0.02790485556180284,
+              "gain_vs_model": -0.02790485556180284,
+              "test_target_cells": 1457
+            },
+            "simple_mean": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1457
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.25972139564634,
+          "model_brier_index": 71.25972139564634,
+          "model_gain_vs_market": 0.0,
+          "near_bi": true,
+          "partner_name": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
+          "test_target_cells": 1457,
+          "train_bi_gap": 0.0,
+          "train_diversity": {
+            "adjusted_loss_corr": -1.0,
+            "adjusted_pog": 0.0,
+            "high_loss_lift": -62.12032173342088
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1523
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1523
+            },
+            "cf_directional": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1523
+            },
+            "ec_w0_56": {
+              "brier_index": 71.28537022267543,
+              "gain_vs_market": 0.005397201166164908,
+              "gain_vs_model": 0.005397201166164908,
+              "test_target_cells": 1523
+            },
+            "log_odds_mean": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1523
+            },
+            "piecewise_odds": {
+              "brier_index": 71.24990654878381,
+              "gain_vs_market": 0.002870468347682392,
+              "gain_vs_model": 0.002870468347682392,
+              "test_target_cells": 1523
+            },
+            "simple_mean": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 1523
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.2072950814907,
+          "model_brier_index": 71.2072950814907,
+          "model_gain_vs_market": 0.0,
+          "near_bi": true,
+          "partner_name": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
+          "test_target_cells": 1523,
+          "train_bi_gap": 0.0,
+          "train_diversity": {
+            "adjusted_loss_corr": -1.0,
+            "adjusted_pog": 2.790797410905721e-18,
+            "high_loss_lift": -49.306703271562576
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1457
+        }
+      },
       "exact_configuration": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
       "exact_copy_share": 1.0,
       "family": "GPT",
@@ -251,6 +368,118 @@
           "gain_vs_market": 0.02814870737306425,
           "gain_vs_model": -0.023847294092159847,
           "test_target_cells": 1600
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.14967737569735,
+              "gain_vs_market": 0.06140876186715412,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 783
+            },
+            "cf_directional": {
+              "brier_index": 81.07024311570936,
+              "gain_vs_market": 0.05345901493760494,
+              "gain_vs_model": -0.008469871235282072,
+              "test_target_cells": 783
+            },
+            "ec_w0_56": {
+              "brier_index": 80.96659600703745,
+              "gain_vs_market": 0.042758857924394565,
+              "gain_vs_model": -0.019870102324692582,
+              "test_target_cells": 783
+            },
+            "log_odds_mean": {
+              "brier_index": 80.87684961167226,
+              "gain_vs_market": 0.0338633074150611,
+              "gain_vs_model": -0.02934765778006794,
+              "test_target_cells": 783
+            },
+            "piecewise_odds": {
+              "brier_index": 81.03198161104564,
+              "gain_vs_market": 0.049117800553866275,
+              "gain_vs_model": -0.01309511618469659,
+              "test_target_cells": 783
+            },
+            "simple_mean": {
+              "brier_index": 80.8758009990821,
+              "gain_vs_market": 0.033776795653211136,
+              "gain_vs_model": -0.029439829705753144,
+              "test_target_cells": 783
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.54670373553647,
+          "model_brier_index": 81.14967737569735,
+          "model_gain_vs_market": 0.06140876186715412,
+          "near_bi": true,
+          "partner_name": "Gemini-3-Pro-Preview (zero shot with freeze values)",
+          "test_target_cells": 783,
+          "train_bi_gap": 0.39161816830267954,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.957289504681341,
+            "adjusted_pog": 0.0004370440636474892,
+            "high_loss_lift": -62.95632530120482
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 817
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.08703252721683,
+              "gain_vs_market": 0.040514831471145624,
+              "gain_vs_model": 7.380354640567434e-05,
+              "test_target_cells": 817
+            },
+            "cf_directional": {
+              "brier_index": 81.08189404402668,
+              "gain_vs_market": 0.040004530607752255,
+              "gain_vs_model": -0.0004580058219061716,
+              "test_target_cells": 817
+            },
+            "ec_w0_56": {
+              "brier_index": 81.00313304736463,
+              "gain_vs_market": 0.03163345071676395,
+              "gain_vs_model": -0.009181915633288927,
+              "test_target_cells": 817
+            },
+            "log_odds_mean": {
+              "brier_index": 80.91479814570441,
+              "gain_vs_market": 0.0227639585240043,
+              "gain_vs_model": -0.01842524516424904,
+              "test_target_cells": 817
+            },
+            "piecewise_odds": {
+              "brier_index": 81.04373981281005,
+              "gain_vs_market": 0.0355853530858981,
+              "gain_vs_model": -0.005063445818082576,
+              "test_target_cells": 817
+            },
+            "simple_mean": {
+              "brier_index": 80.9136913928324,
+              "gain_vs_market": 0.02267050811786222,
+              "gain_vs_model": -0.018522634381128722,
+              "test_target_cells": 817
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.69609887449224,
+          "model_brier_index": 81.08634801163875,
+          "model_gain_vs_market": 0.04044401283631814,
+          "near_bi": true,
+          "partner_name": "Gemini-3-Pro-Preview (zero shot with freeze values)",
+          "test_target_cells": 817,
+          "train_bi_gap": 0.6029736401608743,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.950977420831961,
+            "adjusted_pog": 0.000308280012771392,
+            "high_loss_lift": -49.247368421052634
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 783
         }
       },
       "exact_configuration": "Gemini-3-Pro-Preview (zero shot with freeze values)",
@@ -317,6 +546,118 @@
           "test_target_cells": 4230
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.49090172282291,
+              "gain_vs_market": 0.003849806395678066,
+              "gain_vs_model": 0.0011825888765321837,
+              "test_target_cells": 2115
+            },
+            "cf_directional": {
+              "brier_index": 73.52135585199547,
+              "gain_vs_market": 0.006133594709010675,
+              "gain_vs_model": 0.003472492091250598,
+              "test_target_cells": 2115
+            },
+            "ec_w0_56": {
+              "brier_index": 73.56469143424366,
+              "gain_vs_market": 0.009360883714738638,
+              "gain_vs_model": 0.006708422245502841,
+              "test_target_cells": 2115
+            },
+            "log_odds_mean": {
+              "brier_index": 73.47774465271542,
+              "gain_vs_market": 0.0028641432693474866,
+              "gain_vs_model": 0.00019428661207222968,
+              "test_target_cells": 2115
+            },
+            "piecewise_odds": {
+              "brier_index": 73.44267173199165,
+              "gain_vs_market": -2.074626172995362e-06,
+              "gain_vs_model": -0.0026796056548770834,
+              "test_target_cells": 2115
+            },
+            "simple_mean": {
+              "brier_index": 73.47062263861642,
+              "gain_vs_market": 0.0023287439233295867,
+              "gain_vs_model": -0.0003425462793333103,
+              "test_target_cells": 2115
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.43950583736974,
+          "model_brier_index": 73.47541041351145,
+          "model_gain_vs_market": 0.0026703754754793486,
+          "near_bi": true,
+          "partner_name": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
+          "test_target_cells": 2115,
+          "train_bi_gap": 0.07336575805745174,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.9635901720679059,
+            "adjusted_pog": 0.0016494511347517745,
+            "high_loss_lift": -219.85026737967914
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2115
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.28275822216978,
+              "gain_vs_market": 0.0042427302869451206,
+              "gain_vs_model": 0.0012041041518082254,
+              "test_target_cells": 2115
+            },
+            "cf_directional": {
+              "brier_index": 73.30691126330485,
+              "gain_vs_market": 0.006062079171327215,
+              "gain_vs_model": 0.003029004912372563,
+              "test_target_cells": 2115
+            },
+            "ec_w0_56": {
+              "brier_index": 73.49254186487667,
+              "gain_vs_market": 0.01981319620904769,
+              "gain_vs_model": 0.01682208448944782,
+              "test_target_cells": 2115
+            },
+            "log_odds_mean": {
+              "brier_index": 73.2664896357459,
+              "gain_vs_market": 0.003046982838640932,
+              "gain_vs_model": 4.707792712265624e-06,
+              "test_target_cells": 2115
+            },
+            "piecewise_odds": {
+              "brier_index": 73.59372134007948,
+              "gain_vs_market": 0.027122294681099123,
+              "gain_vs_model": 0.024153487210051578,
+              "test_target_cells": 2115
+            },
+            "simple_mean": {
+              "brier_index": 73.25896837841105,
+              "gain_vs_market": 0.0024860587806008264,
+              "gain_vs_model": -0.0005579279661152005,
+              "test_target_cells": 2115
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.22549063680776,
+          "model_brier_index": 73.26666004947434,
+          "model_gain_vs_market": 0.0030422893683963834,
+          "near_bi": true,
+          "partner_name": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
+          "test_target_cells": 2115,
+          "train_bi_gap": 0.06688719476465112,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.963374374886021,
+            "adjusted_pog": 0.0016586905342789585,
+            "high_loss_lift": -220.64785553047403
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2115
+        }
+      },
       "exact_configuration": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
       "exact_copy_share": 0.054373522458628844,
       "family": "Claude",
@@ -379,6 +720,118 @@
           "gain_vs_market": 0.005823467816634438,
           "gain_vs_model": 0.0015423716264634326,
           "test_target_cells": 2880
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.1037580692499,
+              "gain_vs_market": 0.014491985940727443,
+              "gain_vs_model": 0.0010317065235609922,
+              "test_target_cells": 1432
+            },
+            "cf_directional": {
+              "brier_index": 81.0050056230392,
+              "gain_vs_market": 0.004164997213131929,
+              "gain_vs_model": -0.009436330426705802,
+              "test_target_cells": 1432
+            },
+            "ec_w0_56": {
+              "brier_index": 81.27750102575631,
+              "gain_vs_market": 0.03244777459259269,
+              "gain_vs_model": 0.019232739180509644,
+              "test_target_cells": 1432
+            },
+            "log_odds_mean": {
+              "brier_index": 81.09944806767206,
+              "gain_vs_market": 0.014066126355724731,
+              "gain_vs_model": 0.0006000304571853836,
+              "test_target_cells": 1432
+            },
+            "piecewise_odds": {
+              "brier_index": 81.30192718878948,
+              "gain_vs_market": 0.034792698639190836,
+              "gain_vs_model": 0.021609690701698527,
+              "test_target_cells": 1432
+            },
+            "simple_mean": {
+              "brier_index": 81.06939456304258,
+              "gain_vs_market": 0.010930948550360404,
+              "gain_vs_model": -0.002577968277771265,
+              "test_target_cells": 1432
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.96498314787333,
+          "model_brier_index": 81.09401199150312,
+          "model_gain_vs_market": 0.013474180817415419,
+          "near_bi": true,
+          "partner_name": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
+          "test_target_cells": 1432,
+          "train_bi_gap": 0.10780303280022029,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.9505069131212975,
+            "adjusted_pog": 0.0011023014433701678,
+            "high_loss_lift": -125.99720357941834
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1448
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.40117146628019,
+              "gain_vs_market": 0.0031817816352295546,
+              "gain_vs_model": 0.008336149025477696,
+              "test_target_cells": 1448
+            },
+            "cf_directional": {
+              "brier_index": 81.31572698800512,
+              "gain_vs_market": -0.005990925522233879,
+              "gain_vs_model": -0.0007891277161068168,
+              "test_target_cells": 1448
+            },
+            "ec_w0_56": {
+              "brier_index": 81.6365302214809,
+              "gain_vs_market": 0.028131830180022285,
+              "gain_vs_model": 0.03315718536500059,
+              "test_target_cells": 1448
+            },
+            "log_odds_mean": {
+              "brier_index": 81.39786101730168,
+              "gain_vs_market": 0.002836386815208197,
+              "gain_vs_model": 0.007992540179833892,
+              "test_target_cells": 1448
+            },
+            "piecewise_odds": {
+              "brier_index": 81.76814400192724,
+              "gain_vs_market": 0.04176836451201371,
+              "gain_vs_model": 0.046723207635131714,
+              "test_target_cells": 1448
+            },
+            "simple_mean": {
+              "brier_index": 81.37650647918335,
+              "gain_vs_market": 0.0005497860866719022,
+              "gain_vs_model": 0.00571776305164172,
+              "test_target_cells": 1448
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 81.37128390799106,
+          "model_brier_index": 81.32325599176912,
+          "model_gain_vs_market": -0.005197696160027282,
+          "near_bi": true,
+          "partner_name": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
+          "test_target_cells": 1448,
+          "train_bi_gap": 0.1485209991233662,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.965075421781147,
+            "adjusted_pog": 0.0013913622905027945,
+            "high_loss_lift": -103.21209465381244
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1432
         }
       },
       "exact_configuration": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
@@ -445,6 +898,118 @@
           "test_target_cells": 4210
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.46190323777749,
+              "gain_vs_market": 0.0020716481722948036,
+              "gain_vs_model": 0.010931261700876334,
+              "test_target_cells": 2104
+            },
+            "cf_directional": {
+              "brier_index": 73.35438203269301,
+              "gain_vs_market": -0.006029374125480935,
+              "gain_vs_model": 0.002902160324691072,
+              "test_target_cells": 2104
+            },
+            "ec_w0_56": {
+              "brier_index": 73.47784928551738,
+              "gain_vs_market": 0.0031964080294246125,
+              "gain_vs_model": 0.01204603593365908,
+              "test_target_cells": 2104
+            },
+            "log_odds_mean": {
+              "brier_index": 73.41383205916252,
+              "gain_vs_market": -0.0015695116894348642,
+              "gain_vs_model": 0.007322428076908751,
+              "test_target_cells": 2104
+            },
+            "piecewise_odds": {
+              "brier_index": 73.31523674764485,
+              "gain_vs_market": -0.009306744324598711,
+              "gain_vs_model": -0.0003461133633384145,
+              "test_target_cells": 2104
+            },
+            "simple_mean": {
+              "brier_index": 73.40350961530585,
+              "gain_vs_market": -0.0023428963844193333,
+              "gain_vs_model": 0.006555909495602617,
+              "test_target_cells": 2104
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.43392086886415,
+          "model_brier_index": 73.31676016396219,
+          "model_gain_vs_market": -0.00895753064020321,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
+          "test_target_cells": 2104,
+          "train_bi_gap": 0.14139211455700204,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.935940645227484,
+            "adjusted_pog": 0.001898750550807218,
+            "high_loss_lift": -168.87586206896552
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2106
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.2376839481397,
+              "gain_vs_market": 0.001006380719719405,
+              "gain_vs_model": 0.009580352922293079,
+              "test_target_cells": 2106
+            },
+            "cf_directional": {
+              "brier_index": 73.14948214934532,
+              "gain_vs_market": -0.0056605356969987525,
+              "gain_vs_model": 0.0029706560462512727,
+              "test_target_cells": 2106
+            },
+            "ec_w0_56": {
+              "brier_index": 73.42055851510553,
+              "gain_vs_market": 0.014534877342977155,
+              "gain_vs_model": 0.022992739740891627,
+              "test_target_cells": 2106
+            },
+            "log_odds_mean": {
+              "brier_index": 73.22497794005567,
+              "gain_vs_market": 1.367871827839224e-05,
+              "gain_vs_model": 0.008596170894555128,
+              "test_target_cells": 2106
+            },
+            "piecewise_odds": {
+              "brier_index": 73.50030708031136,
+              "gain_vs_market": 0.020253607426438988,
+              "gain_vs_model": 0.02866238819678015,
+              "test_target_cells": 2106
+            },
+            "simple_mean": {
+              "brier_index": 73.20178104670987,
+              "gain_vs_market": -0.0017155522775922415,
+              "gain_vs_model": 0.006881781213187689,
+              "test_target_cells": 2106
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.22408638222817,
+          "model_brier_index": 73.10988939949425,
+          "model_gain_vs_market": -0.008656908440651088,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
+          "test_target_cells": 2106,
+          "train_bi_gap": 0.17312544272867417,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.9232468478270777,
+            "adjusted_pog": 0.0018223852946768005,
+            "high_loss_lift": -109.45016987542469
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2104
+        }
+      },
       "exact_configuration": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
       "exact_copy_share": 0.09263657957244656,
       "family": "Claude",
@@ -507,6 +1072,118 @@
           "gain_vs_market": 0.025481510311360506,
           "gain_vs_model": -0.007369938403857004,
           "test_target_cells": 1790
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 79.97348147636106,
+              "gain_vs_market": 0.05445565517816747,
+              "gain_vs_model": 0.0,
+              "test_target_cells": 909
+            },
+            "cf_directional": {
+              "brier_index": 79.79493713195826,
+              "gain_vs_market": 0.03763933285797394,
+              "gain_vs_model": -0.017784805559132404,
+              "test_target_cells": 909
+            },
+            "ec_w0_56": {
+              "brier_index": 80.19067267885927,
+              "gain_vs_market": 0.07482113413244527,
+              "gain_vs_model": 0.021538364716374294,
+              "test_target_cells": 909
+            },
+            "log_odds_mean": {
+              "brier_index": 79.84975928109911,
+              "gain_vs_market": 0.04278843817688525,
+              "gain_vs_model": -0.012339153700380565,
+              "test_target_cells": 909
+            },
+            "piecewise_odds": {
+              "brier_index": 80.35776397762011,
+              "gain_vs_market": 0.09024482278241847,
+              "gain_vs_model": 0.03785033224538473,
+              "test_target_cells": 909
+            },
+            "simple_mean": {
+              "brier_index": 79.7916355416772,
+              "gain_vs_market": 0.03725466426010036,
+              "gain_vs_model": -0.018191627936084028,
+              "test_target_cells": 909
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 79.40463075040864,
+          "model_brier_index": 79.97348147636106,
+          "model_gain_vs_market": 0.05445565517816747,
+          "near_bi": true,
+          "partner_name": "GPT-5-2025-08-07 (zero shot with freeze values)",
+          "test_target_cells": 909,
+          "train_bi_gap": 0.1466293262029536,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7770184391856395,
+            "adjusted_pog": 0.0026973615777525534,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 881
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 79.82025133782962,
+              "gain_vs_market": 0.011947230761627953,
+              "gain_vs_model": 0.002555026630881823,
+              "test_target_cells": 881
+            },
+            "cf_directional": {
+              "brier_index": 79.78372430201944,
+              "gain_vs_market": 0.008332052492104553,
+              "gain_vs_model": -0.001094516698214838,
+              "test_target_cells": 881
+            },
+            "ec_w0_56": {
+              "brier_index": 80.30303193345789,
+              "gain_vs_market": 0.05857690312072758,
+              "gain_vs_model": 0.04962795001359233,
+              "test_target_cells": 881
+            },
+            "log_odds_mean": {
+              "brier_index": 79.87340959855918,
+              "gain_vs_market": 0.017155175084614983,
+              "gain_vs_model": 0.007812476484044898,
+              "test_target_cells": 881
+            },
+            "piecewise_odds": {
+              "brier_index": 80.64100838583951,
+              "gain_vs_market": 0.09046628261674416,
+              "gain_vs_model": 0.0818204626732964,
+              "test_target_cells": 881
+            },
+            "simple_mean": {
+              "brier_index": 79.83077250190544,
+              "gain_vs_market": 0.012980612396590955,
+              "gain_vs_model": 0.003598231355828184,
+              "test_target_cells": 881
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 79.69921527665521,
+          "model_brier_index": 79.79465807280107,
+          "model_gain_vs_market": 0.009416262933304108,
+          "near_bi": true,
+          "partner_name": "GPT-5-2025-08-07 (zero shot with freeze values)",
+          "test_target_cells": 881,
+          "train_bi_gap": 0.5688507259523966,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8304242868077432,
+            "adjusted_pog": 0.0018709966336633644,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 909
         }
       },
       "exact_configuration": "GPT-5-2025-08-07 (zero shot with freeze values)",
@@ -573,6 +1250,118 @@
           "test_target_cells": 1450
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.68265927400715,
+              "gain_vs_market": 0.0018739014960325244,
+              "gain_vs_model": 0.07333555621975142,
+              "test_target_cells": 706
+            },
+            "cf_directional": {
+              "brier_index": 80.7124998481765,
+              "gain_vs_market": 0.0040510686212574505,
+              "gain_vs_model": 0.07535684728321236,
+              "test_target_cells": 706
+            },
+            "ec_w0_56": {
+              "brier_index": 80.47165063053315,
+              "gain_vs_market": -0.021322246296774223,
+              "gain_vs_model": 0.05180015560806182,
+              "test_target_cells": 706
+            },
+            "log_odds_mean": {
+              "brier_index": 80.4036404636653,
+              "gain_vs_market": -0.02799542428518177,
+              "gain_vs_model": 0.04560474925795955,
+              "test_target_cells": 706
+            },
+            "piecewise_odds": {
+              "brier_index": 80.42733042700853,
+              "gain_vs_market": -0.026959723509537133,
+              "gain_vs_model": 0.04656629818912568,
+              "test_target_cells": 706
+            },
+            "simple_mean": {
+              "brier_index": 80.37980219498957,
+              "gain_vs_market": -0.030351172656880948,
+              "gain_vs_model": 0.04341766261848705,
+              "test_target_cells": 706
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.66194871706669,
+          "model_brier_index": 79.9495033083011,
+          "model_gain_vs_market": -0.07711707857506345,
+          "near_bi": true,
+          "partner_name": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
+          "test_target_cells": 706,
+          "train_bi_gap": 0.5720058399077028,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.9644182560371611,
+            "adjusted_pog": 0.0008820410887096763,
+            "high_loss_lift": -65.36422413793103
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 744
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.88690799120293,
+              "gain_vs_market": 0.004483785610522321,
+              "gain_vs_model": 0.054676961943043736,
+              "test_target_cells": 744
+            },
+            "cf_directional": {
+              "brier_index": 81.02039069554844,
+              "gain_vs_market": 0.018170692017236548,
+              "gain_vs_model": 0.06767378485660237,
+              "test_target_cells": 744
+            },
+            "ec_w0_56": {
+              "brier_index": 80.76960422296789,
+              "gain_vs_market": -0.009094636403783636,
+              "gain_vs_model": 0.04178315372068834,
+              "test_target_cells": 744
+            },
+            "log_odds_mean": {
+              "brier_index": 80.70225077906703,
+              "gain_vs_market": -0.015746456455941592,
+              "gain_vs_model": 0.035466713416227334,
+              "test_target_cells": 744
+            },
+            "piecewise_odds": {
+              "brier_index": 80.73873368406765,
+              "gain_vs_market": -0.013270886280143382,
+              "gain_vs_model": 0.03781746721177847,
+              "test_target_cells": 744
+            },
+            "simple_mean": {
+              "brier_index": 80.66856400716638,
+              "gain_vs_market": -0.019153095518071758,
+              "gain_vs_model": 0.0322318345250268,
+              "test_target_cells": 744
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.8426164906422,
+          "model_brier_index": 80.35919365185596,
+          "model_gain_vs_market": -0.05309632190461569,
+          "near_bi": true,
+          "partner_name": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
+          "test_target_cells": 744,
+          "train_bi_gap": 0.7538665226465177,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.9648376670703194,
+            "adjusted_pog": 0.001058608654390934,
+            "high_loss_lift": -49.919928825622776
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 706
+        }
+      },
       "exact_configuration": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
       "exact_copy_share": 0.08275862068965517,
       "family": "GPT",
@@ -635,6 +1424,118 @@
           "gain_vs_market": 0.01523797730697065,
           "gain_vs_model": 0.005679169579091605,
           "test_target_cells": 3880
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.01832177927395,
+              "gain_vs_market": 0.01923704688370567,
+              "gain_vs_model": 0.003438152126658456,
+              "test_target_cells": 1933
+            },
+            "cf_directional": {
+              "brier_index": 80.03303116590325,
+              "gain_vs_market": 0.02059657696834567,
+              "gain_vs_model": 0.0048195825824921485,
+              "test_target_cells": 1933
+            },
+            "ec_w0_56": {
+              "brier_index": 80.33226405149685,
+              "gain_vs_market": 0.0497725684889632,
+              "gain_vs_model": 0.03446556373516308,
+              "test_target_cells": 1933
+            },
+            "log_odds_mean": {
+              "brier_index": 80.09541115807576,
+              "gain_vs_market": 0.02678888829265523,
+              "gain_vs_model": 0.0111116444883309,
+              "test_target_cells": 1933
+            },
+            "piecewise_odds": {
+              "brier_index": 80.45570638657935,
+              "gain_vs_market": 0.06156009159118084,
+              "gain_vs_model": 0.04644296945513914,
+              "test_target_cells": 1933
+            },
+            "simple_mean": {
+              "brier_index": 80.02654847523424,
+              "gain_vs_market": 0.02005390612665564,
+              "gain_vs_model": 0.004268169975538314,
+              "test_target_cells": 1933
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 79.82324711934517,
+          "model_brier_index": 79.98411337801149,
+          "model_gain_vs_market": 0.015853401161967,
+          "near_bi": true,
+          "partner_name": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
+          "test_target_cells": 1933,
+          "train_bi_gap": 0.1746815067970229,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8328588769589944,
+            "adjusted_pog": 0.002150875290190034,
+            "high_loss_lift": -128.23491928632114
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1947
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 79.97533927117307,
+              "gain_vs_market": 0.01033353363567627,
+              "gain_vs_model": 0.006968201180729015,
+              "test_target_cells": 1947
+            },
+            "cf_directional": {
+              "brier_index": 80.07422586287264,
+              "gain_vs_market": 0.020090559048526226,
+              "gain_vs_model": 0.016758405078858195,
+              "test_target_cells": 1947
+            },
+            "ec_w0_56": {
+              "brier_index": 80.35082551436186,
+              "gain_vs_market": 0.04707972046958167,
+              "gain_vs_model": 0.043839342369814294,
+              "test_target_cells": 1947
+            },
+            "log_odds_mean": {
+              "brier_index": 80.02318859805665,
+              "gain_vs_market": 0.015086905994732858,
+              "gain_vs_model": 0.011737737246260522,
+              "test_target_cells": 1947
+            },
+            "piecewise_odds": {
+              "brier_index": 80.54634559896115,
+              "gain_vs_market": 0.06584113210935015,
+              "gain_vs_model": 0.06266455165216016,
+              "test_target_cells": 1947
+            },
+            "simple_mean": {
+              "brier_index": 79.97599101388586,
+              "gain_vs_market": 0.010434042567991292,
+              "gain_vs_model": 0.007069051890787781,
+              "test_target_cells": 1947
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 79.87100403338843,
+          "model_brier_index": 79.9049930021607,
+          "model_gain_vs_market": 0.003388947321675582,
+          "near_bi": true,
+          "partner_name": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
+          "test_target_cells": 1947,
+          "train_bi_gap": 0.22928306119126504,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8258387307961552,
+            "adjusted_pog": 0.002568051914123123,
+            "high_loss_lift": -108.05132378472223
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1933
         }
       },
       "exact_configuration": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
@@ -701,6 +1602,118 @@
           "test_target_cells": 3040
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.46206548667843,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.05404830079502112,
+              "test_target_cells": 1510
+            },
+            "cf_directional": {
+              "brier_index": 74.4230601686491,
+              "gain_vs_market": -0.0030392809070445255,
+              "gain_vs_model": 0.0511732878566411,
+              "test_target_cells": 1510
+            },
+            "ec_w0_56": {
+              "brier_index": 74.47891337566105,
+              "gain_vs_market": 0.0012596003686995744,
+              "gain_vs_model": 0.0552398219041117,
+              "test_target_cells": 1510
+            },
+            "log_odds_mean": {
+              "brier_index": 74.25869891535835,
+              "gain_vs_market": -0.015993863998342784,
+              "gain_vs_model": 0.03891887796893543,
+              "test_target_cells": 1510
+            },
+            "piecewise_odds": {
+              "brier_index": 74.62100329510675,
+              "gain_vs_market": 0.012197001011401346,
+              "gain_vs_model": 0.06558607462696107,
+              "test_target_cells": 1510
+            },
+            "simple_mean": {
+              "brier_index": 74.19126824615151,
+              "gain_vs_market": -0.02131883019863106,
+              "gain_vs_model": 0.03388171714356365,
+              "test_target_cells": 1510
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.46206548667843,
+          "model_brier_index": 73.74342485881779,
+          "model_gain_vs_market": -0.05713642762145867,
+          "near_bi": true,
+          "partner_name": "DeepSeek-V3 (zero shot with freeze values)",
+          "test_target_cells": 1510,
+          "train_bi_gap": 0.6321029115266443,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8334134863430578,
+            "adjusted_pog": 0.0017565272875816993,
+            "high_loss_lift": -146.37923728813558
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1530
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.2136387127832,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.04733708486040146,
+              "test_target_cells": 1530
+            },
+            "cf_directional": {
+              "brier_index": 74.19876141593684,
+              "gain_vs_market": -0.0011795595127732663,
+              "gain_vs_model": 0.046213362256382236,
+              "test_target_cells": 1530
+            },
+            "ec_w0_56": {
+              "brier_index": 74.27804084742822,
+              "gain_vs_market": 0.004935206504943733,
+              "gain_vs_model": 0.05203867307621707,
+              "test_target_cells": 1530
+            },
+            "log_odds_mean": {
+              "brier_index": 74.02587743164567,
+              "gain_vs_market": -0.014622556096289568,
+              "gain_vs_model": 0.033406717942917934,
+              "test_target_cells": 1530
+            },
+            "piecewise_odds": {
+              "brier_index": 74.4879101914534,
+              "gain_vs_market": 0.020971252367390003,
+              "gain_vs_model": 0.06731561927484743,
+              "test_target_cells": 1530
+            },
+            "simple_mean": {
+              "brier_index": 73.9714667892385,
+              "gain_vs_market": -0.01887358013448208,
+              "gain_vs_model": 0.02935692499036495,
+              "test_target_cells": 1530
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.2136387127832,
+          "model_brier_index": 73.58153580125655,
+          "model_gain_vs_market": -0.04968922806601002,
+          "near_bi": true,
+          "partner_name": "DeepSeek-V3 (zero shot with freeze values)",
+          "test_target_cells": 1530,
+          "train_bi_gap": 0.7186406278606395,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8264978317489762,
+            "adjusted_pog": 0.001567962417218539,
+            "high_loss_lift": -114.9452380952381
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1510
+        }
+      },
       "exact_configuration": "DeepSeek-V3 (zero shot with freeze values)",
       "exact_copy_share": 0.45723684210526316,
       "family": "DeepSeek",
@@ -763,6 +1776,118 @@
           "gain_vs_market": -0.010450613510431306,
           "gain_vs_model": 0.024242922060975277,
           "test_target_cells": 3010
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.42970250580584,
+              "gain_vs_market": 0.003444577751446815,
+              "gain_vs_model": 0.03971874651705526,
+              "test_target_cells": 1493
+            },
+            "cf_directional": {
+              "brier_index": 74.58152676776243,
+              "gain_vs_market": 0.015275085153777809,
+              "gain_vs_model": 0.051118628775501475,
+              "test_target_cells": 1493
+            },
+            "ec_w0_56": {
+              "brier_index": 74.51703681963389,
+              "gain_vs_market": 0.010240879402614186,
+              "gain_vs_model": 0.04626766584750817,
+              "test_target_cells": 1493
+            },
+            "log_odds_mean": {
+              "brier_index": 74.28393543678537,
+              "gain_vs_market": -0.007932012945563501,
+              "gain_vs_model": 0.02875625860018884,
+              "test_target_cells": 1493
+            },
+            "piecewise_odds": {
+              "brier_index": 74.6981081761266,
+              "gain_vs_market": 0.024167096461133443,
+              "gain_vs_model": 0.059686974874051224,
+              "test_target_cells": 1493
+            },
+            "simple_mean": {
+              "brier_index": 74.23753399233286,
+              "gain_vs_market": -0.011581531481644225,
+              "gain_vs_model": 0.02523958089597305,
+              "test_target_cells": 1493
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.38593480251913,
+          "model_brier_index": 73.90755979083774,
+          "model_gain_vs_market": -0.037774525571588384,
+          "near_bi": true,
+          "partner_name": "DeepSeek-R1 (scratchpad with freeze values)",
+          "test_target_cells": 1493,
+          "train_bi_gap": 0.4619112768832637,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7464309188769274,
+            "adjusted_pog": 0.0029733592617007263,
+            "high_loss_lift": -111.5728051391863
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1517
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.18066032446492,
+              "gain_vs_market": 0.0013425069693249329,
+              "gain_vs_model": 0.033628080081611986,
+              "test_target_cells": 1517
+            },
+            "cf_directional": {
+              "brier_index": 74.38845166505313,
+              "gain_vs_market": 0.01742620087228156,
+              "gain_vs_model": 0.049191804646689125,
+              "test_target_cells": 1517
+            },
+            "ec_w0_56": {
+              "brier_index": 74.38471525193513,
+              "gain_vs_market": 0.017092887172851727,
+              "gain_vs_model": 0.04886926663751082,
+              "test_target_cells": 1517
+            },
+            "log_odds_mean": {
+              "brier_index": 74.10147183314132,
+              "gain_vs_market": -0.0047522064607714255,
+              "gain_vs_model": 0.02773040248954721,
+              "test_target_cells": 1517
+            },
+            "piecewise_odds": {
+              "brier_index": 74.62824802904191,
+              "gain_vs_market": 0.035623187448104145,
+              "gain_vs_model": 0.06680050129867195,
+              "test_target_cells": 1517
+            },
+            "simple_mean": {
+              "brier_index": 74.04230686538646,
+              "gain_vs_market": -0.00935668129189311,
+              "gain_vs_model": 0.023274785610066906,
+              "test_target_cells": 1517
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.16333822392262,
+          "model_brier_index": 73.73607114812395,
+          "model_gain_vs_market": -0.03340905550630407,
+          "near_bi": true,
+          "partner_name": "DeepSeek-R1 (scratchpad with freeze values)",
+          "test_target_cells": 1517,
+          "train_bi_gap": 0.565910418254796,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7292814175712128,
+            "adjusted_pog": 0.00309048392498325,
+            "high_loss_lift": -93.32528180354268
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1493
         }
       },
       "exact_configuration": "DeepSeek-R1 (scratchpad with freeze values)",
@@ -829,6 +1954,118 @@
           "test_target_cells": 1190
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.16539755182684,
+              "gain_vs_market": 0.008034506111984672,
+              "gain_vs_model": 0.008113054636521379,
+              "test_target_cells": 605
+            },
+            "cf_directional": {
+              "brier_index": 71.00144046839713,
+              "gain_vs_market": -0.003188990614505802,
+              "gain_vs_model": -0.0031095533603575907,
+              "test_target_cells": 605
+            },
+            "ec_w0_56": {
+              "brier_index": 71.09380166427374,
+              "gain_vs_market": 0.0030688056414324765,
+              "gain_vs_model": 0.003147747373643903,
+              "test_target_cells": 605
+            },
+            "log_odds_mean": {
+              "brier_index": 71.22474715058041,
+              "gain_vs_market": 0.012146857952434722,
+              "gain_vs_model": 0.012225080841481653,
+              "test_target_cells": 605
+            },
+            "piecewise_odds": {
+              "brier_index": 70.54946212556467,
+              "gain_vs_market": -0.03516532436603075,
+              "gain_vs_model": -0.03508335507437544,
+              "test_target_cells": 605
+            },
+            "simple_mean": {
+              "brier_index": 71.14153996069132,
+              "gain_vs_market": 0.006425688691994008,
+              "gain_vs_model": 0.006504364610311415,
+              "test_target_cells": 605
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.05015140005845,
+          "model_brier_index": 71.04636612355054,
+          "model_gain_vs_market": -7.91910054909768e-05,
+          "near_bi": true,
+          "partner_name": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
+          "test_target_cells": 605,
+          "train_bi_gap": 0.3692084944242806,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8519417054769385,
+            "adjusted_pog": 0.001250670512820512,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 585
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.1678831973138,
+              "gain_vs_market": 0.024902135267392447,
+              "gain_vs_model": 0.00043609815688152226,
+              "test_target_cells": 585
+            },
+            "cf_directional": {
+              "brier_index": 70.90460537998318,
+              "gain_vs_market": 0.006930132136397515,
+              "gain_vs_model": -0.01798683786142285,
+              "test_target_cells": 585
+            },
+            "ec_w0_56": {
+              "brier_index": 71.36716177354921,
+              "gain_vs_market": 0.03818010830867162,
+              "gain_vs_model": 0.014047226866868247,
+              "test_target_cells": 585
+            },
+            "log_odds_mean": {
+              "brier_index": 71.15300821336714,
+              "gain_vs_market": 0.023823679773331406,
+              "gain_vs_model": -0.0006694167053660845,
+              "test_target_cells": 585
+            },
+            "piecewise_odds": {
+              "brier_index": 71.3864010724341,
+              "gain_vs_market": 0.03914897663383558,
+              "gain_vs_model": 0.01504040492468162,
+              "test_target_cells": 585
+            },
+            "simple_mean": {
+              "brier_index": 71.07422459057936,
+              "gain_vs_market": 0.018487908514657436,
+              "gain_vs_model": -0.006139067015927543,
+              "test_target_cells": 585
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 70.8049871618335,
+          "model_brier_index": 71.1615707383698,
+          "model_gain_vs_market": 0.024476711359221203,
+          "near_bi": true,
+          "partner_name": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
+          "test_target_cells": 585,
+          "train_bi_gap": 0.23427758004468574,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.853015613352216,
+            "adjusted_pog": 0.0016636768595041352,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 605
+        }
+      },
       "exact_configuration": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
       "exact_copy_share": 0.44537815126050423,
       "family": "Qwen",
@@ -891,6 +2128,118 @@
           "gain_vs_market": -0.0029200289167734357,
           "gain_vs_model": 0.04690095760817739,
           "test_target_cells": 2880
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.30320023053996,
+              "gain_vs_market": 0.03507016004056442,
+              "gain_vs_model": 0.050795871335532726,
+              "test_target_cells": 1432
+            },
+            "cf_directional": {
+              "brier_index": 80.51359288268402,
+              "gain_vs_market": -0.0486542979197478,
+              "gain_vs_model": -0.03156410746817374,
+              "test_target_cells": 1432
+            },
+            "ec_w0_56": {
+              "brier_index": 81.07962118783082,
+              "gain_vs_market": 0.010772100271472672,
+              "gain_vs_model": 0.026893803334062844,
+              "test_target_cells": 1432
+            },
+            "log_odds_mean": {
+              "brier_index": 80.8797454455912,
+              "gain_vs_market": -0.00987357963286866,
+              "gain_vs_model": 0.0065845914175678075,
+              "test_target_cells": 1432
+            },
+            "piecewise_odds": {
+              "brier_index": 81.12661293729268,
+              "gain_vs_market": 0.014900285416139778,
+              "gain_vs_model": 0.030954710377184304,
+              "test_target_cells": 1432
+            },
+            "simple_mean": {
+              "brier_index": 81.0889351916357,
+              "gain_vs_market": 0.012770394030874044,
+              "gain_vs_model": 0.028859530382972388,
+              "test_target_cells": 1432
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.96498314787333,
+          "model_brier_index": 80.8245795336025,
+          "model_gain_vs_market": -0.016567259686380023,
+          "near_bi": true,
+          "partner_name": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
+          "test_target_cells": 1432,
+          "train_bi_gap": 1.0170476914689803,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6392510784318206,
+            "adjusted_pog": 0.001344660241712708,
+            "high_loss_lift": -84.10011185682326
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 1448
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.4822450776087,
+              "gain_vs_market": 0.011765632891547478,
+              "gain_vs_model": 0.0926469586558412,
+              "test_target_cells": 1448
+            },
+            "cf_directional": {
+              "brier_index": 80.51427577093996,
+              "gain_vs_market": -0.09531722264932643,
+              "gain_vs_model": -0.005671778158708609,
+              "test_target_cells": 1448
+            },
+            "ec_w0_56": {
+              "brier_index": 81.06477119123981,
+              "gain_vs_market": -0.03462002666321554,
+              "gain_vs_model": 0.050057699799242406,
+              "test_target_cells": 1448
+            },
+            "log_odds_mean": {
+              "brier_index": 80.84060887103296,
+              "gain_vs_market": -0.05882574934460448,
+              "gain_vs_model": 0.02783307695278637,
+              "test_target_cells": 1448
+            },
+            "piecewise_odds": {
+              "brier_index": 81.10782770353453,
+              "gain_vs_market": -0.03080386152825593,
+              "gain_vs_model": 0.053561533663681514,
+              "test_target_cells": 1448
+            },
+            "simple_mean": {
+              "brier_index": 81.1963434182364,
+              "gain_vs_market": -0.01912102920405763,
+              "gain_vs_model": 0.06428819304094222,
+              "test_target_cells": 1448
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 81.37128390799106,
+          "model_brier_index": 80.57615855575736,
+          "model_gain_vs_market": -0.08913986296279516,
+          "near_bi": true,
+          "partner_name": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
+          "test_target_cells": 1448,
+          "train_bi_gap": 0.8168377796040638,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7305404664463492,
+            "adjusted_pog": 0.0016468546159217874,
+            "high_loss_lift": -89.21194858311422
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1432
         }
       },
       "exact_configuration": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
@@ -957,6 +2306,118 @@
           "test_target_cells": 1630
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.43584191159698,
+              "gain_vs_market": 0.0001021616761774245,
+              "gain_vs_model": 0.02692342166740831,
+              "test_target_cells": 810
+            },
+            "cf_directional": {
+              "brier_index": 74.45496811083149,
+              "gain_vs_market": 0.0015826775662889305,
+              "gain_vs_model": 0.02836422419872668,
+              "test_target_cells": 810
+            },
+            "ec_w0_56": {
+              "brier_index": 74.59067705311125,
+              "gain_vs_market": 0.011972681553815034,
+              "gain_vs_model": 0.038475526715384005,
+              "test_target_cells": 810
+            },
+            "log_odds_mean": {
+              "brier_index": 74.4409232685401,
+              "gain_vs_market": 0.0004947686016425397,
+              "gain_vs_model": 0.0273054973045571,
+              "test_target_cells": 810
+            },
+            "piecewise_odds": {
+              "brier_index": 74.63721209690546,
+              "gain_vs_market": 0.015217911994438485,
+              "gain_vs_model": 0.041633707093447735,
+              "test_target_cells": 810
+            },
+            "simple_mean": {
+              "brier_index": 74.3496339213493,
+              "gain_vs_market": -0.006577045559402588,
+              "gain_vs_model": 0.02042337748922735,
+              "test_target_cells": 810
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.43452161162294,
+          "model_brier_index": 74.0830672958931,
+          "model_gain_vs_market": -0.027563359953838636,
+          "near_bi": true,
+          "partner_name": "DeepSeek-R1 (zero shot with freeze values)",
+          "test_target_cells": 810,
+          "train_bi_gap": 0.5324230152495556,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7352791746658411,
+            "adjusted_pog": 7.841128048780542e-05,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 820
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.44744885315282,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.040292986836694474,
+              "test_target_cells": 820
+            },
+            "cf_directional": {
+              "brier_index": 74.46296264331117,
+              "gain_vs_market": 0.0012004257547682895,
+              "gain_vs_model": 0.04144504385232746,
+              "test_target_cells": 820
+            },
+            "ec_w0_56": {
+              "brier_index": 74.70069209360274,
+              "gain_vs_market": 0.01955471415898499,
+              "gain_vs_model": 0.05905978315547616,
+              "test_target_cells": 820
+            },
+            "log_odds_mean": {
+              "brier_index": 74.44657020230002,
+              "gain_vs_market": -7.343354895114822e-05,
+              "gain_vs_model": 0.040222512144764584,
+              "test_target_cells": 820
+            },
+            "piecewise_odds": {
+              "brier_index": 74.86644778773844,
+              "gain_vs_market": 0.03207381522479747,
+              "gain_vs_model": 0.07107445224683662,
+              "test_target_cells": 820
+            },
+            "simple_mean": {
+              "brier_index": 74.31349011868333,
+              "gain_vs_market": -0.01043610983529777,
+              "gain_vs_model": 0.030277379037616656,
+              "test_target_cells": 820
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.44744885315282,
+          "model_brier_index": 73.91502583790326,
+          "model_gain_vs_market": -0.04198467478515565,
+          "near_bi": true,
+          "partner_name": "DeepSeek-R1 (zero shot with freeze values)",
+          "test_target_cells": 820,
+          "train_bi_gap": 0.3540949156779241,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.8308680887574103,
+            "adjusted_pog": 9.680493827161165e-05,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 810
+        }
+      },
       "exact_configuration": "DeepSeek-R1 (zero shot with freeze values)",
       "exact_copy_share": 0.8773006134969326,
       "family": "DeepSeek",
@@ -1019,6 +2480,118 @@
           "gain_vs_market": -0.03316255186815253,
           "gain_vs_model": 0.052020508127872324,
           "test_target_cells": 7690
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.47243178758191,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.07958171608812849,
+              "test_target_cells": 3809
+            },
+            "cf_directional": {
+              "brier_index": 73.4539360243131,
+              "gain_vs_market": -0.001401604017352283,
+              "gain_vs_model": 0.07829165412375312,
+              "test_target_cells": 3809
+            },
+            "ec_w0_56": {
+              "brier_index": 73.01753801667597,
+              "gain_vs_market": -0.034820505291299486,
+              "gain_vs_model": 0.04753228636296637,
+              "test_target_cells": 3809
+            },
+            "log_odds_mean": {
+              "brier_index": 72.94256103231304,
+              "gain_vs_market": -0.04051450827909524,
+              "gain_vs_model": 0.04229142190435034,
+              "test_target_cells": 3809
+            },
+            "piecewise_odds": {
+              "brier_index": 72.83186544323058,
+              "gain_vs_market": -0.04928582517180382,
+              "gain_vs_model": 0.0342181414623163,
+              "test_target_cells": 3809
+            },
+            "simple_mean": {
+              "brier_index": 73.03155222438585,
+              "gain_vs_market": -0.03360240488582434,
+              "gain_vs_model": 0.04865344824780616,
+              "test_target_cells": 3809
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.47243178758191,
+          "model_brier_index": 72.35390517279485,
+          "model_gain_vs_market": -0.0864625545571499,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
+          "test_target_cells": 3809,
+          "train_bi_gap": 1.2128471656117645,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6554198548401297,
+            "adjusted_pog": 0.00245500215923731,
+            "high_loss_lift": -49.690056545132556
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 3881
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.26795841649937,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.08520299235648539,
+              "test_target_cells": 3881
+            },
+            "cf_directional": {
+              "brier_index": 73.26795841649937,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.08520299235648539,
+              "test_target_cells": 3881
+            },
+            "ec_w0_56": {
+              "brier_index": 72.87944243978903,
+              "gain_vs_market": -0.029492475851862453,
+              "gain_vs_model": 0.058223363699203,
+              "test_target_cells": 3881
+            },
+            "log_odds_mean": {
+              "brier_index": 72.72735806042003,
+              "gain_vs_market": -0.04101080482316992,
+              "gain_vs_model": 0.04768643082319733,
+              "test_target_cells": 3881
+            },
+            "piecewise_odds": {
+              "brier_index": 72.86041278383216,
+              "gain_vs_market": -0.031100784975921225,
+              "gain_vs_model": 0.056752087325148276,
+              "test_target_cells": 3881
+            },
+            "simple_mean": {
+              "brier_index": 72.83501683252308,
+              "gain_vs_market": -0.032737435563498875,
+              "gain_vs_model": 0.055254884265074244,
+              "test_target_cells": 3881
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.26795841649937,
+          "model_brier_index": 72.0551112508876,
+          "model_gain_vs_market": -0.09313868721101891,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
+          "test_target_cells": 3881,
+          "train_bi_gap": 1.1185266147870638,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7507849480527551,
+            "adjusted_pog": 0.001761656870569701,
+            "high_loss_lift": -49.794091734962045
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 3809
         }
       },
       "exact_configuration": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
@@ -1085,6 +2658,118 @@
           "test_target_cells": 2950
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.98422408892691,
+              "gain_vs_market": 0.00101019567329007,
+              "gain_vs_model": 0.04497117218576956,
+              "test_target_cells": 1496
+            },
+            "cf_directional": {
+              "brier_index": 72.71855579102375,
+              "gain_vs_market": -0.019275496084815748,
+              "gain_vs_model": 0.02557816102866199,
+              "test_target_cells": 1496
+            },
+            "ec_w0_56": {
+              "brier_index": 72.80219536881015,
+              "gain_vs_market": -0.012801655691457135,
+              "gain_vs_model": 0.03176711728782287,
+              "test_target_cells": 1496
+            },
+            "log_odds_mean": {
+              "brier_index": 72.80911838104475,
+              "gain_vs_market": -0.012233729318940465,
+              "gain_vs_model": 0.032310051815763255,
+              "test_target_cells": 1496
+            },
+            "piecewise_odds": {
+              "brier_index": 72.45964612789068,
+              "gain_vs_market": -0.038744636184894175,
+              "gain_vs_model": 0.006965768822256571,
+              "test_target_cells": 1496
+            },
+            "simple_mean": {
+              "brier_index": 72.80326212797092,
+              "gain_vs_market": -0.01263943272427592,
+              "gain_vs_model": 0.031922201563478754,
+              "test_target_cells": 1496
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.96988867407352,
+          "model_brier_index": 72.36748473238929,
+          "model_gain_vs_market": -0.04603104663666829,
+          "near_bi": true,
+          "partner_name": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
+          "test_target_cells": 1496,
+          "train_bi_gap": 0.7564878593845058,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7258676597515407,
+            "adjusted_pog": 0.003120258253094907,
+            "high_loss_lift": -44.91776913099871
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1454
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.8910818874349,
+              "gain_vs_market": 0.0014587838597828523,
+              "gain_vs_model": 0.053091812455781186,
+              "test_target_cells": 1454
+            },
+            "cf_directional": {
+              "brier_index": 72.72174587131799,
+              "gain_vs_market": -0.011390582373584295,
+              "gain_vs_model": 0.04090686716312635,
+              "test_target_cells": 1454
+            },
+            "ec_w0_56": {
+              "brier_index": 72.91102533373723,
+              "gain_vs_market": 0.0025424703443983235,
+              "gain_vs_model": 0.05411946318108616,
+              "test_target_cells": 1454
+            },
+            "log_odds_mean": {
+              "brier_index": 72.67577933296182,
+              "gain_vs_market": -0.014765937151485059,
+              "gain_vs_model": 0.03770604678295697,
+              "test_target_cells": 1454
+            },
+            "piecewise_odds": {
+              "brier_index": 72.96083467307209,
+              "gain_vs_market": 0.005908095230304687,
+              "gain_vs_model": 0.057311056786992755,
+              "test_target_cells": 1454
+            },
+            "simple_mean": {
+              "brier_index": 72.66018560508452,
+              "gain_vs_market": -0.01589157837685571,
+              "gain_vs_model": 0.036638610731933606,
+              "test_target_cells": 1454
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.87098172726266,
+          "model_brier_index": 72.15469418822262,
+          "model_gain_vs_market": -0.05452802000783964,
+          "near_bi": true,
+          "partner_name": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
+          "test_target_cells": 1454,
+          "train_bi_gap": 0.6310747713910145,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7512282339818567,
+            "adjusted_pog": 0.0030145335895721864,
+            "high_loss_lift": -56.49566880930518
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1496
+        }
+      },
       "exact_configuration": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
       "exact_copy_share": 0.2135593220338983,
       "family": "GPT",
@@ -1147,6 +2832,118 @@
           "gain_vs_market": -0.01520854953583062,
           "gain_vs_model": 0.05014347830826769,
           "test_target_cells": 5760
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 76.80783390676527,
+              "gain_vs_market": 0.0024060589406877625,
+              "gain_vs_model": 0.04916172270640349,
+              "test_target_cells": 2863
+            },
+            "cf_directional": {
+              "brier_index": 76.58043452377139,
+              "gain_vs_market": -0.017484569226321807,
+              "gain_vs_model": 0.030203337092589502,
+              "test_target_cells": 2863
+            },
+            "ec_w0_56": {
+              "brier_index": 76.7696923401225,
+              "gain_vs_market": -0.0013080095479065107,
+              "gain_vs_model": 0.04562172678411927,
+              "test_target_cells": 2863
+            },
+            "log_odds_mean": {
+              "brier_index": 76.69900415160829,
+              "gain_vs_market": -0.007392767401156629,
+              "gain_vs_model": 0.039822151990401636,
+              "test_target_cells": 2863
+            },
+            "piecewise_odds": {
+              "brier_index": 76.58118869231723,
+              "gain_vs_market": -0.017719891073067193,
+              "gain_vs_model": 0.02997904441181065,
+              "test_target_cells": 2863
+            },
+            "simple_mean": {
+              "brier_index": 76.69296308404603,
+              "gain_vs_market": -0.007664168278783167,
+              "gain_vs_model": 0.03956347124634623,
+              "test_target_cells": 2863
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 76.7799719295225,
+          "model_brier_index": 76.22212068560147,
+          "model_gain_vs_market": -0.04917309797287292,
+          "near_bi": true,
+          "partner_name": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
+          "test_target_cells": 2863,
+          "train_bi_gap": 0.9930928621297845,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6322241728146649,
+            "adjusted_pog": 0.0009619922782188495,
+            "high_loss_lift": -59.83291809851089
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2897
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 76.91903973654787,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0812497313469179,
+              "test_target_cells": 2897
+            },
+            "cf_directional": {
+              "brier_index": 76.570260283385,
+              "gain_vs_market": -0.030954491297148747,
+              "gain_vs_model": 0.052810284151642996,
+              "test_target_cells": 2897
+            },
+            "ec_w0_56": {
+              "brier_index": 76.97292161596492,
+              "gain_vs_market": 0.004237584052586301,
+              "gain_vs_model": 0.08514301283367158,
+              "test_target_cells": 2897
+            },
+            "log_odds_mean": {
+              "brier_index": 76.71739611371626,
+              "gain_vs_market": -0.017931278010657054,
+              "gain_vs_model": 0.06477536485733362,
+              "test_target_cells": 2897
+            },
+            "piecewise_odds": {
+              "brier_index": 77.03490338227259,
+              "gain_vs_market": 0.009447774452952182,
+              "gain_vs_model": 0.08992987666374144,
+              "test_target_cells": 2897
+            },
+            "simple_mean": {
+              "brier_index": 76.6595524803407,
+              "gain_vs_market": -0.02275452778276306,
+              "gain_vs_model": 0.06034400283343032,
+              "test_target_cells": 2897
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 76.91903973654787,
+          "model_brier_index": 75.9259468744181,
+          "model_gain_vs_market": -0.088435055878713,
+          "near_bi": true,
+          "partner_name": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
+          "test_target_cells": 2897,
+          "train_bi_gap": 0.6135751984065706,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7037473793826298,
+            "adjusted_pog": 0.0014486208557457237,
+            "high_loss_lift": -65.2264728140645
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2863
         }
       },
       "exact_configuration": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
@@ -1213,6 +3010,118 @@
           "test_target_cells": 7110
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 76.18852491536228,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.05785753867080436,
+              "test_target_cells": 3547
+            },
+            "cf_directional": {
+              "brier_index": 76.21090011504363,
+              "gain_vs_market": 0.0019042912606981714,
+              "gain_vs_model": 0.05965165232624622,
+              "test_target_cells": 3547
+            },
+            "ec_w0_56": {
+              "brier_index": 76.02628920311386,
+              "gain_vs_market": -0.013683065270037044,
+              "gain_vs_model": 0.04496614187876363,
+              "test_target_cells": 3547
+            },
+            "log_odds_mean": {
+              "brier_index": 75.94428544148664,
+              "gain_vs_market": -0.020631355484810914,
+              "gain_vs_model": 0.038419862633787015,
+              "test_target_cells": 3547
+            },
+            "piecewise_odds": {
+              "brier_index": 75.9134495988193,
+              "gain_vs_market": -0.023304004242595044,
+              "gain_vs_model": 0.035901846754859856,
+              "test_target_cells": 3547
+            },
+            "simple_mean": {
+              "brier_index": 75.96169167353214,
+              "gain_vs_market": -0.019128917243900683,
+              "gain_vs_model": 0.03983537349607329,
+              "test_target_cells": 3547
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 76.18852491536228,
+          "model_brier_index": 75.46881449697737,
+          "model_gain_vs_market": -0.06141060513202819,
+          "near_bi": true,
+          "partner_name": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
+          "test_target_cells": 3547,
+          "train_bi_gap": 1.1403946903885618,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5075118504747472,
+            "adjusted_pog": 0.0014995893909626676,
+            "high_loss_lift": -78.68877524259113
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 3563
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 76.19604064063662,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.08938381246137976,
+              "test_target_cells": 3563
+            },
+            "cf_directional": {
+              "brier_index": 76.21808020103705,
+              "gain_vs_market": 0.0018390963449333626,
+              "gain_vs_model": 0.09105852336351919,
+              "test_target_cells": 3563
+            },
+            "ec_w0_56": {
+              "brier_index": 76.01795590907392,
+              "gain_vs_market": -0.015037712298338404,
+              "gain_vs_model": 0.07569022821896422,
+              "test_target_cells": 3563
+            },
+            "log_odds_mean": {
+              "brier_index": 75.83580775592084,
+              "gain_vs_market": -0.030514742978408626,
+              "gain_vs_model": 0.061596593546660416,
+              "test_target_cells": 3563
+            },
+            "piecewise_odds": {
+              "brier_index": 76.10836612526275,
+              "gain_vs_market": -0.007441071614019367,
+              "gain_vs_model": 0.08260785219701959,
+              "test_target_cells": 3563
+            },
+            "simple_mean": {
+              "brier_index": 75.87511003720972,
+              "gain_vs_market": -0.02713542414760888,
+              "gain_vs_model": 0.06467385597684075,
+              "test_target_cells": 3563
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 76.19604064063662,
+          "model_brier_index": 75.05564595024806,
+          "model_gain_vs_market": -0.09815750442893252,
+          "near_bi": true,
+          "partner_name": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
+          "test_target_cells": 3563,
+          "train_bi_gap": 0.7197104183849083,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6500996437745152,
+            "adjusted_pog": 0.001484872455596276,
+            "high_loss_lift": -101.83654753479594
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 3547
+        }
+      },
       "exact_configuration": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
       "exact_copy_share": 0.12376933895921238,
       "family": "Claude",
@@ -1275,6 +3184,118 @@
           "gain_vs_market": -0.03791139253815148,
           "gain_vs_model": 0.06243453962555001,
           "test_target_cells": 7100
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.09495503613321,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.09400190574716856,
+              "test_target_cells": 3515
+            },
+            "cf_directional": {
+              "brier_index": 73.05270399988538,
+              "gain_vs_market": -0.00315740305931627,
+              "gain_vs_model": 0.09114130459263997,
+              "test_target_cells": 3515
+            },
+            "ec_w0_56": {
+              "brier_index": 72.80982834316708,
+              "gain_vs_market": -0.021399480546860986,
+              "gain_vs_model": 0.07461401715371198,
+              "test_target_cells": 3515
+            },
+            "log_odds_mean": {
+              "brier_index": 72.67449009181601,
+              "gain_vs_market": -0.03157498017167457,
+              "gain_vs_model": 0.06539503388556046,
+              "test_target_cells": 3515
+            },
+            "piecewise_odds": {
+              "brier_index": 72.75122050401339,
+              "gain_vs_market": -0.025898710319042652,
+              "gain_vs_model": 0.07053772355450978,
+              "test_target_cells": 3515
+            },
+            "simple_mean": {
+              "brier_index": 72.59776087442401,
+              "gain_vs_market": -0.0373818634958342,
+              "gain_vs_model": 0.06013400866032329,
+              "test_target_cells": 3515
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.09495503613321,
+          "model_brier_index": 71.73813335232005,
+          "model_gain_vs_market": -0.10375508110167836,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
+          "test_target_cells": 3515,
+          "train_bi_gap": 1.4476374612087552,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6858805270608285,
+            "adjusted_pog": 0.0030665650514365385,
+            "high_loss_lift": -41.37918720981483
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 3585
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.95146336596787,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.0992641850820489,
+              "test_target_cells": 3585
+            },
+            "cf_directional": {
+              "brier_index": 72.94700377271906,
+              "gain_vs_market": -0.0003284375345599344,
+              "gain_vs_model": 0.09896834963170742,
+              "test_target_cells": 3585
+            },
+            "ec_w0_56": {
+              "brier_index": 72.74139092105729,
+              "gain_vs_market": -0.015674935622479208,
+              "gain_vs_model": 0.08514520917034868,
+              "test_target_cells": 3585
+            },
+            "log_odds_mean": {
+              "brier_index": 72.52817922464665,
+              "gain_vs_market": -0.031606625318780536,
+              "gain_vs_model": 0.07079496566873077,
+              "test_target_cells": 3585
+            },
+            "piecewise_odds": {
+              "brier_index": 72.83558562609798,
+              "gain_vs_market": -0.00875475713152417,
+              "gain_vs_model": 0.09137846178277674,
+              "test_target_cells": 3585
+            },
+            "simple_mean": {
+              "brier_index": 72.43758441085508,
+              "gain_vs_market": -0.0384250904610296,
+              "gain_vs_model": 0.06465332991233742,
+              "test_target_cells": 3585
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.95146336596787,
+          "model_brier_index": 71.50382590475913,
+          "model_gain_vs_market": -0.11020343971899349,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
+          "test_target_cells": 3585,
+          "train_bi_gap": 1.3568216838131775,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.734376731792203,
+            "adjusted_pog": 0.002938159570298719,
+            "high_loss_lift": -38.26014959593907
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 3515
         }
       },
       "exact_configuration": "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
@@ -1341,6 +3362,118 @@
           "test_target_cells": 2880
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 78.09688362565446,
+              "gain_vs_market": 0.0036542275212956003,
+              "gain_vs_model": 0.07725299818195618,
+              "test_target_cells": 1464
+            },
+            "cf_directional": {
+              "brier_index": 78.12025069574806,
+              "gain_vs_market": 0.0055801969758500205,
+              "gain_vs_model": 0.0790366987695162,
+              "test_target_cells": 1464
+            },
+            "ec_w0_56": {
+              "brier_index": 78.38315155050495,
+              "gain_vs_market": 0.029506554257181457,
+              "gain_vs_model": 0.10119564705395608,
+              "test_target_cells": 1464
+            },
+            "log_odds_mean": {
+              "brier_index": 78.05451110964945,
+              "gain_vs_market": -0.00024049813304155205,
+              "gain_vs_model": 0.0736459708630138,
+              "test_target_cells": 1464
+            },
+            "piecewise_odds": {
+              "brier_index": 78.5535504915372,
+              "gain_vs_market": 0.04468839947532356,
+              "gain_vs_model": 0.11525602904589718,
+              "test_target_cells": 1464
+            },
+            "simple_mean": {
+              "brier_index": 77.98452741927032,
+              "gain_vs_market": -0.0066193468095826465,
+              "gain_vs_model": 0.06773831946937565,
+              "test_target_cells": 1464
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 78.05693667980789,
+          "model_brier_index": 77.20462534410527,
+          "model_gain_vs_market": -0.07976050912726074,
+          "near_bi": true,
+          "partner_name": "Kimi-K2-Instruct (zero shot with freeze values)",
+          "test_target_cells": 1464,
+          "train_bi_gap": 0.8384255409281405,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6015104151295086,
+            "adjusted_pog": 0.004535386151129944,
+            "high_loss_lift": -103.73989455184534
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1416
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 78.09063212244435,
+              "gain_vs_market": 0.0014902096520006882,
+              "gain_vs_model": 0.07163545440505384,
+              "test_target_cells": 1416
+            },
+            "cf_directional": {
+              "brier_index": 78.02553357141859,
+              "gain_vs_market": -0.0044483610810761975,
+              "gain_vs_model": 0.06611406786143775,
+              "test_target_cells": 1416
+            },
+            "ec_w0_56": {
+              "brier_index": 78.4867369613484,
+              "gain_vs_market": 0.03722431063955044,
+              "gain_vs_model": 0.10485923723244975,
+              "test_target_cells": 1416
+            },
+            "log_odds_mean": {
+              "brier_index": 78.00679615785933,
+              "gain_vs_market": -0.0062017695830887355,
+              "gain_vs_model": 0.06448383618724869,
+              "test_target_cells": 1416
+            },
+            "piecewise_odds": {
+              "brier_index": 78.80095496263365,
+              "gain_vs_market": 0.06505970885359283,
+              "gain_vs_model": 0.1307392006181143,
+              "test_target_cells": 1416
+            },
+            "simple_mean": {
+              "brier_index": 77.94126425571787,
+              "gain_vs_market": -0.012196998095192077,
+              "gain_vs_model": 0.058909772069723206,
+              "test_target_cells": 1416
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 78.07429429691467,
+          "model_brier_index": 77.26854440704587,
+          "model_gain_vs_market": -0.07555786688094632,
+          "near_bi": true,
+          "partner_name": "Kimi-K2-Instruct (zero shot with freeze values)",
+          "test_target_cells": 1416,
+          "train_bi_gap": 0.9322052273957807,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5706811935574704,
+            "adjusted_pog": 0.004941998066939891,
+            "high_loss_lift": -62.88119561104806
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1464
+        }
+      },
       "exact_configuration": "Kimi-K2-Instruct (zero shot with freeze values)",
       "exact_copy_share": 0.05555555555555555,
       "family": "Kimi",
@@ -1403,6 +3536,118 @@
           "gain_vs_market": -0.03250966338652176,
           "gain_vs_model": 0.07795502289833756,
           "test_target_cells": 3110
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 78.6106295713844,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.10151052054068524,
+              "test_target_cells": 1543
+            },
+            "cf_directional": {
+              "brier_index": 78.28979985443944,
+              "gain_vs_market": -0.03123128631880275,
+              "gain_vs_model": 0.07344953835325933,
+              "test_target_cells": 1543
+            },
+            "ec_w0_56": {
+              "brier_index": 78.71089761908787,
+              "gain_vs_market": 0.009024486617493544,
+              "gain_vs_model": 0.10961892682402456,
+              "test_target_cells": 1543
+            },
+            "log_odds_mean": {
+              "brier_index": 78.42769142518509,
+              "gain_vs_market": -0.017495666360393534,
+              "gain_vs_model": 0.08579084837974141,
+              "test_target_cells": 1543
+            },
+            "piecewise_odds": {
+              "brier_index": 78.86470781809093,
+              "gain_vs_market": 0.02328248956337411,
+              "gain_vs_model": 0.12242959246899818,
+              "test_target_cells": 1543
+            },
+            "simple_mean": {
+              "brier_index": 78.31616506129703,
+              "gain_vs_market": -0.028047000190631485,
+              "gain_vs_model": 0.07631058593900945,
+              "test_target_cells": 1543
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 78.6106295713844,
+          "model_brier_index": 77.4524601099278,
+          "model_gain_vs_market": -0.11297908641264376,
+          "near_bi": true,
+          "partner_name": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
+          "test_target_cells": 1543,
+          "train_bi_gap": 1.3559804740784438,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6336021507864372,
+            "adjusted_pog": 0.002151461231652841,
+            "high_loss_lift": -68.05214968152866
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 1567
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 78.80645910231233,
+              "gain_vs_market": 0.0033069238432780128,
+              "gain_vs_model": 0.11532910856757765,
+              "test_target_cells": 1567
+            },
+            "cf_directional": {
+              "brier_index": 78.51518477788957,
+              "gain_vs_market": -0.024650499480967467,
+              "gain_vs_model": 0.09051392804100523,
+              "test_target_cells": 1567
+            },
+            "ec_w0_56": {
+              "brier_index": 78.91827702642574,
+              "gain_vs_market": 0.013495961084649235,
+              "gain_vs_model": 0.12437296055651698,
+              "test_target_cells": 1567
+            },
+            "log_odds_mean": {
+              "brier_index": 78.48079186635876,
+              "gain_vs_market": -0.027815178031139823,
+              "gain_vs_model": 0.08770493993719121,
+              "test_target_cells": 1567
+            },
+            "piecewise_odds": {
+              "brier_index": 79.18233618701449,
+              "gain_vs_market": 0.0380206529561907,
+              "gain_vs_model": 0.14614122757785877,
+              "test_target_cells": 1567
+            },
+            "simple_mean": {
+              "brier_index": 78.38540285794126,
+              "gain_vs_market": -0.036970295454429064,
+              "gain_vs_model": 0.07957880152429,
+              "test_target_cells": 1567
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 78.77029701217873,
+          "model_brier_index": 77.4866407183675,
+          "model_gain_vs_market": -0.12662582866597766,
+          "near_bi": true,
+          "partner_name": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
+          "test_target_cells": 1567,
+          "train_bi_gap": 1.1581694614565965,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6529501558581814,
+            "adjusted_pog": 0.0031892128969539858,
+            "high_loss_lift": -73.6504854368932
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 1543
         }
       },
       "exact_configuration": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
@@ -1469,6 +3714,118 @@
           "test_target_cells": 4790
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.11700394858512,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.06763676164344358,
+              "test_target_cells": 2366
+            },
+            "cf_directional": {
+              "brier_index": 72.11628971583123,
+              "gain_vs_market": -6.169914263195537e-05,
+              "gain_vs_model": 0.06757923563101544,
+              "test_target_cells": 2366
+            },
+            "ec_w0_56": {
+              "brier_index": 71.92833453258284,
+              "gain_vs_market": -0.013751103675384287,
+              "gain_vs_model": 0.054815738089685546,
+              "test_target_cells": 2366
+            },
+            "log_odds_mean": {
+              "brier_index": 71.90518252831771,
+              "gain_vs_market": -0.015365205126967244,
+              "gain_vs_model": 0.05331080923325164,
+              "test_target_cells": 2366
+            },
+            "piecewise_odds": {
+              "brier_index": 71.74907694698352,
+              "gain_vs_market": -0.026878399956914305,
+              "gain_vs_model": 0.04257632961777224,
+              "test_target_cells": 2366
+            },
+            "simple_mean": {
+              "brier_index": 71.83931363586568,
+              "gain_vs_market": -0.020133943441663468,
+              "gain_vs_model": 0.04886461293528648,
+              "test_target_cells": 2366
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.11700394858512,
+          "model_brier_index": 71.13286878306803,
+          "model_gain_vs_market": -0.07254335956302235,
+          "near_bi": true,
+          "partner_name": "GPT-4o-2024-05-13 (zero shot with freeze values)",
+          "test_target_cells": 2366,
+          "train_bi_gap": 1.259955125984304,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6305583654741374,
+            "adjusted_pog": 0.0011179105816831684,
+            "high_loss_lift": -43.64453088165959
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 2424
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.02143635154584,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.08484677102877719,
+              "test_target_cells": 2424
+            },
+            "cf_directional": {
+              "brier_index": 71.98950277281081,
+              "gain_vs_market": -0.0023249671165857066,
+              "gain_vs_model": 0.08271906986478186,
+              "test_target_cells": 2424
+            },
+            "ec_w0_56": {
+              "brier_index": 71.83830238587079,
+              "gain_vs_market": -0.013282050757721226,
+              "gain_vs_model": 0.07269165939048894,
+              "test_target_cells": 2424
+            },
+            "log_odds_mean": {
+              "brier_index": 71.73103868774352,
+              "gain_vs_market": -0.020959121601262773,
+              "gain_vs_model": 0.06566596321898106,
+              "test_target_cells": 2424
+            },
+            "piecewise_odds": {
+              "brier_index": 71.85766406932387,
+              "gain_vs_market": -0.01201532812404611,
+              "gain_vs_model": 0.07385090469890765,
+              "test_target_cells": 2424
+            },
+            "simple_mean": {
+              "brier_index": 71.65769496208688,
+              "gain_vs_market": -0.026267594006451168,
+              "gain_vs_model": 0.06080789755646827,
+              "test_target_cells": 2424
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.02143635154584,
+          "model_brier_index": 70.76148122556155,
+          "model_gain_vs_market": -0.09271318544563122,
+          "near_bi": true,
+          "partner_name": "GPT-4o-2024-05-13 (zero shot with freeze values)",
+          "test_target_cells": 2424,
+          "train_bi_gap": 0.984135165517084,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7039406625259618,
+            "adjusted_pog": 0.0013045307480980546,
+            "high_loss_lift": -54.2565370526909
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 2366
+        }
+      },
       "exact_configuration": "GPT-4o-2024-05-13 (zero shot with freeze values)",
       "exact_copy_share": 0.7599164926931107,
       "family": "GPT",
@@ -1531,6 +3888,118 @@
           "gain_vs_market": 0.0008745016679657768,
           "gain_vs_model": 0.07648792203569234,
           "test_target_cells": 2850
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.28547732576494,
+              "gain_vs_market": 0.030142128168878762,
+              "gain_vs_model": 0.0860616504045013,
+              "test_target_cells": 1424
+            },
+            "cf_directional": {
+              "brier_index": 81.31128800381519,
+              "gain_vs_market": 0.03362411980205807,
+              "gain_vs_model": 0.08934287931335667,
+              "test_target_cells": 1424
+            },
+            "ec_w0_56": {
+              "brier_index": 81.46736482816738,
+              "gain_vs_market": 0.04900910323816383,
+              "gain_vs_model": 0.10384080398720721,
+              "test_target_cells": 1424
+            },
+            "log_odds_mean": {
+              "brier_index": 81.26374327691549,
+              "gain_vs_market": 0.02816354814809542,
+              "gain_vs_model": 0.08419715024292275,
+              "test_target_cells": 1424
+            },
+            "piecewise_odds": {
+              "brier_index": 81.56917170022132,
+              "gain_vs_market": 0.05914002329321208,
+              "gain_vs_model": 0.11338760112513567,
+              "test_target_cells": 1424
+            },
+            "simple_mean": {
+              "brier_index": 81.14843723782475,
+              "gain_vs_market": 0.016259239787460432,
+              "gain_vs_model": 0.07297921382956639,
+              "test_target_cells": 1424
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.98902384881077,
+          "model_brier_index": 80.4468606859748,
+          "model_gain_vs_market": -0.061185223555146835,
+          "near_bi": true,
+          "partner_name": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
+          "test_target_cells": 1424,
+          "train_bi_gap": 1.0576698161214162,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5401679518118491,
+            "adjusted_pog": 0.0026904401823281913,
+            "high_loss_lift": -47.28829966329966
+          },
+          "train_near_bi_share": 0.7,
+          "train_target_cells": 1426
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.4873878228522,
+              "gain_vs_market": 0.007874730150500693,
+              "gain_vs_model": 0.10092387209892459,
+              "test_target_cells": 1426
+            },
+            "cf_directional": {
+              "brier_index": 81.34722452720295,
+              "gain_vs_market": -0.007807206746786074,
+              "gain_vs_model": 0.0867127079122283,
+              "test_target_cells": 1426
+            },
+            "ec_w0_56": {
+              "brier_index": 81.60509118787688,
+              "gain_vs_market": 0.019810346280475954,
+              "gain_vs_model": 0.11174007430681676,
+              "test_target_cells": 1426
+            },
+            "log_odds_mean": {
+              "brier_index": 81.3620158299101,
+              "gain_vs_market": -0.006082250783042601,
+              "gain_vs_model": 0.08827588423261132,
+              "test_target_cells": 1426
+            },
+            "piecewise_odds": {
+              "brier_index": 81.78284411254941,
+              "gain_vs_market": 0.0383256228005225,
+              "gain_vs_model": 0.12851884572465028,
+              "test_target_cells": 1426
+            },
+            "simple_mean": {
+              "brier_index": 81.2770750836515,
+              "gain_vs_market": -0.015199898267011172,
+              "gain_vs_model": 0.08001335988757881,
+              "test_target_cells": 1426
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 81.41456693983702,
+          "model_brier_index": 80.50253888974598,
+          "model_gain_vs_market": -0.10349417480992446,
+          "near_bi": true,
+          "partner_name": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
+          "test_target_cells": 1426,
+          "train_bi_gap": 1.1350701167443342,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.56789610510521,
+            "adjusted_pog": 0.0033348260814606745,
+            "high_loss_lift": -39.405522288755826
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 1424
         }
       },
       "exact_configuration": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
@@ -1597,6 +4066,118 @@
           "test_target_cells": 2870
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.99623099997264,
+              "gain_vs_market": 0.002089931577040977,
+              "gain_vs_model": 0.11673215774332532,
+              "test_target_cells": 1429
+            },
+            "cf_directional": {
+              "brier_index": 81.20362767928899,
+              "gain_vs_market": 0.023822021513415493,
+              "gain_vs_model": 0.1359676147180852,
+              "test_target_cells": 1429
+            },
+            "ec_w0_56": {
+              "brier_index": 81.05388271784282,
+              "gain_vs_market": 0.00790111322489972,
+              "gain_vs_model": 0.12187573734782557,
+              "test_target_cells": 1429
+            },
+            "log_odds_mean": {
+              "brier_index": 80.80616036108668,
+              "gain_vs_market": -0.01810140489637244,
+              "gain_vs_model": 0.09886044889551825,
+              "test_target_cells": 1429
+            },
+            "piecewise_odds": {
+              "brier_index": 81.18715799504434,
+              "gain_vs_market": 0.02159107862570967,
+              "gain_vs_model": 0.13399296773037028,
+              "test_target_cells": 1429
+            },
+            "simple_mean": {
+              "brier_index": 80.7535248044416,
+              "gain_vs_market": -0.023709948981211343,
+              "gain_vs_model": 0.09389622738020087,
+              "test_target_cells": 1429
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.97588345981953,
+          "model_brier_index": 79.80202504040113,
+          "model_gain_vs_market": -0.129793275246366,
+          "near_bi": true,
+          "partner_name": "DeepSeek-V3.1 (zero shot with freeze values)",
+          "test_target_cells": 1429,
+          "train_bi_gap": 1.9384697589318372,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.4507970618214144,
+            "adjusted_pog": 0.002363558077723801,
+            "high_loss_lift": -37.8430463576159
+          },
+          "train_near_bi_share": 0.6,
+          "train_target_cells": 1441
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.39896892982436,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.1813679999323523,
+              "test_target_cells": 1441
+            },
+            "cf_directional": {
+              "brier_index": 81.48549844504221,
+              "gain_vs_market": 0.009235903110293316,
+              "gain_vs_model": 0.18892880576796275,
+              "test_target_cells": 1441
+            },
+            "ec_w0_56": {
+              "brier_index": 81.3707545451395,
+              "gain_vs_market": -0.003278159422340193,
+              "gain_vs_model": 0.17868439372790137,
+              "test_target_cells": 1441
+            },
+            "log_odds_mean": {
+              "brier_index": 81.05763710706617,
+              "gain_vs_market": -0.03715600224556437,
+              "gain_vs_model": 0.15095090749954795,
+              "test_target_cells": 1441
+            },
+            "piecewise_odds": {
+              "brier_index": 81.57864214800351,
+              "gain_vs_market": 0.018733603000382296,
+              "gain_vs_model": 0.19670392682502857,
+              "test_target_cells": 1441
+            },
+            "simple_mean": {
+              "brier_index": 80.86321248076206,
+              "gain_vs_market": -0.058555716554483966,
+              "gain_vs_model": 0.13343241657396085,
+              "test_target_cells": 1441
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 81.39896892982436,
+          "model_brier_index": 79.46049917089253,
+          "model_gain_vs_market": -0.22155009811168508,
+          "near_bi": true,
+          "partner_name": "DeepSeek-V3.1 (zero shot with freeze values)",
+          "test_target_cells": 1441,
+          "train_bi_gap": 1.2145534997246155,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.52522094025561,
+            "adjusted_pog": 0.0037473901049685098,
+            "high_loss_lift": -48.2891376451078
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 1429
+        }
+      },
       "exact_configuration": "DeepSeek-V3.1 (zero shot with freeze values)",
       "exact_copy_share": 0.4564459930313589,
       "family": "DeepSeek",
@@ -1659,6 +4240,118 @@
           "gain_vs_market": 0.0031332866181780126,
           "gain_vs_model": 0.08051004530762121,
           "test_target_cells": 3390
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.27994298042132,
+              "gain_vs_market": 0.027108728582689805,
+              "gain_vs_model": 0.05215238291751172,
+              "test_target_cells": 1689
+            },
+            "cf_directional": {
+              "brier_index": 80.19696997181634,
+              "gain_vs_market": 0.019413153615927305,
+              "gain_vs_model": 0.04465490338549862,
+              "test_target_cells": 1689
+            },
+            "ec_w0_56": {
+              "brier_index": 80.40280948734453,
+              "gain_vs_market": 0.03924691302534851,
+              "gain_vs_model": 0.06397811261382307,
+              "test_target_cells": 1689
+            },
+            "log_odds_mean": {
+              "brier_index": 80.18386716610368,
+              "gain_vs_market": 0.01781627221214277,
+              "gain_vs_model": 0.043099128061154825,
+              "test_target_cells": 1689
+            },
+            "piecewise_odds": {
+              "brier_index": 80.46691575031412,
+              "gain_vs_market": 0.045397327312971004,
+              "gain_vs_model": 0.06997020617850314,
+              "test_target_cells": 1689
+            },
+            "simple_mean": {
+              "brier_index": 80.23027495676335,
+              "gain_vs_market": 0.022501610415581158,
+              "gain_vs_model": 0.04766385875802395,
+              "test_target_cells": 1689
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.00064919461178,
+          "model_brier_index": 79.75922303719119,
+          "model_gain_vs_market": -0.02642160394083941,
+          "near_bi": true,
+          "partner_name": "Gemini-2.5-Pro (zero shot with freeze values)",
+          "test_target_cells": 1689,
+          "train_bi_gap": 1.3471677571804161,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.38450216793037084,
+            "adjusted_pog": 0.003945128259847149,
+            "high_loss_lift": -57.04783861671469
+          },
+          "train_near_bi_share": 0.7,
+          "train_target_cells": 1701
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.2780883792632,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.1251845835462628,
+              "test_target_cells": 1701
+            },
+            "cf_directional": {
+              "brier_index": 79.39493831618684,
+              "gain_vs_market": -0.09503343334514879,
+              "gain_vs_model": 0.04204787097739798,
+              "test_target_cells": 1701
+            },
+            "ec_w0_56": {
+              "brier_index": 80.1001566318902,
+              "gain_vs_market": -0.018598444736630353,
+              "gain_vs_model": 0.10891437736859569,
+              "test_target_cells": 1701
+            },
+            "log_odds_mean": {
+              "brier_index": 79.86586404553083,
+              "gain_vs_market": -0.042577056116475116,
+              "gain_vs_model": 0.08793751846835447,
+              "test_target_cells": 1701
+            },
+            "piecewise_odds": {
+              "brier_index": 80.26425665041863,
+              "gain_vs_market": -0.0020137762622459785,
+              "gain_vs_model": 0.12342290102676143,
+              "test_target_cells": 1701
+            },
+            "simple_mean": {
+              "brier_index": 80.11740425060705,
+              "gain_vs_market": -0.01664308031301731,
+              "gain_vs_model": 0.11062496031115755,
+              "test_target_cells": 1701
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.2780883792632,
+          "model_brier_index": 78.93092062208278,
+          "model_gain_vs_market": -0.1430982824396567,
+          "near_bi": true,
+          "partner_name": "Gemini-2.5-Pro (zero shot with freeze values)",
+          "test_target_cells": 1701,
+          "train_bi_gap": 0.8000137290396766,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5693885412836968,
+            "adjusted_pog": 0.00386816806098283,
+            "high_loss_lift": -62.27081784386617
+          },
+          "train_near_bi_share": 1.0,
+          "train_target_cells": 1689
         }
       },
       "exact_configuration": "Gemini-2.5-Pro (zero shot with freeze values)",
@@ -1725,6 +4418,118 @@
           "test_target_cells": 3410
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.00033779459578,
+              "gain_vs_market": 0.0012732113214088488,
+              "gain_vs_model": 0.1004625416522264,
+              "test_target_cells": 1703
+            },
+            "cf_directional": {
+              "brier_index": 79.77842239808838,
+              "gain_vs_market": -0.022326075665661558,
+              "gain_vs_model": 0.0792070362669586,
+              "test_target_cells": 1703
+            },
+            "ec_w0_56": {
+              "brier_index": 80.41554315520877,
+              "gain_vs_market": 0.042205789994041135,
+              "gain_vs_model": 0.1373298693340209,
+              "test_target_cells": 1703
+            },
+            "log_odds_mean": {
+              "brier_index": 80.15549204687679,
+              "gain_vs_market": 0.016657270573133216,
+              "gain_vs_model": 0.11431872105508127,
+              "test_target_cells": 1703
+            },
+            "piecewise_odds": {
+              "brier_index": 80.58410483084899,
+              "gain_vs_market": 0.058560949007792545,
+              "gain_vs_model": 0.15206070296828145,
+              "test_target_cells": 1703
+            },
+            "simple_mean": {
+              "brier_index": 79.85284196985863,
+              "gain_vs_market": -0.013636757598394049,
+              "gain_vs_model": 0.08703336793004235,
+              "test_target_cells": 1703
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 79.98720214932621,
+          "model_brier_index": 78.92574442559741,
+          "model_gain_vs_market": -0.11026703714262624,
+          "near_bi": true,
+          "partner_name": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
+          "test_target_cells": 1703,
+          "train_bi_gap": 1.6146839475976917,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.4456090305692861,
+            "adjusted_pog": 0.0025236060339777397,
+            "high_loss_lift": -43.84638515674984
+          },
+          "train_near_bi_share": 0.7,
+          "train_target_cells": 1707
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.27123207572507,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.14653104133462133,
+              "test_target_cells": 1707
+            },
+            "cf_directional": {
+              "brier_index": 80.08144059797996,
+              "gain_vs_market": -0.01953122086131463,
+              "gain_vs_model": 0.12986175060465163,
+              "test_target_cells": 1707
+            },
+            "ec_w0_56": {
+              "brier_index": 80.42655360217114,
+              "gain_vs_market": 0.015555583772084975,
+              "gain_vs_model": 0.15980724921801476,
+              "test_target_cells": 1707
+            },
+            "log_odds_mean": {
+              "brier_index": 80.13162746646799,
+              "gain_vs_market": -0.014267504044773756,
+              "gain_vs_model": 0.13435416951477422,
+              "test_target_cells": 1707
+            },
+            "piecewise_odds": {
+              "brier_index": 80.67301370372175,
+              "gain_vs_market": 0.04011405825570482,
+              "gain_vs_model": 0.18076714486196008,
+              "test_target_cells": 1707
+            },
+            "simple_mean": {
+              "brier_index": 79.84313327570707,
+              "gain_vs_market": -0.04401103494931264,
+              "gain_vs_model": 0.1089689891666459,
+              "test_target_cells": 1707
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.27123207572507,
+          "model_brier_index": 78.65654812812737,
+          "model_gain_vs_market": -0.17168877654760972,
+          "near_bi": true,
+          "partner_name": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
+          "test_target_cells": 1707,
+          "train_bi_gap": 1.08772901426792,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5022154030856475,
+            "adjusted_pog": 0.003738319166177335,
+            "high_loss_lift": -44.85076204523107
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 1703
+        }
+      },
       "exact_configuration": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
       "exact_copy_share": 0.10850439882697947,
       "family": "GPT",
@@ -1787,6 +4592,118 @@
           "gain_vs_market": -0.034696080412479915,
           "gain_vs_model": 0.07334370900846898,
           "test_target_cells": 3490
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.88943767634574,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.08354431118778186,
+              "test_target_cells": 1725
+            },
+            "cf_directional": {
+              "brier_index": 73.87566953392546,
+              "gain_vs_market": -0.0010502179335011312,
+              "gain_vs_model": 0.08258183298813213,
+              "test_target_cells": 1725
+            },
+            "ec_w0_56": {
+              "brier_index": 73.93821108605401,
+              "gain_vs_market": 0.0037812811263410696,
+              "gain_vs_model": 0.0870096877870154,
+              "test_target_cells": 1725
+            },
+            "log_odds_mean": {
+              "brier_index": 73.7806435318764,
+              "gain_vs_market": -0.008364429908844189,
+              "gain_vs_model": 0.07587868181415053,
+              "test_target_cells": 1725
+            },
+            "piecewise_odds": {
+              "brier_index": 73.85088104336137,
+              "gain_vs_market": -0.002956048031103684,
+              "gain_vs_model": 0.08083522415327472,
+              "test_target_cells": 1725
+            },
+            "simple_mean": {
+              "brier_index": 73.5745997418712,
+              "gain_vs_market": -0.024316072411443915,
+              "gain_vs_model": 0.06125970829674424,
+              "test_target_cells": 1725
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.88943767634574,
+          "model_brier_index": 72.73144507804511,
+          "model_gain_vs_market": -0.09116022979360881,
+          "near_bi": true,
+          "partner_name": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
+          "test_target_cells": 1725,
+          "train_bi_gap": 1.7831318600795478,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6222313246722804,
+            "adjusted_pog": 0.002935795325779035,
+            "high_loss_lift": 1.0
+          },
+          "train_near_bi_share": 0.7,
+          "train_target_cells": 1765
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.8118227606151,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.12380528211890576,
+              "test_target_cells": 1765
+            },
+            "cf_directional": {
+              "brier_index": 73.61552600525076,
+              "gain_vs_market": -0.0152868895688692,
+              "gain_vs_model": 0.11041099022583098,
+              "test_target_cells": 1765
+            },
+            "ec_w0_56": {
+              "brier_index": 73.83884628849428,
+              "gain_vs_market": 0.0021060876050811887,
+              "gain_vs_model": 0.12565062495387275,
+              "test_target_cells": 1765
+            },
+            "log_odds_mean": {
+              "brier_index": 73.4814825654797,
+              "gain_vs_market": -0.025394734306243453,
+              "gain_vs_model": 0.10155455005778144,
+              "test_target_cells": 1765
+            },
+            "piecewise_odds": {
+              "brier_index": 74.02513376051517,
+              "gain_vs_market": 0.01621609872791155,
+              "gain_vs_model": 0.1380137421689402,
+              "test_target_cells": 1765
+            },
+            "simple_mean": {
+              "brier_index": 73.23255205346516,
+              "gain_vs_market": -0.04478099988203498,
+              "gain_vs_model": 0.08456840656083281,
+              "test_target_cells": 1765
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.8118227606151,
+          "model_brier_index": 72.02869090053557,
+          "model_gain_vs_market": -0.14129882273007152,
+          "near_bi": true,
+          "partner_name": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
+          "test_target_cells": 1765,
+          "train_bi_gap": 1.1579925983006045,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.6778926419646257,
+            "adjusted_pog": 0.0036957818840579735,
+            "high_loss_lift": 1.0
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 1725
         }
       },
       "exact_configuration": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
@@ -1853,6 +4770,118 @@
           "test_target_cells": 3350
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.04646756476177,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.1593789313583235,
+              "test_target_cells": 1678
+            },
+            "cf_directional": {
+              "brier_index": 80.0346715008512,
+              "gain_vs_market": -0.0011741011206279804,
+              "gain_vs_model": 0.1583919572196078,
+              "test_target_cells": 1678
+            },
+            "ec_w0_56": {
+              "brier_index": 79.83732696497967,
+              "gain_vs_market": -0.021356273349733487,
+              "gain_vs_model": 0.14142639803286677,
+              "test_target_cells": 1678
+            },
+            "log_odds_mean": {
+              "brier_index": 79.70811151482201,
+              "gain_vs_market": -0.03438649428781463,
+              "gain_vs_model": 0.13047291978325987,
+              "test_target_cells": 1678
+            },
+            "piecewise_odds": {
+              "brier_index": 79.93866462952141,
+              "gain_vs_market": -0.011197547405465434,
+              "gain_vs_model": 0.14996603709217532,
+              "test_target_cells": 1678
+            },
+            "simple_mean": {
+              "brier_index": 79.66519901960949,
+              "gain_vs_market": -0.038630387656525475,
+              "gain_vs_model": 0.12690541360445282,
+              "test_target_cells": 1678
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.04646756476177,
+          "model_brier_index": 78.24552771315106,
+          "model_gain_vs_market": -0.1895966414639798,
+          "near_bi": false,
+          "partner_name": "Gemini-2.5-Flash (zero shot with freeze values)",
+          "test_target_cells": 1678,
+          "train_bi_gap": 2.1336168826571114,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.4454747751452275,
+            "adjusted_pog": 0.0029054280284689002,
+            "high_loss_lift": -36.27255381604697
+          },
+          "train_near_bi_share": 0.3,
+          "train_target_cells": 1672
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.38143636691244,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.187233696928332,
+              "test_target_cells": 1672
+            },
+            "cf_directional": {
+              "brier_index": 79.97598441110867,
+              "gain_vs_market": -0.04280756042671868,
+              "gain_vs_model": 0.1524411542967908,
+              "test_target_cells": 1672
+            },
+            "ec_w0_56": {
+              "brier_index": 79.9013639618894,
+              "gain_vs_market": -0.04985263185109655,
+              "gain_vs_model": 0.14671515764032336,
+              "test_target_cells": 1672
+            },
+            "log_odds_mean": {
+              "brier_index": 79.7282511179081,
+              "gain_vs_market": -0.06788582696757336,
+              "gain_vs_model": 0.13205838431293446,
+              "test_target_cells": 1672
+            },
+            "piecewise_odds": {
+              "brier_index": 80.09412840078235,
+              "gain_vs_market": -0.02991859538287889,
+              "gain_vs_model": 0.16291687076589245,
+              "test_target_cells": 1672
+            },
+            "simple_mean": {
+              "brier_index": 79.76748479377152,
+              "gain_vs_market": -0.06360789929344715,
+              "gain_vs_model": 0.13553533977344198,
+              "test_target_cells": 1672
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.38143636691244,
+          "model_brier_index": 78.24781948425533,
+          "model_gain_vs_market": -0.23036596893931777,
+          "near_bi": true,
+          "partner_name": "Gemini-2.5-Flash (zero shot with freeze values)",
+          "test_target_cells": 1672,
+          "train_bi_gap": 1.8009398516107051,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.49091409641433364,
+            "adjusted_pog": 0.003900818658760428,
+            "high_loss_lift": -41.0558882235529
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 1678
+        }
+      },
       "exact_configuration": "Gemini-2.5-Flash (zero shot with freeze values)",
       "exact_copy_share": 0.1701492537313433,
       "family": "Gemini",
@@ -1915,6 +4944,118 @@
           "gain_vs_market": -0.08030644472663635,
           "gain_vs_model": 0.109077329197296,
           "test_target_cells": 2980
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.15850266204463886,
+              "test_target_cells": 1457
+            },
+            "cf_directional": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.15850266204463886,
+              "test_target_cells": 1457
+            },
+            "ec_w0_56": {
+              "brier_index": 70.1782615899807,
+              "gain_vs_market": -0.07704054575119833,
+              "gain_vs_model": 0.09367324788037726,
+              "test_target_cells": 1457
+            },
+            "log_odds_mean": {
+              "brier_index": 70.21577284933643,
+              "gain_vs_market": -0.07423697973451374,
+              "gain_vs_model": 0.09603244122019945,
+              "test_target_cells": 1457
+            },
+            "piecewise_odds": {
+              "brier_index": 69.6406423411113,
+              "gain_vs_market": -0.11650930201455455,
+              "gain_vs_model": 0.06046039455235402,
+              "test_target_cells": 1457
+            },
+            "simple_mean": {
+              "brier_index": 70.20502578001135,
+              "gain_vs_market": -0.07495621111089489,
+              "gain_vs_model": 0.09542720993160075,
+              "test_target_cells": 1457
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.25972139564634,
+          "model_brier_index": 68.68597533093882,
+          "model_gain_vs_market": -0.18835788884343083,
+          "near_bi": false,
+          "partner_name": "Claude-3-Opus-20240229 (zero shot with freeze values)",
+          "test_target_cells": 1457,
+          "train_bi_gap": 3.1991127771998293,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5766240372178087,
+            "adjusted_pog": 0.004606036933683519,
+            "high_loss_lift": -23.713551209496714
+          },
+          "train_near_bi_share": 0.2,
+          "train_target_cells": 1523
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.19070959683331828,
+              "test_target_cells": 1523
+            },
+            "cf_directional": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.19070959683331828,
+              "test_target_cells": 1523
+            },
+            "ec_w0_56": {
+              "brier_index": 69.86502773122777,
+              "gain_vs_market": -0.09574878635369306,
+              "gain_vs_model": 0.11322102292241756,
+              "test_target_cells": 1523
+            },
+            "log_odds_mean": {
+              "brier_index": 69.83255555007739,
+              "gain_vs_market": -0.09800724886724331,
+              "gain_vs_model": 0.11139327088428964,
+              "test_target_cells": 1523
+            },
+            "piecewise_odds": {
+              "brier_index": 69.5882761354864,
+              "gain_vs_market": -0.11626544585085435,
+              "gain_vs_model": 0.09661708728632637,
+              "test_target_cells": 1523
+            },
+            "simple_mean": {
+              "brier_index": 70.00540440757045,
+              "gain_vs_market": -0.08540643181023758,
+              "gain_vs_model": 0.12159099120058342,
+              "test_target_cells": 1523
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.2072950814907,
+          "model_brier_index": 68.00818230429087,
+          "model_gain_vs_market": -0.23565038716273976,
+          "near_bi": false,
+          "partner_name": "Claude-3-Opus-20240229 (zero shot with freeze values)",
+          "test_target_cells": 1523,
+          "train_bi_gap": 2.5737460647075303,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.7558743114520674,
+            "adjusted_pog": 0.0031856319492107087,
+            "high_loss_lift": -24.15563133912911
+          },
+          "train_near_bi_share": 0.4,
+          "train_target_cells": 1457
         }
       },
       "exact_configuration": "Claude-3-Opus-20240229 (zero shot with freeze values)",
@@ -1981,6 +5122,118 @@
           "test_target_cells": 4210
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.42857124628576,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.09126960708227637,
+              "test_target_cells": 2106
+            },
+            "cf_directional": {
+              "brier_index": 73.23864708498816,
+              "gain_vs_market": -0.014469345867726467,
+              "gain_vs_model": 0.07812087272663486,
+              "test_target_cells": 2106
+            },
+            "ec_w0_56": {
+              "brier_index": 73.0342612786223,
+              "gain_vs_market": -0.030169635296173503,
+              "gain_vs_model": 0.0638535425454002,
+              "test_target_cells": 2106
+            },
+            "log_odds_mean": {
+              "brier_index": 72.99633617428887,
+              "gain_vs_market": -0.033001726217633566,
+              "gain_vs_model": 0.061279935449563075,
+              "test_target_cells": 2106
+            },
+            "piecewise_odds": {
+              "brier_index": 72.78836468210129,
+              "gain_vs_market": -0.04931716532423488,
+              "gain_vs_model": 0.04645360005959607,
+              "test_target_cells": 2106
+            },
+            "simple_mean": {
+              "brier_index": 72.99090273103366,
+              "gain_vs_market": -0.03334197876253661,
+              "gain_vs_model": 0.06097073762074207,
+              "test_target_cells": 2106
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.42857124628576,
+          "model_brier_index": 72.13093766747498,
+          "model_gain_vs_market": -0.10043639763079863,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
+          "test_target_cells": 2106,
+          "train_bi_gap": 1.3644432191983926,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.521321874648465,
+            "adjusted_pog": 0.00369353302756654,
+            "high_loss_lift": -38.74712933523371
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 2104
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 73.20705534175694,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.09486009707864,
+              "test_target_cells": 2104
+            },
+            "cf_directional": {
+              "brier_index": 73.07834251853679,
+              "gain_vs_market": -0.009990535503065922,
+              "gain_vs_model": 0.08581726474326251,
+              "test_target_cells": 2104
+            },
+            "ec_w0_56": {
+              "brier_index": 73.03904295649242,
+              "gain_vs_market": -0.01280635221765458,
+              "gain_vs_model": 0.08326855667557538,
+              "test_target_cells": 2104
+            },
+            "log_odds_mean": {
+              "brier_index": 72.88894915808179,
+              "gain_vs_market": -0.0240686561043458,
+              "gain_vs_model": 0.07307459602890484,
+              "test_target_cells": 2104
+            },
+            "piecewise_odds": {
+              "brier_index": 73.06428611967121,
+              "gain_vs_market": -0.01112267570659654,
+              "gain_vs_model": 0.08479251946934543,
+              "test_target_cells": 2104
+            },
+            "simple_mean": {
+              "brier_index": 72.78412210149249,
+              "gain_vs_market": -0.03193743772803995,
+              "gain_vs_model": 0.06595224779392495,
+              "test_target_cells": 2104
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 73.20705534175694,
+          "model_brier_index": 71.84261212255853,
+          "model_gain_vs_market": -0.10480158566921736,
+          "near_bi": true,
+          "partner_name": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
+          "test_target_cells": 2104,
+          "train_bi_gap": 1.2976335788107864,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5578351255778766,
+            "adjusted_pog": 0.003403641267806265,
+            "high_loss_lift": -40.470554926387315
+          },
+          "train_near_bi_share": 0.9,
+          "train_target_cells": 2106
+        }
+      },
       "exact_configuration": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
       "exact_copy_share": 0.030878859857482184,
       "family": "Claude",
@@ -2043,6 +5296,118 @@
           "gain_vs_market": -0.025373291369481524,
           "gain_vs_model": 0.08619666607913015,
           "test_target_cells": 6240
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 76.5087539206072,
+              "gain_vs_market": 0.0011874940459499978,
+              "gain_vs_model": 0.09891535497408456,
+              "test_target_cells": 3142
+            },
+            "cf_directional": {
+              "brier_index": 75.80724619152831,
+              "gain_vs_market": -0.06155142650675734,
+              "gain_vs_model": 0.04231506451061476,
+              "test_target_cells": 3142
+            },
+            "ec_w0_56": {
+              "brier_index": 76.49918052074925,
+              "gain_vs_market": -0.00013284517179654537,
+              "gain_vs_model": 0.097724203092981,
+              "test_target_cells": 3142
+            },
+            "log_odds_mean": {
+              "brier_index": 76.37356037661682,
+              "gain_vs_market": -0.010826378290659248,
+              "gain_vs_model": 0.08807696856493578,
+              "test_target_cells": 3142
+            },
+            "piecewise_odds": {
+              "brier_index": 76.41480881418536,
+              "gain_vs_market": -0.007375730611928423,
+              "gain_vs_model": 0.0911899908991212,
+              "test_target_cells": 3142
+            },
+            "simple_mean": {
+              "brier_index": 76.28618160885601,
+              "gain_vs_market": -0.018229820312062526,
+              "gain_vs_model": 0.08139790929599526,
+              "test_target_cells": 3142
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 76.4945279435349,
+          "model_brier_index": 75.27280760047611,
+          "model_gain_vs_market": -0.108455805420282,
+          "near_bi": true,
+          "partner_name": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
+          "test_target_cells": 3142,
+          "train_bi_gap": 1.6223457825842267,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5019267285203997,
+            "adjusted_pog": 0.002672523240800516,
+            "high_loss_lift": -45.604318032122414
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 3098
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 76.65897824574397,
+              "gain_vs_market": 0.00425584806813744,
+              "gain_vs_model": 0.12351105207000497,
+              "test_target_cells": 3098
+            },
+            "cf_directional": {
+              "brier_index": 75.81541865183084,
+              "gain_vs_market": -0.07033662235951618,
+              "gain_vs_model": 0.05785214179492137,
+              "test_target_cells": 3098
+            },
+            "ec_w0_56": {
+              "brier_index": 76.54280581907831,
+              "gain_vs_market": -0.00612351572485097,
+              "gain_vs_model": 0.114374771798161,
+              "test_target_cells": 3098
+            },
+            "log_odds_mean": {
+              "brier_index": 76.28196435305223,
+              "gain_vs_market": -0.028541668077996275,
+              "gain_vs_model": 0.0946415273373015,
+              "test_target_cells": 3098
+            },
+            "piecewise_odds": {
+              "brier_index": 76.6836792597295,
+              "gain_vs_market": 0.0057955569941332075,
+              "gain_vs_model": 0.12486635790237786,
+              "test_target_cells": 3098
+            },
+            "simple_mean": {
+              "brier_index": 76.23329359444632,
+              "gain_vs_market": -0.03268847037965095,
+              "gain_vs_model": 0.09099136642036376,
+              "test_target_cells": 3098
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 76.6076513983657,
+          "model_brier_index": 75.08795931053803,
+          "model_gain_vs_market": -0.13606013433884442,
+          "near_bi": true,
+          "partner_name": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
+          "test_target_cells": 3098,
+          "train_bi_gap": 1.2501722972033862,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.5063429848056198,
+            "adjusted_pog": 0.0032921891311266708,
+            "high_loss_lift": -63.883198146882364
+          },
+          "train_near_bi_share": 0.8,
+          "train_target_cells": 3142
         }
       },
       "exact_configuration": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
@@ -2109,6 +5474,118 @@
           "test_target_cells": 3030
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.4700482664896,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.1497903356538992,
+              "test_target_cells": 1504
+            },
+            "cf_directional": {
+              "brier_index": 74.59698474334441,
+              "gain_vs_market": 0.009943487496573295,
+              "gain_vs_model": 0.15824438482079045,
+              "test_target_cells": 1504
+            },
+            "ec_w0_56": {
+              "brier_index": 74.24493882157557,
+              "gain_vs_market": -0.017835113929562618,
+              "gain_vs_model": 0.1346267494262713,
+              "test_target_cells": 1504
+            },
+            "log_odds_mean": {
+              "brier_index": 73.98206557748621,
+              "gain_vs_market": -0.038749514955510364,
+              "gain_vs_model": 0.11684512355000054,
+              "test_target_cells": 1504
+            },
+            "piecewise_odds": {
+              "brier_index": 74.5394307127988,
+              "gain_vs_market": 0.005269307053313052,
+              "gain_vs_model": 0.15427035143503304,
+              "test_target_cells": 1504
+            },
+            "simple_mean": {
+              "brier_index": 73.75456736361785,
+              "gain_vs_market": -0.05699806627747017,
+              "gain_vs_model": 0.10133002885575448,
+              "test_target_cells": 1504
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.4700482664896,
+          "model_brier_index": 72.32491188038443,
+          "model_gain_vs_market": -0.17618046693118158,
+          "near_bi": true,
+          "partner_name": "DeepSeek-V3 (scratchpad with freeze values)",
+          "test_target_cells": 1504,
+          "train_bi_gap": 1.8814996841445768,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.4144109032029536,
+            "adjusted_pog": 0.004718327942332892,
+            "high_loss_lift": -52.45711252653928
+          },
+          "train_near_bi_share": 0.5,
+          "train_target_cells": 1526
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 74.21818969900083,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.1321170258096674,
+              "test_target_cells": 1526
+            },
+            "cf_directional": {
+              "brier_index": 74.41606517316939,
+              "gain_vs_market": 0.015306779316334066,
+              "gain_vs_model": 0.14540151896800246,
+              "test_target_cells": 1526
+            },
+            "ec_w0_56": {
+              "brier_index": 74.16823194414812,
+              "gain_vs_market": -0.003989200985296797,
+              "gain_vs_model": 0.128654866193905,
+              "test_target_cells": 1526
+            },
+            "log_odds_mean": {
+              "brier_index": 73.8580205714703,
+              "gain_vs_market": -0.02827179250907949,
+              "gain_vs_model": 0.10758041844119552,
+              "test_target_cells": 1526
+            },
+            "piecewise_odds": {
+              "brier_index": 74.57892933721288,
+              "gain_vs_market": 0.027647081782314883,
+              "gain_vs_model": 0.1561114573745862,
+              "test_target_cells": 1526
+            },
+            "simple_mean": {
+              "brier_index": 73.62000228350038,
+              "gain_vs_market": -0.04708110363322575,
+              "gain_vs_model": 0.09125613756030015,
+              "test_target_cells": 1526
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 74.21818969900083,
+          "model_brier_index": 72.33669001485625,
+          "model_gain_vs_market": -0.1522290789641568,
+          "near_bi": false,
+          "partner_name": "DeepSeek-V3 (scratchpad with freeze values)",
+          "test_target_cells": 1526,
+          "train_bi_gap": 2.1451363861051616,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.3776130404608766,
+            "adjusted_pog": 0.004575316795212767,
+            "high_loss_lift": -57.26942675159235
+          },
+          "train_near_bi_share": 0.5,
+          "train_target_cells": 1504
+        }
+      },
       "exact_configuration": "DeepSeek-V3 (scratchpad with freeze values)",
       "exact_copy_share": 0.0627062706270627,
       "family": "DeepSeek",
@@ -2171,6 +5648,118 @@
           "gain_vs_market": -0.0745881555805998,
           "gain_vs_model": 0.14156262345240794,
           "test_target_cells": 4790
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.11700394858512,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.19906515081071544,
+              "test_target_cells": 2366
+            },
+            "cf_directional": {
+              "brier_index": 72.08582158392167,
+              "gain_vs_market": -0.002150583187651492,
+              "gain_vs_model": 0.1973426737896448,
+              "test_target_cells": 2366
+            },
+            "ec_w0_56": {
+              "brier_index": 71.70354750807425,
+              "gain_vs_market": -0.029829782602313393,
+              "gain_vs_model": 0.17517343838078242,
+              "test_target_cells": 2366
+            },
+            "log_odds_mean": {
+              "brier_index": 71.56550937207037,
+              "gain_vs_market": -0.03991801759688154,
+              "gain_vs_model": 0.16709341940682193,
+              "test_target_cells": 2366
+            },
+            "piecewise_odds": {
+              "brier_index": 71.78154219357596,
+              "gain_vs_market": -0.024225596739073915,
+              "gain_vs_model": 0.17966202613998486,
+              "test_target_cells": 2366
+            },
+            "simple_mean": {
+              "brier_index": 71.10193850226513,
+              "gain_vs_market": -0.07411674312412862,
+              "gain_vs_model": 0.13970246833419053,
+              "test_target_cells": 2366
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.11700394858512,
+          "model_brier_index": 68.85699713582466,
+          "model_gain_vs_market": -0.2485410030693651,
+          "near_bi": false,
+          "partner_name": "GPT-4o-2024-05-13 (scratchpad with freeze values)",
+          "test_target_cells": 2366,
+          "train_bi_gap": 3.353500849444713,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.46780393948684595,
+            "adjusted_pog": 0.00670329589521452,
+            "high_loss_lift": -16.101837697314622
+          },
+          "train_near_bi_share": 0.1,
+          "train_target_cells": 2424
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 72.02143635154584,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.20315598724889095,
+              "test_target_cells": 2424
+            },
+            "cf_directional": {
+              "brier_index": 71.96139255351004,
+              "gain_vs_market": -0.004235666569613839,
+              "gain_vs_model": 0.19978082170288414,
+              "test_target_cells": 2424
+            },
+            "ec_w0_56": {
+              "brier_index": 71.70202567593918,
+              "gain_vs_market": -0.022922119687124532,
+              "gain_vs_model": 0.18489063341664144,
+              "test_target_cells": 2424
+            },
+            "log_odds_mean": {
+              "brier_index": 71.47539919250517,
+              "gain_vs_market": -0.039377175371717164,
+              "gain_vs_model": 0.1717785208148877,
+              "test_target_cells": 2424
+            },
+            "piecewise_odds": {
+              "brier_index": 71.95345433874456,
+              "gain_vs_market": -0.004889256511930121,
+              "gain_vs_model": 0.19926001247055505,
+              "test_target_cells": 2424
+            },
+            "simple_mean": {
+              "brier_index": 70.99015978095304,
+              "gain_vs_market": -0.07504515697003777,
+              "gain_vs_model": 0.14335670323134916,
+              "test_target_cells": 2424
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 72.02143635154584,
+          "model_brier_index": 68.66793550210114,
+          "model_gain_vs_market": -0.2549507607486359,
+          "near_bi": false,
+          "partner_name": "GPT-4o-2024-05-13 (scratchpad with freeze values)",
+          "test_target_cells": 2424,
+          "train_bi_gap": 3.2600068127604724,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.4924567621691677,
+            "adjusted_pog": 0.006368348795435331,
+            "high_loss_lift": -16.107246077559584
+          },
+          "train_near_bi_share": 0.3,
+          "train_target_cells": 2366
         }
       },
       "exact_configuration": "GPT-4o-2024-05-13 (scratchpad with freeze values)",
@@ -2237,6 +5826,118 @@
           "test_target_cells": 1190
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.05015140005845,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.2505372712434306,
+              "test_target_cells": 605
+            },
+            "cf_directional": {
+              "brier_index": 70.95750330765058,
+              "gain_vs_market": -0.006393174342602758,
+              "gain_vs_model": 0.2457458253552071,
+              "test_target_cells": 605
+            },
+            "ec_w0_56": {
+              "brier_index": 70.50646299703673,
+              "gain_vs_market": -0.038122591641871095,
+              "gain_vs_model": 0.22196580968424154,
+              "test_target_cells": 605
+            },
+            "log_odds_mean": {
+              "brier_index": 70.44943701293302,
+              "gain_vs_market": -0.042172272133190664,
+              "gain_vs_model": 0.21893072509262493,
+              "test_target_cells": 605
+            },
+            "piecewise_odds": {
+              "brier_index": 70.29066604721108,
+              "gain_vs_market": -0.05331731642055004,
+              "gain_vs_model": 0.21057792978890777,
+              "test_target_cells": 605
+            },
+            "simple_mean": {
+              "brier_index": 69.69682393446777,
+              "gain_vs_market": -0.0959920515234788,
+              "gain_vs_model": 0.178594806369703,
+              "test_target_cells": 605
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.05015140005845,
+          "model_brier_index": 66.57880212405576,
+          "model_gain_vs_market": -0.3342891669330856,
+          "near_bi": false,
+          "partner_name": "Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values)",
+          "test_target_cells": 605,
+          "train_bi_gap": 3.964399168262498,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.41593410977235395,
+            "adjusted_pog": 0.006236553846153843,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 0.1,
+          "train_target_cells": 585
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 70.8049871618335,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.2258198144345522,
+              "test_target_cells": 585
+            },
+            "cf_directional": {
+              "brier_index": 70.77896249466951,
+              "gain_vs_market": -0.0017784377500012604,
+              "gain_vs_model": 0.22444298316723962,
+              "test_target_cells": 585
+            },
+            "ec_w0_56": {
+              "brier_index": 70.68295213172588,
+              "gain_vs_market": -0.008608995437494882,
+              "gain_vs_model": 0.2191549007492203,
+              "test_target_cells": 585
+            },
+            "log_odds_mean": {
+              "brier_index": 70.30518825760068,
+              "gain_vs_market": -0.03473498894297502,
+              "gain_vs_model": 0.19892867424906602,
+              "test_target_cells": 585
+            },
+            "piecewise_odds": {
+              "brier_index": 70.88748054334079,
+              "gain_vs_market": 0.005425684194647396,
+              "gain_vs_model": 0.23002027163118385,
+              "test_target_cells": 585
+            },
+            "simple_mean": {
+              "brier_index": 69.60595900721684,
+              "gain_vs_market": -0.08411794191841998,
+              "gain_vs_model": 0.16069737055076627,
+              "test_target_cells": 585
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 70.8049871618335,
+          "model_brier_index": 66.840587993571,
+          "model_gain_vs_market": -0.2916889616202426,
+          "near_bi": false,
+          "partner_name": "Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values)",
+          "test_target_cells": 585,
+          "train_bi_gap": 4.471349276002704,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.4025077938398642,
+            "adjusted_pog": 0.007859365289256197,
+            "high_loss_lift": null
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 605
+        }
+      },
       "exact_configuration": "Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values)",
       "exact_copy_share": 0.01680672268907563,
       "family": "Qwen",
@@ -2299,6 +6000,118 @@
           "gain_vs_market": -0.10451653215820944,
           "gain_vs_model": 0.25605420952534885,
           "test_target_cells": 2880
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.96498314787333,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.2792103076745526,
+              "test_target_cells": 1432
+            },
+            "cf_directional": {
+              "brier_index": 81.01577169938949,
+              "gain_vs_market": 0.005281511088352377,
+              "gain_vs_model": 0.2830171664269396,
+              "test_target_cells": 1432
+            },
+            "ec_w0_56": {
+              "brier_index": 79.94931506331396,
+              "gain_vs_market": -0.11176692356505842,
+              "gain_vs_model": 0.1986498612259324,
+              "test_target_cells": 1432
+            },
+            "log_odds_mean": {
+              "brier_index": 79.87594619465196,
+              "gain_vs_market": -0.11955647786074049,
+              "gain_vs_model": 0.19303523078179535,
+              "test_target_cells": 1432
+            },
+            "piecewise_odds": {
+              "brier_index": 79.82311456598678,
+              "gain_vs_market": -0.12633956526237672,
+              "gain_vs_model": 0.18814605130055337,
+              "test_target_cells": 1432
+            },
+            "simple_mean": {
+              "brier_index": 80.37329401454825,
+              "gain_vs_market": -0.06347746431660531,
+              "gain_vs_model": 0.23345640570018716,
+              "test_target_cells": 1432
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.96498314787333,
+          "model_brier_index": 77.62311374880976,
+          "model_gain_vs_market": -0.3873672315897728,
+          "near_bi": false,
+          "partner_name": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
+          "test_target_cells": 1432,
+          "train_bi_gap": 4.787048171659433,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.13023253226917975,
+            "adjusted_pog": 0.0026882462705801113,
+            "high_loss_lift": -28.878448918717375
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1448
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 81.37128390799106,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.36914328220885956,
+              "test_target_cells": 1448
+            },
+            "cf_directional": {
+              "brier_index": 80.47907242219333,
+              "gain_vs_market": -0.103082465159398,
+              "gain_vs_model": 0.30411301657658213,
+              "test_target_cells": 1448
+            },
+            "ec_w0_56": {
+              "brier_index": 79.50034784955984,
+              "gain_vs_market": -0.21281167668569684,
+              "gain_vs_model": 0.23488960634729147,
+              "test_target_cells": 1448
+            },
+            "log_odds_mean": {
+              "brier_index": 79.38626535105008,
+              "gain_vs_market": -0.22602093088400194,
+              "gain_vs_model": 0.22655645959927986,
+              "test_target_cells": 1448
+            },
+            "piecewise_odds": {
+              "brier_index": 79.39807886285861,
+              "gain_vs_market": -0.22542834950614066,
+              "gain_vs_model": 0.2269302935423416,
+              "test_target_cells": 1448
+            },
+            "simple_mean": {
+              "brier_index": 80.05271642875907,
+              "gain_vs_market": -0.14689103997804948,
+              "gain_vs_model": 0.27647608285538006,
+              "test_target_cells": 1448
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 81.37128390799106,
+          "model_brier_index": 76.58423573633162,
+          "model_gain_vs_market": -0.5851459955936823,
+          "near_bi": false,
+          "partner_name": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
+          "test_target_cells": 1448,
+          "train_bi_gap": 3.341869399063577,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.2925626498907364,
+            "adjusted_pog": 0.004401106680307264,
+            "high_loss_lift": -35.37888652393473
+          },
+          "train_near_bi_share": 0.2,
+          "train_target_cells": 1432
         }
       },
       "exact_configuration": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
@@ -2365,6 +6178,118 @@
           "test_target_cells": 2980
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.28485617591517404,
+              "test_target_cells": 1457
+            },
+            "cf_directional": {
+              "brier_index": 71.15074272400767,
+              "gain_vs_market": -0.007481039758469235,
+              "gain_vs_model": 0.2795061565341717,
+              "test_target_cells": 1457
+            },
+            "ec_w0_56": {
+              "brier_index": 70.62047222450764,
+              "gain_vs_market": -0.044860892449639256,
+              "gain_vs_model": 0.25277418573688093,
+              "test_target_cells": 1457
+            },
+            "log_odds_mean": {
+              "brier_index": 70.48552042872024,
+              "gain_vs_market": -0.05447252162022241,
+              "gain_vs_model": 0.24590048849614482,
+              "test_target_cells": 1457
+            },
+            "piecewise_odds": {
+              "brier_index": 70.43968112048165,
+              "gain_vs_market": -0.05785798426701539,
+              "gain_vs_model": 0.24347939579262096,
+              "test_target_cells": 1457
+            },
+            "simple_mean": {
+              "brier_index": 69.71787430579661,
+              "gain_vs_market": -0.11003647667885483,
+              "gain_vs_model": 0.20616426919423703,
+              "test_target_cells": 1457
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.25972139564634,
+          "model_brier_index": 66.01841748532995,
+          "model_gain_vs_market": -0.3983201229203178,
+          "near_bi": false,
+          "partner_name": "GPT-4-Turbo-2024-04-09 (scratchpad with freeze values)",
+          "test_target_cells": 1457,
+          "train_bi_gap": 4.936065869588377,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.30265236507753696,
+            "adjusted_pog": 0.006426423013788572,
+            "high_loss_lift": -9.423433262525515
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1523
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.2714467404403974,
+              "test_target_cells": 1523
+            },
+            "cf_directional": {
+              "brier_index": 71.12017828090335,
+              "gain_vs_market": -0.005921406915859472,
+              "gain_vs_model": 0.2671326801306692,
+              "test_target_cells": 1523
+            },
+            "ec_w0_56": {
+              "brier_index": 70.77040203631489,
+              "gain_vs_market": -0.03048922638873822,
+              "gain_vs_model": 0.24923371517343154,
+              "test_target_cells": 1523
+            },
+            "log_odds_mean": {
+              "brier_index": 70.51133371931266,
+              "gain_vs_market": -0.04881742487608636,
+              "gain_vs_model": 0.23588064642361867,
+              "test_target_cells": 1523
+            },
+            "piecewise_odds": {
+              "brier_index": 70.85077799171926,
+              "gain_vs_market": -0.024924143505059546,
+              "gain_vs_model": 0.25328817444805496,
+              "test_target_cells": 1523
+            },
+            "simple_mean": {
+              "brier_index": 69.76417325474469,
+              "gain_vs_market": -0.1026330326342398,
+              "gain_vs_model": 0.19667310997623494,
+              "test_target_cells": 1523
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.2072950814907,
+          "model_brier_index": 66.27122921190232,
+          "model_gain_vs_market": -0.37258324889587635,
+          "near_bi": false,
+          "partner_name": "GPT-4-Turbo-2024-04-09 (scratchpad with freeze values)",
+          "test_target_cells": 1523,
+          "train_bi_gap": 5.241303910316391,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.2700332180152347,
+            "adjusted_pog": 0.005889761667810567,
+            "high_loss_lift": -9.189000078983778
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1457
+        }
+      },
       "exact_configuration": "GPT-4-Turbo-2024-04-09 (scratchpad with freeze values)",
       "exact_copy_share": 0.23825503355704697,
       "family": "GPT",
@@ -2427,6 +6352,118 @@
           "gain_vs_market": -0.15192459843943185,
           "gain_vs_model": 0.2520872119101541,
           "test_target_cells": 2950
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.25622943639222,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.3282095689302775,
+              "test_target_cells": 1442
+            },
+            "cf_directional": {
+              "brier_index": 71.2322990166226,
+              "gain_vs_market": -0.001634314648593191,
+              "gain_vs_model": 0.3271116519879955,
+              "test_target_cells": 1442
+            },
+            "ec_w0_56": {
+              "brier_index": 70.5604319548666,
+              "gain_vs_market": -0.04910754127458848,
+              "gain_vs_model": 0.2952195926086475,
+              "test_target_cells": 1442
+            },
+            "log_odds_mean": {
+              "brier_index": 70.392821380196,
+              "gain_vs_market": -0.061118692299960385,
+              "gain_vs_model": 0.28715061628366934,
+              "test_target_cells": 1442
+            },
+            "piecewise_odds": {
+              "brier_index": 70.65026416463195,
+              "gain_vs_market": -0.04276521075218219,
+              "gain_vs_model": 0.29948030956428145,
+              "test_target_cells": 1442
+            },
+            "simple_mean": {
+              "brier_index": 69.41400891309529,
+              "gain_vs_market": -0.13246836390040484,
+              "gain_vs_model": 0.23921858964252365,
+              "test_target_cells": 1442
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.25622943639222,
+          "model_brier_index": 64.94732200322231,
+          "model_gain_vs_market": -0.48855945805547485,
+          "near_bi": false,
+          "partner_name": "Claude-3-Opus-20240229 (scratchpad with freeze values)",
+          "test_target_cells": 1442,
+          "train_bi_gap": 7.498906666493211,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.29228247150954056,
+            "adjusted_pog": 0.01029950928381963,
+            "high_loss_lift": -6.0904048535853255
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1508
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.20341268374723,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.3708214399004751,
+              "test_target_cells": 1508
+            },
+            "cf_directional": {
+              "brier_index": 70.86671438620152,
+              "gain_vs_market": -0.024298295608045962,
+              "gain_vs_model": 0.35553347325693213,
+              "test_target_cells": 1508
+            },
+            "ec_w0_56": {
+              "brier_index": 70.23164898111017,
+              "gain_vs_market": -0.0686411633895674,
+              "gain_vs_model": 0.32763389155547085,
+              "test_target_cells": 1508
+            },
+            "log_odds_mean": {
+              "brier_index": 69.95405989755564,
+              "gain_vs_market": -0.08867480563326427,
+              "gain_vs_model": 0.3150291533750327,
+              "test_target_cells": 1508
+            },
+            "piecewise_odds": {
+              "brier_index": 70.55617071555967,
+              "gain_vs_market": -0.04552712541798993,
+              "gain_vs_model": 0.34217674868451375,
+              "test_target_cells": 1508
+            },
+            "simple_mean": {
+              "brier_index": 68.8457381513984,
+              "gain_vs_market": -0.17046200883169316,
+              "gain_vs_model": 0.26357039863207793,
+              "test_target_cells": 1508
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.20341268374723,
+          "model_brier_index": 63.70450601725402,
+          "model_gain_vs_market": -0.5893739288284359,
+          "near_bi": false,
+          "partner_name": "Claude-3-Opus-20240229 (scratchpad with freeze values)",
+          "test_target_cells": 1508,
+          "train_bi_gap": 6.3089074331698916,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.31740074675200364,
+            "adjusted_pog": 0.012552747919556172,
+            "high_loss_lift": -5.634464603771556
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1442
         }
       },
       "exact_configuration": "Claude-3-Opus-20240229 (scratchpad with freeze values)",
@@ -2493,6 +6530,118 @@
           "test_target_cells": 2980
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.46947597205751057,
+              "test_target_cells": 1457
+            },
+            "cf_directional": {
+              "brier_index": 71.21854058123365,
+              "gain_vs_market": -0.002894462055821652,
+              "gain_vs_model": 0.4679403903889294,
+              "test_target_cells": 1457
+            },
+            "ec_w0_56": {
+              "brier_index": 70.21917297132329,
+              "gain_vs_market": -0.0738410076975363,
+              "gain_vs_model": 0.43030154322648123,
+              "test_target_cells": 1457
+            },
+            "log_odds_mean": {
+              "brier_index": 69.86583409023577,
+              "gain_vs_market": -0.09947205704932553,
+              "gain_vs_model": 0.41670365568397727,
+              "test_target_cells": 1457
+            },
+            "piecewise_odds": {
+              "brier_index": 70.44777494081042,
+              "gain_vs_market": -0.05761034523499996,
+              "gain_vs_model": 0.43891229965228096,
+              "test_target_cells": 1457
+            },
+            "simple_mean": {
+              "brier_index": 67.9094336993326,
+              "gain_vs_market": -0.24676752461383558,
+              "gain_vs_model": 0.3385598709339811,
+              "test_target_cells": 1457
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.25972139564634,
+          "model_brier_index": 60.546497921483244,
+          "model_gain_vs_market": -0.8849287635062654,
+          "near_bi": false,
+          "partner_name": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
+          "test_target_cells": 1457,
+          "train_bi_gap": 10.624037821786336,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.19752801583021098,
+            "adjusted_pog": 0.013614647406434666,
+            "high_loss_lift": -1.6498687651541264
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1523
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.46653329487463985,
+              "test_target_cells": 1523
+            },
+            "cf_directional": {
+              "brier_index": 70.99317239099291,
+              "gain_vs_market": -0.014977430528700727,
+              "gain_vs_model": 0.4585433343592499,
+              "test_target_cells": 1523
+            },
+            "ec_w0_56": {
+              "brier_index": 70.17457474281103,
+              "gain_vs_market": -0.0730812174751735,
+              "gain_vs_model": 0.4275468985816091,
+              "test_target_cells": 1523
+            },
+            "log_odds_mean": {
+              "brier_index": 69.70922549565368,
+              "gain_vs_market": -0.10680803326543213,
+              "gain_vs_model": 0.40955476528760987,
+              "test_target_cells": 1523
+            },
+            "piecewise_odds": {
+              "brier_index": 70.54333342970284,
+              "gain_vs_market": -0.04688943928218636,
+              "gain_vs_model": 0.44151934019559624,
+              "test_target_cells": 1523
+            },
+            "simple_mean": {
+              "brier_index": 67.83198590119098,
+              "gain_vs_market": -0.24817110992166455,
+              "gain_vs_model": 0.33414227055742585,
+              "test_target_cells": 1523
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.2072950814907,
+          "model_brier_index": 60.58325725970437,
+          "model_gain_vs_market": -0.8745312320194536,
+          "near_bi": false,
+          "partner_name": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
+          "test_target_cells": 1523,
+          "train_bi_gap": 10.713223474163094,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.1570132828679028,
+            "adjusted_pog": 0.014796664035689775,
+            "high_loss_lift": -0.18816147096608574
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1457
+        }
+      },
       "exact_configuration": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
       "exact_copy_share": 0.013422818791946308,
       "family": "Claude",
@@ -2555,6 +6704,118 @@
           "gain_vs_market": -0.4360091561122392,
           "gain_vs_model": 0.4508562137768993,
           "test_target_cells": 3410
+        }
+      },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 79.98720214932621,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.5902217494379706,
+              "test_target_cells": 1703
+            },
+            "cf_directional": {
+              "brier_index": 79.98303159318,
+              "gain_vs_market": -0.00041150724815299514,
+              "gain_vs_model": 0.5900531227177288,
+              "test_target_cells": 1703
+            },
+            "ec_w0_56": {
+              "brier_index": 79.05488441476245,
+              "gain_vs_market": -0.09597055353752075,
+              "gain_vs_model": 0.5508951039038957,
+              "test_target_cells": 1703
+            },
+            "log_odds_mean": {
+              "brier_index": 78.64098270951969,
+              "gain_vs_market": -0.13967144359164332,
+              "gain_vs_model": 0.5329874296295137,
+              "test_target_cells": 1703
+            },
+            "piecewise_odds": {
+              "brier_index": 79.54490109904536,
+              "gain_vs_market": -0.04539359186669108,
+              "gain_vs_model": 0.5716204427761111,
+              "test_target_cells": 1703
+            },
+            "simple_mean": {
+              "brier_index": 76.50604316842316,
+              "gain_vs_market": -0.37902632246426204,
+              "gain_vs_model": 0.4349050061016056,
+              "test_target_cells": 1703
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 79.98720214932621,
+          "model_brier_index": 68.77518812831771,
+          "model_gain_vs_market": -1.4403442560176258,
+          "near_bi": false,
+          "partner_name": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
+          "test_target_cells": 1703,
+          "train_bi_gap": 13.221323067678329,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.14108491516319654,
+            "adjusted_pog": 0.004210346514352667,
+            "high_loss_lift": -6.304955367886228
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1707
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 80.27123207572507,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.6421274459848931,
+              "test_target_cells": 1707
+            },
+            "cf_directional": {
+              "brier_index": 80.10728996120079,
+              "gain_vs_market": -0.016670767776134437,
+              "gain_vs_model": 0.6361614357434552,
+              "test_target_cells": 1707
+            },
+            "ec_w0_56": {
+              "brier_index": 78.47605441881466,
+              "gain_vs_market": -0.19086104888879163,
+              "gain_vs_model": 0.5738235149570592,
+              "test_target_cells": 1707
+            },
+            "log_odds_mean": {
+              "brier_index": 78.02500431373784,
+              "gain_vs_market": -0.24125325072282233,
+              "gain_vs_model": 0.5557895289842698,
+              "test_target_cells": 1707
+            },
+            "piecewise_odds": {
+              "brier_index": 78.97949003973117,
+              "gain_vs_market": -0.13590180415883044,
+              "gain_vs_model": 0.5934919202353116,
+              "test_target_cells": 1707
+            },
+            "simple_mean": {
+              "brier_index": 75.88769158436165,
+              "gain_vs_market": -0.49450644857845516,
+              "gain_vs_model": 0.46515716025518133,
+              "test_target_cells": 1707
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 80.27123207572507,
+          "model_brier_index": 67.04990900804673,
+          "model_gain_vs_market": -1.7942908411964644,
+          "near_bi": false,
+          "partner_name": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
+          "test_target_cells": 1707,
+          "train_bi_gap": 11.212014021008505,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.19448148955036582,
+            "adjusted_pog": 0.004831377568995892,
+            "high_loss_lift": -6.696860877705272
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1703
         }
       },
       "exact_configuration": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
@@ -2621,6 +6882,118 @@
           "test_target_cells": 2980
         }
       },
+      "directions": {
+        "a_to_b": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.25972139564634,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.6633639291668959,
+              "test_target_cells": 1457
+            },
+            "cf_directional": {
+              "brier_index": 71.23130481876154,
+              "gain_vs_market": -0.0019371703311173141,
+              "gain_vs_model": 0.6627118077580941,
+              "test_target_cells": 1457
+            },
+            "ec_w0_56": {
+              "brier_index": 69.57241701146432,
+              "gain_vs_market": -0.12123498969348641,
+              "gain_vs_model": 0.6225518585889889,
+              "test_target_cells": 1457
+            },
+            "log_odds_mean": {
+              "brier_index": 68.9722054158104,
+              "gain_vs_market": -0.16591326351875535,
+              "gain_vs_model": 0.6075115400368447,
+              "test_target_cells": 1457
+            },
+            "piecewise_odds": {
+              "brier_index": 70.26273087325528,
+              "gain_vs_market": -0.07102055692315384,
+              "gain_vs_model": 0.6394558479359067,
+              "test_target_cells": 1457
+            },
+            "simple_mean": {
+              "brier_index": 64.63353730851615,
+              "gain_vs_market": -0.5144705200472249,
+              "gain_vs_model": 0.4901745947387345,
+              "test_target_cells": 1457
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.25972139564634,
+          "model_brier_index": 50.47647077271107,
+          "model_gain_vs_market": -1.9705669910096344,
+          "near_bi": false,
+          "partner_name": "Claude-3-Haiku-20240307 (scratchpad with freeze values)",
+          "test_target_cells": 1457,
+          "train_bi_gap": 21.98651865655904,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.029133060885037036,
+            "adjusted_pog": 0.020041002133946155,
+            "high_loss_lift": -0.524504587927346
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1523
+        },
+        "b_to_a": {
+          "aggregation": {
+            "best_single": {
+              "brier_index": 71.2072950814907,
+              "gain_vs_market": 0.0,
+              "gain_vs_model": 0.6786201920435468,
+              "test_target_cells": 1523
+            },
+            "cf_directional": {
+              "brier_index": 70.92623389296546,
+              "gain_vs_market": -0.019748455768848146,
+              "gain_vs_model": 0.6722734371211179,
+              "test_target_cells": 1523
+            },
+            "ec_w0_56": {
+              "brier_index": 68.79535316839876,
+              "gain_vs_market": -0.17472698593379513,
+              "gain_vs_model": 0.6224664668593338,
+              "test_target_cells": 1523
+            },
+            "log_odds_mean": {
+              "brier_index": 68.15739853278745,
+              "gain_vs_market": -0.223252609970198,
+              "gain_vs_model": 0.6068713111255477,
+              "test_target_cells": 1523
+            },
+            "piecewise_odds": {
+              "brier_index": 69.45189573655483,
+              "gain_vs_market": -0.1258884348021779,
+              "gain_vs_model": 0.6381621910428844,
+              "test_target_cells": 1523
+            },
+            "simple_mean": {
+              "brier_index": 63.80490287856352,
+              "gain_vs_market": -0.5803807042190146,
+              "gain_vs_model": 0.49209755278000883,
+              "test_target_cells": 1523
+            }
+          },
+          "base_name": "Polymarket Freeze",
+          "market_brier_index": 71.2072950814907,
+          "model_brier_index": 49.220776424931664,
+          "model_gain_vs_market": -2.111583164974383,
+          "near_bi": false,
+          "partner_name": "Claude-3-Haiku-20240307 (scratchpad with freeze values)",
+          "test_target_cells": 1523,
+          "train_bi_gap": 20.783250622935274,
+          "train_diversity": {
+            "adjusted_loss_corr": -0.060913666881917475,
+            "adjusted_pog": 0.025542228037062457,
+            "high_loss_lift": -0.24086635414039853
+          },
+          "train_near_bi_share": 0.0,
+          "train_target_cells": 1457
+        }
+      },
       "exact_configuration": "Claude-3-Haiku-20240307 (scratchpad with freeze values)",
       "exact_copy_share": 0.0,
       "family": "Claude",
@@ -2649,15 +7022,17 @@
   ],
   "provenance": {
     "configuration_selection": "all eligible exact zero-shot and scratchpad with-freeze configurations",
+    "fold_results": "data/derived/freeze_exposed_market_aggregation/fold_method_results.csv.gz",
+    "fold_results_sha256": "887a2ddef5caf566ffb446a452de1c570b0810bcd9eb6c508606c0a416f0bff6",
     "imputation_policy": "exclude Polymarket rows backed only by original ForecastBench forecasts marked imputed=true",
     "market_probability": "ForecastBench question-set freeze_datetime_value",
     "pair_results": "data/derived/freeze_exposed_market_aggregation/pair_method_results.csv",
     "pair_results_sha256": "c6d5304fea11f20bd7a1670c2f42115b4014fca6a0a946b48c5ba51b27db9c70",
     "site_filter": "require explicit 'with freeze values' and exclude configurations containing 'news'",
     "summary": "data/derived/freeze_exposed_market_aggregation/summary.json",
-    "summary_sha256": "86c508aa8c2c84749c7c35d394b1a346fa474a8a6a0dd0fa7a870d0a27ffe48f"
+    "summary_sha256": "aa6051948cf783c3ed253a4d1a7ff31b39f40128fdabb677e1b23c8824109935"
   },
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "scope": "Every eligible zero-shot and scratchpad with-freeze configuration is kept as a separate observation; news-augmented configurations are excluded. Correlations use identical non-imputed Polymarket event support.",
   "title": "Freeze-only prompt ↔ Polymarket correlation"
 }

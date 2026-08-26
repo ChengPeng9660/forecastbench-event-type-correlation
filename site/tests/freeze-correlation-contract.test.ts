@@ -37,6 +37,18 @@ describe("with-freeze model/market correlation contract", () => {
       for (const score of Object.values(point.aggregation)) {
         expect(score.test_target_cells).toBe(point.n_common * 10);
       }
+      for (const direction of ["a_to_b", "b_to_a"] as const) {
+        const view = point.directions[direction];
+        expect(view.base_name).toBe("Polymarket Freeze");
+        expect(view.partner_name).toBe(point.exact_configuration);
+        expect(view.train_target_cells).toBeGreaterThan(0);
+        expect(view.test_target_cells).toBeGreaterThan(0);
+        for (const score of Object.values(view.aggregation)) {
+          expect(score.test_target_cells).toBe(view.test_target_cells);
+        }
+      }
+      expect(point.directions.a_to_b.test_target_cells + point.directions.b_to_a.test_target_cells)
+        .toBe(point.aggregation.cf_directional.test_target_cells);
     }
   });
 

@@ -69,12 +69,15 @@ describe("with-freeze model/market correlation explorer", () => {
     expect(summary.support).toBe(openAi.reduce((sum, point) => sum + point.n_common, 0));
     expect(summary.correlation).toBeGreaterThan(0.8);
 
-    const directional = summarizeFreezeAggregationPoints(payload.points, "cf_directional");
+    const directional = summarizeFreezeAggregationPoints(payload.points, "cf_directional", "combined");
     expect(directional.pairCount).toBe(39);
     expect(directional.support).toBe(136_140);
     expect(directional.weightedBi).toBeCloseTo(75.50871279772113, 12);
     expect(directional.gainVsMarket).toBeCloseTo(-0.00860617172400239, 12);
     expect(directional.positiveVsMarket).toBe(13);
+    const aToB = summarizeFreezeAggregationPoints(payload.points, "cf_directional", "a_to_b");
+    const bToA = summarizeFreezeAggregationPoints(payload.points, "cf_directional", "b_to_a");
+    expect(aToB.support + bToA.support).toBe(directional.support);
   });
 
   it("keeps Polymarket fixed while switching diversity, outcome, method, and Near-BI", () => {
@@ -97,6 +100,11 @@ describe("with-freeze model/market correlation explorer", () => {
     fireEvent.click(screen.getByRole("row", { name: "Use EC · w = 0.56 in the diversity chart" }));
     expect(within(scatterSummary).getByText("EC · w = 0.56")).toBeInTheDocument();
     expect(screen.getAllByText(/fixed Polymarket base/i).length).toBeGreaterThanOrEqual(2);
+
+    fireEvent.click(screen.getByRole("button", { name: "A→B" }));
+    expect(screen.getByText(/10 repeated A→B evaluations/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "B→A" }));
+    expect(screen.getByText(/10 repeated B→A evaluations/i)).toBeInTheDocument();
   });
 
   it("computes pair-level diversity associations without support weighting", () => {
@@ -105,10 +113,13 @@ describe("with-freeze model/market correlation explorer", () => {
       point,
       "cf_directional",
       "gain_vs_market",
+      "combined",
     ));
     expect(pearsonCorrelation(xs, ys)).toBeCloseTo(-0.10268175312152283, 12);
     expect(spearmanCorrelation(xs, ys)).not.toBeNull();
-    expect(freezeAggregationOutcomeValue(payload.points[0], "cf_directional", "aggregation_bi"))
+    expect(freezeAggregationOutcomeValue(payload.points[0], "cf_directional", "aggregation_bi", "combined"))
       .toBe(payload.points[0].aggregation.cf_directional.brier_index);
+    expect(freezeAggregationOutcomeValue(payload.points[0], "cf_directional", "aggregation_bi", "a_to_b"))
+      .toBe(payload.points[0].directions.a_to_b.aggregation.cf_directional.brier_index);
   });
 });

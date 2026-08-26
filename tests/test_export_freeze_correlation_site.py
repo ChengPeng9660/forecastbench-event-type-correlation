@@ -5,7 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from analysis.export_freeze_correlation_site import build_payload
+from analysis.export_freeze_correlation_site import (
+    build_payload,
+    build_without_freeze_base_payload,
+)
 from analysis.pair_aggregation import dependence_support, event_fold
 from analysis.closed_form_aggregation import evaluate_pair
 
@@ -83,6 +86,56 @@ def test_freeze_correlation_site_payload_matches_released_experiment() -> None:
             row["prompt_type"],
         ),
     )
+
+
+def test_released_market_payload_preserves_both_cross_fit_directions() -> None:
+    root = Path("data/derived/freeze_exposed_market_aggregation")
+    summary = root / "summary.json"
+    pairs = root / "pair_method_results.csv"
+    folds = root / "fold_method_results.csv.gz"
+    if not all(path.exists() for path in (summary, pairs, folds)):
+        pytest.skip("freeze-exposed experiment artifact not generated")
+    payload = build_payload(summary, pairs, folds)
+    assert payload["aggregation"]["fold_views"] == {
+        "combined": "ten A→B and ten B→A evaluations pooled",
+        "a_to_b": "A-train diversity and B-test aggregation outcome",
+        "b_to_a": "B-train diversity and A-test aggregation outcome",
+    }
+    for point in payload["points"]:
+        assert set(point["directions"]) == {"a_to_b", "b_to_a"}
+        a_to_b = point["directions"]["a_to_b"]
+        b_to_a = point["directions"]["b_to_a"]
+        assert a_to_b["base_name"] == b_to_a["base_name"] == "Polymarket Freeze"
+        assert a_to_b["partner_name"] == b_to_a["partner_name"] == point["exact_configuration"]
+        assert a_to_b["test_target_cells"] + b_to_a["test_target_cells"] == point["aggregation"]["cf_directional"]["test_target_cells"]
+
+
+def test_without_freeze_fixed_base_payload_is_exact_same_version_and_directional() -> None:
+    root = Path("data/derived/freeze_exposed_market_aggregation")
+    summary = root / "summary.json"
+    pairs = root / "without_freeze_base_pair_method_results.csv"
+    folds = root / "without_freeze_base_fold_method_results.csv.gz"
+    if not all(path.exists() for path in (summary, pairs, folds)):
+        pytest.skip("without-freeze fixed-base experiment artifact not generated")
+    payload = build_without_freeze_base_payload(summary, pairs, folds)
+    assert payload["audit"]["configuration_count"] == 36
+    assert payload["audit"]["model_count"] == 26
+    assert payload["audit"]["prompt_counts"] == {"zero_shot": 26, "scratchpad": 10}
+    assert payload["audit"]["all_bases_fixed_without_freeze"]
+    assert payload["audit"]["all_partners_explicit_with_freeze"]
+    assert len(payload["audit"]["excluded_configurations"]) == 3
+    for point in payload["points"]:
+        assert point["base_configuration"].endswith("(without freeze values)")
+        assert point["partner_configuration"].endswith("with freeze values)")
+        assert point["combined"]["base_name"] == point["base_configuration"]
+        assert set(point["directions"]) == {"a_to_b", "b_to_a"}
+        assert sum(
+            point["directions"][direction]["test_target_cells"]
+            for direction in ("a_to_b", "b_to_a")
+        ) == point["combined"]["test_target_cells"]
+        for view in (point["combined"], *point["directions"].values()):
+            assert view["base_name"].endswith("(without freeze values)")
+            assert view["partner_name"] == point["partner_configuration"]
 
 
 def test_freeze_correlation_export_locks_market_anchor_exact_prompts_and_train_fields() -> None:

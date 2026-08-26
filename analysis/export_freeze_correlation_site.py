@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gzip
 import json
 import math
 from pathlib import Path
 from typing import Any
 
+from analysis.closed_form_aggregation import aggregate_pairs
+from analysis.freeze_exposed_market_aggregation import add_model_reference_fields
 from analysis.pair_aggregation import family, sha256_file
 
 
@@ -69,6 +72,24 @@ AGGREGATION_METHOD_METADATA = {
     },
 }
 
+DIVERSITY_METRICS = {
+    "adjusted_pog": {
+        "label": "Adjusted POG",
+        "axis": "Adjusted pairwise oracle gain",
+        "orientation": "higher means greater base–partner diversity",
+    },
+    "high_loss_lift": {
+        "label": "High-loss Lift",
+        "axis": "Complementarity orientation · 1 − high-loss lift",
+        "orientation": "higher means greater base–partner diversity",
+    },
+    "adjusted_loss_corr": {
+        "label": "Loss Correlation",
+        "axis": "Complementarity orientation · − adjusted-loss correlation",
+        "orientation": "higher means greater base–partner diversity",
+    },
+}
+
 
 def _normalized_configuration(configuration: str) -> str:
     return " ".join(configuration.casefold().split())
@@ -90,8 +111,122 @@ def prompt_type(configuration: str) -> str:
     raise ValueError(f"unsupported freeze prompt type: {configuration!r}")
 
 
-def optional_float(value: str) -> float | None:
-    return float(value) if value.strip() else None
+def optional_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, str) and not value.strip():
+        return None
+    return float(value)
+
+
+def read_csv_rows(path: Path) -> list[dict[str, str]]:
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def directional_pair_indexes(
+    fold_path: Path,
+) -> dict[str, dict[tuple[str, str], dict[str, Any]]]:
+    string_fields = {
+        "experiment",
+        "pair_id",
+        "model_a",
+        "model_b",
+        "pair_group",
+        "train_fold",
+        "test_fold",
+        "anchor",
+        "partner",
+        "method",
+        "canonical_model_version",
+        "model_configuration",
+        "source_model_configuration",
+        "freeze_exposure",
+        "base_model_configuration",
+        "partner_model_configuration",
+    }
+    integer_fields = {"repetition", "seed", "n_train", "n_test", "primary_configuration"}
+    fold_rows: list[dict[str, Any]] = []
+    for raw in read_csv_rows(fold_path):
+        typed: dict[str, Any] = {}
+        for field, value in raw.items():
+            if field in string_fields:
+                typed[field] = value
+            elif field in integer_fields:
+                typed[field] = int(value)
+            elif value == "":
+                typed[field] = None
+            elif value.casefold() in {"true", "false"}:
+                typed[field] = value.casefold() == "true"
+            else:
+                typed[field] = float(value)
+        fold_rows.append(typed)
+    output: dict[str, dict[tuple[str, str], dict[str, Any]]] = {}
+    for direction, train_fold in (("a_to_b", "A"), ("b_to_a", "B")):
+        selected = [row for row in fold_rows if row["train_fold"] == train_fold]
+        aggregated = add_model_reference_fields(aggregate_pairs(selected))
+        output[direction] = {
+            (str(row["model_b"]), str(row["method"])): row
+            for row in aggregated
+        }
+    return output
+
+
+def aggregation_scores(
+    index: dict[tuple[str, str], dict[str, Any]],
+    model_b: str,
+    *,
+    base_name: str,
+    partner_name: str,
+) -> dict[str, Any]:
+    anchor = index[(model_b, "anchor")]
+    partner = index[(model_b, "partner")]
+    aggregation: dict[str, dict[str, Any]] = {}
+    for method in AGGREGATION_METHODS:
+        row = index[(model_b, method)]
+        aggregation[method] = {
+            "brier_index": float(row["brier_index"]),
+            "gain_vs_base": float(row["gain_vs_anchor"]),
+            "gain_vs_partner": float(row["gain_vs_model"]),
+            "test_target_cells": int(row["test_target_cells"]),
+        }
+    return {
+        "base_name": base_name,
+        "partner_name": partner_name,
+        "base_brier_index": float(anchor["brier_index"]),
+        "partner_brier_index": float(partner["brier_index"]),
+        "partner_gain_vs_base": float(partner["gain_vs_anchor"]),
+        "train_diversity": {
+            metric: optional_float(anchor[f"train_{metric}_complementarity"])
+            for metric in DIVERSITY_METRICS
+        },
+        "train_bi_gap": float(anchor["train_bi_gap"]),
+        "train_near_bi_share": float(anchor["train_near_bi_share"]),
+        "near_bi": float(anchor["train_bi_gap"]) <= 2.0,
+        "train_target_cells": int(anchor["train_target_cells"]),
+        "test_target_cells": int(anchor["test_target_cells"]),
+        "aggregation": aggregation,
+    }
+
+
+def market_direction_scores(
+    index: dict[tuple[str, str], dict[str, Any]],
+    model_b: str,
+) -> dict[str, Any]:
+    generic = aggregation_scores(
+        index,
+        model_b,
+        base_name="Polymarket Freeze",
+        partner_name=model_b,
+    )
+    generic["market_brier_index"] = generic.pop("base_brier_index")
+    generic["model_brier_index"] = generic.pop("partner_brier_index")
+    generic["model_gain_vs_market"] = generic.pop("partner_gain_vs_base")
+    for score in generic["aggregation"].values():
+        score["gain_vs_market"] = score.pop("gain_vs_base")
+        score["gain_vs_model"] = score.pop("gain_vs_partner")
+    return generic
 
 
 def summarize_aggregation(
@@ -120,7 +255,11 @@ def summarize_aggregation(
     }
 
 
-def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
+def build_payload(
+    summary_path: Path,
+    pair_path: Path,
+    fold_path: Path | None = None,
+) -> dict[str, Any]:
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     candidate_similarities = summary["similarity_summary"]["all_configurations"]
     non_freeze = [
@@ -148,12 +287,13 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
     if not similarities:
         raise ValueError("no news-free with-freeze configurations available for site export")
 
-    with pair_path.open(encoding="utf-8", newline="") as handle:
-        pair_rows = list(csv.DictReader(handle))
+    pair_rows = read_csv_rows(pair_path)
     pair_index = {
         (row["model_b"], row["method"]): row
         for row in pair_rows
     }
+    resolved_fold_path = fold_path or pair_path.with_name("fold_method_results.csv.gz")
+    direction_indexes = directional_pair_indexes(resolved_fold_path)
 
     points: list[dict[str, Any]] = []
     for row in similarities:
@@ -213,6 +353,10 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 "train_near_bi_share": float(anchor["train_near_bi_share"]),
                 "near_bi": float(anchor["train_bi_gap"]) <= 2.0,
                 "aggregation": aggregation,
+                "directions": {
+                    direction: market_direction_scores(index, exact_configuration)
+                    for direction, index in direction_indexes.items()
+                },
             }
         )
     points.sort(
@@ -279,7 +423,7 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 )
 
     return {
-        "schema_version": "1.2.0",
+        "schema_version": "1.3.0",
         "generated_at": summary["generated_at"],
         "title": "Freeze-only prompt ↔ Polymarket correlation",
         "scope": (
@@ -305,23 +449,12 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 "opposite-fold test target cells"
             ),
             "market_baseline": "ForecastBench freeze_datetime_value",
-            "diversity_metrics": {
-                "adjusted_pog": {
-                    "label": "Adjusted POG",
-                    "axis": "Adjusted pairwise oracle gain",
-                    "orientation": "higher means greater market–model diversity",
-                },
-                "high_loss_lift": {
-                    "label": "High-loss Lift",
-                    "axis": "Complementarity orientation · 1 − high-loss lift",
-                    "orientation": "higher means greater market–model diversity",
-                },
-                "adjusted_loss_corr": {
-                    "label": "Loss Correlation",
-                    "axis": "Complementarity orientation · − adjusted-loss correlation",
-                    "orientation": "higher means greater market–model diversity",
-                },
+            "fold_views": {
+                "combined": "ten A→B and ten B→A evaluations pooled",
+                "a_to_b": "A-train diversity and B-test aggregation outcome",
+                "b_to_a": "B-train diversity and A-test aggregation outcome",
             },
+            "diversity_metrics": DIVERSITY_METRICS,
             "near_bi": {
                 "threshold_bi_points": 2.0,
                 "definition": "mean train-fold BI gap at most 2.0 points",
@@ -362,6 +495,8 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
             "summary_sha256": sha256_file(summary_path),
             "pair_results": str(pair_path),
             "pair_results_sha256": sha256_file(pair_path),
+            "fold_results": str(resolved_fold_path),
+            "fold_results_sha256": sha256_file(resolved_fold_path),
             "market_probability": summary["design"]["market_probability"],
             "imputation_policy": summary["design"]["imputation_policy"],
             "configuration_selection": (
@@ -371,6 +506,172 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
                 "require explicit 'with freeze values' and exclude configurations "
                 "containing 'news'"
             ),
+        },
+        "points": points,
+    }
+
+
+def summarize_fixed_base_aggregation(
+    points: list[dict[str, Any]],
+    method: str,
+) -> dict[str, Any]:
+    scores = [point["combined"]["aggregation"][method] for point in points]
+    support = sum(score["test_target_cells"] for score in scores)
+
+    def weighted(field: str) -> float:
+        return sum(score[field] * score["test_target_cells"] for score in scores) / support
+
+    return {
+        "method": method,
+        "pair_count": len(scores),
+        "test_target_cells": support,
+        "support_weighted_brier_index": weighted("brier_index"),
+        "support_weighted_gain_vs_base": weighted("gain_vs_base"),
+        "support_weighted_gain_vs_partner": weighted("gain_vs_partner"),
+        "positive_vs_base_pairs": sum(score["gain_vs_base"] > 0 for score in scores),
+    }
+
+
+def build_without_freeze_base_payload(
+    summary_path: Path,
+    pair_path: Path,
+    fold_path: Path,
+) -> dict[str, Any]:
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    pair_rows = read_csv_rows(pair_path)
+    pair_index = {
+        (row["model_b"], row["method"]): row
+        for row in pair_rows
+    }
+    direction_indexes = directional_pair_indexes(fold_path)
+    partner_names = sorted(
+        {row["model_b"] for row in pair_rows if row["method"] == "anchor"},
+        key=str.casefold,
+    )
+    points: list[dict[str, Any]] = []
+    for partner_name in partner_names:
+        anchor = pair_index[(partner_name, "anchor")]
+        canonical = anchor["canonical_model_version"]
+        model_family = family(canonical)
+        if model_family not in PROVIDERS:
+            raise ValueError(f"unsupported canonical model family: {canonical}")
+        configuration = anchor["partner_model_configuration"]
+        prompt = prompt_type(configuration)
+        combined = aggregation_scores(
+            pair_index,
+            partner_name,
+            base_name=anchor["model_a"],
+            partner_name=partner_name,
+        )
+        points.append(
+            {
+                "model": canonical,
+                "provider": PROVIDERS[model_family],
+                "family": model_family,
+                "base_configuration": anchor["model_a"],
+                "partner_configuration": partner_name,
+                "prompt_type": prompt,
+                "prompt_label": "Scratchpad" if prompt == "scratchpad" else "Zero shot",
+                "n_common": int(anchor["test_target_cells"]) // 10,
+                "combined": combined,
+                "directions": {
+                    direction: aggregation_scores(
+                        index,
+                        partner_name,
+                        base_name=anchor["model_a"],
+                        partner_name=partner_name,
+                    )
+                    for direction, index in direction_indexes.items()
+                },
+            }
+        )
+    points.sort(
+        key=lambda row: (
+            str(row["provider"]).casefold(),
+            str(row["model"]).casefold(),
+            str(row["prompt_type"]),
+        )
+    )
+    summaries = [
+        summarize_fixed_base_aggregation(points, method)
+        for method in AGGREGATION_METHODS
+    ]
+    exclusions = summary["eligibility"].get(
+        "same_version_no_freeze_base_exclusions", {}
+    )
+    fixed_base_methods = json.loads(json.dumps(AGGREGATION_METHOD_METADATA))
+    fixed_base_methods["ec_w0_56"]["formula"] = (
+        "sigmoid(0.56 × (logit(p_base) + logit(p_partner)))"
+    )
+    fixed_base_methods["simple_mean"]["formula"] = "(p_base + p_partner) / 2"
+    fixed_base_methods["log_odds_mean"]["formula"] = (
+        "sigmoid((logit(p_base) + logit(p_partner)) / 2)"
+    )
+    fixed_base_methods["piecewise_odds"]["formula"] = (
+        "threshold-5 piecewise transform of the summed base/partner logits"
+    )
+    fixed_base_methods["best_single"]["formula"] = (
+        "higher test-fold adjusted Brier Index of base and partner on identical support"
+    )
+    return {
+        "schema_version": "1.0.0",
+        "generated_at": summary["generated_at"],
+        "title": "Without-freeze base × with-freeze partner",
+        "scope": (
+            "Each exact zero-shot or scratchpad with-freeze forecast is paired with the "
+            "same canonical model version without freeze values on identical, non-imputed "
+            "Polymarket event support."
+        ),
+        "base": {
+            "label": "Without-freeze same-version model",
+            "fixed": True,
+            "selection": "released canonical no-freeze ForecastBench model-version panel",
+        },
+        "partner": {
+            "label": "With-freeze same-version model",
+            "selection": "every eligible exact zero-shot or scratchpad configuration",
+        },
+        "evaluation": {
+            "design": (
+                "ten-repeat event-disjoint two-fold cross-fit; all diversity diagnostics "
+                "and Directional CF weights use the named training fold only"
+            ),
+            "fold_views": {
+                "combined": "ten A→B and ten B→A evaluations pooled",
+                "a_to_b": "A-train diversity and B-test aggregation outcome",
+                "b_to_a": "B-train diversity and A-test aggregation outcome",
+            },
+            "near_bi_threshold": 2.0,
+            "diversity_metrics": DIVERSITY_METRICS,
+            "methods": fixed_base_methods,
+            "summary_combined": summaries,
+        },
+        "audit": {
+            "configuration_count": len(points),
+            "model_count": len({point["model"] for point in points}),
+            "prompt_counts": {
+                prompt: sum(point["prompt_type"] == prompt for point in points)
+                for prompt in ("zero_shot", "scratchpad")
+            },
+            "near_bi_combined_count": sum(point["combined"]["near_bi"] for point in points),
+            "excluded_configurations": exclusions,
+            "all_bases_fixed_without_freeze": all(
+                point["combined"]["base_name"].endswith("(without freeze values)")
+                for point in points
+            ),
+            "all_partners_explicit_with_freeze": all(
+                is_news_free_freeze_configuration(point["partner_configuration"])
+                for point in points
+            ),
+        },
+        "provenance": {
+            "summary": str(summary_path),
+            "summary_sha256": sha256_file(summary_path),
+            "pair_results": str(pair_path),
+            "pair_results_sha256": sha256_file(pair_path),
+            "fold_results": str(fold_path),
+            "fold_results_sha256": sha256_file(fold_path),
+            "imputation_policy": summary["design"]["imputation_policy"],
         },
         "points": points,
     }
@@ -391,17 +692,63 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--fold-results",
+        type=Path,
+        default=Path(
+            "data/derived/freeze_exposed_market_aggregation/fold_method_results.csv.gz"
+        ),
+    )
+    parser.add_argument(
+        "--without-freeze-pair-results",
+        type=Path,
+        default=Path(
+            "data/derived/freeze_exposed_market_aggregation/"
+            "without_freeze_base_pair_method_results.csv"
+        ),
+    )
+    parser.add_argument(
+        "--without-freeze-fold-results",
+        type=Path,
+        default=Path(
+            "data/derived/freeze_exposed_market_aggregation/"
+            "without_freeze_base_fold_method_results.csv.gz"
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path(
             "site/public/data/polymarket-aggregation/freeze-exposed-correlation.json"
         ),
     )
+    parser.add_argument(
+        "--without-freeze-output",
+        type=Path,
+        default=Path(
+            "site/public/data/polymarket-aggregation/without-freeze-base.json"
+        ),
+    )
     args = parser.parse_args()
-    payload = build_payload(args.summary, args.pair_results)
+    payload = build_payload(args.summary, args.pair_results, args.fold_results)
+    without_freeze_payload = build_without_freeze_base_payload(
+        args.summary,
+        args.without_freeze_pair_results,
+        args.without_freeze_fold_results,
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    args.without_freeze_output.parent.mkdir(parents=True, exist_ok=True)
+    args.without_freeze_output.write_text(
+        json.dumps(
+            without_freeze_payload,
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n",
         encoding="utf-8",
     )
     print(
@@ -410,6 +757,10 @@ def main() -> None:
                 "output": str(args.output),
                 "models": payload["audit"]["model_count"],
                 "model_event_cells": payload["audit"]["model_event_cells"],
+                "without_freeze_output": str(args.without_freeze_output),
+                "without_freeze_configurations": without_freeze_payload["audit"][
+                    "configuration_count"
+                ],
             },
             indent=2,
         )

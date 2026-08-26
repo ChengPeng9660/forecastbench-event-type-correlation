@@ -2,12 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import type {
   FreezeAggregationMethodId,
   FreezeDiversityMetricId,
+  FreezeFoldView,
   FreezeMarketCorrelationData,
   FreezeMarketCorrelationPoint,
+  FreezeMarketDirectionPoint,
 } from "../types/data";
 
 export type FreezeCorrelationSort = "correlation" | "exact_copy" | "mad" | "support";
 export type FreezeAggregationOutcome = "gain_vs_market" | "aggregation_bi";
+
+const FOLD_VIEWS: Array<{ id: FreezeFoldView; label: string }> = [
+  { id: "combined", label: "Combined" },
+  { id: "a_to_b", label: "A→B" },
+  { id: "b_to_a", label: "B→A" },
+];
 
 const SCATTER_WIDTH = 980;
 const SCATTER_HEIGHT = 430;
@@ -19,7 +27,7 @@ const signedPercent = (value: number | null, digits = 1) => (
   value === null ? "—" : `${value >= 0 ? "+" : ""}${(value * 100).toFixed(digits)}%`
 );
 
-const AGGREGATION_METHODS: FreezeAggregationMethodId[] = [
+export const FREEZE_AGGREGATION_METHODS: FreezeAggregationMethodId[] = [
   "ec_w0_56",
   "simple_mean",
   "log_odds_mean",
@@ -28,13 +36,13 @@ const AGGREGATION_METHODS: FreezeAggregationMethodId[] = [
   "best_single",
 ];
 
-const DIVERSITY_METRICS: FreezeDiversityMetricId[] = [
+export const FREEZE_DIVERSITY_METRICS: FreezeDiversityMetricId[] = [
   "adjusted_pog",
   "high_loss_lift",
   "adjusted_loss_corr",
 ];
 
-const PROVIDER_COLORS: Record<string, string> = {
+export const FREEZE_PROVIDER_COLORS: Record<string, string> = {
   OpenAI: "#efab02",
   Anthropic: "#4f207f",
   Google: "#4285f4",
@@ -43,7 +51,7 @@ const PROVIDER_COLORS: Record<string, string> = {
   Moonshot: "#20242c",
 };
 
-function finiteExtent(values: number[], includeZero = false): [number, number] {
+export function finiteExtent(values: number[], includeZero = false): [number, number] {
   const valid = values.filter(Number.isFinite);
   let low = valid.length ? Math.min(...valid) : 0;
   let high = valid.length ? Math.max(...valid) : 1;
@@ -59,11 +67,11 @@ function finiteExtent(values: number[], includeZero = false): [number, number] {
   return [low - padding, high + padding];
 }
 
-function linearPosition(value: number, domain: [number, number], range: [number, number]) {
+export function linearPosition(value: number, domain: [number, number], range: [number, number]) {
   return range[0] + ((value - domain[0]) / (domain[1] - domain[0])) * (range[1] - range[0]);
 }
 
-function linearTicks(domain: [number, number], count = 5) {
+export function linearTicks(domain: [number, number], count = 5) {
   return Array.from({ length: count }, (_, index) => (
     domain[0] + (index / (count - 1)) * (domain[1] - domain[0])
   ));
@@ -110,13 +118,36 @@ export function freezeAggregationOutcomeValue(
   point: FreezeMarketCorrelationPoint,
   method: FreezeAggregationMethodId,
   outcome: FreezeAggregationOutcome,
+  foldView: FreezeFoldView = "combined",
 ) {
+  const score = freezeMarketPointView(point, foldView).aggregation[method];
   return outcome === "gain_vs_market"
-    ? point.aggregation[method].gain_vs_market
-    : point.aggregation[method].brier_index;
+    ? score.gain_vs_market
+    : score.brier_index;
 }
 
-function scatterMetricLabel(metric: FreezeDiversityMetricId, value: number) {
+export function freezeMarketPointView(
+  point: FreezeMarketCorrelationPoint,
+  foldView: FreezeFoldView,
+): FreezeMarketDirectionPoint {
+  if (foldView !== "combined") return point.directions[foldView];
+  return {
+    base_name: "Polymarket Freeze",
+    partner_name: point.exact_configuration,
+    market_brier_index: point.market_brier_index,
+    model_brier_index: point.model_brier_index,
+    model_gain_vs_market: point.model_gain_vs_market,
+    train_diversity: point.train_diversity,
+    train_bi_gap: point.train_bi_gap,
+    train_near_bi_share: point.train_near_bi_share,
+    near_bi: point.near_bi,
+    train_target_cells: point.aggregation.ec_w0_56.test_target_cells,
+    test_target_cells: point.aggregation.ec_w0_56.test_target_cells,
+    aggregation: point.aggregation,
+  };
+}
+
+export function scatterMetricLabel(metric: FreezeDiversityMetricId, value: number) {
   return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
 }
 
@@ -152,19 +183,23 @@ export function summarizeFreezeCorrelationPoints(points: FreezeMarketCorrelation
 export function summarizeFreezeAggregationPoints(
   points: FreezeMarketCorrelationPoint[],
   method: FreezeAggregationMethodId,
+  foldView: FreezeFoldView = "combined",
 ) {
   const valid = points.filter((point) => {
-    const score = point.aggregation[method];
+    const score = freezeMarketPointView(point, foldView).aggregation[method];
     return score && Number.isFinite(score.brier_index) && score.test_target_cells > 0;
   });
   const support = valid.reduce(
-    (sum, point) => sum + point.aggregation[method].test_target_cells,
+    (sum, point) => sum + freezeMarketPointView(point, foldView).aggregation[method].test_target_cells,
     0,
   );
   const weighted = (field: "brier_index" | "gain_vs_market" | "gain_vs_model") => (
     support
       ? valid.reduce(
-        (sum, point) => sum + point.aggregation[method][field] * point.aggregation[method].test_target_cells,
+        (sum, point) => {
+          const score = freezeMarketPointView(point, foldView).aggregation[method];
+          return sum + score[field] * score.test_target_cells;
+        },
         0,
       ) / support
       : null
@@ -176,7 +211,9 @@ export function summarizeFreezeAggregationPoints(
     weightedBi: weighted("brier_index"),
     gainVsMarket: weighted("gain_vs_market"),
     gainVsModel: weighted("gain_vs_model"),
-    positiveVsMarket: valid.filter((point) => point.aggregation[method].gain_vs_market > 0).length,
+    positiveVsMarket: valid.filter(
+      (point) => freezeMarketPointView(point, foldView).aggregation[method].gain_vs_market > 0,
+    ).length,
   };
 }
 
@@ -188,8 +225,8 @@ function downloadCorrelationCsv(points: FreezeMarketCorrelationPoint[]) {
     "market_mean_probability", "model_mean_probability", "market_brier_index",
     "model_brier_index", "model_gain_vs_market", "train_bi_gap", "train_near_bi_share", "near_bi",
   ];
-  const diversityFields = DIVERSITY_METRICS.map((metric) => `train_diversity_${metric}`);
-  const aggregationFields = AGGREGATION_METHODS.flatMap((method) => [
+  const diversityFields = FREEZE_DIVERSITY_METRICS.map((metric) => `train_diversity_${metric}`);
+  const aggregationFields = FREEZE_AGGREGATION_METHODS.flatMap((method) => [
     `${method}_brier_index`,
     `${method}_gain_vs_market`,
     `${method}_gain_vs_model`,
@@ -199,8 +236,8 @@ function downloadCorrelationCsv(points: FreezeMarketCorrelationPoint[]) {
     [...directFields, ...diversityFields, ...aggregationFields] as string[],
     ...points.map((point) => [
       ...directFields.map((field) => point[field] as CsvCell),
-      ...DIVERSITY_METRICS.map((metric) => point.train_diversity[metric]),
-      ...AGGREGATION_METHODS.flatMap((method) => {
+      ...FREEZE_DIVERSITY_METRICS.map((metric) => point.train_diversity[metric]),
+      ...FREEZE_AGGREGATION_METHODS.flatMap((method) => {
         const score = point.aggregation[method];
         return [score.brier_index, score.gain_vs_market, score.gain_vs_model, score.test_target_cells];
       }),
@@ -226,6 +263,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   const [aggregationMethod, setAggregationMethod] = useState<FreezeAggregationMethodId>("cf_directional");
   const [diversityMetric, setDiversityMetric] = useState<FreezeDiversityMetricId>("adjusted_pog");
   const [aggregationOutcome, setAggregationOutcome] = useState<FreezeAggregationOutcome>("gain_vs_market");
+  const [foldView, setFoldView] = useState<FreezeFoldView>("combined");
   const [nearBiOnly, setNearBiOnly] = useState(false);
   const [selectedAggregationConfiguration, setSelectedAggregationConfiguration] = useState(
     data.points[0]?.exact_configuration ?? "",
@@ -241,8 +279,10 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   const ranked = useMemo(() => sortFreezeCorrelationPoints(filtered, sort), [filtered, sort]);
   const summary = useMemo(() => summarizeFreezeCorrelationPoints(filtered), [filtered]);
   const aggregationSummaries = useMemo(
-    () => AGGREGATION_METHODS.map((method) => summarizeFreezeAggregationPoints(filtered, method)),
-    [filtered],
+    () => FREEZE_AGGREGATION_METHODS.map(
+      (method) => summarizeFreezeAggregationPoints(filtered, method, foldView),
+    ),
+    [filtered, foldView],
   );
   const bestDeployable = [...aggregationSummaries]
     .filter((row) => row.method !== "best_single" && row.weightedBi !== null)
@@ -251,20 +291,24 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   const selected = ranked.find((point) => point.exact_configuration === selectedConfiguration) ?? ranked[0];
   const scatterPoints = useMemo(
     () => filtered.filter((point) => {
-      const diversity = point.train_diversity[diversityMetric];
-      const outcome = freezeAggregationOutcomeValue(point, aggregationMethod, aggregationOutcome);
-      return (!nearBiOnly || point.near_bi)
+      const view = freezeMarketPointView(point, foldView);
+      const diversity = view.train_diversity[diversityMetric];
+      const outcome = freezeAggregationOutcomeValue(point, aggregationMethod, aggregationOutcome, foldView);
+      return (!nearBiOnly || view.near_bi)
         && diversity !== null
         && Number.isFinite(diversity)
         && Number.isFinite(outcome);
     }),
-    [aggregationMethod, aggregationOutcome, diversityMetric, filtered, nearBiOnly],
+    [aggregationMethod, aggregationOutcome, diversityMetric, filtered, foldView, nearBiOnly],
   );
-  const scatterX = scatterPoints.map((point) => point.train_diversity[diversityMetric] as number);
+  const scatterX = scatterPoints.map(
+    (point) => freezeMarketPointView(point, foldView).train_diversity[diversityMetric] as number,
+  );
   const scatterY = scatterPoints.map((point) => freezeAggregationOutcomeValue(
     point,
     aggregationMethod,
     aggregationOutcome,
+    foldView,
   ));
   const scatterPearson = pearsonCorrelation(scatterX, scatterY);
   const scatterSpearman = spearmanCorrelation(scatterX, scatterY);
@@ -275,10 +319,16 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   const selectedAggregation = scatterPoints.find(
     (point) => point.exact_configuration === selectedAggregationConfiguration,
   ) ?? scatterPoints[0];
-  const selectedAggregationScore = selectedAggregation?.aggregation[aggregationMethod];
+  const selectedAggregationView = selectedAggregation
+    ? freezeMarketPointView(selectedAggregation, foldView)
+    : null;
+  const selectedAggregationScore = selectedAggregationView?.aggregation[aggregationMethod];
   const selectedMethodSummary = aggregationSummaries.find((row) => row.method === aggregationMethod);
   const missingDiversityCount = filtered.filter(
-    (point) => (!nearBiOnly || point.near_bi) && point.train_diversity[diversityMetric] === null,
+    (point) => {
+      const view = freezeMarketPointView(point, foldView);
+      return (!nearBiOnly || view.near_bi) && view.train_diversity[diversityMetric] === null;
+    },
   ).length;
 
   useEffect(() => {
@@ -414,7 +464,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
 
           <dl className="freeze-aggregation-summary">
             <div><dt>PROMPT–MARKET PAIRS</dt><dd>{filtered.length}</dd><small>{prompt === "all" ? "zero-shot + scratchpad" : prompt === "zero_shot" ? "zero-shot only" : "scratchpad only"}{provider === "all" ? " · all providers" : ` · ${provider}`}</small></div>
-            <div><dt>OOS TARGET CELLS</dt><dd>{(aggregationSummaries[0]?.support ?? 0).toLocaleString()}</dd><small>10 repeated opposite-fold evaluations</small></div>
+            <div><dt>OOS TARGET CELLS</dt><dd>{(aggregationSummaries[0]?.support ?? 0).toLocaleString()}</dd><small>{foldView === "combined" ? "10 repeats · both directions" : `10 repeated ${foldView === "a_to_b" ? "A→B" : "B→A"} evaluations`}</small></div>
             <div><dt>BEST DEPLOYABLE BI ↑</dt><dd>{bestDeployable?.weightedBi?.toFixed(2) ?? "—"}</dd><small>{bestDeployable ? data.aggregation.methods[bestDeployable.method].label : "no eligible pairs"}</small></div>
             <div><dt>GAIN VS MARKET</dt><dd className={(bestDeployable?.gainVsMarket ?? 0) >= 0 ? "positive" : "negative"}>{signedPercent(bestDeployable?.gainVsMarket ?? null)}</dd><small>support-weighted adjusted-Brier reduction</small></div>
           </dl>
@@ -426,14 +476,20 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
               <p className="eyebrow">FIXED POLYMARKET BASE</p>
               <h4>Does a more diverse model improve market aggregation?</h4>
             </div>
-            <p>Each point is one exact with-freeze prompt paired with the same freeze-time market probability. It separately averages train-fold diversity and opposite-fold gain over ten random event-disjoint splits in both directions, so this is a repeated cross-fit aggregate diagnostic—not a directional regression.</p>
+            <p>Each point is one exact with-freeze prompt paired with the same freeze-time market probability. Use A→B or B→A to relate one named training-fold diversity estimate to its opposite-fold aggregation outcome; Combined pools both directions.</p>
           </div>
 
           <div className="freeze-diversity-controls">
             <div className="freeze-diversity-control-group">
+              <span>DIRECTION</span>
+              <div className="freeze-diversity-tabs" role="group" aria-label="Select Polymarket cross-fit direction">
+                {FOLD_VIEWS.map((view) => <button className={foldView === view.id ? "active" : ""} type="button" aria-pressed={foldView === view.id} onClick={() => setFoldView(view.id)} key={view.id}>{view.label}</button>)}
+              </div>
+            </div>
+            <div className="freeze-diversity-control-group">
               <span>DIVERSITY</span>
               <div className="freeze-diversity-tabs" role="group" aria-label="Select market-model diversity metric">
-                {DIVERSITY_METRICS.map((metric) => <button
+                {FREEZE_DIVERSITY_METRICS.map((metric) => <button
                   className={diversityMetric === metric ? "active" : ""}
                   type="button"
                   aria-pressed={diversityMetric === metric}
@@ -490,11 +546,12 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
                   y2={linearPosition(0, yDomain, [SCATTER_HEIGHT - SCATTER_MARGIN.bottom, SCATTER_MARGIN.top])}
                 />}
                 {scatterPoints.map((point) => {
-                  const xValue = point.train_diversity[diversityMetric] as number;
-                  const yValue = freezeAggregationOutcomeValue(point, aggregationMethod, aggregationOutcome);
+                  const pointView = freezeMarketPointView(point, foldView);
+                  const xValue = pointView.train_diversity[diversityMetric] as number;
+                  const yValue = freezeAggregationOutcomeValue(point, aggregationMethod, aggregationOutcome, foldView);
                   const x = linearPosition(xValue, xDomain, [SCATTER_MARGIN.left, SCATTER_WIDTH - SCATTER_MARGIN.right]);
                   const y = linearPosition(yValue, yDomain, [SCATTER_HEIGHT - SCATTER_MARGIN.bottom, SCATTER_MARGIN.top]);
-                  const color = PROVIDER_COLORS[point.provider] ?? "#665f6d";
+                  const color = FREEZE_PROVIDER_COLORS[point.provider] ?? "#665f6d";
                   const isSelected = selectedAggregation?.exact_configuration === point.exact_configuration;
                   const pointLabel = `${point.model}, ${point.prompt_label}: diversity ${scatterMetricLabel(diversityMetric, xValue)}, ${aggregationOutcome === "gain_vs_market" ? `gain ${signedPercent(yValue)}` : `BI ${yValue.toFixed(2)}`}`;
                   return <g
@@ -525,12 +582,12 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
               <h5>{selectedAggregation.model}</h5>
               <p>{selectedAggregation.prompt_label} · fixed Polymarket base</p>
               <dl>
-                <div><dt>{data.aggregation.diversity_metrics[diversityMetric].label}</dt><dd>{scatterMetricLabel(diversityMetric, selectedAggregation.train_diversity[diversityMetric] as number)}</dd></div>
+                <div><dt>{data.aggregation.diversity_metrics[diversityMetric].label}</dt><dd>{scatterMetricLabel(diversityMetric, selectedAggregationView?.train_diversity[diversityMetric] as number)}</dd></div>
                 <div><dt>Fraction gain vs PM</dt><dd className={selectedAggregationScore.gain_vs_market >= 0 ? "positive" : "negative"}>{signedPercent(selectedAggregationScore.gain_vs_market)}</dd></div>
                 <div><dt>Aggregation BI ↑</dt><dd>{selectedAggregationScore.brier_index.toFixed(2)}</dd></div>
-                <div><dt>Market BI ↑</dt><dd>{selectedAggregation.market_brier_index.toFixed(2)}</dd></div>
-                <div><dt>Train BI gap</dt><dd>{selectedAggregation.train_bi_gap.toFixed(2)}</dd></div>
-                <div><dt>Near-BI</dt><dd>{selectedAggregation.near_bi ? "Yes" : "No"}</dd></div>
+                <div><dt>Market BI ↑</dt><dd>{selectedAggregationView?.market_brier_index.toFixed(2)}</dd></div>
+                <div><dt>Train BI gap</dt><dd>{selectedAggregationView?.train_bi_gap.toFixed(2)}</dd></div>
+                <div><dt>Near-BI</dt><dd>{selectedAggregationView?.near_bi ? "Yes" : "No"}</dd></div>
                 <div><dt>Common events</dt><dd>{selectedAggregation.n_common.toLocaleString()}</dd></div>
                 <div><dt>OOS target cells</dt><dd>{selectedAggregationScore.test_target_cells.toLocaleString()}</dd></div>
               </dl>
@@ -539,9 +596,9 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
 
           <div className="freeze-diversity-legend">
             <span><i className="zero-shot" /> Zero shot</span><span><i className="scratchpad" /> Scratchpad</span>
-            {providers.map((item) => <span key={item}><i style={{ backgroundColor: PROVIDER_COLORS[item] ?? "#665f6d" }} /> {item}</span>)}
+            {providers.map((item) => <span key={item}><i style={{ backgroundColor: FREEZE_PROVIDER_COLORS[item] ?? "#665f6d" }} /> {item}</span>)}
           </div>
-          <p className="freeze-diversity-note"><strong>Interpretation.</strong> The displayed r and ρ are unweighted pair-level associations, not causal effects. All three x axes are oriented so that larger values mean greater market–model diversity. Near-BI keeps pairs whose mean training-fold BI gap is at most {data.aggregation.near_bi.threshold_bi_points.toFixed(1)} points. Because each point combines both train→test directions, use this chart as a repeated cross-fit aggregate diagnostic; direction-level inference requires keeping the two directions as separate observations. The headline method gain remains support-weighted across all provider/prompt-filtered pairs.</p>
+          <p className="freeze-diversity-note"><strong>Interpretation.</strong> The displayed r and ρ are unweighted pair-level associations, not causal effects. All three x axes are oriented so that larger values mean greater market–model diversity. Near-BI keeps pairs whose mean training-fold BI gap is at most {data.aggregation.near_bi.threshold_bi_points.toFixed(1)} points. {foldView === "combined" ? "Combined is a repeated cross-fit aggregate diagnostic." : `${foldView === "a_to_b" ? "A→B" : "B→A"} keeps train diversity and opposite-fold gain directionally aligned.`} The headline method gain remains support-weighted across all provider/prompt-filtered pairs.</p>
         </div>
 
         <p className="freeze-aggregation-caveat"><strong>Leakage boundary.</strong> Fixed pools never use outcomes. Directional CF estimates its two direction-specific weights on the training fold only. Best Single uses test outcomes to select the better constituent and is shown only as a non-deployable upper-reference benchmark.</p>

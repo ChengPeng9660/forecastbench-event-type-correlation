@@ -39,6 +39,7 @@ from analysis.scoring import normalize_id
 
 FREEZE_TOKEN = "with freeze values"
 EXPERIMENT = "polymarket_model"
+EXPOSURE_EXPERIMENT = "same_version_freeze_exposure"
 
 
 @dataclass
@@ -652,6 +653,85 @@ def matched_comparison(
     return pairs, similarity_rows, exclusions
 
 
+def same_version_freeze_exposure_comparison(
+    eligible_names: Iterable[str],
+    configurations: Mapping[str, ExactConfiguration],
+    freeze_panel: Mapping[tuple[str, ...], Mapping[str, str]],
+    freeze_config_panel: Mapping[str, Mapping[tuple[str, ...], Mapping[str, str]]],
+    nofreeze_panel: Mapping[str, Mapping[tuple[str, ...], Mapping[str, str]]],
+    split_seeds: list[int],
+    minimum_overlap: int,
+    minimum_fold_overlap: int,
+    ec_weight: float,
+    piecewise_threshold: float,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, str]]:
+    """Evaluate with-freeze partners against fixed same-version no-freeze bases."""
+
+    fold_rows: list[dict[str, Any]] = []
+    exclusions: dict[str, str] = {}
+    for freeze_name in sorted(eligible_names):
+        canonical = configurations[freeze_name].canonical_version
+        if canonical not in nofreeze_panel:
+            exclusions[freeze_name] = "no matching no-freeze canonical model"
+            continue
+        common = sorted(
+            set(freeze_panel)
+            & set(freeze_config_panel[freeze_name])
+            & set(nofreeze_panel[canonical])
+        )
+        if len(common) < minimum_overlap:
+            exclusions[freeze_name] = f"same-version support {len(common)} < {minimum_overlap}"
+            continue
+        smallest = min(
+            min(
+                sum(event_fold(key[1], key[2], seed) == fold for key in common)
+                for fold in ("A", "B")
+            )
+            for seed in split_seeds
+        )
+        if smallest < minimum_fold_overlap:
+            exclusions[freeze_name] = (
+                f"minimum repeated same-version fold support {smallest} < "
+                f"{minimum_fold_overlap}"
+            )
+            continue
+        base_name = f"{canonical} (without freeze values)"
+        base_slice = {key: nofreeze_panel[canonical][key] for key in common}
+        partner_slice = {key: freeze_config_panel[freeze_name][key] for key in common}
+        rows = evaluate_pair(
+            EXPOSURE_EXPERIMENT,
+            base_name,
+            freeze_name,
+            base_slice,
+            partner_slice,
+            split_seeds,
+            minimum_fold_overlap,
+            ec_weight,
+            piecewise_threshold,
+        )
+        for row in rows:
+            row["canonical_model_version"] = canonical
+            row["base_model_configuration"] = canonical
+            row["partner_model_configuration"] = configurations[freeze_name].configuration
+        fold_rows.extend(rows)
+
+    pair_rows = add_model_reference_fields(aggregate_pairs(fold_rows))
+    metadata = {
+        row["pair_id"]: (
+            row["canonical_model_version"],
+            row["base_model_configuration"],
+            row["partner_model_configuration"],
+        )
+        for row in fold_rows
+    }
+    for row in pair_rows:
+        canonical, base_configuration, partner_configuration = metadata[row["pair_id"]]
+        row["canonical_model_version"] = canonical
+        row["base_model_configuration"] = base_configuration
+        row["partner_model_configuration"] = partner_configuration
+    return fold_rows, pair_rows, exclusions
+
+
 def matched_method_differences(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     indexed = {
         (row["canonical_model_version"], row["freeze_exposure"], row["method"]): row
@@ -696,7 +776,14 @@ def run_experiment(
     minimum_fold_overlap: int = 50,
     ec_weight: float = 0.56,
     piecewise_threshold: float = 5.0,
-) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+) -> tuple[
+    dict[str, Any],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+]:
     split_seeds = [split_seed + offset for offset in range(split_repetitions)]
     raw_panel, configurations, raw_audit = read_freeze_exposed_panel(raw_panel_path)
     primary_by_canonical, selection_audit = select_primary_configurations(configurations)
@@ -771,6 +858,25 @@ def run_experiment(
             )
         )
 
+    exposure_fold_rows, exposure_pair_rows, exposure_exclusions = (
+        same_version_freeze_exposure_comparison(
+            eligible,
+            configurations,
+            freeze_panel,
+            raw_panel,
+            nofreeze_panel,
+            split_seeds,
+            minimum_overlap,
+            minimum_fold_overlap,
+            ec_weight,
+            piecewise_threshold,
+        )
+    )
+    exposure_summary = summarize_sample(
+        exposure_pair_rows,
+        "same_version_no_freeze_base",
+    )
+
     similarity_by_name = {row["model_configuration"]: row for row in similarity_rows}
     report = {
         "schema_version": "1.0.0",
@@ -793,6 +899,10 @@ def run_experiment(
                 "selected with-freeze and released no-freeze canonical forecasts evaluated on "
                 "identical market/model/model triple support"
             ),
+            "same_version_no_freeze_base": (
+                "each eligible exact with-freeze configuration is paired with its canonical "
+                "without-freeze forecast as a fixed base on identical audited Polymarket support"
+            ),
             "leakage_control": (
                 "all fitted weights and dependence diagnostics use train events only; "
                 "opposite-fold outcomes are used only for scoring"
@@ -812,6 +922,14 @@ def run_experiment(
             "pair_method_rows": len(pair_rows),
             "primary_pair_method_rows": len(primary_rows),
             "matched_pair_method_rows": len(matched_rows),
+            "same_version_no_freeze_base_configurations": len(
+                {row["model_b"] for row in exposure_fold_rows}
+            ),
+            "same_version_no_freeze_base_model_versions": len(
+                {row["canonical_model_version"] for row in exposure_fold_rows}
+            ),
+            "same_version_no_freeze_base_fold_method_rows": len(exposure_fold_rows),
+            "same_version_no_freeze_base_pair_method_rows": len(exposure_pair_rows),
             "primary_train_near_bi_pair_fold_records": sum(
                 row["primary_configuration"]
                 and row["train_near_bi"]
@@ -856,9 +974,10 @@ def run_experiment(
             "excluded_exact_configurations": exclusions,
             "common_support": overlaps,
             "matched_exclusions": matched_exclusions,
+            "same_version_no_freeze_base_exclusions": exposure_exclusions,
         },
         "selection_audit": selection_audit,
-        "method_summary": [*summaries, *matched_summary],
+        "method_summary": [*summaries, *matched_summary, *exposure_summary],
         "repetition_summary": summarize_repetitions(
             fold_rows,
             "canonical_primary",
@@ -893,7 +1012,14 @@ def run_experiment(
         },
         "matched_method_differences": matched_differences,
     }
-    return report, fold_rows, pair_rows, matched_rows
+    return (
+        report,
+        fold_rows,
+        pair_rows,
+        matched_rows,
+        exposure_fold_rows,
+        exposure_pair_rows,
+    )
 
 
 def main() -> None:
@@ -923,7 +1049,14 @@ def main() -> None:
         default=Path("data/derived/freeze_exposed_market_aggregation"),
     )
     args = parser.parse_args()
-    report, fold_rows, pair_rows, matched_rows = run_experiment(
+    (
+        report,
+        fold_rows,
+        pair_rows,
+        matched_rows,
+        exposure_fold_rows,
+        exposure_pair_rows,
+    ) = run_experiment(
         raw_panel_path=args.raw_panel,
         canonical_panel_path=args.canonical_panel,
         taxonomy_path=args.taxonomy,
@@ -940,6 +1073,8 @@ def main() -> None:
     fold_path = args.output_dir / "fold_method_results.csv.gz"
     pair_path = args.output_dir / "pair_method_results.csv"
     matched_path = args.output_dir / "matched_pair_method_results.csv"
+    exposure_fold_path = args.output_dir / "without_freeze_base_fold_method_results.csv.gz"
+    exposure_pair_path = args.output_dir / "without_freeze_base_pair_method_results.csv"
     summary_path.write_text(
         json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -947,6 +1082,8 @@ def main() -> None:
     write_csv(fold_path, fold_rows)
     write_csv(pair_path, pair_rows)
     write_csv(matched_path, matched_rows)
+    write_csv(exposure_fold_path, exposure_fold_rows)
+    write_csv(exposure_pair_path, exposure_pair_rows)
     print(
         json.dumps(
             {
@@ -954,6 +1091,8 @@ def main() -> None:
                 "fold_results": str(fold_path),
                 "pair_results": str(pair_path),
                 "matched_results": str(matched_path),
+                "without_freeze_base_fold_results": str(exposure_fold_path),
+                "without_freeze_base_pair_results": str(exposure_pair_path),
                 **report["audit"],
             },
             indent=2,

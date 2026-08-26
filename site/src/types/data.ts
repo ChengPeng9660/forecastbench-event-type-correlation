@@ -817,7 +817,10 @@ export interface FreezeMarketCorrelationPoint {
   train_near_bi_share: number;
   near_bi: boolean;
   aggregation: Record<FreezeAggregationMethodId, FreezeAggregationScore>;
+  directions: Record<Exclude<FreezeFoldView, "combined">, FreezeMarketDirectionPoint>;
 }
+
+export type FreezeFoldView = "combined" | "a_to_b" | "b_to_a";
 
 export type FreezeDiversityMetricId =
   | "adjusted_pog"
@@ -837,6 +840,96 @@ export interface FreezeAggregationScore {
   gain_vs_market: number;
   gain_vs_model: number;
   test_target_cells: number;
+}
+
+export interface FreezeMarketDirectionPoint {
+  base_name: string;
+  partner_name: string;
+  market_brier_index: number;
+  model_brier_index: number;
+  model_gain_vs_market: number;
+  train_diversity: Record<FreezeDiversityMetricId, number | null>;
+  train_bi_gap: number;
+  train_near_bi_share: number;
+  near_bi: boolean;
+  train_target_cells: number;
+  test_target_cells: number;
+  aggregation: Record<FreezeAggregationMethodId, FreezeAggregationScore>;
+}
+
+export interface FixedBaseAggregationScore {
+  brier_index: number;
+  gain_vs_base: number;
+  gain_vs_partner: number;
+  test_target_cells: number;
+}
+
+export interface FixedBaseAggregationView {
+  base_name: string;
+  partner_name: string;
+  base_brier_index: number;
+  partner_brier_index: number;
+  partner_gain_vs_base: number;
+  train_diversity: Record<FreezeDiversityMetricId, number | null>;
+  train_bi_gap: number;
+  train_near_bi_share: number;
+  near_bi: boolean;
+  train_target_cells: number;
+  test_target_cells: number;
+  aggregation: Record<FreezeAggregationMethodId, FixedBaseAggregationScore>;
+}
+
+export interface FixedBaseAggregationPoint {
+  model: string;
+  provider: string;
+  family: string;
+  base_configuration: string;
+  partner_configuration: string;
+  prompt_type: "zero_shot" | "scratchpad";
+  prompt_label: "Zero shot" | "Scratchpad";
+  n_common: number;
+  combined: FixedBaseAggregationView;
+  directions: Record<Exclude<FreezeFoldView, "combined">, FixedBaseAggregationView>;
+}
+
+export interface FixedBaseAggregationData {
+  schema_version: string;
+  generated_at: string;
+  title: string;
+  scope: string;
+  base: { label: string; fixed: boolean; selection: string };
+  partner: { label: string; selection: string };
+  evaluation: {
+    design: string;
+    fold_views: Record<FreezeFoldView, string>;
+    near_bi_threshold: number;
+    diversity_metrics: Record<FreezeDiversityMetricId, {
+      label: string;
+      axis: string;
+      orientation: string;
+    }>;
+    methods: FreezeMarketCorrelationData["aggregation"]["methods"];
+    summary_combined: Array<{
+      method: FreezeAggregationMethodId;
+      pair_count: number;
+      test_target_cells: number;
+      support_weighted_brier_index: number;
+      support_weighted_gain_vs_base: number;
+      support_weighted_gain_vs_partner: number;
+      positive_vs_base_pairs: number;
+    }>;
+  };
+  audit: {
+    configuration_count: number;
+    model_count: number;
+    prompt_counts: Record<"zero_shot" | "scratchpad", number>;
+    near_bi_combined_count: number;
+    excluded_configurations: Record<string, string>;
+    all_bases_fixed_without_freeze: boolean;
+    all_partners_explicit_with_freeze: boolean;
+  };
+  provenance: Record<string, unknown>;
+  points: FixedBaseAggregationPoint[];
 }
 
 export interface FreezeAggregationSummary {
@@ -865,6 +958,7 @@ export interface FreezeMarketCorrelationData {
     evaluation: string;
     support_weighting: string;
     market_baseline: string;
+    fold_views: Record<FreezeFoldView, string>;
     diversity_metrics: Record<FreezeDiversityMetricId, {
       label: string;
       axis: string;

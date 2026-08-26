@@ -6,6 +6,7 @@ import type {
   CrossTypeSummary,
   EventTypeData,
   FocalGainData,
+  FixedBaseAggregationData,
   FreezeMarketCorrelationData,
   GlobalBaselineData,
   GlobalBaselineManifest,
@@ -57,6 +58,10 @@ export function loadPolymarketAggregationData(): Promise<PolymarketAggregationDa
 
 export function loadFreezeMarketCorrelationData(): Promise<FreezeMarketCorrelationData> {
   return loadJson<FreezeMarketCorrelationData>("polymarket-aggregation/freeze-exposed-correlation.json");
+}
+
+export function loadWithoutFreezeBaseData(): Promise<FixedBaseAggregationData> {
+  return loadJson<FixedBaseAggregationData>("polymarket-aggregation/without-freeze-base.json");
 }
 
 export function crossTypeAssetUrl(path: string): string {

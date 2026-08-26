@@ -322,6 +322,25 @@ test("explores the Polymarket freeze baseline across models, methods, and folds"
   await expect(section.getByText("Gain vs Model (fractional adjusted-Brier reduction)")).toBeVisible();
 });
 
+test("compares both OOS directions with a fixed without-freeze base", async ({ page }) => {
+  await page.goto("/#without-freeze-base");
+  const section = page.locator("#without-freeze-base");
+  await expect(section.getByRole("heading", { name: "Does market exposure create useful aggregation diversity?" })).toBeVisible();
+  await expect(section.getByText("EXACT PAIRS").locator("..").locator("dd")).toHaveText("36");
+  await expect(section.locator(".freeze-aggregation-summary").getByText("GAIN VS BASE").locator("..").locator("dd")).toHaveText("+41.6%");
+
+  const direction = section.getByRole("group", { name: "Select exposure cross-fit direction" });
+  await direction.getByRole("button", { name: "A→B" }).click();
+  await expect(section).toContainText("10 repeated A→B");
+  await expect(section.getByLabel("Without-freeze base diversity summary")).toContainText("-0.69");
+  await direction.getByRole("button", { name: "B→A" }).click();
+  await expect(section).toContainText("10 repeated B→A");
+  await expect(section.getByLabel("Without-freeze base diversity summary")).toContainText("-0.65");
+
+  await section.getByRole("button", { name: "Aggregation BI" }).click();
+  await expect(section.getByRole("img", { name: /Adjusted POG versus aggregation Brier Index/i })).toBeVisible();
+});
+
 test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {
   await page.goto("/");
   const matrix = page.getByTestId("heatmap");

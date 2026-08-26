@@ -4,13 +4,14 @@ import { CrossTypeStability } from "./components/CrossTypeStability";
 import { PairAggregationExplorer } from "./components/PairAggregationExplorer";
 import { PolymarketAggregationExplorer } from "./components/PolymarketAggregationExplorer";
 import { FreezeMarketCorrelationExplorer } from "./components/FreezeMarketCorrelationExplorer";
+import { WithoutFreezeBaseExplorer } from "./components/WithoutFreezeBaseExplorer";
 import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
 import { ModelMultiSelect } from "./components/ModelMultiSelect";
 import { PairRanking } from "./components/PairRanking";
-import { loadAppData, loadCrossTypeData, loadEventType, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadPairAggregationData, loadPolymarketAggregationData } from "./lib/data";
+import { loadAppData, loadCrossTypeData, loadEventType, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadPairAggregationData, loadPolymarketAggregationData, loadWithoutFreezeBaseData } from "./lib/data";
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
-import type { AppData, CrossTypeData, EventTypeData, FreezeMarketCorrelationData, GlobalBaselineData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData } from "./types/data";
+import type { AppData, CrossTypeData, EventTypeData, FixedBaseAggregationData, FreezeMarketCorrelationData, GlobalBaselineData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData } from "./types/data";
 
 interface Filters {
   eventType: string;
@@ -117,6 +118,8 @@ export default function App() {
   const [polymarketAggregationError, setPolymarketAggregationError] = useState("");
   const [freezeMarketCorrelationData, setFreezeMarketCorrelationData] = useState<FreezeMarketCorrelationData | null>(null);
   const [freezeMarketCorrelationError, setFreezeMarketCorrelationError] = useState("");
+  const [withoutFreezeBaseData, setWithoutFreezeBaseData] = useState<FixedBaseAggregationData | null>(null);
+  const [withoutFreezeBaseError, setWithoutFreezeBaseError] = useState("");
 
   useEffect(() => {
     loadAppData().then(setAppData).catch((reason: Error) => setError(reason.message));
@@ -149,16 +152,23 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!appData || !eventData || !pairAggregationData || !polymarketAggregationData || !freezeMarketCorrelationData || window.location.hash !== "#freeze-correlation") return;
+    loadWithoutFreezeBaseData().then(setWithoutFreezeBaseData).catch((reason: Error) => setWithoutFreezeBaseError(reason.message));
+  }, []);
+
+  useEffect(() => {
+    const targetId = window.location.hash.slice(1);
+    if (!appData || !eventData || !pairAggregationData || !polymarketAggregationData || !freezeMarketCorrelationData) return;
+    if (targetId === "without-freeze-base" && !withoutFreezeBaseData) return;
+    if (!new Set(["freeze-correlation", "without-freeze-base"]).has(targetId)) return;
     const scrollToModule = () => {
-      const module = document.getElementById("freeze-correlation");
+      const module = document.getElementById(targetId);
       if (module) window.scrollTo({ top: module.getBoundingClientRect().top + window.scrollY - 16 });
     };
     const frame = window.requestAnimationFrame(scrollToModule);
     const timeout = window.setTimeout(scrollToModule, 250);
     const stabilization = window.setTimeout(scrollToModule, 1_200);
     return () => { window.cancelAnimationFrame(frame); window.clearTimeout(timeout); window.clearTimeout(stabilization); };
-  }, [appData, eventData, pairAggregationData, polymarketAggregationData, freezeMarketCorrelationData]);
+  }, [appData, eventData, pairAggregationData, polymarketAggregationData, freezeMarketCorrelationData, withoutFreezeBaseData]);
 
   useEffect(() => {
     if (!appData) return;
@@ -268,7 +278,7 @@ export default function App() {
           <span><strong>ForecastBench</strong><small>DEPENDENCE ATLAS</small></span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#freeze-correlation">Freeze correlation</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
+          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#freeze-correlation">Freeze correlation</a><a href="#without-freeze-base">Exposure base</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
         </nav>
         <div className="build-state"><i /> {appData.manifest.fixture ? "Sample build" : "Verified build"}</div>
       </header>
@@ -325,6 +335,8 @@ export default function App() {
         {polymarketAggregationData ? <PolymarketAggregationExplorer data={polymarketAggregationData} /> : polymarketAggregationError ? <section className="polymarket-aggregation-section" id="polymarket-aggregation"><div className="cross-type-unavailable"><strong>Polymarket freeze benchmark unavailable</strong><span>{polymarketAggregationError}</span></div></section> : null}
 
         {freezeMarketCorrelationData ? <FreezeMarketCorrelationExplorer data={freezeMarketCorrelationData} /> : freezeMarketCorrelationError ? <section className="freeze-correlation-section" id="freeze-correlation"><div className="cross-type-unavailable"><strong>With-freeze correlation unavailable</strong><span>{freezeMarketCorrelationError}</span></div></section> : null}
+
+        {withoutFreezeBaseData ? <WithoutFreezeBaseExplorer data={withoutFreezeBaseData} /> : withoutFreezeBaseError ? <section className="without-freeze-base-section" id="without-freeze-base"><div className="cross-type-unavailable"><strong>Without-freeze base experiment unavailable</strong><span>{withoutFreezeBaseError}</span></div></section> : null}
 
         <GlobalBaseline data={globalBaselineData} models={appData.models} heatmapModelIds={filters.heatmapModels} loading={globalBaselineLoading} error={globalBaselineError} />
 
