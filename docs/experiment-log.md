@@ -1,5 +1,38 @@
 # Experiment log
 
+## 2026-08-26 — Freeze-exposed LLM × Polymarket aggregation
+
+- Identified 79 exact GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi
+  configurations explicitly labeled `with freeze values`; retained 27
+  canonical versions and 39 exact configurations after strict repeated-fold
+  support checks.
+- Reopened the original processed ForecastBench JSON referenced by each scored
+  row. Excluded 855 of 16,966 with-freeze Polymarket rows (`5.04%`) and 1,126
+  of 10,960 released no-freeze rows (`10.27%`) because every backing forecast
+  was marked `imputed=true`.
+- Evaluated Polymarket, the model alone, four fixed pools, conservative
+  closed-form pools, and diagnostic oracles using ten event-disjoint A/B
+  splits in both directions. Fitted weights, dependence, and Near-BI used only
+  the training half.
+- In the canonical sample, Piecewise Odds was the best fixed pool but remained
+  negative versus Polymarket (`-0.819%` event-count-weighted gain); EC was
+  `-1.318%`, Log-odds `-3.096%`, and Simple mean `-4.416%`.
+- CF-LCB-95 shrank almost entirely to Polymarket (`+0.0068%` weighted and
+  `+0.0040%` pooled gain), was strictly positive for only one of 27 models, and
+  changed sign across split repetitions. It is not treated as a meaningful
+  improvement.
+- Matched forecast/market correlation rose from `0.396` without freeze exposure
+  to `0.920` with exposure; exact copying rose from `0.69%` to `21.87%`.
+  Freeze exposure makes models much better but highly redundant with the
+  market, explaining why re-aggregation usually fails.
+- Piecewise Odds was positive for 13 of 27 models, led by GPT-5 (`+9.04%`) and
+  Claude Opus 4.1 (`+6.37%`), but large negative outliers made the average
+  negative. These pair rankings remain exploratory because they use combined
+  test performance.
+- The strict train-fold Near-BI subset did not reverse the mean result.
+  A test-fitted directional oracle gained `+1.354%`, showing conditional signal
+  exists but is not stably transferable from the current half-history.
+
 ## 2026-08-26 — Closed-form aggregation and diversity-failure diagnosis
 
 - Reused the released 28 Polymarket-model and 337 six-family model-model pairs,

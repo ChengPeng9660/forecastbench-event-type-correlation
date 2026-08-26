@@ -100,6 +100,10 @@ The pooled global baseline, leave-one-topic-out transfer comparisons, focal-
 model partner stability, and individual-model BI control are documented in
 [`docs/global-baseline.md`](docs/global-baseline.md).
 
+The imputation-audited experiment that aggregates explicitly freeze-exposed
+LLM configurations with the same Polymarket freeze probability is documented
+in [`docs/freeze-exposed-market-aggregation.md`](docs/freeze-exposed-market-aggregation.md).
+
 ## Repository layout
 
 - `analysis/`: taxonomy, official-FX scoring, model-version selection, streaming metrics, and static-data export.
@@ -107,6 +111,8 @@ model partner stability, and individual-model BI control are documented in
 - `data/derived/`: complete and eligible pair tables plus the combined audit.
 - `data/derived/cross_type_*`: cross-topic summaries, all-pair transitions, and a standalone audit.
 - `data/derived/global_*`: pooled pair metrics, global-to-topic transfer tables, partner profiles, and BI controls.
+- `data/derived/freeze_exposed_market_aggregation/`: repeated OOS model-market
+  aggregation results, matched exposure comparisons, and provenance audit.
 - `site/`: React/Vite static explorer deployed by GitHub Pages.
 - `tests/` and `site/tests/`: data invariants, schema, metric direction, URL state, desktop, and mobile checks.
 
