@@ -362,7 +362,11 @@ def evaluate_pair(
             dependence = dependence_support(first_panel, second_panel, train_keys, 2.0, 0.25)
             first_train_brier = single_brier(first_panel, train_keys)
             second_train_brier = single_brier(second_panel, train_keys)
-            if experiment in {"polymarket_model", "same_version_freeze_exposure"} or first_train_brier <= second_train_brier:
+            if experiment in {
+                "polymarket_model",
+                "same_version_freeze_exposure",
+                "fixed_focal_without_freeze",
+            } or first_train_brier <= second_train_brier:
                 anchor_name, partner_name = model_a, model_b
                 anchor_panel, partner_panel = first_panel, second_panel
             else:
@@ -383,7 +387,11 @@ def evaluate_pair(
                 output.append(
                     {
                         "experiment": experiment,
-                        "pair_id": " x ".join(sorted((model_a, model_b), key=str.casefold)),
+                        "pair_id": (
+                            f"{model_a} -> {model_b}"
+                            if experiment == "fixed_focal_without_freeze"
+                            else " x ".join(sorted((model_a, model_b), key=str.casefold))
+                        ),
                         "model_a": model_a,
                         "model_b": model_b,
                         "pair_group": (

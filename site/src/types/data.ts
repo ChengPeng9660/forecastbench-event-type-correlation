@@ -932,6 +932,79 @@ export interface FixedBaseAggregationData {
   points: FixedBaseAggregationPoint[];
 }
 
+export interface FixedFocalAggregationScore extends FixedBaseAggregationScore {
+  gain_vs_best_single: number;
+}
+
+export interface FixedFocalAggregationView
+  extends Omit<FixedBaseAggregationView, "aggregation"> {
+  aggregation: Record<FreezeAggregationMethodId, FixedFocalAggregationScore>;
+}
+
+export interface FixedFocalWithoutFreezePoint {
+  base_model: string;
+  base_family: ModelFamily;
+  base_provider: string;
+  partner_model: string;
+  partner_family: ModelFamily;
+  partner_provider: string;
+  pair_group: PairGroupId;
+  n_common: number;
+  combined: FixedFocalAggregationView;
+  directions: Record<Exclude<FreezeFoldView, "combined">, FixedFocalAggregationView>;
+}
+
+export interface FixedFocalWithoutFreezeData {
+  schema_version: string;
+  generated_at: string;
+  title: string;
+  scope: string;
+  evaluation: {
+    design: string;
+    split_seeds: number[];
+    fold_views: Record<FreezeFoldView, string>;
+    near_bi_threshold: number;
+    diversity_metrics: FixedBaseAggregationData["evaluation"]["diversity_metrics"];
+    methods: FixedBaseAggregationData["evaluation"]["methods"];
+    summary_combined: Array<{
+      method: FreezeAggregationMethodId;
+      ordered_pair_count: number;
+      test_target_cells: number;
+      support_weighted_brier_index: number;
+      support_weighted_gain_vs_base: number;
+      support_weighted_gain_vs_partner: number;
+      support_weighted_gain_vs_best_single: number;
+      positive_vs_base_pairs: number;
+    }>;
+    focal_correlation_summary: Array<{
+      base_model: string;
+      method: FreezeAggregationMethodId;
+      metric: FreezeDiversityMetricId;
+      ordered_pair_count: number;
+      defined_pair_count: number;
+      pearson: number | null;
+      spearman: number | null;
+      near_bi_pair_count: number;
+      near_bi_pearson: number | null;
+    }>;
+  };
+  audit: {
+    model_count: number;
+    unordered_pair_count: number;
+    ordered_pair_count: number;
+    fold_directions_per_ordered_pair: number;
+    retained_fold_method_rows: number;
+    pair_method_rows: number;
+    all_models_exclude_freeze_values: boolean;
+    with_freeze_model_count: number;
+    near_bi_ordered_pair_count: number;
+    minimum_common_support: number;
+    model_configurations: Record<string, string[]>;
+  };
+  provenance: Record<string, unknown>;
+  points: FixedFocalWithoutFreezePoint[];
+}
+
 export interface FreezeAggregationSummary {
   method: FreezeAggregationMethodId;
   pair_count: number;

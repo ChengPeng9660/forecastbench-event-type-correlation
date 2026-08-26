@@ -341,6 +341,29 @@ test("compares both OOS directions with a fixed without-freeze base", async ({ p
   await expect(section.getByRole("img", { name: /Adjusted POG versus aggregation Brier Index/i })).toBeVisible();
 });
 
+test("compares every without-freeze partner against one fixed focal model", async ({ page }) => {
+  await page.goto("/#fixed-focal-no-freeze");
+  const section = page.locator("#fixed-focal-no-freeze");
+  await expect(section.getByRole("heading", { name: "Which partner improves a fixed focal model?" })).toBeVisible();
+  await expect(section.getByLabel("Without-freeze base model")).toHaveValue("GPT-5-2025-08-07");
+  await expect(section.getByText("FOCAL PARTNERS").locator("..").locator("dd")).toHaveText("16");
+  await expect(section.getByRole("img", { name: /Adjusted POG versus fraction gain versus fixed focal base/i })).toBeVisible();
+
+  await section.getByLabel("Without-freeze base model").selectOption("Claude-3-7-Sonnet-20250219");
+  await expect(section.getByText("FOCAL PARTNERS").locator("..").locator("dd")).toHaveText("34");
+  await section.getByRole("button", { name: "GPT", exact: true }).click();
+  await expect(section.getByText("GPT partners")).toBeVisible();
+  const allCount = Number(await section.getByText("FOCAL PARTNERS").locator("..").locator("dd").innerText());
+  await section.getByRole("button", { name: "Near-BI" }).click();
+  const nearCount = Number(await section.getByText("FOCAL PARTNERS").locator("..").locator("dd").innerText());
+  expect(nearCount).toBeLessThan(allCount);
+
+  await section.getByRole("button", { name: "B→A" }).click();
+  await expect(section).toContainText("10 repeated B→A");
+  await section.getByRole("button", { name: "Aggregation BI" }).click();
+  await expect(section.getByRole("img", { name: /Adjusted POG versus aggregation Brier Index/i })).toBeVisible();
+});
+
 test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {
   await page.goto("/");
   const matrix = page.getByTestId("heatmap");
