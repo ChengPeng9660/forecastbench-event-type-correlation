@@ -238,6 +238,123 @@ export interface PairAggregationData {
   };
 }
 
+export type PolymarketPairGroup = "all" | Lowercase<ModelFamily>;
+
+export interface PolymarketAggregationPoint
+  extends Omit<PairAggregationPoint, "family_a" | "pair_group"> {
+  model_a: "Polymarket Freeze";
+  family_a: "Polymarket";
+  pair_group: Exclude<PolymarketPairGroup, "all">;
+  gain_fraction_vs_polymarket: Record<AggregationMethodId, number | null>;
+  gain_fraction_vs_model: Record<AggregationMethodId, number | null>;
+}
+
+export interface PolymarketAggregationSummary {
+  pair_group: PolymarketPairGroup;
+  sample: "eligible" | "near_bi";
+  method: AggregationMethodId;
+  pair_count: number;
+  pair_event_cells: number;
+  support_weighted_brier_index: number | null;
+  support_weighted_gain_vs_polymarket: number | null;
+  support_weighted_gain_vs_model: number | null;
+  support_weighted_gain_vs_best_single: number | null;
+  positive_vs_polymarket_pairs: number;
+  positive_vs_polymarket_share: number | null;
+  positive_vs_model_pairs: number;
+  positive_vs_model_share: number | null;
+  macro_gain_vs_polymarket: number | null;
+  macro_gain_vs_model: number | null;
+  macro_gain_vs_best_single: number | null;
+}
+
+export interface PolymarketAggregationData {
+  schema_version: string;
+  generated_at: string;
+  scope: string;
+  baseline: {
+    id: "polymarket_freeze";
+    label: "Polymarket Freeze";
+    probability_field: "market_prob";
+    upstream_field: "freeze_datetime_value";
+    timestamp_field: "freeze_datetime";
+    timing: string;
+    outcome_blind: true;
+  };
+  model_scope: {
+    definition: string;
+    gpt_models: string[];
+    claude_models: string[];
+    gemini_models: string[];
+    qwen_models: string[];
+    deepseek_models: string[];
+    kimi_models: string[];
+  };
+  pair_scope: {
+    eligible_pair_count: number;
+    near_bi_pair_count: number;
+    minimum_overlap: number;
+    minimum_fold_overlap: number;
+    common_support: string;
+    excluded_models: Record<string, string>;
+    model_common_support: Record<string, number>;
+  };
+  methods: Record<AggregationMethodId, PairAggregationMethod>;
+  outcomes: {
+    primary: string;
+    gain_vs_polymarket: string;
+    gain_vs_model: string;
+    gain_vs_best_single: string;
+    score_weighting: string;
+  };
+  brier_index: PairAggregationData["brier_index"];
+  near_bi: PairAggregationData["near_bi"];
+  provenance: {
+    panel: string;
+    panel_sha256: string;
+    taxonomy: string;
+    taxonomy_sha256: string;
+    freeze_field_mapping: string;
+    join_key: string;
+    model_alias_audit: PairAggregationData["provenance"]["model_alias_audit"];
+    snapshot_audit: {
+      polymarket_snapshot_rows: number;
+      valid_probability_rows: number;
+      invalid_probability_rows: number;
+      invalid_probability_examples: string[][];
+      unique_market_ids: number;
+      freeze_to_due_lag_days: { minimum: number; median: number; maximum: number };
+    };
+    match_audit: {
+      scored_polymarket_round_events: number;
+      unique_market_ids: number;
+      forecast_dates: number;
+      date_min: string;
+      date_max: string;
+      freeze_datetime_min: string;
+      freeze_datetime_max: string;
+      matched_freeze_values: number;
+      missing_freeze_values: number;
+    };
+  };
+  summary: PolymarketAggregationSummary[];
+  points: PolymarketAggregationPoint[];
+  cross_fit: {
+    schema_version: string;
+    evaluation: string;
+    split: PairAggregationData["cross_fit"]["split"];
+    leakage_controls: Record<string, string | boolean>;
+    audit: PairAggregationData["cross_fit"]["audit"];
+    summary: PolymarketAggregationSummary[];
+    eligible_points: PolymarketAggregationPoint[];
+    near_bi_points: PolymarketAggregationPoint[];
+    directional_points: Record<"a_to_b" | "b_to_a", {
+      eligible_points: PolymarketAggregationPoint[];
+      near_bi_points: PolymarketAggregationPoint[];
+    }>;
+  };
+}
+
 export interface MetricDefinition {
   id: MetricId;
   label: string;

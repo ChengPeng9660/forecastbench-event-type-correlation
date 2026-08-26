@@ -16,6 +16,7 @@ import type {
   Manifest,
   Model,
   PairAggregationData,
+  PolymarketAggregationData,
   Taxonomy,
 } from "../types/data";
 
@@ -47,6 +48,10 @@ export function loadFocalGainData(): Promise<FocalGainData> {
 
 export function loadPairAggregationData(): Promise<PairAggregationData> {
   return loadJson<PairAggregationData>("pair-aggregation/all-six-family-pairs.json");
+}
+
+export function loadPolymarketAggregationData(): Promise<PolymarketAggregationData> {
+  return loadJson<PolymarketAggregationData>("polymarket-aggregation/freeze-baseline.json");
 }
 
 export function crossTypeAssetUrl(path: string): string {

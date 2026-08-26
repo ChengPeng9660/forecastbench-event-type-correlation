@@ -283,6 +283,26 @@ test("renders an English-only interface", async ({ page }) => {
   expect(await page.locator("body").innerText()).not.toMatch(/\p{Script=Han}/u);
 });
 
+test("explores the Polymarket freeze baseline across models, methods, and folds", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("#polymarket-aggregation");
+  await section.scrollIntoViewIfNeeded();
+  await expect(section.getByRole("heading", { name: "Can an LLM improve the market snapshot?" })).toBeVisible();
+  await expect(section).toContainText("1,057");
+  await expect(section.getByRole("button", { name: "Near-BI (0)" })).toBeDisabled();
+  await expect(section.getByText("MODEL PAIRS").locator("..").locator("dd")).toHaveText("28");
+
+  await section.getByRole("tab", { name: "Claude" }).click();
+  await expect(section.getByText("MODEL PAIRS").locator("..").locator("dd")).toHaveText("9");
+  await section.getByRole("row", { name: /Piecewise Odds/ }).click();
+  await expect(section.getByRole("row", { name: /Piecewise Odds/ })).toHaveClass(/active/);
+  await section.getByRole("button", { name: "B→A" }).click();
+  await expect(section).toContainText("Ten B-train → A-test evaluations averaged");
+  await section.getByRole("button", { name: "Same-sample diagnostic" }).click();
+  await expect(section.getByRole("button", { name: "B→A" })).toHaveCount(0);
+  await expect(section.getByText("Aggregation Brier Index (higher is better)")).toBeVisible();
+});
+
 test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {
   await page.goto("/");
   const matrix = page.getByTestId("heatmap");

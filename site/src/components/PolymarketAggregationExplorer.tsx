@@ -1,0 +1,316 @@
+import { useEffect, useMemo, useState } from "react";
+import type {
+  AggregationMethodId,
+  MetricId,
+  ModelFamily,
+  PolymarketAggregationData,
+  PolymarketAggregationPoint,
+  PolymarketPairGroup,
+} from "../types/data";
+
+const WIDTH = 980;
+const HEIGHT = 480;
+const MARGIN = { top: 24, right: 32, bottom: 76, left: 86 };
+
+const METHODS: AggregationMethodId[] = [
+  "ec_w0_56",
+  "simple_mean",
+  "log_odds_mean",
+  "piecewise_odds",
+  "best_single",
+];
+
+const GROUPS: Array<{ id: PolymarketPairGroup; label: string }> = [
+  { id: "all", label: "All models" },
+  { id: "gpt", label: "GPT" },
+  { id: "claude", label: "Claude" },
+  { id: "gemini", label: "Gemini" },
+  { id: "qwen", label: "Qwen" },
+  { id: "deepseek", label: "DeepSeek" },
+  { id: "kimi", label: "Kimi" },
+];
+
+const METRICS: Array<{ id: MetricId; label: string; axis: string }> = [
+  { id: "adjusted_pog", label: "Adjusted POG", axis: "Adjusted pairwise oracle gain" },
+  { id: "high_loss_lift", label: "High-loss lift", axis: "Complementarity orientation · 1 − lift" },
+  { id: "adjusted_loss_corr", label: "Loss correlation", axis: "Complementarity orientation · − correlation" },
+];
+
+type EvaluationMode = "cross_fit" | "same_sample";
+export type PolymarketFoldView = "combined" | "a_to_b" | "b_to_a";
+
+const FOLD_VIEWS: Array<{ id: PolymarketFoldView; label: string; detail: string }> = [
+  { id: "combined", label: "Combined", detail: "A→B and B→A averaged across 10 splits" },
+  { id: "a_to_b", label: "A→B", detail: "Ten A-train → B-test evaluations averaged" },
+  { id: "b_to_a", label: "B→A", detail: "Ten B-train → A-test evaluations averaged" },
+];
+
+const FAMILY_COLORS: Record<ModelFamily, string> = {
+  GPT: "#efab02",
+  Claude: "#4f207f",
+  Gemini: "#4285f4",
+  Qwen: "#267c79",
+  DeepSeek: "#c75b39",
+  Kimi: "#1f2937",
+};
+
+function mean(values: number[]) {
+  return values.reduce((total, value) => total + value, 0) / values.length;
+}
+
+function pearson(x: number[], y: number[]) {
+  if (x.length < 2 || x.length !== y.length) return null;
+  const xMean = mean(x);
+  const yMean = mean(y);
+  const numerator = x.reduce((total, value, index) => total + (value - xMean) * (y[index] - yMean), 0);
+  const xScale = Math.sqrt(x.reduce((total, value) => total + (value - xMean) ** 2, 0));
+  const yScale = Math.sqrt(y.reduce((total, value) => total + (value - yMean) ** 2, 0));
+  return xScale && yScale ? numerator / (xScale * yScale) : null;
+}
+
+function extent(values: number[]): [number, number] {
+  const low = Math.min(...values);
+  const high = Math.max(...values);
+  const span = high - low || Math.max(Math.abs(high), 0.01);
+  return [low - span * 0.08, high + span * 0.08];
+}
+
+function ticks([low, high]: [number, number]) {
+  return Array.from({ length: 5 }, (_, index) => low + ((high - low) * index) / 4);
+}
+
+function percent(value: number | null, digits = 1) {
+  if (value === null || !Number.isFinite(value)) return "—";
+  return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(digits)}%`;
+}
+
+function metricValue(value: number, metric: MetricId) {
+  return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
+}
+
+function shortModel(model: string) {
+  return model.replace(/-20\d{2}.*/, "");
+}
+
+export function selectPolymarketPoints(
+  data: PolymarketAggregationData,
+  evaluation: EvaluationMode,
+  foldView: PolymarketFoldView,
+  nearBiOnly: boolean,
+) {
+  if (evaluation === "same_sample") {
+    return data.points.filter((point) => !nearBiOnly || point.near_bi);
+  }
+  if (foldView === "combined") {
+    return nearBiOnly ? data.cross_fit.near_bi_points : data.cross_fit.eligible_points;
+  }
+  const directional = data.cross_fit.directional_points[foldView];
+  return nearBiOnly ? directional.near_bi_points : directional.eligible_points;
+}
+
+interface MethodSummary {
+  method: AggregationMethodId;
+  pairCount: number;
+  support: number;
+  weightedBi: number | null;
+  gainVsPolymarket: number | null;
+  gainVsModel: number | null;
+  positiveVsPolymarket: number;
+}
+
+export function summarizePolymarketPoints(
+  points: PolymarketAggregationPoint[],
+  method: AggregationMethodId,
+): MethodSummary {
+  const valid = points.filter((point) =>
+    Number.isFinite(point.brier_index[method])
+    && point.gain_fraction_vs_polymarket[method] !== null
+    && point.gain_fraction_vs_model[method] !== null
+  );
+  const support = valid.reduce((total, point) => total + point.n_overlap, 0);
+  const weighted = (value: (point: PolymarketAggregationPoint) => number | null) => {
+    if (!support) return null;
+    return valid.reduce((total, point) => total + (value(point) as number) * point.n_overlap, 0) / support;
+  };
+  return {
+    method,
+    pairCount: valid.length,
+    support,
+    weightedBi: weighted((point) => point.brier_index[method]),
+    gainVsPolymarket: weighted((point) => point.gain_fraction_vs_polymarket[method]),
+    gainVsModel: weighted((point) => point.gain_fraction_vs_model[method]),
+    positiveVsPolymarket: valid.filter((point) => (point.gain_fraction_vs_polymarket[method] as number) > 0).length,
+  };
+}
+
+interface PolymarketAggregationExplorerProps {
+  data: PolymarketAggregationData;
+}
+
+export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExplorerProps) {
+  const [evaluation, setEvaluation] = useState<EvaluationMode>("cross_fit");
+  const [foldView, setFoldView] = useState<PolymarketFoldView>("combined");
+  const [group, setGroup] = useState<PolymarketPairGroup>("all");
+  const [model, setModel] = useState("");
+  const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
+  const [metric, setMetric] = useState<MetricId>("adjusted_pog");
+  const [nearBiOnly, setNearBiOnly] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("");
+
+  const sourcePoints = useMemo(
+    () => selectPolymarketPoints(data, evaluation, foldView, nearBiOnly),
+    [data, evaluation, foldView, nearBiOnly],
+  );
+  const points = useMemo(() => sourcePoints.filter((point) =>
+    (group === "all" || point.pair_group === group)
+    && (!model || point.model_b === model)
+  ), [group, model, sourcePoints]);
+  const definedPoints = useMemo(() => points.filter((point) =>
+    point.metrics[metric].complementarity !== null && Number.isFinite(point.brier_index[method])
+  ), [method, metric, points]);
+  const summaries = useMemo(
+    () => METHODS.map((methodId) => summarizePolymarketPoints(points, methodId)),
+    [points],
+  );
+  const activeSummary = summaries.find((row) => row.method === method);
+  const activeSelectedModel = definedPoints.some((point) => point.model_b === selectedModel)
+    ? selectedModel
+    : [...definedPoints].sort((a, b) => b.brier_index[method] - a.brier_index[method])[0]?.model_b ?? "";
+  const selected = definedPoints.find((point) => point.model_b === activeSelectedModel);
+
+  useEffect(() => {
+    if (selected) setSelectedModel(selected.model_b);
+  }, [evaluation, foldView, group, model, nearBiOnly, method, metric, selected?.model_b]);
+
+  useEffect(() => {
+    if (group === "all") return;
+    if (!sourcePoints.some((point) => point.pair_group === group)) setGroup("all");
+  }, [group, sourcePoints]);
+
+  const xValues = definedPoints.map((point) => point.metrics[metric].complementarity as number);
+  const yValues = definedPoints.map((point) => point.brier_index[method]);
+  const xDomain = extent(xValues.length ? xValues : [0, 1]);
+  const yDomain = extent(yValues.length ? yValues : [0, 1]);
+  const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
+  const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
+  const xScale = (value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth;
+  const yScale = (value: number) => MARGIN.top + (1 - (value - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotHeight;
+  const correlation = pearson(xValues, yValues);
+  const maxOverlap = Math.max(1, ...definedPoints.map((point) => point.n_overlap));
+  const metricMeta = METRICS.find((item) => item.id === metric) ?? METRICS[0];
+  const foldMeta = FOLD_VIEWS.find((item) => item.id === foldView) ?? FOLD_VIEWS[0];
+  const matchAudit = data.provenance.match_audit;
+  const familyModels: Array<[ModelFamily, string[]]> = [
+    ["GPT", data.model_scope.gpt_models],
+    ["Claude", data.model_scope.claude_models],
+    ["Gemini", data.model_scope.gemini_models],
+    ["Qwen", data.model_scope.qwen_models],
+    ["DeepSeek", data.model_scope.deepseek_models],
+    ["Kimi", data.model_scope.kimi_models],
+  ];
+
+  return (
+    <section className="polymarket-aggregation-section" id="polymarket-aggregation">
+      <div className="section-heading polymarket-aggregation-heading">
+        <div><p className="eyebrow">POLYMARKET FREEZE BASELINE</p><h2>Can an LLM improve the market snapshot?</h2></div>
+        <p>Polymarket's probability at the ForecastBench question-set freeze is paired with every eligible GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi model on exact common support.</p>
+      </div>
+
+      <div className="polymarket-provenance-ribbon">
+        <div><span>FREEZE FIELD</span><strong>freeze_datetime_value</strong><small>audited as <code>market_prob</code></small></div>
+        <div><span>MATCHED ROUNDS</span><strong>{matchAudit.matched_freeze_values.toLocaleString()}</strong><small>{matchAudit.missing_freeze_values} missing · {matchAudit.unique_market_ids.toLocaleString()} unique markets</small></div>
+        <div><span>FREEZE LEAD</span><strong>{data.provenance.snapshot_audit.freeze_to_due_lag_days.median.toFixed(0)} days</strong><small>{data.provenance.snapshot_audit.freeze_to_due_lag_days.minimum}–{data.provenance.snapshot_audit.freeze_to_due_lag_days.maximum} days before due date</small></div>
+        <div><span>REPEATED OOS</span><strong>{data.cross_fit.split.repetitions} × 2 folds</strong><small>event-disjoint · both directions</small></div>
+      </div>
+
+      <div className="aggregation-evaluation-bar">
+        <div className="aggregation-evaluation-toggle" role="group" aria-label="Polymarket aggregation evaluation design">
+          <button type="button" className={evaluation === "cross_fit" ? "active" : ""} onClick={() => { setEvaluation("cross_fit"); setSelectedModel(""); }}>Cross-fit OOS</button>
+          <button type="button" className={evaluation === "same_sample" ? "active" : ""} onClick={() => { setEvaluation("same_sample"); setSelectedModel(""); }}>Same-sample diagnostic</button>
+        </div>
+        <p>{evaluation === "cross_fit"
+          ? `${data.cross_fit.split.repetitions} deterministic random splits · dependence is train-only · BI is scored on the opposite fold`
+          : "Dependence and aggregation BI use the same common outcomes; retained as a sensitivity view."}</p>
+      </div>
+
+      {evaluation === "cross_fit" && <div className="aggregation-fold-bar">
+        <span>FOLD VIEW</span>
+        <div className="aggregation-fold-toggle" role="group" aria-label="Polymarket cross-fit fold view">
+          {FOLD_VIEWS.map((item) => <button type="button" className={foldView === item.id ? "active" : ""} onClick={() => { setFoldView(item.id); setSelectedModel(""); }} key={item.id}>{item.label}</button>)}
+        </div>
+        <small>{foldMeta.detail}. Every recurring date for a market remains in one fold.</small>
+      </div>}
+
+      <div className="polymarket-controls">
+        <div className="pair-group-tabs" role="tablist" aria-label="Polymarket paired model family">
+          {GROUPS.map((item) => <button type="button" role="tab" aria-selected={group === item.id} className={group === item.id ? "active" : ""} onClick={() => { setGroup(item.id); setModel(""); setSelectedModel(""); }} key={item.id}>{item.label}</button>)}
+        </div>
+        <div className="aggregation-filter-cluster">
+          <label className="aggregation-focal-select">
+            <span>PAIRED MODEL</span>
+            <select aria-label="Polymarket paired model" value={model} onChange={(event) => { setModel(event.target.value); setGroup("all"); setSelectedModel(""); }}>
+              <option value="">All paired models</option>
+              {familyModels.map(([family, models]) => <optgroup label={family} key={family}>{models.map((item) => <option value={item} key={item}>{item}</option>)}</optgroup>)}
+            </select>
+          </label>
+          <div className="gain-sample-toggle" role="group" aria-label="Polymarket aggregation sample">
+            <button type="button" className={!nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(false)}>All eligible</button>
+            <button type="button" disabled={!data.pair_scope.near_bi_pair_count} className={nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(true)}>Near-BI ({data.pair_scope.near_bi_pair_count})</button>
+          </div>
+        </div>
+      </div>
+
+      {!data.pair_scope.near_bi_pair_count && <p className="polymarket-near-bi-note"><strong>No Near-BI pairs.</strong> Polymarket Freeze is more than {data.near_bi.threshold_bi_points.toFixed(1)} BI points away from every eligible model on common support.</p>}
+
+      <div className="polymarket-overview">
+        <div className="polymarket-method-table" role="table" aria-label="Polymarket aggregation method comparison">
+          <div className="polymarket-method-head" role="row"><span>METHOD</span><span>BI ↑</span><span>GAIN VS PM</span><span>GAIN VS MODEL</span><span>POSITIVE VS PM</span></div>
+          {summaries.map((row, index) => <button type="button" role="row" className={`polymarket-method-row ${method === row.method ? "active" : ""}`} onClick={() => setMethod(row.method)} key={row.method}>
+            <span><i>{row.method === "best_single" ? "B" : String(index + 1).padStart(2, "0")}</i><strong>{data.methods[row.method].label}</strong><small>{row.method === "best_single" ? "Hindsight benchmark" : "Outcome-blind pool"}</small></span>
+            <strong>{row.weightedBi?.toFixed(2) ?? "—"}</strong>
+            <strong className={(row.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.gainVsPolymarket)}</strong>
+            <strong className={(row.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.gainVsModel)}</strong>
+            <strong>{row.positiveVsPolymarket}/{row.pairCount}</strong>
+          </button>)}
+        </div>
+
+        <dl className="polymarket-selection-summary">
+          <div><dt>MODEL PAIRS</dt><dd>{points.length}</dd><small>{group === "all" ? "all six model families" : `${GROUPS.find((item) => item.id === group)?.label} models`} · {evaluation === "cross_fit" ? foldMeta.label : "same sample"}</small></div>
+          <div><dt>WEIGHTED BI ↑</dt><dd>{activeSummary?.weightedBi?.toFixed(2) ?? "—"}</dd><small>absolute aggregation Brier Index</small></div>
+          <div><dt>GAIN VS POLYMARKET</dt><dd className={(activeSummary?.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsPolymarket ?? null)}</dd><small>fractional adjusted-Brier reduction</small></div>
+          <div><dt>GAIN VS MODEL</dt><dd className={(activeSummary?.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsModel ?? null)}</dd><small>same pool, model as denominator</small></div>
+          <div><dt>DIVERSITY–BI r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train complementarity vs opposite-fold BI" : "same-sample complementarity vs BI"}</small></div>
+        </dl>
+      </div>
+
+      <div className="aggregation-metric-tabs" role="tablist" aria-label="Polymarket complementarity metric">
+        {METRICS.map((item) => <button type="button" role="tab" aria-selected={metric === item.id} className={metric === item.id ? "active" : ""} onClick={() => setMetric(item.id)} key={item.id}>{item.label}</button>)}
+      </div>
+
+      <div className="pair-aggregation-chart-wrap polymarket-chart-wrap">
+        <div className="pair-group-legend">
+          <span><i className="polymarket-baseline-key" /> Polymarket Freeze baseline</span>
+          {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
+          <small>Gold ring = market baseline · area = test support</small>
+        </div>
+        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} Brier Index for Polymarket Freeze pairs`}>
+          {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className="gain-grid-line" /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{tick.toFixed(2)}</text></g>)}
+          {ticks(xDomain).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
+          {definedPoints.map((point) => {
+            const complementarity = point.metrics[metric].complementarity as number;
+            const aggregationBi = point.brier_index[method];
+            const radius = 4.5 + 7.5 * Math.sqrt(point.n_overlap / maxOverlap);
+            const isSelected = point.model_b === activeSelectedModel;
+            return <g className={`polymarket-point ${isSelected ? "selected" : ""}`} role="button" tabIndex={0} aria-label={`Polymarket Freeze × ${point.model_b}, aggregation BI ${aggregationBi.toFixed(2)}`} onMouseEnter={() => setSelectedModel(point.model_b)} onFocus={() => setSelectedModel(point.model_b)} onClick={() => setSelectedModel(point.model_b)} key={point.model_b}>
+              <circle cx={xScale(complementarity)} cy={yScale(aggregationBi)} r={radius} fill={FAMILY_COLORS[point.family_b]} />
+              {isSelected && <text x={xScale(complementarity)} y={yScale(aggregationBi) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_b)}</text>}
+              <title>{`${data.baseline.label} × ${point.model_b}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} BI: ${aggregationBi.toFixed(2)}\nGain vs Polymarket: ${percent(point.gain_fraction_vs_polymarket[method])}\nGain vs model: ${percent(point.gain_fraction_vs_model[method])}\nTest support: ${point.n_overlap.toLocaleString()}`}</title>
+            </g>;
+          })}
+          <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>
+          <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Aggregation Brier Index (higher is better)</text>
+        </svg> : <div className="aggregation-empty-state"><strong>No eligible Polymarket–model pairs in this view.</strong><span>Return to All eligible or choose another model family.</span></div>}
+      </div>
+    </section>
+  );
+}

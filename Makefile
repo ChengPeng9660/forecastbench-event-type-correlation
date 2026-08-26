@@ -6,11 +6,11 @@ BUILD_TIMESTAMP ?= 2026-08-19T00:00:00+00:00
 EXCLUSION_REFERENCE_PANEL ?=
 MODEL_VERSION_STAMP := $(BUILD_DIR)/.model_versions.stamp
 
-.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline analysis test site-build
+.PHONY: help check-inputs taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation analysis test site-build
 
 help:
 	@echo "Required variables: FORECASTBENCH_EVENTS, FORECASTBENCH_PROCESSED_ROOT, FORECASTBENCH_FIXED_EFFECTS"
-	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline analysis test site-build"
+	@echo "Targets: taxonomy scoring model-versions metrics export cross-type global-baseline polymarket-aggregation analysis test site-build"
 
 check-inputs:
 	@test -f "$(FORECASTBENCH_EVENTS)" || (echo "FORECASTBENCH_EVENTS is missing" && exit 1)
@@ -99,7 +99,15 @@ $(DERIVED_DIR)/global_baseline_audit.json: analysis/global_baseline.py $(MODEL_V
 		--built-at "$(BUILD_TIMESTAMP)" \
 		$(if $(strip $(EXCLUSION_REFERENCE_PANEL)),--exclusion-reference-panel "$(EXCLUSION_REFERENCE_PANEL)",)
 
-analysis: export cross-type global-baseline
+polymarket-aggregation: $(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json
+
+$(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json: analysis/polymarket_aggregation.py $(MODEL_VERSION_STAMP) $(BUILD_DIR)/event_taxonomy.csv
+	$(PYTHON) -m analysis.polymarket_aggregation \
+		--panel "$(BUILD_DIR)/scored_panel_model_versions.csv" \
+		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
+		--output "$(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json"
+
+analysis: export cross-type global-baseline polymarket-aggregation
 
 test:
 	$(PYTHON) -m pytest
