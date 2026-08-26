@@ -24,7 +24,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 132px; background: var(--bg); }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; background: var(--bg); }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
 button, select, input { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -32,9 +32,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 
 .app-shell { min-height: 100vh; }
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
+  position: relative;
+  top: auto;
+  z-index: 10;
   height: 68px;
   display: flex;
   align-items: center;
@@ -218,7 +218,7 @@ button.heat-cell:hover { transform: scale(.93); box-shadow: inset 0 0 0 1px rgba
 .heat-cell.is-active { box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px var(--purple-deep); z-index: 1; }
 .heat-cell.is-muted { opacity: .18; }
 
-.cross-type-section { background: var(--surface-raised); scroll-margin-top: 126px; }
+.cross-type-section { background: var(--surface-raised); scroll-margin-top: 16px; }
 .cross-type-toolbar {
   display: flex;
   align-items: flex-end;
@@ -303,9 +303,9 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .cross-type-unavailable strong { font-size: 11px; }
 .cross-type-unavailable span { color: var(--muted); font-size: 10px; }
 
-.global-baseline-section { background: #fff; scroll-margin-top: 126px; }
+.global-baseline-section { background: #fff; scroll-margin-top: 16px; }
 
-.focal-gain-section { background: var(--surface-raised); scroll-margin-top: 126px; }
+.focal-gain-section { background: var(--surface-raised); scroll-margin-top: 16px; }
 .focal-gain-heading { margin-bottom: 24px; }
 .focal-gain-controls { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 12px 0; border-block: 1px solid var(--line-strong); }
 .gain-metric-tabs, .gain-sample-toggle { display: flex; align-items: center; }
@@ -359,7 +359,7 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .focal-gain-footnote { max-width: 1040px; margin: 18px 0 0; color: var(--quiet); font-size: 9px; line-height: 1.65; }
 .focal-gain-footnote strong { color: var(--muted); }
 
-.pair-aggregation-section { background: var(--surface-raised); scroll-margin-top: 126px; }
+.pair-aggregation-section { background: var(--surface-raised); scroll-margin-top: 16px; }
 .pair-aggregation-heading { margin-bottom: 25px; }
 .aggregation-evaluation-bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 10px 0; border-top: 1px solid var(--line-strong); }
 .aggregation-evaluation-bar p { margin: 0; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.45; text-align: right; }
@@ -428,7 +428,7 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .aggregation-point.gpt_claude circle { fill: url(#cross-pair-fill); }
 .aggregation-point:hover circle, .aggregation-point:focus circle, .aggregation-point.selected circle { opacity: 1; stroke: var(--ink); stroke-width: 2.5; transform: scale(1.1); }
 
-.polymarket-aggregation-section { background: #fff; scroll-margin-top: 166px; }
+.polymarket-aggregation-section { background: #fff; scroll-margin-top: 16px; }
 .polymarket-aggregation-heading { margin-bottom: 25px; }
 .polymarket-provenance-ribbon { display: grid; grid-template-columns: 1.15fr .8fr .7fr .8fr; border-block: 1px solid var(--line-strong); background: linear-gradient(90deg, var(--gold-soft), #fff 44%, var(--purple-soft)); }
 .polymarket-provenance-ribbon > div { min-width: 0; padding: 15px 18px; }
@@ -622,7 +622,7 @@ footer a { color: var(--purple-deep); }
 
 @media (max-width: 720px) {
   :root { --content-gutter: 16px; }
-  html { scroll-padding-top: 60px; }
+  html { scroll-padding-top: 16px; }
   .site-header { height: 60px; padding-inline: 16px; gap: 16px; }
   .brand { min-width: auto; }
   .brand small, .build-state { display: none; }

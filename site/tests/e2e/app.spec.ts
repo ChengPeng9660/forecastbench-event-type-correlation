@@ -276,13 +276,15 @@ test("keeps the research workspace usable on mobile", async ({ page }, testInfo)
   await expect(page.getByRole("heading", { name: "Model pair ranking" })).toBeVisible();
 });
 
-test("keeps the analysis filters at their original document position", async ({ page }) => {
+test("keeps the navigation and analysis filters at their original document positions", async ({ page }) => {
   await page.goto("/");
   const dock = page.locator(".filter-dock");
+  const header = page.locator(".site-header");
   await expect(dock).toHaveCSS("position", "relative");
+  await expect(header).toHaveCSS("position", "relative");
   await page.evaluate(() => window.scrollTo(0, 1_800));
   await expect.poll(() => dock.evaluate((element) => element.getBoundingClientRect().bottom)).toBeLessThan(0);
-  await expect(page.locator(".site-header")).toHaveCSS("position", "sticky");
+  await expect.poll(() => header.evaluate((element) => element.getBoundingClientRect().bottom)).toBeLessThan(0);
 });
 
 test("renders an English-only interface", async ({ page }) => {
