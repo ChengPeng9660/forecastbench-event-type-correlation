@@ -1,5 +1,34 @@
 # Experiment log
 
+## 2026-08-26 — Closed-form aggregation and diversity-failure diagnosis
+
+- Reused the released 28 Polymarket-model and 337 six-family model-model pairs,
+  with the same ten event-disjoint A/B repetitions and both train/test
+  directions. All anchor choices, dependence signals, Near-BI decisions, and
+  closed-form weights use the training fold only.
+- Derived the exact linear-pool identity
+  `L(anchor) - L(pool) = 2 alpha C - alpha^2 D`, separating directional
+  alignment `C` from disagreement magnitude `D`. Verified the identity on all
+  7,300 unique pair-fold records to maximum absolute error `5.03e-16`.
+- Found that none of the 560 Polymarket training-fold records is Near-BI; the
+  median pair BI gap is 12.13 points and no model beats Polymarket in any
+  opposite test fold. Fixed pools lose 17.15% to 41.85% versus Polymarket.
+- A conservative closed-form linear pool reduces the Polymarket loss to
+  -0.013% but does not turn positive. A direction-specific test oracle shows a
+  +0.737% upper bound, while train-fitted directional weights remain negative,
+  indicating unstable incremental model signal.
+- For model-model pairs, train-fitted Directional CF achieves +4.098%
+  support-weighted gain against the opposite-fold hindsight best constituent,
+  with 91.7% positive pairs. The one-standard-error version achieves +3.443%
+  and 89.3% positive pairs. Both are positive in all ten repetitions.
+- Among 85 top-quartile Adjusted-POG pairs, 37 simple-mean failures all have BI
+  gap greater than two: four have nonpositive alignment and 33 have positive
+  alignment but a pooled optimal partner weight below 0.25. This confirms that
+  high diversity is potential, not sufficient evidence for equal weighting.
+- Kept the result exploratory. It requires forward-time and untouched external
+  validation, clustered uncertainty, and ablations before a confirmatory paper
+  claim or production release.
+
 ## 2026-08-24 — Model-version deduplication
 
 - Preserved the 1,046,424-row exact-configuration scored panel as the immutable input layer.
