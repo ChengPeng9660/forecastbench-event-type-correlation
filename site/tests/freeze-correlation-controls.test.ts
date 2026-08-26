@@ -21,20 +21,24 @@ describe("with-freeze model/market correlation explorer", () => {
   it("renders audited headline values and a compact top-12 ranking", () => {
     render(createElement(FreezeMarketCorrelationExplorer, { data: payload }));
     expect(screen.getByRole("heading", { name: "How closely do models track the market snapshot?" })).toBeInTheDocument();
-    expect(screen.getByText("0.920")).toBeInTheDocument();
+    expect(screen.getByText(/news-augmented configurations are excluded/i)).toBeInTheDocument();
+    expect(screen.getByText("0.902")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(12);
-    expect(screen.getByRole("button", { name: "Show all 27" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Show all 39" })).toBeInTheDocument();
     expect(screen.getByText(/Correlation measures similarity/)).toBeInTheDocument();
   });
 
   it("shows every row on demand and filters to one provider", () => {
     render(createElement(FreezeMarketCorrelationExplorer, { data: payload }));
-    fireEvent.click(screen.getByRole("button", { name: "Show all 27" }));
-    expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(27);
+    fireEvent.click(screen.getByRole("button", { name: "Show all 39" }));
+    expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(39);
 
     fireEvent.click(screen.getByRole("button", { name: "OpenAI" }));
-    expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(7);
-    expect(screen.getByText("7", { selector: ".freeze-correlation-kpis strong" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(10);
+    expect(screen.getByText("10", { selector: ".freeze-correlation-kpis strong" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Scratchpad" }));
+    expect(screen.getAllByRole("button", { name: /^Inspect / })).toHaveLength(3);
   });
 
   it("sorts by common support and updates the selected-model ledger", () => {
@@ -51,6 +55,7 @@ describe("with-freeze model/market correlation explorer", () => {
     const openAi = payload.points.filter((point) => point.provider === "OpenAI");
     const summary = summarizeFreezeCorrelationPoints(openAi);
     expect(summary.models).toBe(7);
+    expect(summary.configurations).toBe(10);
     expect(summary.support).toBe(openAi.reduce((sum, point) => sum + point.n_common, 0));
     expect(summary.correlation).toBeGreaterThan(0.8);
   });

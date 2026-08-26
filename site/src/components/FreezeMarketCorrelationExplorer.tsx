@@ -26,7 +26,8 @@ export function summarizeFreezeCorrelationPoints(points: FreezeMarketCorrelation
     support ? points.reduce((sum, point) => sum + point[key] * point.n_common, 0) / support : 0
   );
   return {
-    models: points.length,
+    models: new Set(points.map((point) => point.model)).size,
+    configurations: points.length,
     support,
     correlation: weighted("prediction_pearson"),
     exactCopy: weighted("exact_copy_share"),
@@ -36,7 +37,7 @@ export function summarizeFreezeCorrelationPoints(points: FreezeMarketCorrelation
 
 function downloadCorrelationCsv(points: FreezeMarketCorrelationPoint[]) {
   const fields: Array<keyof FreezeMarketCorrelationPoint> = [
-    "model", "provider", "family", "exact_configuration", "n_common", "prediction_pearson",
+    "model", "provider", "family", "prompt_type", "prompt_label", "exact_configuration", "n_common", "prediction_pearson",
     "exact_copy_share", "mean_absolute_difference", "root_mean_squared_difference",
     "market_mean_probability", "model_mean_probability", "market_brier_index",
     "model_brier_index", "model_gain_vs_market",
@@ -55,25 +56,36 @@ function downloadCorrelationCsv(points: FreezeMarketCorrelationPoint[]) {
 
 export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCorrelationData }) {
   const [provider, setProvider] = useState("all");
+  const [prompt, setPrompt] = useState<"all" | FreezeMarketCorrelationPoint["prompt_type"]>("all");
   const [sort, setSort] = useState<FreezeCorrelationSort>("correlation");
   const [showAll, setShowAll] = useState(false);
-  const [selectedModel, setSelectedModel] = useState(data.points[0]?.model ?? "");
+  const [selectedConfiguration, setSelectedConfiguration] = useState(data.points[0]?.exact_configuration ?? "");
   const providers = useMemo(() => [...new Set(data.points.map((point) => point.provider))], [data.points]);
   const filtered = useMemo(
-    () => data.points.filter((point) => provider === "all" || point.provider === provider),
-    [data.points, provider],
+    () => data.points.filter((point) => (
+      (provider === "all" || point.provider === provider)
+      && (prompt === "all" || point.prompt_type === prompt)
+    )),
+    [data.points, prompt, provider],
   );
   const ranked = useMemo(() => sortFreezeCorrelationPoints(filtered, sort), [filtered, sort]);
   const summary = useMemo(() => summarizeFreezeCorrelationPoints(filtered), [filtered]);
   const displayed = showAll || ranked.length <= 12 ? ranked : ranked.slice(0, 12);
-  const selected = ranked.find((point) => point.model === selectedModel) ?? ranked[0];
+  const selected = ranked.find((point) => point.exact_configuration === selectedConfiguration) ?? ranked[0];
 
   useEffect(() => {
-    if (!ranked.some((point) => point.model === selectedModel)) setSelectedModel(ranked[0]?.model ?? "");
-  }, [ranked, selectedModel]);
+    if (!ranked.some((point) => point.exact_configuration === selectedConfiguration)) {
+      setSelectedConfiguration(ranked[0]?.exact_configuration ?? "");
+    }
+  }, [ranked, selectedConfiguration]);
 
   function chooseProvider(nextProvider: string) {
     setProvider(nextProvider);
+    setShowAll(false);
+  }
+
+  function choosePrompt(nextPrompt: "all" | FreezeMarketCorrelationPoint["prompt_type"]) {
+    setPrompt(nextPrompt);
     setShowAll(false);
   }
 
@@ -81,14 +93,14 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
     <section className="freeze-correlation-section" id="freeze-correlation">
       <div className="section-heading freeze-correlation-heading">
         <div>
-          <p className="eyebrow">WITH-FREEZE MODEL ↔ MARKET</p>
+          <p className="eyebrow">FREEZE-ONLY PROMPT ↔ MARKET</p>
           <h2>How closely do models track the market snapshot?</h2>
         </div>
-        <p>Prediction-level Pearson correlation compares each explicit with-freeze model with the same ForecastBench freeze-time Polymarket probability. Higher values mean closer alignment—not higher forecasting quality or causal market influence.</p>
+        <p>Prediction-level Pearson correlation compares each zero-shot or scratchpad with-freeze configuration with the same ForecastBench freeze-time Polymarket probability. The two prompt types remain separate, and news-augmented configurations are excluded. Higher values mean closer alignment—not higher forecasting quality or causal market influence.</p>
       </div>
 
       <div className="freeze-correlation-kpis" aria-label="Correlation summary">
-        <div><span>MODELS</span><strong>{summary.models}</strong><small>canonical configurations</small></div>
+        <div><span>CONFIGS</span><strong>{summary.configurations}</strong><small>{summary.models} model versions</small></div>
         <div><span>WEIGHTED r</span><strong>{decimal(summary.correlation)}</strong><small>support-weighted Pearson</small></div>
         <div><span>EXACT COPY</span><strong>{percent(summary.exactCopy)}</strong><small>identical probabilities</small></div>
         <div><span>MEAN |Δp|</span><strong>{percent(summary.mad, 2)}</strong><small>absolute probability gap</small></div>
@@ -99,6 +111,11 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
         <div className="freeze-provider-tabs" role="group" aria-label="Filter models by provider">
           <button className={provider === "all" ? "active" : ""} type="button" onClick={() => chooseProvider("all")}>All providers</button>
           {providers.map((item) => <button className={provider === item ? "active" : ""} type="button" onClick={() => chooseProvider(item)} key={item}>{item}</button>)}
+        </div>
+        <div className="freeze-provider-tabs" role="group" aria-label="Filter models by prompt type">
+          <button className={prompt === "all" ? "active" : ""} type="button" onClick={() => choosePrompt("all")}>All prompts</button>
+          <button className={prompt === "zero_shot" ? "active" : ""} type="button" onClick={() => choosePrompt("zero_shot")}>Zero shot</button>
+          <button className={prompt === "scratchpad" ? "active" : ""} type="button" onClick={() => choosePrompt("scratchpad")}>Scratchpad</button>
         </div>
         <div className="freeze-correlation-actions">
           <label><span>SORT BY</span><select aria-label="Sort freeze correlation models" value={sort} onChange={(event) => setSort(event.target.value as FreezeCorrelationSort)}><option value="correlation">Prediction correlation</option><option value="exact_copy">Exact-copy share</option><option value="mad">Mean |Δp| (closest first)</option><option value="support">Common support</option></select></label>
@@ -115,13 +132,13 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
               <button
                 className={`freeze-correlation-row ${selected?.model === point.model ? "active" : ""}`}
                 type="button"
-                aria-label={`Inspect ${point.model}, prediction correlation ${decimal(point.prediction_pearson)}`}
-                aria-pressed={selected?.model === point.model}
-                onClick={() => setSelectedModel(point.model)}
-                key={point.model}
+                aria-label={`Inspect ${point.model}, ${point.prompt_label}, prediction correlation ${decimal(point.prediction_pearson)}`}
+                aria-pressed={selected?.exact_configuration === point.exact_configuration}
+                onClick={() => setSelectedConfiguration(point.exact_configuration)}
+                key={point.exact_configuration}
               >
                 <span className="freeze-correlation-rank">{String(index + 1).padStart(2, "0")}</span>
-                <span className="freeze-correlation-model"><strong>{point.model}</strong><small>{point.provider} · n {point.n_common.toLocaleString()}</small></span>
+                <span className="freeze-correlation-model"><strong>{point.model}</strong><small>{point.provider} · {point.prompt_label} · n {point.n_common.toLocaleString()}</small></span>
                 <span className="freeze-correlation-track"><i className="freeze-correlation-zero" /><i className="freeze-correlation-segment" style={{ left: "50%", width: `${Math.max(0, position - 50)}%` }} /><i className="freeze-correlation-dot" style={{ left: `${position}%` }} /></span>
                 <strong className="freeze-correlation-value">{decimal(point.prediction_pearson)}</strong>
               </button>
@@ -133,7 +150,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
         {selected && <aside className="freeze-correlation-detail" aria-live="polite">
           <p className="eyebrow">SELECTED MODEL</p>
           <h3>{selected.model}</h3>
-          <p className="freeze-correlation-config">{selected.exact_configuration}</p>
+          <p className="freeze-correlation-config">{selected.prompt_label} · with freeze values</p>
           <dl>
             <div><dt>Prediction r</dt><dd>{decimal(selected.prediction_pearson)}</dd></div>
             <div><dt>Exact copy</dt><dd>{percent(selected.exact_copy_share)}</dd></div>
@@ -149,7 +166,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
       </div>
 
       <div className="freeze-correlation-audit">
-        <p><strong>Exact freeze exposure.</strong> One canonical configuration per model version; all displayed configurations explicitly include <code>with freeze values</code>.</p>
+        <p><strong>Freeze-only scope.</strong> Zero-shot and scratchpad configurations are retained as separate rows. Every displayed configuration explicitly includes <code>with freeze values</code>, and configurations containing <code>news</code> are excluded.</p>
         <p><strong>Outcome-blind support.</strong> Imputed market rows are excluded, leaving {data.audit.model_event_cells.toLocaleString()} model–event cells; correlation is computed only on each model's exact common support.</p>
       </div>
     </section>

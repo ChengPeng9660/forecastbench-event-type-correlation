@@ -21,21 +21,59 @@ PROVIDERS = {
 }
 
 
+def _normalized_configuration(configuration: str) -> str:
+    return " ".join(configuration.casefold().split())
+
+
+def is_news_free_freeze_configuration(configuration: str) -> bool:
+    """Return true for explicit freeze-value prompts without news augmentation."""
+
+    normalized = _normalized_configuration(configuration)
+    return "with freeze values" in normalized and "news" not in normalized
+
+
+def prompt_type(configuration: str) -> str:
+    normalized = _normalized_configuration(configuration)
+    if "scratchpad" in normalized:
+        return "scratchpad"
+    if "zero shot" in normalized:
+        return "zero_shot"
+    raise ValueError(f"unsupported freeze prompt type: {configuration!r}")
+
+
 def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    similarities = summary["similarity_summary"]["canonical_primary"]
-    aggregate = next(
+    candidate_similarities = summary["similarity_summary"]["all_configurations"]
+    non_freeze = [
         row
-        for row in summary["similarity_summary"]["aggregate"]
-        if row["sample"] == "canonical_primary"
+        for row in candidate_similarities
+        if "with freeze values"
+        not in _normalized_configuration(row["model_configuration"])
+    ]
+    if non_freeze:
+        raise ValueError("all-configuration sample contains a non-freeze configuration")
+    excluded_news = [
+        row
+        for row in candidate_similarities
+        if "news" in _normalized_configuration(row["model_configuration"])
+    ]
+    excluded_news_candidates = sum(
+        "news" in _normalized_configuration(row["model_configuration"])
+        for row in summary.get("selection_audit", [])
     )
+    similarities = [
+        row
+        for row in candidate_similarities
+        if is_news_free_freeze_configuration(row["model_configuration"])
+    ]
+    if not similarities:
+        raise ValueError("no news-free with-freeze configurations available for site export")
 
     with pair_path.open(encoding="utf-8", newline="") as handle:
         pair_rows = list(csv.DictReader(handle))
     pair_index = {
-        (row["canonical_model_version"], row["method"]): row
+        (row["model_b"], row["method"]): row
         for row in pair_rows
-        if row["primary_configuration"] == "1"
     }
 
     points: list[dict[str, Any]] = []
@@ -44,14 +82,18 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
         model_family = family(canonical)
         if model_family not in PROVIDERS:
             raise ValueError(f"unsupported canonical model family: {canonical}")
-        anchor = pair_index[(canonical, "anchor")]
-        partner = pair_index[(canonical, "partner")]
+        exact_configuration = row["model_configuration"]
+        anchor = pair_index[(exact_configuration, "anchor")]
+        partner = pair_index[(exact_configuration, "partner")]
         if int(anchor["test_target_cells"]) != int(row["n"]) * 10:
-            raise ValueError(f"cross-fit support mismatch for {canonical}")
+            raise ValueError(f"cross-fit support mismatch for {exact_configuration}")
+        prompt = prompt_type(anchor["model_configuration"])
         points.append(
             {
                 "model": canonical,
-                "exact_configuration": row["model_configuration"],
+                "exact_configuration": exact_configuration,
+                "prompt_type": prompt,
+                "prompt_label": "Scratchpad" if prompt == "scratchpad" else "Zero shot",
                 "family": model_family,
                 "provider": PROVIDERS[model_family],
                 "n_common": int(row["n"]),
@@ -71,21 +113,36 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
             -float(row["prediction_pearson"]),
             str(row["model"]).casefold(),
             str(row["model"]),
+            str(row["prompt_type"]),
         )
     )
-    if len(points) != summary["audit"]["primary_eligible_model_versions"]:
+    if len(points) + len(excluded_news) != summary["audit"]["eligible_exact_configurations"]:
         raise ValueError("site correlation point count does not match experiment audit")
-    if any("with freeze values" not in row["exact_configuration"].casefold() for row in points):
-        raise ValueError("site correlation payload contains a non-freeze configuration")
+    if any(
+        not is_news_free_freeze_configuration(row["exact_configuration"])
+        for row in points
+    ):
+        raise ValueError("site correlation payload contains a non-freeze or news configuration")
 
     correlations = [float(row["prediction_pearson"]) for row in points]
+    model_event_cells = sum(int(row["n_common"]) for row in points)
+    model_count = len({str(row["model"]) for row in points})
+    prompt_counts = {
+        prompt: sum(row["prompt_type"] == prompt for row in points)
+        for prompt in ("zero_shot", "scratchpad")
+    }
+
+    def support_weighted(field: str) -> float:
+        return sum(float(row[field]) * int(row["n_common"]) for row in points) / model_event_cells
+
     return {
         "schema_version": "1.0.0",
         "generated_at": summary["generated_at"],
-        "title": "With-freeze model ↔ Polymarket correlation",
+        "title": "Freeze-only prompt ↔ Polymarket correlation",
         "scope": (
-            "One outcome-blind canonical configuration per explicit with-freeze "
-            "model version, on identical non-imputed Polymarket event support."
+            "Every eligible zero-shot and scratchpad with-freeze configuration is kept "
+            "as a separate observation; news-augmented configurations are excluded. "
+            "Correlations use identical non-imputed Polymarket event support."
         ),
         "metric": {
             "id": "prediction_pearson",
@@ -95,25 +152,31 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
             "causal_warning": "Correlation measures similarity, not incremental forecasting value.",
         },
         "audit": {
-            "model_count": len(points),
-            "model_event_cells": aggregate["model_event_cells"],
-            "support_weighted_prediction_pearson": aggregate[
-                "support_weighted_prediction_pearson"
-            ],
-            "support_weighted_exact_copy_share": aggregate[
-                "support_weighted_exact_copy_share"
-            ],
-            "support_weighted_mean_absolute_difference": aggregate[
-                "support_weighted_mean_absolute_difference"
-            ],
+            "model_count": model_count,
+            "configuration_count": len(points),
+            "prompt_counts": prompt_counts,
+            "model_event_cells": model_event_cells,
+            "support_weighted_prediction_pearson": support_weighted(
+                "prediction_pearson"
+            ),
+            "support_weighted_exact_copy_share": support_weighted(
+                "exact_copy_share"
+            ),
+            "support_weighted_mean_absolute_difference": support_weighted(
+                "mean_absolute_difference"
+            ),
             "correlation_minimum": min(correlations),
             "correlation_maximum": max(correlations),
             "imputed_rows_excluded_all_configurations": summary["provenance"][
                 "with_freeze_imputation_audit"
             ]["excluded_imputed_rows"],
-            "all_configs_explicitly_with_freeze": summary["audit"][
-                "all_selected_configs_explicitly_with_freeze"
-            ],
+            "all_configs_explicitly_with_freeze": all(
+                "with freeze values"
+                in _normalized_configuration(row["exact_configuration"])
+                for row in points
+            ),
+            "all_configs_exclude_news": True,
+            "excluded_news_augmented_candidate_configurations": excluded_news_candidates,
         },
         "provenance": {
             "summary": str(summary_path),
@@ -122,7 +185,13 @@ def build_payload(summary_path: Path, pair_path: Path) -> dict[str, Any]:
             "pair_results_sha256": sha256_file(pair_path),
             "market_probability": summary["design"]["market_probability"],
             "imputation_policy": summary["design"]["imputation_policy"],
-            "configuration_selection": summary["design"]["primary_selection"],
+            "configuration_selection": (
+                "all eligible exact zero-shot and scratchpad with-freeze configurations"
+            ),
+            "site_filter": (
+                "require explicit 'with freeze values' and exclude configurations "
+                "containing 'news'"
+            ),
         },
         "points": points,
     }

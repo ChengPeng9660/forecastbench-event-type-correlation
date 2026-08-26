@@ -11,11 +11,18 @@ const payload = JSON.parse(
 describe("with-freeze model/market correlation contract", () => {
   it("publishes only explicit with-freeze canonical configurations", () => {
     expect(payload.audit.model_count).toBe(27);
-    expect(payload.audit.model_event_cells).toBe(9_323);
+    expect(payload.audit.configuration_count).toBe(39);
+    expect(payload.audit.prompt_counts).toEqual({ zero_shot: 27, scratchpad: 12 });
+    expect(payload.audit.model_event_cells).toBe(13_614);
     expect(payload.audit.all_configs_explicitly_with_freeze).toBe(true);
-    expect(payload.points).toHaveLength(27);
+    expect(payload.audit.all_configs_exclude_news).toBe(true);
+    expect(payload.audit.excluded_news_augmented_candidate_configurations).toBe(9);
+    expect(payload.points).toHaveLength(39);
     expect(new Set(payload.points.map((point) => point.model)).size).toBe(27);
+    expect(new Set(payload.points.map((point) => point.prompt_type))).toEqual(new Set(["zero_shot", "scratchpad"]));
     expect(payload.points.every((point) => point.exact_configuration.toLowerCase().includes("with freeze values"))).toBe(true);
+    expect(payload.points.every((point) => !point.exact_configuration.toLowerCase().includes("news"))).toBe(true);
+    expect(payload.provenance.site_filter).toContain("exclude");
     expect(payload.provenance.market_probability).toContain("freeze_datetime_value");
     expect(payload.provenance.imputation_policy).toContain("exclude");
   });

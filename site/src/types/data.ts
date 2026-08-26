@@ -798,6 +798,8 @@ export interface GlobalPairMatrixCompact {
 export interface FreezeMarketCorrelationPoint {
   model: string;
   exact_configuration: string;
+  prompt_type: "zero_shot" | "scratchpad";
+  prompt_label: "Zero shot" | "Scratchpad";
   family: string;
   provider: string;
   n_common: number;
@@ -826,6 +828,8 @@ export interface FreezeMarketCorrelationData {
   };
   audit: {
     model_count: number;
+    configuration_count: number;
+    prompt_counts: Record<"zero_shot" | "scratchpad", number>;
     model_event_cells: number;
     support_weighted_prediction_pearson: number;
     support_weighted_exact_copy_share: number;
@@ -834,6 +838,8 @@ export interface FreezeMarketCorrelationData {
     correlation_maximum: number;
     imputed_rows_excluded_all_configurations: number;
     all_configs_explicitly_with_freeze: boolean;
+    all_configs_exclude_news: boolean;
+    excluded_news_augmented_candidate_configurations: number;
   };
   provenance: {
     summary: string;
@@ -843,6 +849,7 @@ export interface FreezeMarketCorrelationData {
     market_probability: string;
     imputation_policy: string;
     configuration_selection: string;
+    site_filter: string;
   };
   points: FreezeMarketCorrelationPoint[];
 }
