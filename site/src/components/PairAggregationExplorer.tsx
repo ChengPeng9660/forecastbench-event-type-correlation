@@ -23,6 +23,8 @@ const PRIMARY_METHODS: AggregationMethodId[] = [
   "best_single",
 ];
 
+const ALL_METHODS: AggregationMethodId[] = [...PRIMARY_METHODS, "past_only_best_single"];
+
 const GROUPS: Array<{ id: PairGroupFilter; label: string; short: string }> = [
   { id: "all", label: "All four-family pairs", short: "All pairs" },
   { id: "gpt_gpt", label: "GPT × GPT", short: "GPT × GPT" },
@@ -116,6 +118,21 @@ function shortModel(model: string) {
 
 function pairLabel(point: PairAggregationPoint) {
   return `${point.model_a} × ${point.model_b}`;
+}
+
+export function withGainFractionVsFocal(point: PairAggregationPoint, focalModel: string) {
+  const focalSide = point.model_a === focalModel
+    ? "model_a"
+    : point.model_b === focalModel ? "model_b" : null;
+  if (!focalSide) return null;
+  const focalBrier = point.adjusted_brier[focalSide];
+  const gains = Object.fromEntries(ALL_METHODS.map((method) => [
+    method,
+    Number.isFinite(focalBrier) && focalBrier > 0
+      ? (focalBrier - point.adjusted_brier[method]) / focalBrier
+      : null,
+  ])) as Record<AggregationMethodId, number | null>;
+  return { ...point, gain_fraction_vs_best_single: gains };
 }
 
 function matchesGroup(point: PairAggregationPoint, group: PairGroupFilter) {
@@ -226,10 +243,13 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
     ...data.model_scope.qwen_models,
     ...data.model_scope.deepseek_models,
   ];
+  const defaultFocalModel = modelOptions.includes("GPT-5-2025-08-07")
+    ? "GPT-5-2025-08-07"
+    : modelOptions[0];
   const [focalModel, setFocalModel] = useState(() => {
-    if (typeof window === "undefined") return "";
+    if (typeof window === "undefined") return defaultFocalModel;
     const candidate = new URLSearchParams(window.location.search).get("gain_model") ?? "";
-    return modelOptions.includes(candidate) ? candidate : "";
+    return modelOptions.includes(candidate) ? candidate : defaultFocalModel;
   });
   const [evaluation, setEvaluation] = useState<EvaluationMode>(() => {
     if (typeof window === "undefined") return "cross_fit";
@@ -251,9 +271,10 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
     }
     return data.points.filter((point) => !nearBiOnly || point.near_bi);
   }, [data, evaluation, foldView, nearBiOnly]);
-  const focalPoints = useMemo(() => evaluationPoints.filter((point) =>
-    !focalModel || point.model_a === focalModel || point.model_b === focalModel
-  ), [evaluationPoints, focalModel]);
+  const focalPoints = useMemo(() => evaluationPoints.flatMap((point) => {
+    const focalPoint = withGainFractionVsFocal(point, focalModel);
+    return focalPoint ? [focalPoint] : [];
+  }), [evaluationPoints, focalModel]);
   const availableGroups = useMemo(() => new Set(GROUPS.filter((item) =>
     focalPoints.some((point) => matchesGroup(point, item.id))
   ).map((item) => item.id)), [focalPoints]);
@@ -360,7 +381,6 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           <label className="aggregation-focal-select">
             <span>FOCAL MODEL</span>
             <select aria-label="Aggregation focal model" value={focalModel} onChange={(event) => chooseFocalModel(event.target.value)}>
-              <option value="">All models</option>
               <optgroup label="GPT">
                 {data.model_scope.gpt_models.map((model) => <option value={model} key={model}>{model}</option>)}
               </optgroup>
@@ -384,14 +404,14 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
 
       <div className="aggregation-overview">
         <div className="aggregation-method-table" role="table" aria-label="Aggregation method comparison">
-          <div className="aggregation-method-head" role="row"><span>METHOD</span><span>WEIGHTED GAIN</span><span>POSITIVE PAIRS</span><span>MACRO GAIN</span></div>
+          <div className="aggregation-method-head" role="row"><span>METHOD</span><span>GAIN VS FOCAL</span><span>POSITIVE PAIRS</span><span>MACRO GAIN</span></div>
           {summaries.map((row) => {
             const isBaseline = row.method === "best_single";
             const rank = rankedMethods.findIndex((item) => item.method === row.method) + 1;
             return <button type="button" role="row" className={`aggregation-method-row ${method === row.method ? "active" : ""}`} onClick={() => setMethod(row.method)} key={row.method}>
               <span><i>{isBaseline ? "B" : String(rank).padStart(2, "0")}</i><strong>{data.methods[row.method].label}</strong><small>{isBaseline ? "Hindsight benchmark" : data.methods[row.method].outcome_blind ? "Outcome-blind pool" : "Benchmark"}</small></span>
               <strong className={(row.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.support_weighted_gain_fraction)}</strong>
-              <strong>{isBaseline ? "—" : `${row.positive_pairs}/${row.pair_count}`}</strong>
+              <strong>{`${row.positive_pairs}/${row.pair_count}`}</strong>
               <strong className={(row.macro_mean_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.macro_mean_gain_fraction)}</strong>
             </button>;
           })}
@@ -401,7 +421,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{evaluation === "cross_fit" ? `${foldViewMeta.label} · Cross-fit OOS · ` : "Same-sample · "}{nearBiOnly ? `train BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "all eligible pairs"}</small></div>
           <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} {evaluation === "cross_fit" ? "test" : "same-sample"} pair-event cells</small></div>
           <div><dt>SELECTED METHOD</dt><dd>{data.methods[method].label}</dd><small>{data.methods[method].formula}</small></div>
-          <div><dt>WEIGHTED GAIN</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>pair fractions weighted by common support</small></div>
+          <div><dt>WEIGHTED GAIN VS FOCAL</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>fractional Brier reduction from the fixed focal model</small></div>
           <div><dt>COMPLEMENTARITY r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train metric versus opposite-fold gain" : "same-sample descriptive association"}</small></div>
         </dl>
       </div>
@@ -435,11 +455,11 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
             return <g className={`aggregation-point ${point.pair_group} ${isSelected ? "selected" : ""}`} key={key} role="button" tabIndex={0} aria-label={`${pairLabel(point)}, ${percent(gain)} gain`} onMouseEnter={() => setSelectedKey(key)} onFocus={() => setSelectedKey(key)} onClick={() => setSelectedKey(key)}>
               <circle cx={xScale(complementarity)} cy={yScale(gain)} r={radius} style={{ fill: `url(#pair-fill-${point.pair_group})` }} />
               {isSelected && <text x={xScale(complementarity)} y={yScale(gain) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_a)} × {shortModel(point.model_b)}</text>}
-              <title>{`${pairLabel(point)}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} gain: ${percent(gain, 2)}\n${evaluation === "cross_fit" ? "Test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included folds: ${point.cross_fit?.included_fold_count ?? 0}/2` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
+              <title>{`${pairLabel(point)}\nFixed focal: ${focalModel}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} gain vs focal: ${percent(gain, 2)}\n${evaluation === "cross_fit" ? "Test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included folds: ${point.cross_fit?.included_fold_count ?? 0}/2` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
             </g>;
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>
-          <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Gain fraction versus pair Best Single</text>
+          <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Gain fraction versus fixed focal model</text>
         </svg> : <div className="aggregation-empty-state"><strong>No eligible partners in this sample.</strong><span>Choose All eligible or another pair group.</span></div>}
       </div>
 
@@ -454,7 +474,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
 
       <div className="aggregation-caveats">
         <p><strong>Event-disjoint cross-fit.</strong> SHA-256 with seed {data.cross_fit.split.seed} assigns every (source, event_id)—including every date and horizon—to one fold. Dependence and Near-BI use only the training fold; gain uses only the opposite test fold, then A/B swap.</p>
-        <p><strong>Best Single is a test benchmark, not an algorithm.</strong> It selects the lower adjusted-Brier constituent after observing that test fold, so its gain is zero by definition. EC, Simple Mean, Log-odds Mean, and Piecewise Odds never use test outcomes to form predictions.</p>
+        <p><strong>Fixed-focal denominator.</strong> Every displayed gain is (focal adjusted Brier − method adjusted Brier) / focal adjusted Brier on identical support. Best Single remains a hindsight benchmark, so its gain versus the focal model is non-negative but is not deployable. EC, Simple Mean, Log-odds Mean, and Piecewise Odds never use test outcomes to form predictions.</p>
       </div>
     </section>
   );
