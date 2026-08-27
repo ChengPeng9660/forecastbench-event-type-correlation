@@ -17,6 +17,7 @@ import type {
   GlobalPairMatrixCompact,
   GlobalPairMatrixRow,
   Manifest,
+  MarketDiversityPerformanceData,
   Model,
   PairAggregationData,
   PolymarketAggregationData,
@@ -59,6 +60,10 @@ export function loadPolymarketAggregationData(): Promise<PolymarketAggregationDa
 
 export function loadFreezeMarketCorrelationData(): Promise<FreezeMarketCorrelationData> {
   return loadJson<FreezeMarketCorrelationData>("polymarket-aggregation/freeze-exposed-correlation.json");
+}
+
+export function loadMarketDiversityPerformanceData(): Promise<MarketDiversityPerformanceData> {
+  return loadJson<MarketDiversityPerformanceData>("polymarket-aggregation/market-diversity-performance.json");
 }
 
 export function loadWithoutFreezeBaseData(): Promise<FixedBaseAggregationData> {

@@ -1077,3 +1077,81 @@ export interface FreezeMarketCorrelationData {
   };
   points: FreezeMarketCorrelationPoint[];
 }
+
+export type MarketPerformanceDiversityMetricId =
+  | "prediction_diversity"
+  | "adjusted_pog"
+  | "high_loss_lift"
+  | "adjusted_loss_corr";
+
+export type MarketPerformanceOutcomeId = "raw_brier" | "brier_index";
+
+export type MarketInformationType =
+  | "none"
+  | "freeze_values"
+  | "news"
+  | "news_freeze"
+  | "web_search"
+  | "web_search_freeze"
+  | "other";
+
+export type MarketPromptType = "zero_shot" | "scratchpad" | "unspecified";
+
+export interface MarketDiversityPerformancePoint {
+  canonical_model_version: string;
+  exact_configuration: string;
+  model_configuration: string;
+  provider: string;
+  prompt_type: MarketPromptType;
+  prompt_label: string;
+  information_type: MarketInformationType;
+  information_label: string;
+  n_common: number;
+  date_min: string;
+  date_max: string;
+  prediction_pearson: number | null;
+  diversity: Record<MarketPerformanceDiversityMetricId, number | null>;
+  model: Record<MarketPerformanceOutcomeId | "adjusted_brier", number>;
+  matched_market: Record<MarketPerformanceOutcomeId | "adjusted_brier", number>;
+}
+
+export interface MarketDiversityPerformanceData {
+  schema_version: string;
+  generated_at: string;
+  title: string;
+  scope: string;
+  metrics: Record<MarketPerformanceDiversityMetricId, {
+    label: string;
+    axis: string;
+    higher_means: string;
+  }>;
+  outcomes: Record<MarketPerformanceOutcomeId, {
+    label: string;
+    axis: string;
+    higher_is_better: boolean;
+    formula?: string;
+  }>;
+  encoding: {
+    color: "information_type";
+    shape: "prompt_type";
+    market_line: string;
+  };
+  eligibility: {
+    minimum_overlap: number;
+    eligible_configurations: number;
+    excluded_configurations: Record<string, string>;
+  };
+  audit: {
+    raw_exact_configurations: number;
+    canonical_model_versions: number;
+    eligible_canonical_model_versions: number;
+    eligible_exact_configurations: number;
+    information_counts: Record<string, number>;
+    prompt_counts: Record<string, number>;
+    provider_counts: Record<string, number>;
+    model_event_cells: number;
+    all_scores_use_identical_pair_support: boolean;
+  };
+  provenance: Record<string, unknown>;
+  points: MarketDiversityPerformancePoint[];
+}
