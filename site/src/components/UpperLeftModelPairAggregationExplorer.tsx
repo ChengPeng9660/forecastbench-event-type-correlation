@@ -146,14 +146,13 @@ function PairBlock({
   const xValues = filtered.map((row) => row.diversity[metric] as number);
   const yValues = filtered.map((row) => row.aggregationBi);
   const marketLine = filtered.length ? filtered.reduce((sum, row) => sum + row.marketBi, 0) / filtered.length : null;
-  const chartMarketLine = crossfit ? null : marketLine;
   const rawX = finiteExtent(xValues);
   const xPadding = Math.max((rawX[1] - rawX[0]) * 0.07, 0.005);
   const xDomain: [number, number] = [
     metric === "prediction_diversity" || metric === "adjusted_pog" ? Math.max(0, rawX[0] - xPadding) : rawX[0] - xPadding,
     rawX[1] + xPadding,
   ];
-  const rawY = finiteExtent(chartMarketLine === null ? yValues : [...yValues, chartMarketLine]);
+  const rawY = finiteExtent(yValues);
   const yPadding = Math.max((rawY[1] - rawY[0]) * 0.13, 0.25);
   const yDomain: [number, number] = [rawY[0] - yPadding, rawY[1] + yPadding];
   const positive = filtered.filter((row) => row.beatsMarket).length;
@@ -175,9 +174,9 @@ function PairBlock({
 
       <dl className="upper-left-kpis">
         <div><dt>VISIBLE PAIRS</dt><dd>{filtered.length}</dd><small>one fixed focal model</small></div>
-        <div><dt>ABOVE MARKET MEAN</dt><dd>{positive}</dd><small>{filtered.length ? `${(100 * positive / filtered.length).toFixed(1)}% of pairs` : "no eligible pairs"}</small></div>
+        <div><dt>ABOVE PAIR-MATCHED MARKET</dt><dd>{positive}</dd><small>{filtered.length ? `${(100 * positive / filtered.length).toFixed(1)}% of pairs` : "no eligible pairs"}</small></div>
         <div><dt>MEAN AGGREGATION BI</dt><dd>{meanBi?.toFixed(2) ?? "—"}</dd><small>higher is better</small></div>
-        <div><dt>MARKET REFERENCE</dt><dd>{marketLine?.toFixed(2) ?? "—"}</dd><small>direct mean · unmatched support</small></div>
+        <div><dt>PAIR-MATCHED MARKET</dt><dd>{marketLine?.toFixed(2) ?? "—"}</dd><small>mean across visible pair supports</small></div>
         <div><dt>{crossfit ? "MAX OOS DIRECTIONS" : "FIXED MODELS"}</dt><dd>{crossfit ? data.crossfit.maximum_pair_evaluations : data.fixed.models.length}</dd><small>{crossfit ? "10 splits × 2 directions" : "exact configurations"}</small></div>
       </dl>
 
@@ -192,7 +191,6 @@ function PairBlock({
               const x = linearPosition(tick, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
               return <g key={`x-${tick}`}><line className="upper-left-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="upper-left-tick" x={x} y={HEIGHT - MARGIN.bottom + 23} textAnchor="middle">{formatMetric(metric, tick)}</text></g>;
             })}
-            {chartMarketLine !== null && <g className="upper-left-market-line"><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={linearPosition(chartMarketLine, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} y2={linearPosition(chartMarketLine, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} /><text x={WIDTH - MARGIN.right - 5} y={linearPosition(chartMarketLine, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]) - 9} textAnchor="end">Overall Polymarket BI · {chartMarketLine.toFixed(2)}</text></g>}
             {filtered.map((row) => {
               const xValue = row.diversity[metric] as number;
               const x = linearPosition(xValue, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
@@ -207,12 +205,12 @@ function PairBlock({
 
         <aside className="upper-left-inspector" aria-live="polite">
           <p className="eyebrow">SELECTED PARTNER</p>
-          {selected ? <><h4>{selected.modelB.split(" (")[0]}</h4><p>{selected.modelB.includes(" (") ? selected.modelB.split(" (")[1].replace(/\)$/, "") : "Exact configuration"}</p><dl><div><dt>{data.metrics[metric].label}</dt><dd>{formatMetric(metric, selected.diversity[metric] as number)}</dd></div><div><dt>Aggregation BI ↑</dt><dd>{selected.aggregationBi.toFixed(2)}</dd></div><div><dt>Overall market mean ↑</dt><dd>{selected.marketBi.toFixed(2)}</dd></div><div><dt>ΔBI vs mean</dt><dd className={selected.beatsMarket ? "positive" : "negative"}>{selected.deltaBi >= 0 ? "+" : ""}{selected.deltaBi.toFixed(2)}</dd></div><div><dt>{crossfit ? "OOS directions" : "Pair cells"}</dt><dd>{crossfit ? `${selected.evaluationCount}/${selected.maximumEvaluations}` : Math.round(selected.support).toLocaleString()}</dd></div>{crossfit && <><div><dt>A→B / B→A</dt><dd>{selected.aToB?.count ?? 0} / {selected.bToA?.count ?? 0}</dd></div><div><dt>Above-mean share</dt><dd>{((selected.beatMarketShare ?? 0) * 100).toFixed(1)}%</dd></div></>}</dl></> : <p>No selected pair.</p>}
+          {selected ? <><h4>{selected.modelB.split(" (")[0]}</h4><p>{selected.modelB.includes(" (") ? selected.modelB.split(" (")[1].replace(/\)$/, "") : "Exact configuration"}</p><dl><div><dt>{data.metrics[metric].label}</dt><dd>{formatMetric(metric, selected.diversity[metric] as number)}</dd></div><div><dt>Aggregation BI ↑</dt><dd>{selected.aggregationBi.toFixed(2)}</dd></div><div><dt>Pair-matched market BI ↑</dt><dd>{selected.marketBi.toFixed(2)}</dd></div><div><dt>ΔBI vs market</dt><dd className={selected.beatsMarket ? "positive" : "negative"}>{selected.deltaBi >= 0 ? "+" : ""}{selected.deltaBi.toFixed(2)}</dd></div><div><dt>{crossfit ? "OOS directions" : "Pair cells"}</dt><dd>{crossfit ? `${selected.evaluationCount}/${selected.maximumEvaluations}` : Math.round(selected.support).toLocaleString()}</dd></div>{crossfit && <><div><dt>A→B / B→A</dt><dd>{selected.aToB?.count ?? 0} / {selected.bToA?.count ?? 0}</dd></div><div><dt>Pair-matched win share</dt><dd>{((selected.beatMarketShare ?? 0) * 100).toFixed(1)}%</dd></div></>}</dl></> : <p>No selected pair.</p>}
         </aside>
       </div>
 
-      <div className="upper-left-table-heading"><div><strong>PAIR RESULTS</strong><span><i className="triangle-symbol" /> above overall market mean <i className="circle-symbol" /> at or below market mean</span></div><button type="button" className="download-button" onClick={() => downloadRows(filtered, metric, `${crossfit ? "crossfit" : "fixed"}_${method}_${metric}.csv`)}>Download filtered CSV ↓</button></div>
-      <div className="upper-left-table-wrap"><table className="upper-left-table"><thead><tr><th>Partner</th><th>Diversity</th><th>Aggregation BI ↑</th><th>Market mean ↑</th><th>ΔBI</th><th>{crossfit ? "OOS directions (A/B)" : "Pair cells"}</th><th>{crossfit ? "Above-mean share" : "Above mean"}</th></tr></thead><tbody>{filtered.map((row) => <tr className={selected?.pairId === row.pairId ? "selected" : ""} onClick={() => setSelectedPair(row.pairId)} key={row.pairId}><td><span className={row.beatsMarket ? "row-shape triangle" : "row-shape circle"} /> <strong>{row.modelB.split(" (")[0]}</strong><small>{row.modelB.includes(" (") ? row.modelB.split(" (")[1].replace(/\)$/, "") : ""}</small></td><td>{formatMetric(metric, row.diversity[metric] as number)}</td><td>{row.aggregationBi.toFixed(2)}</td><td>{row.marketBi.toFixed(2)}</td><td className={row.beatsMarket ? "positive" : "negative"}>{row.deltaBi >= 0 ? "+" : ""}{row.deltaBi.toFixed(2)}</td><td>{crossfit ? `${row.evaluationCount}/${row.maximumEvaluations} (${row.aToB?.count ?? 0}/${row.bToA?.count ?? 0})` : Math.round(row.support).toLocaleString()}</td><td>{crossfit ? `${((row.beatMarketShare ?? 0) * 100).toFixed(1)}%` : row.beatsMarket ? "Yes" : "No"}</td></tr>)}</tbody></table></div>
+      <div className="upper-left-table-heading"><div><strong>PAIR RESULTS</strong><span><i className="triangle-symbol" /> above pair-matched market <i className="circle-symbol" /> at or below pair-matched market</span></div><button type="button" className="download-button" onClick={() => downloadRows(filtered, metric, `${crossfit ? "crossfit" : "fixed"}_${method}_${metric}.csv`)}>Download filtered CSV ↓</button></div>
+      <div className="upper-left-table-wrap"><table className="upper-left-table"><thead><tr><th>Partner</th><th>Diversity</th><th>Aggregation BI ↑</th><th>Pair-matched market BI ↑</th><th>ΔBI</th><th>{crossfit ? "OOS directions (A/B)" : "Pair cells"}</th><th>{crossfit ? "Pair-matched win share" : "Above market"}</th></tr></thead><tbody>{filtered.map((row) => <tr className={selected?.pairId === row.pairId ? "selected" : ""} onClick={() => setSelectedPair(row.pairId)} key={row.pairId}><td><span className={row.beatsMarket ? "row-shape triangle" : "row-shape circle"} /> <strong>{row.modelB.split(" (")[0]}</strong><small>{row.modelB.includes(" (") ? row.modelB.split(" (")[1].replace(/\)$/, "") : ""}</small></td><td>{formatMetric(metric, row.diversity[metric] as number)}</td><td>{row.aggregationBi.toFixed(2)}</td><td>{row.marketBi.toFixed(2)}</td><td className={row.beatsMarket ? "positive" : "negative"}>{row.deltaBi >= 0 ? "+" : ""}{row.deltaBi.toFixed(2)}</td><td>{crossfit ? `${row.evaluationCount}/${row.maximumEvaluations} (${row.aToB?.count ?? 0}/${row.bToA?.count ?? 0})` : Math.round(row.support).toLocaleString()}</td><td>{crossfit ? `${((row.beatMarketShare ?? 0) * 100).toFixed(1)}%` : row.beatsMarket ? "Yes" : "No"}</td></tr>)}</tbody></table></div>
     </article>
   );
 }
@@ -220,10 +218,10 @@ function PairBlock({
 export function UpperLeftModelPairAggregationExplorer({ data }: { data: UpperLeftModelPairAggregationData }) {
   return (
     <section className="upper-left-pairs-section" id="upper-left-pairs">
-      <div className="section-heading upper-left-section-heading"><div><p className="eyebrow">UPPER-LEFT CONFIGURATIONS · MODEL × MODEL</p><h2>Which model pairs rise above the market mean?</h2></div><p>Fix one focal configuration, vary its model partner, and compare four closed-form pools. The x-axis measures model-to-model diversity; the y-axis is aggregation BI. Triangles exceed the direct overall Polymarket mean on unmatched support.</p></div>
+      <div className="section-heading upper-left-section-heading"><div><p className="eyebrow">UPPER-LEFT CONFIGURATIONS · MODEL × MODEL</p><h2>Which model pairs beat the market?</h2></div><p>Fix one focal configuration, vary its model partner, and compare four closed-form pools. The x-axis measures model-to-model diversity; the y-axis is aggregation BI. Every triangle compares aggregation and Polymarket on exactly the same pair support.</p></div>
       <PairBlock index="01" title={data.fixed.title} description={data.fixed.description} models={data.fixed.models} rows={data.fixed.rows.map(fixedDisplay)} data={data} crossfit={false} />
       <PairBlock index="02" title={data.crossfit.title} description={data.crossfit.description} models={data.crossfit.models} rows={data.crossfit.rows.map(crossfitDisplay)} data={data} crossfit />
-      <p className="upper-left-method-note"><strong>Market reference.</strong> {data.market_reference.interpretation} The triangle is therefore a descriptive “above overall market mean” marker, not an identical-support statistical win. In Block 02, selection and diversity use only the training fold; aggregation BI uses only the opposite test fold.</p>
+      <p className="upper-left-method-note"><strong>Market reference.</strong> {data.market_reference.interpretation} A triangle is a support-matched score comparison, not a statistical-significance claim. In Block 02, selection and diversity use only the training fold; aggregation BI and market BI use the identical opposite-fold pair support.</p>
     </section>
   );
 }

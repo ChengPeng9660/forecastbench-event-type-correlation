@@ -1237,7 +1237,7 @@ export interface UpperLeftModelPairAggregationData {
   metrics: Record<UpperLeftPairDiversityMetricId, { label: string; axis: string }>;
   market_reference: {
     comparison: string;
-    pair_matched_support: false;
+    pair_matched_support: true;
     interpretation: string;
   };
   fixed: {

@@ -12,10 +12,9 @@ study:
   fold.  A/B then swap and pair results are averaged across all eligible
   directions.
 
-The user-requested market reference is deliberately *unmatched*: each block
-compares pair BI with the direct mean Polymarket BI for the corresponding full
-evaluation sample, rather than intersecting market observations with each
-model pair.  The payload labels this limitation explicitly.
+Every market comparison is pair matched: aggregation BI and Polymarket BI are
+computed on the identical model-pair evaluation keys before any direction or
+repetition averages are formed.
 """
 
 from __future__ import annotations
@@ -168,7 +167,7 @@ def fixed_block(
     if missing:
         raise ValueError(f"fixed upper-left configurations missing from panel: {missing}")
     market_keys = sorted(market_panel)
-    market_bi = _market_bi(market_panel, market_keys, "fixed overall market")
+    overall_market_bi = _market_bi(market_panel, market_keys, "fixed overall market")
     rows: list[dict[str, Any]] = []
     excluded: dict[str, str] = {}
     for first, second in combinations(FIXED_UPPER_LEFT_CONFIGURATIONS, 2):
@@ -181,6 +180,7 @@ def fixed_block(
             excluded[pair_id] = f"pair support {len(keys)} < {minimum_overlap}"
             continue
         diversity = _diversity(panel[first], panel[second], keys)
+        pair_market_bi = _market_bi(market_panel, keys, f"fixed pair market {pair_id}")
         scores = score_aggregation_support(
             panel[first], panel[second], keys, ec_weight, piecewise_threshold
         )
@@ -198,9 +198,9 @@ def fixed_block(
                     "date_max": max(key[0][:10] for key in keys),
                     "diversity": diversity,
                     "aggregation_bi": method_bi,
-                    "market_bi": market_bi,
-                    "aggregation_minus_market_bi": method_bi - market_bi,
-                    "beats_market": method_bi > market_bi,
+                    "market_bi": pair_market_bi,
+                    "aggregation_minus_market_bi": method_bi - pair_market_bi,
+                    "beats_market": method_bi > pair_market_bi,
                 }
             )
     return {
@@ -212,11 +212,11 @@ def fixed_block(
         ),
         "models": [_metadata(name, metadata) for name in FIXED_UPPER_LEFT_CONFIGURATIONS],
         "market": {
-            "brier_index": market_bi,
+            "brier_index": overall_market_bi,
             "n": len(market_keys),
             "date_min": min(key[0][:10] for key in market_keys),
             "date_max": max(key[0][:10] for key in market_keys),
-            "support": "overall Polymarket support; not pair matched",
+            "support": "overall Polymarket context only; every pair comparison is support matched",
         },
         "eligible_pairs": len({row["pair_id"] for row in rows}),
         "excluded_pairs": excluded,
@@ -303,8 +303,8 @@ def crossfit_block(
                     "selected_count": len(selected),
                     "selected_models": selected,
                     "thresholds": thresholds,
-                    "test_market_bi": market_bi,
-                    "test_market_n": len(test_market_keys),
+                    "overall_test_market_bi": market_bi,
+                    "overall_test_market_n": len(test_market_keys),
                 }
             )
             for first, second in combinations(selected, 2):
@@ -325,6 +325,11 @@ def crossfit_block(
                     panel[first], panel[second], test_keys, ec_weight, piecewise_threshold
                 )
                 pair_id = f"{first} × {second}"
+                pair_market_bi = _market_bi(
+                    market_panel,
+                    test_keys,
+                    f"crossfit pair market {seed} {train_fold}->{test_fold} {pair_id}",
+                )
                 for method in METHODS:
                     method_bi = scores["brier_index"][method]
                     evaluations.append(
@@ -343,9 +348,9 @@ def crossfit_block(
                             "n_test": len(test_keys),
                             "train_diversity": diversity,
                             "test_aggregation_bi": method_bi,
-                            "test_market_bi": market_bi,
-                            "test_aggregation_minus_market_bi": method_bi - market_bi,
-                            "test_beats_market": method_bi > market_bi,
+                            "test_market_bi": pair_market_bi,
+                            "test_aggregation_minus_market_bi": method_bi - pair_market_bi,
+                            "test_beats_market": method_bi > pair_market_bi,
                         }
                     )
 
@@ -514,11 +519,11 @@ def build_payload(
             },
         },
         "market_reference": {
-            "comparison": "direct mean market BI",
-            "pair_matched_support": False,
+            "comparison": "pair-matched market BI",
+            "pair_matched_support": True,
             "interpretation": (
-                "Descriptive comparison with the overall evaluation-sample Polymarket BI; "
-                "not an identical-support head-to-head test."
+                "Aggregation and Polymarket BI are computed on identical model-pair "
+                "evaluation support in every full-sample or OOS direction."
             ),
         },
         "fixed": fixed,

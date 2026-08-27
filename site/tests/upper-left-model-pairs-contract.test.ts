@@ -14,15 +14,17 @@ describe("upper-left model-pair payload", () => {
       "ec_w0_56",
       "piecewise_odds",
     ]);
-    expect(payload.market_reference.pair_matched_support).toBe(false);
+    expect(payload.market_reference.pair_matched_support).toBe(true);
     expect(payload.audit.selection_uses_test_outcomes).toBe(false);
     expect(payload.audit.pair_aggregation_uses_test_outcomes).toBe(false);
     expect(payload.audit.match_audit.missing_freeze_values).toBe(0);
     expect(payload.fixed.market.n).toBe(payload.audit.match_audit.matched_freeze_values);
   });
 
-  it("uses triangle eligibility from direct mean market BI", () => {
+  it("uses triangle eligibility from pair-matched market BI", () => {
     const payload = JSON.parse(readFileSync("public/data/pair-aggregation/upper-left-model-pairs.json", "utf8"));
+    expect(new Set(payload.fixed.rows.map((row: { market_bi: number }) => row.market_bi.toFixed(10))).size).toBeGreaterThan(1);
+    expect(new Set(payload.crossfit.rows.map((row: { market_bi: number }) => row.market_bi.toFixed(10))).size).toBeGreaterThan(1);
     for (const row of [...payload.fixed.rows, ...payload.crossfit.rows]) {
       expect(row.beats_market).toBe(row.aggregation_bi > row.market_bi);
       expect(row.aggregation_minus_market_bi).toBeCloseTo(row.aggregation_bi - row.market_bi, 10);

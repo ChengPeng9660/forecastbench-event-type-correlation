@@ -6,7 +6,7 @@ Generated: 2026-08-27
 
 After selecting exact model configurations that are close to the upper-left of
 the model-versus-market scatterplot, can closed-form model-to-model pools attain
-a higher Brier Index than the direct mean freeze-time Polymarket benchmark?
+a higher Brier Index than freeze-time Polymarket on identical pair support?
 
 Only non-imputed ForecastBench Polymarket targets with an available
 `freeze_datetime_value` / `market_prob` are eligible. Dataset-source questions
@@ -19,15 +19,16 @@ The fixed set contains 18 exact configurations that satisfied the released
 model names are fixed before this experiment. Every model pair with at least 50
 common eligible Polymarket targets is scored once on its full pair support.
 
-The fixed set yields 92 eligible model pairs. The direct overall Polymarket BI
-is 75.2467 on 1,057 eligible targets.
+The fixed set yields 92 eligible model pairs. The overall Polymarket BI is
+75.2467 on 1,057 eligible targets, but every pair is compared with Polymarket
+only on that pair's common target support.
 
-| Method | Pair-method rows | Pairs above overall market mean | Share above mean | Mean aggregation BI | Mean BI minus market |
+| Method | Pair-method rows | Pairs above pair-matched market | Share above pair-matched market | Mean aggregation BI | Mean BI minus market |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Simple Mean | 92 | 72 | 78.3% | 79.242 | +3.995 |
-| Log-odds Mean | 92 | 72 | 78.3% | 79.233 | +3.986 |
-| EC, w = 0.56 | 92 | 72 | 78.3% | 79.417 | +4.170 |
-| Piecewise Odds | 92 | 72 | 78.3% | **79.501** | **+4.255** |
+| Simple Mean | 92 | 43 | 46.7% | 79.242 | -0.000 |
+| Log-odds Mean | 92 | 40 | 43.5% | 79.233 | -0.009 |
+| EC, w = 0.56 | 92 | 59 | 64.1% | 79.417 | +0.175 |
+| Piecewise Odds | 92 | 66 | 71.7% | **79.501** | **+0.260** |
 
 ## Block 2: train-selected cross-fit
 
@@ -54,20 +55,19 @@ summary table below reports all eligible pair averages.
 The procedure yields 357 distinct eligible pairs and 11,744 fold-level
 pair-method evaluations.
 
-| Method | Averaged pair rows | Pairs above overall market mean | Share above mean | Mean aggregation BI | Mean BI minus market |
+| Method | Averaged pair rows | Pairs above pair-matched market | Share above pair-matched market | Mean aggregation BI | Mean BI minus market |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Simple Mean | 357 | 276 | 77.3% | 78.274 | +3.029 |
-| Log-odds Mean | 357 | 279 | 78.2% | 78.296 | +3.051 |
-| EC, w = 0.56 | 357 | 279 | 78.2% | 78.485 | +3.241 |
-| Piecewise Odds | 357 | 282 | 79.0% | **78.567** | **+3.322** |
+| Simple Mean | 357 | 78 | 21.8% | 78.274 | -0.716 |
+| Log-odds Mean | 357 | 93 | 26.1% | 78.296 | -0.694 |
+| EC, w = 0.56 | 357 | 140 | 39.2% | 78.485 | -0.504 |
+| Piecewise Odds | 357 | 164 | 45.9% | **78.567** | **-0.423** |
 
-## Market comparison caveat
+## Market comparison
 
-The user requested a direct-average market reference rather than a market
-score recomputed on each model pair's exact support. The triangle marker
-therefore means that the pair's aggregation BI is above the overall evaluation
-sample's Polymarket BI. It is a descriptive comparison, not an identical-
-support head-to-head test or a statistical significance claim.
+For every full-sample pair and every OOS direction, aggregation BI and market BI
+are computed on the identical model-pair target keys. Direction-level values
+are then averaged. A triangle therefore means a support-matched score win over
+Polymarket, but it is not by itself a statistical-significance claim.
 
 ## Reproduction
 
