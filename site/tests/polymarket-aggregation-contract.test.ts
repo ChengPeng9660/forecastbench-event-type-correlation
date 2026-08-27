@@ -49,26 +49,31 @@ describe("Polymarket freeze aggregation contract", () => {
       missing_freeze_values: 0,
     });
 
-    expect(payload.points).toHaveLength(28);
-    expect(payload.pair_scope.eligible_pair_count).toBe(28);
+    expect(payload.points).toHaveLength(26);
+    expect(payload.pair_scope.eligible_pair_count).toBe(26);
     const familyCounts = payload.points.reduce<Record<string, number>>((counts, point) => {
       counts[point.family_b] = (counts[point.family_b] ?? 0) + 1;
       return counts;
     }, {});
     expect(familyCounts).toEqual({
       Claude: 9,
-      DeepSeek: 3,
+      DeepSeek: 2,
       Gemini: 3,
       GPT: 7,
-      Kimi: 3,
+      Kimi: 2,
       Qwen: 3,
     });
     expect(payload.model_scope.gpt_models).toHaveLength(7);
     expect(payload.model_scope.claude_models).toHaveLength(9);
     expect(payload.model_scope.gemini_models).toHaveLength(3);
     expect(payload.model_scope.qwen_models).toHaveLength(3);
-    expect(payload.model_scope.deepseek_models).toHaveLength(3);
-    expect(payload.model_scope.kimi_models).toHaveLength(3);
+    expect(payload.model_scope.deepseek_models).toHaveLength(2);
+    expect(payload.model_scope.kimi_models).toHaveLength(2);
+    expect(payload.provenance.imputation_audit).toMatchObject({
+      candidate_scored_polymarket_rows: 10_960,
+      excluded_imputed_rows: 1_126,
+      retained_non_imputed_rows: 9_834,
+    });
     for (const point of payload.points) {
       expect(point.model_a).toBe("Polymarket Freeze");
       expect(point.family_a).toBe("Polymarket");
@@ -76,15 +81,15 @@ describe("Polymarket freeze aggregation contract", () => {
     }
   });
 
-  it("has no same-sample or train-fold Near-BI pairs", () => {
+  it("keeps same-sample and train-fold Near-BI eligibility separate", () => {
     expect(payload.near_bi.threshold_bi_points).toBe(2);
     expect(payload.pair_scope.near_bi_pair_count).toBe(0);
     expect(payload.points.some((point) => point.near_bi)).toBe(false);
     expect(payload.points.every((point) => point.bi_gap > payload.near_bi.threshold_bi_points)).toBe(true);
-    expect(payload.cross_fit.audit.near_bi_pairs_any_train_fold).toBe(0);
-    expect(payload.cross_fit.audit.near_bi_fold_records).toBe(0);
-    expect(payload.cross_fit.near_bi_points).toEqual([]);
-    expect(payload.cross_fit.directional_points.a_to_b.near_bi_points).toEqual([]);
+    expect(payload.cross_fit.audit.near_bi_pairs_any_train_fold).toBe(1);
+    expect(payload.cross_fit.audit.near_bi_fold_records).toBe(1);
+    expect(payload.cross_fit.near_bi_points).toHaveLength(1);
+    expect(payload.cross_fit.directional_points.a_to_b.near_bi_points).toHaveLength(1);
     expect(payload.cross_fit.directional_points.b_to_a.near_bi_points).toEqual([]);
   });
 
@@ -128,11 +133,11 @@ describe("Polymarket freeze aggregation contract", () => {
       20260825, 20260826, 20260827, 20260828, 20260829,
       20260830, 20260831, 20260832, 20260833, 20260834,
     ]);
-    expect(payload.cross_fit.audit.eligible_pairs).toBe(28);
-    expect(payload.cross_fit.audit.pair_fold_records).toBe(28 * 10 * 2);
-    expect(payload.cross_fit.eligible_points).toHaveLength(28);
-    expect(payload.cross_fit.directional_points.a_to_b.eligible_points).toHaveLength(28);
-    expect(payload.cross_fit.directional_points.b_to_a.eligible_points).toHaveLength(28);
+    expect(payload.cross_fit.audit.eligible_pairs).toBe(26);
+    expect(payload.cross_fit.audit.pair_fold_records).toBe(26 * 10 * 2);
+    expect(payload.cross_fit.eligible_points).toHaveLength(26);
+    expect(payload.cross_fit.directional_points.a_to_b.eligible_points).toHaveLength(26);
+    expect(payload.cross_fit.directional_points.b_to_a.eligible_points).toHaveLength(26);
     expect(payload.cross_fit.audit.minimum_observed_train_rows).toBeGreaterThanOrEqual(50);
     expect(payload.cross_fit.audit.minimum_observed_test_rows).toBeGreaterThanOrEqual(50);
     expect(payload.cross_fit.leakage_controls.event_disjoint).toBe(true);

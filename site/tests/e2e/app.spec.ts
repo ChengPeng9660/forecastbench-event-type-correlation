@@ -300,8 +300,9 @@ test("explores the Polymarket freeze baseline across models, methods, and folds"
   await section.scrollIntoViewIfNeeded();
   await expect(section.getByRole("heading", { name: "Can an LLM improve the market snapshot?" })).toBeVisible();
   await expect(section).toContainText("1,057");
-  await expect(section.getByRole("button", { name: "Near-BI (0)" })).toBeDisabled();
-  await expect(section.getByText("MODEL PAIRS").locator("..").locator("dd")).toHaveText("28");
+  await expect(section).toContainText("Dataset questions are excluded");
+  await expect(section.getByRole("button", { name: "Near-BI (1)" })).toBeEnabled();
+  await expect(section.getByText("MODEL PAIRS").locator("..").locator("dd")).toHaveText("26");
 
   await section.getByRole("tab", { name: "Claude" }).click();
   await expect(section.getByText("MODEL PAIRS").locator("..").locator("dd")).toHaveText("9");
@@ -311,6 +312,7 @@ test("explores the Polymarket freeze baseline across models, methods, and folds"
   await expect(section).toContainText("Ten B-train → A-test evaluations averaged");
   await section.getByRole("button", { name: "Same-sample diagnostic" }).click();
   await expect(section.getByRole("button", { name: "B→A" })).toHaveCount(0);
+  await expect(section.getByRole("button", { name: "Near-BI (0)" })).toBeDisabled();
   await expect(section.getByText("Aggregation Brier Index (higher is better)")).toBeVisible();
   const outcomeGroup = section.getByRole("group", { name: "Polymarket chart outcome" });
   await expect(outcomeGroup.getByRole("button")).toHaveCount(3);

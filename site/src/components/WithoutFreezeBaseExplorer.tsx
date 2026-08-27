@@ -151,7 +151,7 @@ export function WithoutFreezeBaseExplorer({ data }: { data: FixedBaseAggregation
           <p className="eyebrow">WITHOUT-FREEZE BASE × WITH-FREEZE PARTNER</p>
           <h2>Does market exposure create useful aggregation diversity?</h2>
         </div>
-        <p>The fixed base is each canonical model version without freeze values. Its partner is the same version under one exact zero-shot or scratchpad with-freeze prompt. Every comparison uses identical audited Polymarket-event support.</p>
+        <p>The fixed base is each canonical model version without freeze values. Its partner is the same version under one exact zero-shot or scratchpad with-freeze prompt. Every comparison uses identical audited, non-imputed Polymarket-event support with a valid freeze-time probability; Dataset questions are excluded.</p>
       </div>
 
       <div className="freeze-correlation-toolbar">

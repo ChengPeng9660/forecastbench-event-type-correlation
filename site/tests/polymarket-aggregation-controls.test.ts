@@ -23,12 +23,20 @@ function renderExplorer() {
 afterEach(cleanup);
 
 describe("Polymarket freeze aggregation explorer", () => {
-  it("keeps the zero-size Near-BI sample explicit and unavailable", () => {
+  it("uses the cross-fit Near-BI count in OOS mode and the same-sample count in diagnostic mode", () => {
     renderExplorer();
     expect(screen.getByRole("heading", { name: "Can an LLM improve the market snapshot?" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Near-BI (1)" })).toBeEnabled();
+    expect(screen.queryByText("No Near-BI pairs.")).not.toBeInTheDocument();
+    expect(pairCount()).toBe("26");
+
+    fireEvent.click(screen.getByRole("button", { name: "Near-BI (1)" }));
+    expect(pairCount()).toBe("1");
+
+    fireEvent.click(screen.getByRole("button", { name: "Same-sample diagnostic" }));
     expect(screen.getByRole("button", { name: "Near-BI (0)" })).toBeDisabled();
     expect(screen.getByText("No Near-BI pairs.")).toBeInTheDocument();
-    expect(pairCount()).toBe("28");
+    expect(pairCount()).toBe("26");
   });
 
   it("filters families and individual paired models without changing the market baseline", () => {

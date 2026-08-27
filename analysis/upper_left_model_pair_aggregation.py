@@ -30,7 +30,7 @@ from statistics import pstdev
 from typing import Any, Iterable, Mapping
 
 from analysis.closed_form_aggregation import single_brier, write_csv
-from analysis.freeze_exposed_market_aggregation import exclude_imputed_polymarket_rows
+from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 from analysis.market_diversity_performance import (
     adjusted_brier,
     information_metadata,
@@ -533,7 +533,6 @@ def build_payload(
             "panel_sha256": sha256_file(panel_path),
             "taxonomy": str(taxonomy_path),
             "taxonomy_sha256": sha256_file(taxonomy_path),
-            "processed_root": str(processed_root),
             "minimum_pair_fold_overlap": minimum_overlap,
             "split_seeds": split_seeds,
             "split_unit": "lowercase source + event_id; every date and horizon remains in one fold",

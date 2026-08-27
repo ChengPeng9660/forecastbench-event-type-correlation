@@ -16,8 +16,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Mapping
 
-from analysis.freeze_exposed_market_aggregation import exclude_imputed_polymarket_rows
 from analysis.metrics import brier_index, pearson_correlation
+from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 from analysis.model_versions import split_model_version
 from analysis.pair_aggregation import (
     KEY,
@@ -314,7 +314,6 @@ def build_payload(
             "panel_sha256": sha256_file(panel_path),
             "taxonomy": str(taxonomy_path),
             "taxonomy_sha256": sha256_file(taxonomy_path),
-            "processed_root": str(processed_root),
             "join_key": "forecast_due_date + lowercase source=polymarket + event_id + horizon",
             "market_probability": "event_taxonomy.market_prob, audited from freeze_datetime_value",
         },

@@ -35,6 +35,7 @@ from analysis.pair_aggregation import (
     score_aggregation_support,
     sha256_file,
 )
+from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 
 
 BASELINE_NAME = "Polymarket Freeze"
@@ -446,6 +447,7 @@ def build_cross_fit(
 def build_payload(
     panel_path: Path,
     taxonomy_path: Path,
+    processed_root: Path,
     ec_weight: float = 0.56,
     piecewise_threshold: float = 5.0,
     split_seed: int = 20260825,
@@ -455,6 +457,9 @@ def build_payload(
 ) -> dict[str, Any]:
     split_seeds = [split_seed + offset for offset in range(split_repetitions)]
     model_panel, alias_audit = read_panel(panel_path)
+    model_panel, imputation_audit = exclude_imputed_polymarket_rows(
+        model_panel, processed_root
+    )
     snapshots, snapshot_audit = read_freeze_snapshots(taxonomy_path)
     freeze_panel, match_audit = build_freeze_panel(model_panel, snapshots)
     models, exclusions, overlaps = eligible_models(
@@ -498,7 +503,7 @@ def build_payload(
     return {
         "schema_version": "1.0.0",
         "generated_at": "2026-08-26",
-        "scope": "official_source_polymarket",
+        "scope": "non-imputed official_source_polymarket rows with a valid freeze-time probability",
         "baseline": {
             "id": "polymarket_freeze",
             "label": BASELINE_NAME,
@@ -581,6 +586,7 @@ def build_payload(
             "freeze_field_mapping": "event_taxonomy.market_prob is the audited rename of question-set freeze_datetime_value",
             "join_key": "forecast_due_date + lowercase source=polymarket + event_id",
             "model_alias_audit": alias_audit,
+            "imputation_audit": imputation_audit,
             "snapshot_audit": snapshot_audit,
             "match_audit": match_audit,
         },
@@ -594,6 +600,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panel", type=Path, default=Path("data/build/scored_panel_model_versions.csv"))
     parser.add_argument("--taxonomy", type=Path, default=Path("data/build/event_taxonomy.csv"))
+    parser.add_argument("--processed-root", type=Path, required=True)
     parser.add_argument("--ec-weight", type=float, default=0.56)
     parser.add_argument("--piecewise-threshold", type=float, default=5.0)
     parser.add_argument("--split-seed", type=int, default=20260825)
@@ -609,6 +616,7 @@ def main() -> None:
     payload = build_payload(
         panel_path=args.panel,
         taxonomy_path=args.taxonomy,
+        processed_root=args.processed_root,
         ec_weight=args.ec_weight,
         piecewise_threshold=args.piecewise_threshold,
         split_seed=args.split_seed,

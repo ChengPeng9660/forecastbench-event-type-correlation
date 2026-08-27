@@ -158,6 +158,39 @@ def test_freeze_panel_does_not_fall_back_to_same_event_on_another_date() -> None
         build_freeze_panel(model_panel, wrong_date_snapshot)
 
 
+def test_freeze_panel_excludes_dataset_questions_even_when_ids_and_dates_match() -> None:
+    market_key = ("2025-01-10", "Polymarket", "shared-id", "7")
+    dataset_key = ("2025-01-10", "FRED", "shared-id", "7")
+    market_row = _model_row(
+        date=market_key[0],
+        event_id=market_key[2],
+        horizon=market_key[3],
+        model_name="GPT-Test",
+        prediction="0.80",
+    )
+    dataset_row = {
+        **market_row,
+        "source": "FRED",
+        "origin_type": "Dataset",
+    }
+    snapshots = {
+        ("2025-01-10", "polymarket", "shared-id"): {
+            "market_prob": "0.27",
+            "freeze_datetime": "2025-01-01T00:00:00+00:00",
+        }
+    }
+
+    freeze_panel, match_audit = build_freeze_panel(
+        {"GPT-Test": {market_key: market_row, dataset_key: dataset_row}},
+        snapshots,
+    )
+
+    assert set(freeze_panel) == {market_key}
+    assert dataset_key not in freeze_panel
+    assert match_audit["scored_polymarket_round_events"] == 1
+    assert match_audit["matched_freeze_values"] == 1
+
+
 def test_reference_gains_use_polymarket_and_model_denominators() -> None:
     method_briers = {
         "ec_w0_56": 0.15,

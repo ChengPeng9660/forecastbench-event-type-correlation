@@ -144,7 +144,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
           <p className="eyebrow">ALL MODEL CONFIGURATIONS × POLYMARKET</p>
           <h2>Does market diversity relate to forecasting performance?</h2>
         </div>
-        <p>Every point keeps one exact information condition and prompt. Model scores and market scores use identical non-imputed Polymarket support; the dashed line is the support-weighted matched-market benchmark under the active filters.</p>
+        <p>Every point keeps one exact information condition and prompt. Model scores and market scores use identical non-imputed Polymarket support; only targets with a valid freeze-time probability are used, and Dataset questions are excluded. The dashed line is the support-weighted matched-market benchmark under the active filters.</p>
       </div>
 
       <div className="market-performance-controls">

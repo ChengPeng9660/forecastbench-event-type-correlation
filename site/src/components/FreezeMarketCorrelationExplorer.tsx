@@ -360,7 +360,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
           <p className="eyebrow">FREEZE-ONLY PROMPT ↔ MARKET</p>
           <h2>How closely do models track the market snapshot?</h2>
         </div>
-        <p>Prediction-level Pearson correlation compares each zero-shot or scratchpad with-freeze configuration with the same ForecastBench freeze-time Polymarket probability. The two prompt types remain separate, and news-augmented configurations are excluded. Higher values mean closer alignment—not higher forecasting quality or causal market influence.</p>
+        <p>Prediction-level Pearson correlation compares each zero-shot or scratchpad with-freeze configuration with the same ForecastBench freeze-time Polymarket probability. Only non-imputed Polymarket targets with a valid freeze-time probability are used; Dataset questions are excluded. The two prompt types remain separate, and news-augmented configurations are excluded. Higher values mean closer alignment—not higher forecasting quality or causal market influence.</p>
       </div>
 
       <div className="freeze-correlation-kpis" aria-label="Correlation summary">
@@ -435,7 +435,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
             <p className="eyebrow">WITH-FREEZE PROMPT × MARKET</p>
             <h3 id="freeze-aggregation-title">Aggregation benchmark</h3>
           </div>
-          <p>Every displayed prompt is paired with the same freeze-time Polymarket probability. Results are ten-repeat, event-disjoint cross-fit OOS and follow the active provider and prompt filters above.</p>
+          <p>Every displayed prompt is paired with the same freeze-time Polymarket probability on non-imputed market targets only; Dataset questions are excluded. Results are ten-repeat, event-disjoint cross-fit OOS and follow the active provider and prompt filters above.</p>
         </div>
 
         <div className="freeze-aggregation-overview">

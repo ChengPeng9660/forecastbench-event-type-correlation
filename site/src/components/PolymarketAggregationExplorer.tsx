@@ -195,6 +195,10 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
   const [nearBiOnly, setNearBiOnly] = useState(false);
   const [selectedModel, setSelectedModel] = useState("");
 
+  const nearBiCount = evaluation === "cross_fit"
+    ? data.cross_fit.audit.near_bi_pairs_any_train_fold
+    : data.pair_scope.near_bi_pair_count;
+
   const sourcePoints = useMemo(
     () => selectPolymarketPoints(data, evaluation, foldView, nearBiOnly),
     [data, evaluation, foldView, nearBiOnly],
@@ -229,6 +233,10 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
     if (!sourcePoints.some((point) => point.pair_group === group)) setGroup("all");
   }, [group, sourcePoints]);
 
+  useEffect(() => {
+    if (!nearBiCount && nearBiOnly) setNearBiOnly(false);
+  }, [nearBiCount, nearBiOnly]);
+
   const xValues = definedPoints.map((point) => point.metrics[metric].complementarity as number);
   const yValues = definedPoints.map((point) => polymarketOutcomeValue(point, method, outcome) as number);
   const xDomain = extent(xValues.length ? xValues : [0, 1]);
@@ -256,7 +264,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
     <section className="polymarket-aggregation-section" id="polymarket-aggregation">
       <div className="section-heading polymarket-aggregation-heading">
         <div><p className="eyebrow">POLYMARKET FREEZE BASELINE</p><h2>Can an LLM improve the market snapshot?</h2></div>
-        <p>Polymarket's probability at the ForecastBench question-set freeze is paired with every eligible GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi model on exact common support.</p>
+        <p>Polymarket's probability at the ForecastBench question-set freeze is paired with every eligible GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi model on exact common support. Only non-imputed <code>source=Polymarket</code> targets with a valid freeze-time probability are eligible; Dataset questions are excluded.</p>
       </div>
 
       <div className="polymarket-provenance-ribbon">
@@ -298,12 +306,12 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
           </label>
           <div className="gain-sample-toggle" role="group" aria-label="Polymarket aggregation sample">
             <button type="button" className={!nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(false)}>All eligible</button>
-            <button type="button" disabled={!data.pair_scope.near_bi_pair_count} className={nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(true)}>Near-BI ({data.pair_scope.near_bi_pair_count})</button>
+            <button type="button" disabled={!nearBiCount} className={nearBiOnly ? "active" : ""} onClick={() => setNearBiOnly(true)}>Near-BI ({nearBiCount})</button>
           </div>
         </div>
       </div>
 
-      {!data.pair_scope.near_bi_pair_count && <p className="polymarket-near-bi-note"><strong>No Near-BI pairs.</strong> Polymarket Freeze is more than {data.near_bi.threshold_bi_points.toFixed(1)} BI points away from every eligible model on common support.</p>}
+      {!nearBiCount && <p className="polymarket-near-bi-note"><strong>No Near-BI pairs.</strong> {evaluation === "cross_fit" ? "No training fold" : "No same-sample pair"} is within {data.near_bi.threshold_bi_points.toFixed(1)} BI points of Polymarket Freeze on common support.</p>}
 
       <div className="polymarket-overview">
         <div className="polymarket-method-table" role="table" aria-label="Polymarket aggregation method comparison">

@@ -284,7 +284,6 @@
     "panel_sha256": "37e649c253882b2f85171efcb7a083e89d8cd2de15b4743805c58958c332d521",
     "taxonomy": "data/build/event_taxonomy.csv",
     "taxonomy_sha256": "48cde9451248e3f2c0748d6101e6b20b2054b36f8b11c199e4f62775ca9a9ee1",
-    "processed_root": "/Users/pcc/Desktop/forecast dependence/forecastbench_downloads_2026-06-25/extracted/processed_forecast_sets_combined/forecastbench-processed-forecast-sets",
     "join_key": "forecast_due_date + lowercase source=polymarket + event_id + horizon",
     "market_probability": "event_taxonomy.market_prob, audited from freeze_datetime_value"
   },

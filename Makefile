@@ -101,10 +101,11 @@ $(DERIVED_DIR)/global_baseline_audit.json: analysis/global_baseline.py $(MODEL_V
 
 polymarket-aggregation: $(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json
 
-$(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json: analysis/polymarket_aggregation.py $(MODEL_VERSION_STAMP) $(BUILD_DIR)/event_taxonomy.csv
+$(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json: analysis/polymarket_aggregation.py analysis/polymarket_cleaning.py $(MODEL_VERSION_STAMP) $(BUILD_DIR)/event_taxonomy.csv | check-inputs
 	$(PYTHON) -m analysis.polymarket_aggregation \
 		--panel "$(BUILD_DIR)/scored_panel_model_versions.csv" \
 		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
+		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
 		--output "$(SITE_DATA_DIR)/polymarket-aggregation/freeze-baseline.json"
 
 freeze-exposed-market-aggregation: $(DERIVED_DIR)/freeze_exposed_market_aggregation/summary.json
@@ -133,6 +134,16 @@ $(DERIVED_DIR)/historical_near_bi_market_aggregation/summary.json: analysis/hist
 		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
 		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
 		--output-dir "$(DERIVED_DIR)/historical_near_bi_market_aggregation"
+
+upper-left-model-pair-aggregation: $(SITE_DATA_DIR)/pair-aggregation/upper-left-model-pairs.json
+
+$(SITE_DATA_DIR)/pair-aggregation/upper-left-model-pairs.json: analysis/upper_left_model_pair_aggregation.py analysis/polymarket_cleaning.py $(BUILD_DIR)/scored_panel.csv $(BUILD_DIR)/event_taxonomy.csv | check-inputs
+	$(PYTHON) -m analysis.upper_left_model_pair_aggregation \
+		--panel "$(BUILD_DIR)/scored_panel.csv" \
+		--taxonomy "$(BUILD_DIR)/event_taxonomy.csv" \
+		--processed-root "$(FORECASTBENCH_PROCESSED_ROOT)" \
+		--output "$@" \
+		--output-dir "$(DERIVED_DIR)/upper_left_model_pair_aggregation"
 
 analysis: export cross-type global-baseline polymarket-aggregation freeze-exposed-correlation-site
 

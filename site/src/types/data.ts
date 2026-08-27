@@ -317,6 +317,16 @@ export interface PolymarketAggregationData {
     freeze_field_mapping: string;
     join_key: string;
     model_alias_audit: PairAggregationData["provenance"]["model_alias_audit"];
+    imputation_audit: {
+      policy: string;
+      candidate_scored_polymarket_rows: number;
+      retained_non_imputed_rows: number;
+      excluded_imputed_rows: number;
+      excluded_imputed_share: number;
+      processed_source_files_read: number;
+      matched_raw_polymarket_rows: number;
+      excluded_by_model: Record<string, number>;
+    };
     snapshot_audit: {
       polymarket_snapshot_rows: number;
       valid_probability_rows: number;
