@@ -5,15 +5,16 @@ import { PairAggregationExplorer } from "./components/PairAggregationExplorer";
 import { PolymarketAggregationExplorer } from "./components/PolymarketAggregationExplorer";
 import { FreezeMarketCorrelationExplorer } from "./components/FreezeMarketCorrelationExplorer";
 import { MarketDiversityPerformanceExplorer } from "./components/MarketDiversityPerformanceExplorer";
+import { UpperLeftModelPairAggregationExplorer } from "./components/UpperLeftModelPairAggregationExplorer";
 import { WithoutFreezeBaseExplorer } from "./components/WithoutFreezeBaseExplorer";
 import { FixedFocalWithoutFreezeExplorer } from "./components/FixedFocalWithoutFreezeExplorer";
 import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
 import { ModelMultiSelect } from "./components/ModelMultiSelect";
 import { PairRanking } from "./components/PairRanking";
-import { loadAppData, loadCrossTypeData, loadEventType, loadFixedFocalWithoutFreezeData, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadMarketDiversityPerformanceData, loadPairAggregationData, loadPolymarketAggregationData, loadWithoutFreezeBaseData } from "./lib/data";
+import { loadAppData, loadCrossTypeData, loadEventType, loadFixedFocalWithoutFreezeData, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadMarketDiversityPerformanceData, loadPairAggregationData, loadPolymarketAggregationData, loadUpperLeftModelPairAggregationData, loadWithoutFreezeBaseData } from "./lib/data";
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
-import type { AppData, CrossTypeData, EventTypeData, FixedBaseAggregationData, FixedFocalWithoutFreezeData, FreezeMarketCorrelationData, GlobalBaselineData, MarketDiversityPerformanceData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData } from "./types/data";
+import type { AppData, CrossTypeData, EventTypeData, FixedBaseAggregationData, FixedFocalWithoutFreezeData, FreezeMarketCorrelationData, GlobalBaselineData, MarketDiversityPerformanceData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData, UpperLeftModelPairAggregationData } from "./types/data";
 
 interface Filters {
   eventType: string;
@@ -122,6 +123,8 @@ export default function App() {
   const [freezeMarketCorrelationError, setFreezeMarketCorrelationError] = useState("");
   const [marketDiversityPerformanceData, setMarketDiversityPerformanceData] = useState<MarketDiversityPerformanceData | null>(null);
   const [marketDiversityPerformanceError, setMarketDiversityPerformanceError] = useState("");
+  const [upperLeftPairData, setUpperLeftPairData] = useState<UpperLeftModelPairAggregationData | null>(null);
+  const [upperLeftPairError, setUpperLeftPairError] = useState("");
   const [withoutFreezeBaseData, setWithoutFreezeBaseData] = useState<FixedBaseAggregationData | null>(null);
   const [withoutFreezeBaseError, setWithoutFreezeBaseError] = useState("");
   const [fixedFocalWithoutFreezeData, setFixedFocalWithoutFreezeData] = useState<FixedFocalWithoutFreezeData | null>(null);
@@ -162,6 +165,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    loadUpperLeftModelPairAggregationData().then(setUpperLeftPairData).catch((reason: Error) => setUpperLeftPairError(reason.message));
+  }, []);
+
+  useEffect(() => {
     loadWithoutFreezeBaseData().then(setWithoutFreezeBaseData).catch((reason: Error) => setWithoutFreezeBaseError(reason.message));
   }, []);
 
@@ -174,7 +181,8 @@ export default function App() {
     if (!appData || !eventData || !pairAggregationData || !polymarketAggregationData || !freezeMarketCorrelationData) return;
     if (targetId === "without-freeze-base" && !withoutFreezeBaseData) return;
     if (targetId === "fixed-focal-no-freeze" && !fixedFocalWithoutFreezeData) return;
-    if (!new Set(["freeze-correlation", "without-freeze-base", "fixed-focal-no-freeze"]).has(targetId)) return;
+    if (targetId === "upper-left-pairs" && !upperLeftPairData) return;
+    if (!new Set(["freeze-correlation", "without-freeze-base", "fixed-focal-no-freeze", "upper-left-pairs"]).has(targetId)) return;
     const scrollToModule = () => {
       const module = document.getElementById(targetId);
       if (module) window.scrollTo({ top: module.getBoundingClientRect().top + window.scrollY - 16 });
@@ -183,7 +191,7 @@ export default function App() {
     const timeout = window.setTimeout(scrollToModule, 250);
     const stabilization = window.setTimeout(scrollToModule, 1_200);
     return () => { window.cancelAnimationFrame(frame); window.clearTimeout(timeout); window.clearTimeout(stabilization); };
-  }, [appData, eventData, pairAggregationData, polymarketAggregationData, freezeMarketCorrelationData, withoutFreezeBaseData, fixedFocalWithoutFreezeData]);
+  }, [appData, eventData, pairAggregationData, polymarketAggregationData, freezeMarketCorrelationData, withoutFreezeBaseData, fixedFocalWithoutFreezeData, upperLeftPairData]);
 
   useEffect(() => {
     if (!appData) return;
@@ -293,7 +301,7 @@ export default function App() {
           <span><strong>ForecastBench</strong><small>DEPENDENCE ATLAS</small></span>
         </a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#market-performance">Market performance</a><a href="#freeze-correlation">Freeze correlation</a><a href="#without-freeze-base">Exposure base</a><a href="#fixed-focal-no-freeze">Model focal</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
+          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#market-performance">Market performance</a><a href="#upper-left-pairs">Upper-left pools</a><a href="#freeze-correlation">Freeze correlation</a><a href="#without-freeze-base">Exposure base</a><a href="#fixed-focal-no-freeze">Model focal</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
         </nav>
         <div className="build-state"><i /> {appData.manifest.fixture ? "Sample build" : "Verified build"}</div>
       </header>
@@ -350,6 +358,8 @@ export default function App() {
         {polymarketAggregationData ? <PolymarketAggregationExplorer data={polymarketAggregationData} /> : polymarketAggregationError ? <section className="polymarket-aggregation-section" id="polymarket-aggregation"><div className="cross-type-unavailable"><strong>Polymarket freeze benchmark unavailable</strong><span>{polymarketAggregationError}</span></div></section> : null}
 
         {marketDiversityPerformanceData ? <MarketDiversityPerformanceExplorer data={marketDiversityPerformanceData} /> : marketDiversityPerformanceError ? <section className="market-performance-section" id="market-performance"><div className="cross-type-unavailable"><strong>Market performance explorer unavailable</strong><span>{marketDiversityPerformanceError}</span></div></section> : null}
+
+        {upperLeftPairData ? <UpperLeftModelPairAggregationExplorer data={upperLeftPairData} /> : upperLeftPairError ? <section className="upper-left-pairs-section" id="upper-left-pairs"><div className="cross-type-unavailable"><strong>Upper-left model-pair experiment unavailable</strong><span>{upperLeftPairError}</span></div></section> : null}
 
         {freezeMarketCorrelationData ? <FreezeMarketCorrelationExplorer data={freezeMarketCorrelationData} /> : freezeMarketCorrelationError ? <section className="freeze-correlation-section" id="freeze-correlation"><div className="cross-type-unavailable"><strong>With-freeze correlation unavailable</strong><span>{freezeMarketCorrelationError}</span></div></section> : null}
 

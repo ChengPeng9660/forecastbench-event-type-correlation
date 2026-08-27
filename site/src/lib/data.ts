@@ -22,6 +22,7 @@ import type {
   PairAggregationData,
   PolymarketAggregationData,
   Taxonomy,
+  UpperLeftModelPairAggregationData,
 } from "../types/data";
 
 const dataUrl = (path: string) => `${import.meta.env.BASE_URL}data/${path}`;
@@ -64,6 +65,10 @@ export function loadFreezeMarketCorrelationData(): Promise<FreezeMarketCorrelati
 
 export function loadMarketDiversityPerformanceData(): Promise<MarketDiversityPerformanceData> {
   return loadJson<MarketDiversityPerformanceData>("polymarket-aggregation/market-diversity-performance.json");
+}
+
+export function loadUpperLeftModelPairAggregationData(): Promise<UpperLeftModelPairAggregationData> {
+  return loadJson<UpperLeftModelPairAggregationData>("pair-aggregation/upper-left-model-pairs.json");
 }
 
 export function loadWithoutFreezeBaseData(): Promise<FixedBaseAggregationData> {

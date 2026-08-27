@@ -1155,3 +1155,117 @@ export interface MarketDiversityPerformanceData {
   provenance: Record<string, unknown>;
   points: MarketDiversityPerformancePoint[];
 }
+
+export type UpperLeftPairDiversityMetricId =
+  | "prediction_diversity"
+  | "adjusted_pog"
+  | "high_loss_diversity"
+  | "adjusted_loss_diversity";
+
+export type UpperLeftPairMethodId =
+  | "simple_mean"
+  | "log_odds_mean"
+  | "ec_w0_56"
+  | "piecewise_odds";
+
+export interface UpperLeftPairModel {
+  name: string;
+  canonical_model_version: string;
+  provider: string;
+  prompt_type: MarketPromptType;
+  prompt_label: string;
+  information_type: MarketInformationType;
+  information_label: string;
+}
+
+export interface UpperLeftFixedPairRow {
+  pair_id: string;
+  model_a: string;
+  model_b: string;
+  method: UpperLeftPairMethodId;
+  method_label: string;
+  n_pair: number;
+  date_min: string;
+  date_max: string;
+  diversity: Record<UpperLeftPairDiversityMetricId, number | null>;
+  aggregation_bi: number;
+  market_bi: number;
+  aggregation_minus_market_bi: number;
+  beats_market: boolean;
+}
+
+export interface UpperLeftCrossfitPairRow {
+  pair_id: string;
+  model_a: string;
+  model_b: string;
+  method: UpperLeftPairMethodId;
+  method_label: string;
+  evaluation_count: number;
+  maximum_evaluations: number;
+  a_to_b: {
+    count: number;
+    aggregation_bi: number | null;
+    market_bi: number | null;
+    aggregation_minus_market_bi: number | null;
+    beat_market_share: number | null;
+  };
+  b_to_a: {
+    count: number;
+    aggregation_bi: number | null;
+    market_bi: number | null;
+    aggregation_minus_market_bi: number | null;
+    beat_market_share: number | null;
+  };
+  mean_n_train: number;
+  mean_n_test: number;
+  mean_train_diversity: Record<UpperLeftPairDiversityMetricId, number | null>;
+  aggregation_bi: number;
+  aggregation_bi_sd: number;
+  market_bi: number;
+  market_bi_sd: number;
+  aggregation_minus_market_bi: number;
+  beats_market: boolean;
+  beat_market_share: number;
+}
+
+export interface UpperLeftModelPairAggregationData {
+  schema_version: string;
+  generated_at: string;
+  title: string;
+  scope: string;
+  methods: Array<{ id: UpperLeftPairMethodId; label: string }>;
+  metrics: Record<UpperLeftPairDiversityMetricId, { label: string; axis: string }>;
+  market_reference: {
+    comparison: string;
+    pair_matched_support: false;
+    interpretation: string;
+  };
+  fixed: {
+    title: string;
+    description: string;
+    models: UpperLeftPairModel[];
+    market: {
+      brier_index: number;
+      n: number;
+      date_min: string;
+      date_max: string;
+      support: string;
+    };
+    eligible_pairs: number;
+    excluded_pairs: Record<string, string>;
+    rows: UpperLeftFixedPairRow[];
+  };
+  crossfit: {
+    title: string;
+    description: string;
+    models: UpperLeftPairModel[];
+    split_repetitions: number;
+    directions_per_repetition: number;
+    maximum_pair_evaluations: number;
+    selection_rule: string;
+    eligible_pairs: number;
+    selection_runs: Array<Record<string, unknown>>;
+    rows: UpperLeftCrossfitPairRow[];
+  };
+  audit: Record<string, unknown>;
+}
