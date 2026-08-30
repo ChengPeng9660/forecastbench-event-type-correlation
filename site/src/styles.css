@@ -415,7 +415,6 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .pair-group-legend i { width: 8px; height: 8px; border-radius: 50%; }
 .pair-group-legend i.gpt { background: var(--gold); }
 .pair-group-legend i.claude { background: var(--purple-deep); }
-.pair-group-legend i.cross { background: linear-gradient(90deg, var(--gold) 50%, var(--purple-deep) 50%); }
 .pair-group-legend small { margin-left: auto; color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .pair-aggregation-chart { display: block; width: 100%; min-width: 720px; height: auto; }
 .aggregation-empty-state { min-height: 300px; display: grid; place-content: center; gap: 7px; text-align: center; }
@@ -423,9 +422,6 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .aggregation-empty-state span { color: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .aggregation-point { cursor: pointer; outline: none; }
 .aggregation-point circle { stroke: #fff; stroke-width: 2; opacity: .72; transition: opacity .16s ease, stroke-width .16s ease, transform .16s ease; transform-box: fill-box; transform-origin: center; vector-effect: non-scaling-stroke; }
-.aggregation-point.gpt_gpt circle { fill: var(--gold); }
-.aggregation-point.claude_claude circle { fill: var(--purple-deep); }
-.aggregation-point.gpt_claude circle { fill: url(#cross-pair-fill); }
 .aggregation-point:hover circle, .aggregation-point:focus circle, .aggregation-point.selected circle { opacity: 1; stroke: var(--ink); stroke-width: 2.5; transform: scale(1.1); }
 
 .polymarket-aggregation-section { background: #fff; scroll-margin-top: 16px; }

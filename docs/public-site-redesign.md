@@ -68,3 +68,19 @@ This digest includes each tracked file's content hash and path.
 
 No public conclusion is inferred from the new overview's visual preview. Detailed
 experimental limitations are available in each experiment and the Methods area.
+
+## Focal-left pair markers — 2026-08-30
+
+All split-color aggregation markers now use the selected focal model's family
+color on the left and the partner's family color on the right. Labels use the same
+focal-first order. Same-family pairs remain a single color. The original palette,
+coordinates, support sizes, and scientific results are unchanged.
+
+The shared renderer covers all 21 family combinations, all aggregation methods and
+diversity metrics, Near-BI, same-sample diagnostics, and cross-fit Combined/A→B/B→A.
+Other charts keep their existing single-color encodings (provider, information
+condition, or above-market status); those colors convey different information.
+
+The orientation key remains visible on mobile. Verification: 105 frontend tests
+passed (including 28 marker-regression cases); desktop/mobile browser tests passed
+47 cases, with the existing desktop skip for the mobile-only case unchanged.

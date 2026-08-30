@@ -69,30 +69,6 @@ const FAMILY_COLORS: Record<ModelFamily, string> = {
   Kimi: "#1f2937",
 };
 
-const GROUP_FAMILIES: Record<PairGroupId, [ModelFamily, ModelFamily]> = {
-  gpt_gpt: ["GPT", "GPT"],
-  claude_claude: ["Claude", "Claude"],
-  gemini_gemini: ["Gemini", "Gemini"],
-  qwen_qwen: ["Qwen", "Qwen"],
-  deepseek_deepseek: ["DeepSeek", "DeepSeek"],
-  kimi_kimi: ["Kimi", "Kimi"],
-  gpt_claude: ["GPT", "Claude"],
-  gpt_gemini: ["GPT", "Gemini"],
-  gpt_qwen: ["GPT", "Qwen"],
-  gpt_deepseek: ["GPT", "DeepSeek"],
-  gpt_kimi: ["GPT", "Kimi"],
-  claude_gemini: ["Claude", "Gemini"],
-  claude_qwen: ["Claude", "Qwen"],
-  claude_deepseek: ["Claude", "DeepSeek"],
-  claude_kimi: ["Claude", "Kimi"],
-  gemini_qwen: ["Gemini", "Qwen"],
-  gemini_deepseek: ["Gemini", "DeepSeek"],
-  gemini_kimi: ["Gemini", "Kimi"],
-  qwen_deepseek: ["Qwen", "DeepSeek"],
-  qwen_kimi: ["Qwen", "Kimi"],
-  deepseek_kimi: ["DeepSeek", "Kimi"],
-};
-
 const METRICS: Array<{ id: MetricId; label: string; axis: string }> = [
   { id: "adjusted_pog", label: "Adjusted POG", axis: "Adjusted pairwise oracle gain" },
   { id: "high_loss_lift", label: "High-loss lift", axis: "Complementarity orientation · 1 − lift" },
@@ -141,8 +117,9 @@ function shortModel(model: string) {
   return model.replace(/-20\d{2}.*/, "");
 }
 
-function pairLabel(point: PairAggregationPoint) {
-  return `${point.model_a} × ${point.model_b}`;
+function pairLabel(point: PairAggregationPoint, focalModel: string) {
+  const partner = point.model_a === focalModel ? point.model_b : point.model_a;
+  return `${focalModel} × ${partner}`;
 }
 
 export function withGainFractionVsFocal(point: PairAggregationPoint, focalModel: string) {
@@ -293,6 +270,12 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
   const definedPoints = useMemo(() => points.filter((point) =>
     point.metrics[metric].complementarity !== null && Number.isFinite(point.brier_index[method])
   ), [method, metric, points]);
+  // Marker orientation follows the selected focal model, not canonical pair order.
+  const pairFamilies = new Map<PairGroupId, readonly [ModelFamily, ModelFamily]>(
+    definedPoints.map((point) => [point.pair_group, point.model_a === focalModel
+      ? [point.family_a, point.family_b]
+      : [point.family_b, point.family_a]]),
+  );
   const sample = nearBiOnly ? "near_bi" : "eligible";
   const summaries = useMemo(() => PRIMARY_METHODS.map((methodId) =>
     summarizeAggregationPoints(points, methodId, group, sample)
@@ -436,11 +419,11 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
       <div className="pair-aggregation-chart-wrap">
         <div className="pair-group-legend">
           {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
-          <small>Split color = cross-family pair · area = test support</small>
+          <small>Left = selected model · right = partner · area = test support</small>
         </div>
         {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} Brier Index for ${activeSampleLabel}${evaluation === "cross_fit" ? `, ${foldViewMeta.label}` : ""}`}>
           <defs>
-            {(Object.entries(GROUP_FAMILIES) as Array<[PairGroupId, [ModelFamily, ModelFamily]]>).map(([pairGroup, families]) => <linearGradient id={`pair-fill-${pairGroup}`} key={pairGroup}>
+            {[...pairFamilies].map(([pairGroup, families]) => <linearGradient id={`pair-fill-${pairGroup}`} key={pairGroup} x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="50%" stopColor={FAMILY_COLORS[families[0]]} />
               <stop offset="50%" stopColor={FAMILY_COLORS[families[1]]} />
             </linearGradient>)}
@@ -453,10 +436,10 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
             const complementarity = point.metrics[metric].complementarity as number;
             const radius = 4.5 + 7.5 * Math.sqrt(point.n_overlap / maxOverlap);
             const isSelected = key === `${selected?.model_a}::${selected?.model_b}`;
-            return <g className={`aggregation-point ${point.pair_group} ${isSelected ? "selected" : ""}`} key={key} role="button" tabIndex={0} aria-label={`${pairLabel(point)}, aggregation BI ${aggregationBi.toFixed(2)}`} onMouseEnter={() => setSelectedKey(key)} onFocus={() => setSelectedKey(key)} onClick={() => setSelectedKey(key)}>
+            return <g className={`aggregation-point ${point.pair_group} ${isSelected ? "selected" : ""}`} key={key} role="button" tabIndex={0} aria-label={`${pairLabel(point, focalModel)}, aggregation BI ${aggregationBi.toFixed(2)}`} onMouseEnter={() => setSelectedKey(key)} onFocus={() => setSelectedKey(key)} onClick={() => setSelectedKey(key)}>
               <circle cx={xScale(complementarity)} cy={yScale(aggregationBi)} r={radius} style={{ fill: `url(#pair-fill-${point.pair_group})` }} />
-              {isSelected && <text x={xScale(complementarity)} y={yScale(aggregationBi) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(point.model_a)} × {shortModel(point.model_b)}</text>}
-              <title>{`${pairLabel(point)}\nFixed focal: ${focalModel}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} aggregation Brier Index: ${aggregationBi.toFixed(2)}\n${evaluation === "cross_fit" ? "Repeated test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included train→test evaluations: ${point.cross_fit?.included_fold_count ?? 0}/${foldView === "combined" ? data.cross_fit.split.repetitions * 2 : data.cross_fit.split.repetitions}` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
+              {isSelected && <text x={xScale(complementarity)} y={yScale(aggregationBi) - radius - 8} textAnchor="middle" className="gain-point-label">{shortModel(focalModel)} × {shortModel(point.model_a === focalModel ? point.model_b : point.model_a)}</text>}
+              <title>{`${pairLabel(point, focalModel)}\nFixed focal: ${focalModel}\n${metricMeta.label}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\n${data.methods[method].label} aggregation Brier Index: ${aggregationBi.toFixed(2)}\n${evaluation === "cross_fit" ? "Repeated test" : "Common"} targets: ${point.n_overlap.toLocaleString()}\n${evaluation === "cross_fit" ? `Included train→test evaluations: ${point.cross_fit?.included_fold_count ?? 0}/${foldView === "combined" ? data.cross_fit.split.repetitions * 2 : data.cross_fit.split.repetitions}` : `Near-BI: ${point.near_bi ? "Yes" : "No"}`}`}</title>
             </g>;
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>

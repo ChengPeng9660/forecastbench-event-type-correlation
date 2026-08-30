@@ -234,6 +234,8 @@
   .atlas-advanced-filters .range-label { grid-column: 1 / -1; }
   .public-research .section-heading { flex-direction: column; gap: 12px; }
   .public-research .section-heading > p { max-width: 600px; }
+  .public-research .pair-aggregation-section .pair-group-legend { min-width: 0; flex-wrap: wrap; gap: 10px 16px; }
+  .public-research .pair-aggregation-section .pair-group-legend small { display: block; flex: 0 0 100%; margin-left: 0; font-size: 10px; line-height: 1.5; }
   .public-research .market-performance-layout, .public-research .upper-left-visual-row, .public-research .freeze-diversity-layout, .public-research .freeze-correlation-layout { grid-template-columns: 1fr; }
   .public-research .upper-left-controls, .public-research .upper-left-controls.crossfit { grid-template-columns: minmax(0, 1fr); }
   .public-research .upper-left-table-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
