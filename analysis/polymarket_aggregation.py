@@ -226,6 +226,7 @@ def point_from_support(
             "near_bi": dependence["near_bi"],
             "bi_gap": dependence["bi_gap"],
             "metrics": dependence["metrics"],
+            "high_loss_diagnostics": dependence["high_loss_diagnostics"],
             "adjusted_brier": aggregation["adjusted_brier"],
             "brier_index": aggregation["brier_index"],
             "best_single_side": aggregation["best_single_side"],
@@ -363,6 +364,7 @@ def build_cross_fit(
                     "train_model_a_bi": train["model_a_bi"],
                     "train_model_b_bi": train["model_b_bi"],
                     "metrics": train["metrics"],
+                    "high_loss_diagnostics": train["high_loss_diagnostics"],
                     **test,
                 }
                 records.append(record)

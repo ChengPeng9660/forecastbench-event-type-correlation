@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
+import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson } from "../lib/highLoss";
+import { HighLossNotice } from "./HighLossNotice";
 import type {
   AggregationMethodId,
   MetricId,
@@ -78,18 +80,8 @@ const FAMILY_COLORS: Record<ModelFamily, string> = {
   Kimi: "#1f2937",
 };
 
-function mean(values: number[]) {
-  return values.reduce((total, value) => total + value, 0) / values.length;
-}
-
 function pearson(x: number[], y: number[]) {
-  if (x.length < 2 || x.length !== y.length) return null;
-  const xMean = mean(x);
-  const yMean = mean(y);
-  const numerator = x.reduce((total, value, index) => total + (value - xMean) * (y[index] - yMean), 0);
-  const xScale = Math.sqrt(x.reduce((total, value) => total + (value - xMean) ** 2, 0));
-  const yScale = Math.sqrt(y.reduce((total, value) => total + (value - yMean) ** 2, 0));
-  return xScale && yScale ? numerator / (xScale * yScale) : null;
+  return rawPearson(x, y);
 }
 
 function extent(values: number[], includeZero = false): [number, number] {
@@ -202,7 +194,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
     && (!model || point.model_b === model)
   ), [group, model, sourcePoints]);
   const definedPoints = useMemo(() => points.filter((point) =>
-    point.metrics[metric].complementarity !== null
+    Number.isFinite(point.metrics[metric].complementarity)
     && Number.isFinite(polymarketOutcomeValue(point, method, outcome))
   ), [method, metric, outcome, points]);
   const summaries = useMemo(
@@ -237,9 +229,15 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
   const yDomain = extent(yValues.length ? yValues : [0, 1], outcome !== "aggregation_bi");
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
   const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
-  const xScale = (value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth;
+  const lossAxis = isHighLossMetric(metric) ? highLossAxis(xValues, [MARGIN.left, WIDTH - MARGIN.right]) : null;
+  const xScale = lossAxis?.position ?? ((value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth);
   const yScale = (value: number) => MARGIN.top + (1 - (value - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotHeight;
-  const correlation = pearson(xValues, yValues);
+  const maximumDirections = data.cross_fit.split.repetitions * (foldView === "combined" ? 2 : 1);
+  const retainedDirections = definedPoints.every((point) => point.cross_fit !== undefined)
+    ? definedPoints.map((point) => point.cross_fit!.included_fold_count) : undefined;
+  const associationReason = isHighLossMetric(metric)
+    ? highLossAssociationReason(xValues, yValues, retainedDirections, maximumDirections) : null;
+  const correlation = associationReason ? null : pearson(xValues, yValues);
   const maxOverlap = Math.max(1, ...definedPoints.map((point) => point.n_overlap));
   const metricMeta = METRICS.find((item) => item.id === metric) ?? METRICS[0];
   const outcomeMeta = OUTCOMES.find((item) => item.id === outcome) ?? OUTCOMES[0];
@@ -311,16 +309,18 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
         </div>
       </div>
 
+      <HighLossNotice metric={metric} values={xValues} missingCount={points.filter((point) => !Number.isFinite(point.metrics[metric].complementarity)).length} totalCount={points.length} retainedDirections={retainedDirections} maximumDirections={maximumDirections} associationReason={associationReason} diagnostics={points.flatMap((point) => point.high_loss_diagnostics ? [point.high_loss_diagnostics] : [])} />
+
       <div className="pair-aggregation-chart-wrap polymarket-chart-wrap">
         <div className="pair-group-legend">
           <span><i className="polymarket-baseline-key" /> Polymarket Freeze baseline</span>
           {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
           <small>Gold ring = market baseline · area = test support</small>
         </div>
-        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} ${outcomeMeta.label} for Polymarket Freeze pairs`}>
+        {definedPoints.length ? <svg className="pair-aggregation-chart" data-x-scale={lossAxis ? "signed-log" : "linear"} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} ${outcomeMeta.label} for Polymarket Freeze pairs`}>
           {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className="gain-grid-line" /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{outcome === "aggregation_bi" ? tick.toFixed(2) : `${(tick * 100).toFixed(0)}%`}</text></g>)}
           {outcome !== "aggregation_bi" && yDomain[0] <= 0 && yDomain[1] >= 0 && <line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(0)} y2={yScale(0)} className="gain-zero-line" />}
-          {ticks(xDomain).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
+          {(lossAxis?.ticks ?? ticks(xDomain)).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
           {definedPoints.map((point) => {
             const complementarity = point.metrics[metric].complementarity as number;
             const aggregationBi = point.brier_index[method];
@@ -335,7 +335,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>
           <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">{outcomeMeta.axis}</text>
-        </svg> : <div className="aggregation-empty-state"><strong>No eligible Polymarket–model pairs in this view.</strong><span>Return to All eligible or choose another model family.</span></div>}
+        </svg> : <div className="aggregation-empty-state"><strong>{points.length ? "No defined chart coordinates for the selected Polymarket–model pairs." : "No eligible Polymarket–model pairs in this view."}</strong><span>{points.length ? "Their scores remain available; choose another diversity metric or outcome." : "Return to All eligible or choose another model family."}</span></div>}
       </div>
 
       <div className="polymarket-overview">

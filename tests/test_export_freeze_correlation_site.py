@@ -184,6 +184,8 @@ def test_freeze_correlation_export_locks_market_anchor_exact_prompts_and_train_f
         assert int(source["test_target_cells"]) == point["n_common"] * 10
         for metric, field in source_fields.items():
             expected = float(source[field]) if source[field] else None
+            if metric == "high_loss_lift" and point["high_loss_diagnostics"]["undefined_fold_count"]:
+                expected = None  # Legacy pair CSV averaged only its defined training folds.
             if expected is None:
                 assert point["train_diversity"][metric] is None
             else:

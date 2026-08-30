@@ -264,6 +264,8 @@ def high_loss_lift(
 
     if not loss_a or len(loss_a) != len(loss_b):
         raise ValueError("high_loss_lift requires equal non-empty loss vectors")
+    if not math.isfinite(threshold) or not all(math.isfinite(value) for value in (*loss_a, *loss_b)):
+        raise ValueError("high_loss_lift requires finite losses and threshold")
     high_a = [value > threshold for value in loss_a]
     high_b = [value > threshold for value in loss_b]
     joint_count = sum(a and b for a, b in zip(high_a, high_b))

@@ -1,4 +1,5 @@
-import { dependenceDirectionLabel, formatMetric, orientMetricToDependence, sortPairs } from "../lib/metrics";
+import { dependenceDirectionLabel, formatMetric, highLossDiagnosticLabel, orientMetricToDependence, sortPairs } from "../lib/metrics";
+import { HighLossRawNotice } from "./HighLossNotice";
 import type { Manifest, Model, PairMetrics } from "../types/data";
 
 interface ModelProfileProps {
@@ -25,6 +26,7 @@ export function ModelProfile({ modelId, pairs, models, manifest, onSelectPair }:
           const metric = orientMetricToDependence(rawMetric);
           return <div className="profile-column" key={metric.id}>
             <header><span>{metric.short_label}</span><small>{dependenceDirectionLabel(metric.id)}</small></header>
+            <HighLossRawNotice metric={metric.id} />
             <ol>
               {sortPairs(relevant, metric).slice(0, 20).map((pair) => {
                 const partner = pair.a === modelId ? pair.b : pair.a;
@@ -32,7 +34,7 @@ export function ModelProfile({ modelId, pairs, models, manifest, onSelectPair }:
                   <li key={pair.row_id}>
                     <button type="button" onClick={() => onSelectPair(pair)}>
                       <span>{names.get(partner)}</span>
-                      <strong>{formatMetric(pair.metrics[metric.id].value, metric.id)}</strong>
+                      <strong title={metric.id === "high_loss_lift" ? highLossDiagnosticLabel(pair) : undefined}>{formatMetric(pair.metrics[metric.id].value, metric.id)}</strong>
                     </button>
                   </li>
                 );

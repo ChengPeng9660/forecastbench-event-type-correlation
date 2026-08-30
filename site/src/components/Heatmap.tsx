@@ -1,4 +1,5 @@
-import { colorForScore, diversityScore, findPair, formatMetric, textColorForScore } from "../lib/metrics";
+import { colorForScore, diversityScore, findPair, formatMetric, highLossDiagnosticLabel, textColorForScore } from "../lib/metrics";
+import { HighLossRawNotice } from "./HighLossNotice";
 import type { MetricDefinition, Model, PairMetrics } from "../types/data";
 
 interface HeatmapProps {
@@ -17,7 +18,7 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
   }
   const values = pairs
     .map((pair) => pair.metrics[metric.id].value)
-    .filter((value): value is number => value !== null);
+    .filter((value): value is number => value !== null && Number.isFinite(value));
   const compact = models.length < 12;
   const densityClass = models.length <= 3
     ? "is-sparse"
@@ -31,7 +32,7 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
     : `minmax(100px, 1.35fr) repeat(${models.length}, minmax(30px, 1fr))`;
 
   return (
-    <div className="heatmap-scroll" data-testid={testId}>
+    <><HighLossRawNotice metric={metric.id} colorScale /><div className="heatmap-scroll" data-testid={testId}>
       <div className={`heatmap-grid ${compact ? `is-compact ${densityClass}` : ""}`} style={{ gridTemplateColumns: gridTemplate }}>
         <div className="corner-label">MODEL PAIR</div>
         {models.map((model) => (
@@ -51,8 +52,8 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
               }
               const pair = findPair(pairs, rowModel.id, columnModel.id);
               const value = pair?.metrics[metric.id].value ?? null;
-              if (!pair || value === null) {
-                return <div key={`${rowModel.id}-${columnModel.id}`} className="heat-cell missing" aria-label="Missing pair">·</div>;
+              if (!pair || value === null || !Number.isFinite(value)) {
+                return <div key={`${rowModel.id}-${columnModel.id}`} className="heat-cell missing" aria-label="Missing pair" title={pair?.metrics[metric.id].reason ?? "No defined value on the selected support"}>·</div>;
               }
               const score = diversityScore(value, metric, values);
               const active = selectedPair?.row_id === pair.row_id;
@@ -64,6 +65,7 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
                   className={`heat-cell value ${active ? "is-active" : ""} ${related ? "" : "is-muted"}`}
                   style={{ background: colorForScore(score), color: textColorForScore(score) }}
                   aria-label={`${rowModel.name} and ${columnModel.name}: ${formatMetric(value, metric.id)}`}
+                  title={metric.id === "high_loss_lift" ? highLossDiagnosticLabel(pair) : undefined}
                   onClick={() => onSelectPair(pair)}
                 >
                   {formatMetric(value, metric.id)}
@@ -73,6 +75,6 @@ export function Heatmap({ models, pairs, metric, selectedModel, selectedPair, on
           </div>
         ))}
       </div>
-    </div>
+    </div></>
   );
 }

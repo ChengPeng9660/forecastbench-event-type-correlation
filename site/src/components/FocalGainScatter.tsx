@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import type { FocalGainData, FocalGainPoint, MetricId } from "../types/data";
+import type { FocalGainData, MetricId } from "../types/data";
+import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
+import { HighLossNotice } from "./HighLossNotice";
 
 const WIDTH = 920;
 const HEIGHT = 500;
@@ -16,32 +18,12 @@ function mean(values: number[]) {
   return values.reduce((total, value) => total + value, 0) / values.length;
 }
 
-function averageRanks(values: number[]) {
-  const indexed = values.map((value, index) => ({ value, index })).sort((a, b) => a.value - b.value);
-  const ranks = new Array(values.length).fill(0);
-  let start = 0;
-  while (start < indexed.length) {
-    let end = start + 1;
-    while (end < indexed.length && indexed[end].value === indexed[start].value) end += 1;
-    const rank = (start + end - 1) / 2 + 1;
-    for (let cursor = start; cursor < end; cursor += 1) ranks[indexed[cursor].index] = rank;
-    start = end;
-  }
-  return ranks;
-}
-
 export function pearson(x: number[], y: number[]) {
-  if (x.length < 2 || x.length !== y.length) return null;
-  const xMean = mean(x);
-  const yMean = mean(y);
-  const numerator = x.reduce((total, value, index) => total + (value - xMean) * (y[index] - yMean), 0);
-  const xScale = Math.sqrt(x.reduce((total, value) => total + (value - xMean) ** 2, 0));
-  const yScale = Math.sqrt(y.reduce((total, value) => total + (value - yMean) ** 2, 0));
-  return xScale && yScale ? numerator / (xScale * yScale) : null;
+  return rawPearson(x, y);
 }
 
 export function spearman(x: number[], y: number[]) {
-  return pearson(averageRanks(x), averageRanks(y));
+  return rawSpearman(x, y);
 }
 
 function extent(values: number[], includeZero = false): [number, number] {
@@ -59,7 +41,8 @@ function ticks([low, high]: [number, number], count = 5) {
   return Array.from({ length: count }, (_, index) => low + ((high - low) * index) / (count - 1));
 }
 
-function formatMetric(value: number, metric: MetricId) {
+function formatMetric(value: number | null | undefined, metric: MetricId) {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
   return metric === "adjusted_pog" || metric === "total_variation" ? value.toFixed(3) : value.toFixed(2);
 }
 
@@ -68,6 +51,7 @@ function formatPercent(value: number) {
 }
 
 function linearFit(x: number[], y: number[]) {
+  if (rawPearson(x, y) === null) return null;
   const xMean = mean(x);
   const yMean = mean(y);
   const denominator = x.reduce((total, value) => total + (value - xMean) ** 2, 0);
@@ -81,10 +65,15 @@ export function FocalGainScatter({ data }: { data: FocalGainData }) {
   const [nearBiOnly, setNearBiOnly] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState("");
 
-  const points = useMemo(
+  const sampledPoints = useMemo(
     () => data.points.filter((point) => !nearBiOnly || point.near_bi),
     [data.points, nearBiOnly],
   );
+  const points = useMemo(() => sampledPoints.filter((point) => (
+    Number.isFinite(point.metrics[metric].raw)
+    && Number.isFinite(point.metrics[metric].complementarity)
+    && Number.isFinite(point.gain_fraction)
+  )), [sampledPoints, metric]);
   const selected = points.find((point) => point.partner === selectedPartner)
     ?? [...points].sort((a, b) => b.gain_fraction - a.gain_fraction)[0];
 
@@ -92,21 +81,23 @@ export function FocalGainScatter({ data }: { data: FocalGainData }) {
     if (selected) setSelectedPartner(selected.partner);
   }, [nearBiOnly, metric, selected?.partner]);
 
-  const xValues = points.map((point) => point.metrics[metric].complementarity);
+  const xValues = points.map((point) => point.metrics[metric].complementarity as number);
   const yValues = points.map((point) => point.gain_fraction);
-  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : extent(xValues);
-  const yDomain = extent(yValues, true);
+  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : extent(xValues.length ? xValues : [0, 1]);
+  const yDomain = extent(yValues.length ? yValues : [0], true);
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
   const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
-  const xScale = (value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth;
+  const lossAxis = isHighLossMetric(metric) ? highLossAxis(xValues, [MARGIN.left, WIDTH - MARGIN.right]) : null;
+  const xScale = lossAxis?.position ?? ((value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth);
   const yScale = (value: number) => MARGIN.top + (1 - (value - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotHeight;
-  const fit = linearFit(xValues, yValues);
-  const rankCorrelation = spearman(xValues, yValues);
-  const linearCorrelation = pearson(xValues, yValues);
+  const associationReason = isHighLossMetric(metric) ? highLossAssociationReason(xValues, yValues) : null;
+  const fit = !isHighLossMetric(metric) ? linearFit(xValues, yValues) : null;
+  const rankCorrelation = associationReason ? null : spearman(xValues, yValues);
+  const linearCorrelation = associationReason ? null : pearson(xValues, yValues);
   const positive = points.filter((point) => point.gain_fraction > 0).length;
-  const meanGain = mean(yValues);
+  const meanGain = yValues.length ? mean(yValues) : null;
   const metricMeta = METRICS.find((item) => item.id === metric) ?? METRICS[0];
-  const maxOverlap = Math.max(...points.map((point) => point.n_overlap));
+  const maxOverlap = Math.max(1, ...points.map((point) => point.n_overlap));
 
   return (
     <section className="focal-gain-section" id="gain">
@@ -127,27 +118,29 @@ export function FocalGainScatter({ data }: { data: FocalGainData }) {
 
       <dl className="focal-gain-summary">
         <div><dt>PARTNERS</dt><dd>{points.length}</dd><small>{nearBiOnly ? `BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "GPT + Claude"}</small></div>
-        <div><dt>POSITIVE EC GAIN</dt><dd>{positive}/{points.length}</dd><small>{((positive / points.length) * 100).toFixed(0)}% of pairs</small></div>
-        <div><dt>MEAN GAIN FRACTION</dt><dd className={meanGain >= 0 ? "positive" : "negative"}>{formatPercent(meanGain)}</dd><small>vs fixed focal model</small></div>
+        <div><dt>POSITIVE EC GAIN</dt><dd>{positive}/{points.length}</dd><small>{points.length ? `${((positive / points.length) * 100).toFixed(0)}% of pairs` : "no defined pairs"}</small></div>
+        <div><dt>MEAN GAIN FRACTION</dt><dd className={meanGain !== null && meanGain >= 0 ? "positive" : "negative"}>{meanGain === null ? "—" : formatPercent(meanGain)}</dd><small>vs fixed focal model</small></div>
         <div><dt>SPEARMAN ρ</dt><dd>{rankCorrelation?.toFixed(2) ?? "—"}</dd><small>complementarity vs gain</small></div>
         <div><dt>PEARSON r</dt><dd>{linearCorrelation?.toFixed(2) ?? "—"}</dd><small>descriptive, not causal</small></div>
       </dl>
 
+      <HighLossNotice metric={metric} values={xValues} missingCount={sampledPoints.filter((point) => !Number.isFinite(point.metrics[metric].complementarity) || !Number.isFinite(point.metrics[metric].raw)).length} totalCount={sampledPoints.length} associationReason={associationReason} diagnostics={sampledPoints.flatMap((point) => point.high_loss_diagnostics ? [point.high_loss_diagnostics] : [])} />
+
       <div className="focal-gain-chart-wrap">
         <div className="gain-provider-legend"><span><i className="gpt" /> GPT partner</span><span><i className="claude" /> Claude partner</span><small>Circle area reflects common-event support</small></div>
-        <svg className="focal-gain-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} complementarity versus EC aggregation gain for ${data.focal_model}`}>
+        <svg className="focal-gain-chart" data-x-scale={lossAxis ? "signed-log" : "linear"} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} complementarity versus EC aggregation gain for ${data.focal_model}`}>
           <rect x={MARGIN.left} y={MARGIN.top} width={plotWidth} height={Math.max(0, yScale(0) - MARGIN.top)} className="gain-positive-zone" />
           <rect x={MARGIN.left} y={yScale(0)} width={plotWidth} height={Math.max(0, MARGIN.top + plotHeight - yScale(0))} className="gain-negative-zone" />
           {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className={Math.abs(tick) < 1e-10 ? "gain-zero-line" : "gain-grid-line"} /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{formatPercent(tick)}</text></g>)}
-          {ticks(xDomain).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{formatMetric(tick, metric)}</text></g>)}
+          {(lossAxis?.ticks ?? ticks(xDomain)).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{formatMetric(tick, metric)}</text></g>)}
           {fit && <line x1={xScale(xDomain[0])} y1={yScale(fit.intercept + fit.slope * xDomain[0])} x2={xScale(xDomain[1])} y2={yScale(fit.intercept + fit.slope * xDomain[1])} className="gain-fit-line" />}
           {points.map((point) => {
             const isSelected = point.partner === selected?.partner;
             const radius = 5 + 8 * Math.sqrt(point.n_overlap / maxOverlap);
             return <g key={point.partner} className={`gain-point ${point.partner_family.toLowerCase()} ${isSelected ? "selected" : ""}`} onMouseEnter={() => setSelectedPartner(point.partner)} onFocus={() => setSelectedPartner(point.partner)} onClick={() => setSelectedPartner(point.partner)} tabIndex={0} role="button" aria-label={`${point.partner}, ${formatPercent(point.gain_fraction)} gain`}>
-              <circle cx={xScale(point.metrics[metric].complementarity)} cy={yScale(point.gain_fraction)} r={radius} />
-              {isSelected && <text x={xScale(point.metrics[metric].complementarity)} y={yScale(point.gain_fraction) - radius - 9} textAnchor="middle" className="gain-point-label">{point.partner.replace(/-20\d{2}.*/, "")}</text>}
-              <title>{`${point.partner}\n${metricMeta.raw}: ${point.metrics[metric].raw.toFixed(4)}\nEC gain: ${formatPercent(point.gain_fraction)}\nCommon events: ${point.n_overlap.toLocaleString()}\nNear-BI: ${point.near_bi ? "Yes" : "No"}`}</title>
+              <circle cx={xScale(point.metrics[metric].complementarity as number)} cy={yScale(point.gain_fraction)} r={radius} />
+              {isSelected && <text x={xScale(point.metrics[metric].complementarity as number)} y={yScale(point.gain_fraction) - radius - 9} textAnchor="middle" className="gain-point-label">{point.partner.replace(/-20\d{2}.*/, "")}</text>}
+              <title>{`${point.partner}\n${metricMeta.raw}: ${point.metrics[metric].raw?.toFixed(4) ?? "undefined"}\nEC gain: ${formatPercent(point.gain_fraction)}\nCommon events: ${point.n_overlap.toLocaleString()}\nNear-BI: ${point.near_bi ? "Yes" : "No"}`}</title>
             </g>;
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 23} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>

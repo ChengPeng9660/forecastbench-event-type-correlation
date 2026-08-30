@@ -81,6 +81,30 @@ describe("with-freeze model/market correlation explorer", () => {
   });
 
   it("keeps Polymarket fixed while switching diversity, outcome, method, and Near-BI", () => {
+    // A pooled high-loss coordinate is defined only when every included
+    // training direction has positive marginals. Do not silently restore the
+    // old partial-fold coordinates when a published direction is undefined.
+    const nearBi = payload.points.filter((point) => point.near_bi);
+    const definedHighLoss = nearBi.filter((point) => point.train_diversity.high_loss_lift !== null);
+    const undefinedHighLoss = nearBi.filter((point) => point.train_diversity.high_loss_lift === null);
+    expect(nearBi).toHaveLength(29);
+    expect(definedHighLoss.map((point) => point.exact_configuration).sort()).toEqual([
+      "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
+      "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
+      "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
+      "GPT-4o-2024-05-13 (zero shot with freeze values)",
+    ]);
+    for (const point of definedHighLoss) {
+      expect(point.high_loss_diagnostics).toMatchObject({
+        included_fold_count: 20, defined_fold_count: 20, undefined_fold_count: 0,
+      });
+    }
+    expect(undefinedHighLoss).toHaveLength(25);
+    for (const point of undefinedHighLoss) {
+      expect(point.high_loss_diagnostics?.included_fold_count).toBe(20);
+      expect(point.high_loss_diagnostics?.undefined_fold_count).toBeGreaterThan(0);
+    }
+
     render(createElement(FreezeMarketCorrelationExplorer, { data: payload }));
     expect(screen.getByRole("heading", { name: "Does a more diverse model improve market aggregation?" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /Adjusted POG versus fraction gain versus Polymarket/i })).toBeInTheDocument();
@@ -91,8 +115,10 @@ describe("with-freeze model/market correlation explorer", () => {
     expect(within(scatterSummary).getByText("29")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "High-loss Lift" }));
-    expect(within(scatterSummary).getByText("26")).toBeInTheDocument();
-    expect(within(scatterSummary).getByText("3 undefined omitted")).toBeInTheDocument();
+    expect(within(scatterSummary).getByText("4")).toBeInTheDocument();
+    expect(within(scatterSummary).getByText("25 undefined omitted")).toBeInTheDocument();
+    expect(screen.getByRole("note", { name: "High-loss metric diagnostics" }))
+      .toHaveTextContent("25 / 29 candidates have an undefined high-loss coordinate and are not plotted.");
 
     fireEvent.click(screen.getByRole("button", { name: "Aggregation BI" }));
     expect(screen.getByRole("img", { name: /High-loss Lift versus aggregation Brier Index/i })).toBeInTheDocument();

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
+import { HighLossNotice } from "./HighLossNotice";
 import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
 import { existingAggregationHref, existingLinksForConfiguration } from "../lib/existingAggregationLinks";
+import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
 import {
   finiteExtent,
   linearPosition,
@@ -124,12 +126,14 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
     () => INFORMATION_ORDER.filter((id) => data.points.some((point) => point.information_type === id)),
     [data.points],
   );
-  const filtered = useMemo(() => data.points.filter((point) => (
+  const candidates = useMemo(() => data.points.filter((point) => (
     (provider === "all" || point.provider === provider)
     && (prompt === "all" || point.prompt_type === prompt)
     && (information === "all" || point.information_type === information)
-    && point.diversity[metric] !== null
-  )), [data.points, provider, prompt, information, metric]);
+  )), [data.points, provider, prompt, information]);
+  const missingMetricCount = candidates.filter((point) => point.diversity[metric] === null || !Number.isFinite(point.diversity[metric])).length;
+  const filtered = useMemo(() => candidates.filter((point) => point.diversity[metric] !== null
+    && Number.isFinite(point.diversity[metric]) && Number.isFinite(point.model[outcome])), [candidates, metric, outcome]);
   const selected = filtered.find((point) => point.exact_configuration === selectedConfiguration)
     ?? filtered[0]
     ?? null;
@@ -144,10 +148,13 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
   const yDomain: [number, number] = outcome === "raw_brier"
     ? [Math.max(0, rawYDomain[0]), rawYDomain[1]]
     : rawYDomain;
-  const xTicks = linearTicks(xDomain, 6);
+  const highLossScale = isHighLossMetric(metric) ? highLossAxis(xValues, [MARGIN.left, WIDTH - MARGIN.right]) : null;
+  const xPosition = (raw: number) => highLossScale?.position(raw) ?? linearPosition(raw, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+  const xTicks = highLossScale?.ticks ?? linearTicks(xDomain, 6);
   const yTicks = linearTicks(yDomain, 6);
-  const pearson = pearsonCorrelation(xValues, yValues);
-  const spearman = spearmanCorrelation(xValues, yValues);
+  const associationReason = isHighLossMetric(metric) ? highLossAssociationReason(xValues, yValues) : null;
+  const pearson = isHighLossMetric(metric) ? associationReason ? null : rawPearson(xValues, yValues) : pearsonCorrelation(xValues, yValues);
+  const spearman = isHighLossMetric(metric) ? associationReason ? null : rawSpearman(xValues, yValues) : spearmanCorrelation(xValues, yValues);
   const selectedX = selected?.diversity[metric] ?? null;
   const aggregationLinks = selected ? existingLinksForConfiguration(selected.exact_configuration) : [];
 
@@ -179,6 +186,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <div><dt>SPEARMAN ρ</dt><dd>{spearman === null ? "—" : spearman.toFixed(2)}</dd><small>unweighted configuration ranks</small></div>
         <div><dt>COMMON CELLS</dt><dd>{filtered.reduce((sum, point) => sum + point.n_common, 0).toLocaleString()}</dd><small>configuration–market observations</small></div>
       </dl>
+      <HighLossNotice metric={metric} values={xValues} missingCount={missingMetricCount} totalCount={candidates.length} associationReason={associationReason} diagnostics={candidates.flatMap((point) => point.high_loss_diagnostics ? [point.high_loss_diagnostics] : [])} />
 
       <div className="market-performance-layout">
         <div className="market-performance-chart-wrap">
@@ -188,19 +196,19 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
               return <g key={`y-${tick}`}><line className="market-performance-grid" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={y} y2={y} /><text className="market-performance-tick" x={MARGIN.left - 13} y={y + 4} textAnchor="end">{formatY(outcome, tick)}</text></g>;
             })}
             {xTicks.map((tick) => {
-              const x = linearPosition(tick, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+              const x = xPosition(tick);
               return <g key={`x-${tick}`}><line className="market-performance-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="market-performance-tick" x={x} y={HEIGHT - MARGIN.bottom + 23} textAnchor="middle">{formatX(metric, tick)}</text></g>;
             })}
             {baseline !== null && <g className="market-performance-baseline"><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} y2={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} /><text x={WIDTH - MARGIN.right - 4} y={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]) - 8} textAnchor="end">Matched Polymarket · {formatY(outcome, baseline)}</text></g>}
             {filtered.map((point) => {
               const xValue = point.diversity[metric] as number;
               const yValue = point.model[outcome];
-              const x = linearPosition(xValue, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+              const x = xPosition(xValue);
               const y = linearPosition(yValue, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
               const label = `${point.canonical_model_version}\n${point.information_label} · ${point.prompt_label}\n${data.metrics[metric].label}: ${formatX(metric, xValue)}\nModel ${data.outcomes[outcome].label}: ${formatY(outcome, yValue)}\nMatched market: ${formatY(outcome, point.matched_market[outcome])}\nn = ${point.n_common}`;
               return <g className="market-performance-hit" data-configuration={point.exact_configuration} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={selected?.exact_configuration === point.exact_configuration} aria-controls="configuration-pair-aggregation" onClick={() => activateConfiguration(point.exact_configuration)} onFocus={() => setSelectedConfiguration(point.exact_configuration)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activateConfiguration(point.exact_configuration); } }} key={point.exact_configuration}><PointGlyph point={point} selected={selected?.exact_configuration === point.exact_configuration} /><circle className="market-performance-hit-target" r={12} /><title>{label}</title></g>;
             })}
-            <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 15} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity</text>
+            <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 15} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity{highLossScale ? " · signed-log display; raw ticks" : ""}</text>
             <text className="market-performance-axis-label" transform={`translate(20 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">{data.outcomes[outcome].axis}</text>
           </svg> : <div className="market-performance-empty">Not enough configurations under the active filters.</div>}
         </div>
@@ -219,6 +227,11 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
             <div><dt>Common targets</dt><dd>{selected.n_common.toLocaleString()}</dd></div>
             <div><dt>Date range</dt><dd>{selected.date_min}<br />{selected.date_max}</dd></div>
           </dl>
+          {isHighLossMetric(metric) && selected.high_loss_diagnostics && <dl>
+            <div><dt>Marginal high-loss counts A / B</dt><dd>{selected.high_loss_diagnostics.high_count_a ?? "—"} / {selected.high_loss_diagnostics.high_count_b ?? "—"}</dd></div>
+            <div><dt>Joint high-loss count</dt><dd>{selected.high_loss_diagnostics.joint_high_count ?? "—"}</dd></div>
+            <div><dt>Expected joint count</dt><dd>{selected.high_loss_diagnostics.expected_joint_count?.toFixed(2) ?? "—"}</dd></div>
+          </dl>}
           <small>{selected.exact_configuration}</small>
           <div className="market-performance-aggregation-links">
             <button type="button" className="market-performance-aggregation-cta" aria-controls="configuration-pair-aggregation" onClick={() => { activateConfiguration(selected.exact_configuration); setAggregationScrollRequest((value) => value + 1); }}>Explore aggregation ↓</button>

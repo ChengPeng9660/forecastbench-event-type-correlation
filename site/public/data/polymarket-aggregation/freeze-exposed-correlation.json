@@ -260,7 +260,28 @@
             "total_variation": 4.974658425035263e-18
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1523
+          "train_target_cells": 1523,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1523,
+            "valid_train_target_cells": 1523,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 28,
+            "high_count_b": 28,
+            "joint_high_count": 28,
+            "expected_joint_count": 0.5760393125893032,
+            "min_high_count_a": 1,
+            "min_high_count_b": 1,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -316,7 +337,28 @@
             "total_variation": 5.146425686279855e-18
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1457
+          "train_target_cells": 1457,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1457,
+            "valid_train_target_cells": 1457,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 32,
+            "high_count_b": 32,
+            "joint_high_count": 32,
+            "expected_joint_count": 0.7639652118371782,
+            "min_high_count_a": 2,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 2,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
@@ -344,7 +386,28 @@
         "high_loss_lift": -55.85540827740492,
         "total_variation": 5.058639934979347e-18
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 2980,
+        "valid_train_target_cells": 2980,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 60,
+        "high_count_b": 60,
+        "joint_high_count": 60,
+        "expected_joint_count": 1.3400045244264815,
+        "min_high_count_a": 1,
+        "min_high_count_b": 1,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -436,11 +499,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.957289504681341,
             "adjusted_pog": 0.0004370440636474892,
-            "high_loss_lift": -62.95632530120482,
+            "high_loss_lift": null,
             "total_variation": 0.008508200734394124
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 817
+          "train_target_cells": 817,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 817,
+            "valid_train_target_cells": 332,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_b_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 4,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.07341840223094592,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -492,11 +579,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.950977420831961,
             "adjusted_pog": 0.000308280012771392,
-            "high_loss_lift": -49.247368421052634,
+            "high_loss_lift": null,
             "total_variation": 0.00947228607918263
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 783
+          "train_target_cells": 783,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 783,
+            "valid_train_target_cells": 475,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_b_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 6,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.12428868446801156,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         }
       },
       "exact_configuration": "Gemini-3-Pro-Preview (zero shot with freeze values)",
@@ -521,10 +632,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.9542005286475507,
         "adjusted_pog": 0.0003740301562499991,
-        "high_loss_lift": -54.88723667905824,
+        "high_loss_lift": null,
         "total_variation": 0.00898
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 1600,
+        "valid_train_target_cells": 807,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_b_marginal_high_loss_rate_zero": 4,
+          "both_marginal_high_loss_rates_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 10,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.19770708669895748,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -616,11 +751,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.9635901720679059,
             "adjusted_pog": 0.0016494511347517745,
-            "high_loss_lift": -219.85026737967914,
+            "high_loss_lift": null,
             "total_variation": 0.010186382978723403
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2115
+          "train_target_cells": 2115,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 2115,
+            "valid_train_target_cells": 1309,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 6,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.027831645188144977,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -672,11 +830,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.963374374886021,
             "adjusted_pog": 0.0016586905342789585,
-            "high_loss_lift": -220.64785553047403,
+            "high_loss_lift": null,
             "total_variation": 0.010367754137115838
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2115
+          "train_target_cells": 2115,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 2115,
+            "valid_train_target_cells": 886,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 6
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 4,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.018070682333177254,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
@@ -701,10 +882,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.9634822734769634,
         "adjusted_pog": 0.0016540708345153666,
-        "high_loss_lift": -220.17220956719817,
+        "high_loss_lift": null,
         "total_variation": 0.01027706855791962
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 4230,
+        "valid_train_target_cells": 2195,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 10
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 10,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.045902327521322235,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -796,11 +1000,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.9505069131212975,
             "adjusted_pog": 0.0011023014433701678,
-            "high_loss_lift": -125.99720357941834,
+            "high_loss_lift": null,
             "total_variation": 0.009058632596685084
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1448
+          "train_target_cells": 1448,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1448,
+            "valid_train_target_cells": 894,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 8,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.08270502758307637,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -852,11 +1079,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.965075421781147,
             "adjusted_pog": 0.0013913622905027945,
-            "high_loss_lift": -103.21209465381244,
+            "high_loss_lift": null,
             "total_variation": 0.010533589385474862
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1432
+          "train_target_cells": 1432,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1432,
+            "valid_train_target_cells": 1141,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 12,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.13676217043489244,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
@@ -881,10 +1131,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.9577506993716115,
         "adjusted_pog": 0.0012460289201388906,
-        "high_loss_lift": -113.22186732186732,
+        "high_loss_lift": null,
         "total_variation": 0.009792013888888888
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 2880,
+        "valid_train_target_cells": 2035,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 20,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.2194671980179688,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -976,11 +1249,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.935940645227484,
             "adjusted_pog": 0.001898750550807218,
-            "high_loss_lift": -168.87586206896552,
+            "high_loss_lift": null,
             "total_variation": 0.012707454890788224
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2106
+          "train_target_cells": 2106,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 2106,
+            "valid_train_target_cells": 1305,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 9,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.042402963657797915,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -1032,11 +1328,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.9232468478270777,
             "adjusted_pog": 0.0018223852946768005,
-            "high_loss_lift": -109.45016987542469,
+            "high_loss_lift": null,
             "total_variation": 0.01218921102661597
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2104
+          "train_target_cells": 2104,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 2104,
+            "valid_train_target_cells": 883,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 3,
+              "both_marginal_high_loss_rates_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 11,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.03626472491598403,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
@@ -1061,10 +1381,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.9295967616810576,
         "adjusted_pog": 0.001860586061757717,
-        "high_loss_lift": -144.8937385740402,
+        "high_loss_lift": null,
         "total_variation": 0.012448456057007127
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 4210,
+        "valid_train_target_cells": 2188,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 3,
+          "both_marginal_high_loss_rates_zero": 7
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 20,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.07866768857378194,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -1160,7 +1504,31 @@
             "total_variation": 0.014714869466515323
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 881
+          "train_target_cells": 881,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 881,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 7,
+              "both_marginal_high_loss_rates_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 7,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -1216,7 +1584,31 @@
             "total_variation": 0.015016721672167216
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 909
+          "train_target_cells": 909,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 909,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 7,
+              "model_a_marginal_high_loss_rate_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 3,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         }
       },
       "exact_configuration": "GPT-5-2025-08-07 (zero shot with freeze values)",
@@ -1244,7 +1636,31 @@
         "high_loss_lift": null,
         "total_variation": 0.014868156424581004
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 0,
+        "undefined_fold_count": 20,
+        "train_target_cells": 1790,
+        "valid_train_target_cells": 0,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 10,
+          "both_marginal_high_loss_rates_zero": 10
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 0,
+        "high_count_b": 10,
+        "joint_high_count": 0,
+        "expected_joint_count": 0.0,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 20
+      }
     },
     {
       "aggregation": {
@@ -1336,11 +1752,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.9644182560371611,
             "adjusted_pog": 0.0008820410887096763,
-            "high_loss_lift": -65.36422413793103,
+            "high_loss_lift": null,
             "total_variation": 0.01592284946236559
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 744
+          "train_target_cells": 744,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 744,
+            "valid_train_target_cells": 464,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 8,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.16036478861828465,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -1392,11 +1831,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.9648376670703194,
             "adjusted_pog": 0.001058608654390934,
-            "high_loss_lift": -49.919928825622776,
+            "high_loss_lift": null,
             "total_variation": 0.01667195467422096
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 706
+          "train_target_cells": 706,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 706,
+            "valid_train_target_cells": 562,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 12,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.27550698195059375,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
@@ -1421,10 +1883,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.964622465822961,
         "adjusted_pog": 0.000968011227586206,
-        "high_loss_lift": -56.90448343079922,
+        "high_loss_lift": null,
         "total_variation": 0.016287586206896548
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 1450,
+        "valid_train_target_cells": 1026,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 20,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.4358717705688784,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -1516,11 +2001,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.8328588769589944,
             "adjusted_pog": 0.002150875290190034,
-            "high_loss_lift": -128.23491928632114,
+            "high_loss_lift": null,
             "total_variation": 0.01235588084232152
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1947
+          "train_target_cells": 1947,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1947,
+            "valid_train_target_cells": 1177,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 12,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.07213921658827596,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -1572,11 +2081,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.8258387307961552,
             "adjusted_pog": 0.002568051914123123,
-            "high_loss_lift": -108.05132378472223,
+            "high_loss_lift": null,
             "total_variation": 0.014045059493016038
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1933
+          "train_target_cells": 1933,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1933,
+            "valid_train_target_cells": 1536,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 18,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.13424682940575092,
+            "min_high_count_a": 0,
+            "min_high_count_b": 1,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
@@ -1601,10 +2133,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.8293614690897242,
         "adjusted_pog": 0.0023587109639175243,
-        "high_loss_lift": -116.80771593561862,
+        "high_loss_lift": null,
         "total_variation": 0.01319742268041237
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 3880,
+        "valid_train_target_cells": 2713,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 4,
+          "both_marginal_high_loss_rates_zero": 2
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 30,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.20638604599402688,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -1696,11 +2252,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.8334134863430578,
             "adjusted_pog": 0.0017565272875816993,
-            "high_loss_lift": -146.37923728813558,
+            "high_loss_lift": null,
             "total_variation": 0.016774183006535947
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1530
+          "train_target_cells": 1530,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1530,
+            "valid_train_target_cells": 944,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 2,
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 9,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.045252069132205634,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -1752,11 +2332,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.8264978317489762,
             "adjusted_pog": 0.001567962417218539,
-            "high_loss_lift": -114.9452380952381,
+            "high_loss_lift": null,
             "total_variation": 0.017917549668874173
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1510
+          "train_target_cells": 1510,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 1510,
+            "valid_train_target_cells": 630,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 5,
+              "both_marginal_high_loss_rates_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 11,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.03779345559173382,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "DeepSeek-V3 (zero shot with freeze values)",
@@ -1781,10 +2385,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.8299784079098133,
         "adjusted_pog": 0.0016628651315789454,
-        "high_loss_lift": -133.7976493011436,
+        "high_loss_lift": null,
         "total_variation": 0.017342105263157895
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 3040,
+        "valid_train_target_cells": 1574,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 7,
+          "both_marginal_high_loss_rates_zero": 3
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 20,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.08304552472393946,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -1876,11 +2504,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.7464309188769274,
             "adjusted_pog": 0.0029733592617007263,
-            "high_loss_lift": -111.5728051391863,
+            "high_loss_lift": null,
             "total_variation": 0.024323665128543177
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1517
+          "train_target_cells": 1517,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1517,
+            "valid_train_target_cells": 934,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 3,
+              "model_a_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 10,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.057211923699156036,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -1932,11 +2584,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.7292814175712128,
             "adjusted_pog": 0.00309048392498325,
-            "high_loss_lift": -93.32528180354268,
+            "high_loss_lift": null,
             "total_variation": 0.025178164768921634
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1493
+          "train_target_cells": 1493,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 1493,
+            "valid_train_target_cells": 621,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 3,
+              "model_a_marginal_high_loss_rate_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 10,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.044694921387396315,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "DeepSeek-R1 (scratchpad with freeze values)",
@@ -1961,10 +2637,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.7379245383289433,
         "adjusted_pog": 0.0030314546511627885,
-        "high_loss_lift": -104.28553054662379,
+        "high_loss_lift": null,
         "total_variation": 0.024747508305647845
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 3010,
+        "valid_train_target_cells": 1555,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 6,
+          "model_a_marginal_high_loss_rate_zero": 4
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 20,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.10190684508655234,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -2060,7 +2760,30 @@
             "total_variation": 0.011911111111111112
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 585
+          "train_target_cells": 585,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 585,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 10
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 0,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -2116,7 +2839,30 @@
             "total_variation": 0.012507438016528927
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 605
+          "train_target_cells": 605,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 605,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 10
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 0,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         }
       },
       "exact_configuration": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
@@ -2144,7 +2890,30 @@
         "high_loss_lift": null,
         "total_variation": 0.012214285714285716
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 0,
+        "undefined_fold_count": 20,
+        "train_target_cells": 1190,
+        "valid_train_target_cells": 0,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 20
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 0,
+        "high_count_b": 0,
+        "joint_high_count": 0,
+        "expected_joint_count": 0.0,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 20
+      }
     },
     {
       "aggregation": {
@@ -2236,11 +3005,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6392510784318206,
             "adjusted_pog": 0.001344660241712708,
-            "high_loss_lift": -84.10011185682326,
+            "high_loss_lift": null,
             "total_variation": 0.013198342541436463
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 1448
+          "train_target_cells": 1448,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1448,
+            "valid_train_target_cells": 894,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 14,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.11751831727441484,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -2292,11 +3085,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.7305404664463492,
             "adjusted_pog": 0.0016468546159217874,
-            "high_loss_lift": -89.21194858311422,
+            "high_loss_lift": null,
             "total_variation": 0.013035474860335197
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1432
+          "train_target_cells": 1432,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1432,
+            "valid_train_target_cells": 1141,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 1,
+              "model_a_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 16,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.17149433047774013,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
@@ -2321,10 +3138,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.6846421908057112,
         "adjusted_pog": 0.0014949180000000002,
-        "high_loss_lift": -86.96625716625717,
+        "high_loss_lift": null,
         "total_variation": 0.013117361111111111
       },
-      "train_near_bi_share": 0.95
+      "train_near_bi_share": 0.95,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 2880,
+        "valid_train_target_cells": 2035,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 3,
+          "model_a_marginal_high_loss_rate_zero": 3
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 30,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.28901264775215496,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -2420,7 +3261,31 @@
             "total_variation": 0.0070993902439024405
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 820
+          "train_target_cells": 820,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 820,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 6,
+              "both_marginal_high_loss_rates_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 6,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -2476,7 +3341,31 @@
             "total_variation": 0.0056462962962962986
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 810
+          "train_target_cells": 810,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 810,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 6,
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 4,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         }
       },
       "exact_configuration": "DeepSeek-R1 (zero shot with freeze values)",
@@ -2504,7 +3393,31 @@
         "high_loss_lift": null,
         "total_variation": 0.0063773006134969345
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 0,
+        "undefined_fold_count": 20,
+        "train_target_cells": 1630,
+        "valid_train_target_cells": 0,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 10,
+          "both_marginal_high_loss_rates_zero": 10
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 0,
+        "high_count_b": 10,
+        "joint_high_count": 0,
+        "expected_joint_count": 0.0,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 20
+      }
     },
     {
       "aggregation": {
@@ -2600,7 +3513,28 @@
             "total_variation": 0.019740917289358412
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 3881
+          "train_target_cells": 3881,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 3881,
+            "valid_train_target_cells": 3881,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 38,
+            "high_count_b": 81,
+            "joint_high_count": 38,
+            "expected_joint_count": 0.8306669391681588,
+            "min_high_count_a": 1,
+            "min_high_count_b": 5,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -2656,7 +3590,28 @@
             "total_variation": 0.016953399842478338
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 3809
+          "train_target_cells": 3809,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 3809,
+            "valid_train_target_cells": 3809,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 42,
+            "high_count_b": 79,
+            "joint_high_count": 42,
+            "expected_joint_count": 0.9089796906085285,
+            "min_high_count_a": 3,
+            "min_high_count_b": 5,
+            "min_joint_high_count": 3,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
@@ -2684,7 +3639,28 @@
         "high_loss_lift": -49.74158710924966,
         "total_variation": 0.018360208062418726
       },
-      "train_near_bi_share": 0.95
+      "train_near_bi_share": 0.95,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 7690,
+        "valid_train_target_cells": 7690,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 80,
+        "high_count_b": 160,
+        "joint_high_count": 80,
+        "expected_joint_count": 1.7396466297766873,
+        "min_high_count_a": 1,
+        "min_high_count_b": 5,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -2776,11 +3752,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.7258676597515407,
             "adjusted_pog": 0.003120258253094907,
-            "high_loss_lift": -44.91776913099871,
+            "high_loss_lift": null,
             "total_variation": 0.016349037138927096
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1454
+          "train_target_cells": 1454,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 7,
+            "undefined_fold_count": 3,
+            "train_target_cells": 1454,
+            "valid_train_target_cells": 1028,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 10,
+            "high_count_b": 26,
+            "joint_high_count": 10,
+            "expected_joint_count": 0.24683235340916215,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 3
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -2832,11 +3832,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.7512282339818567,
             "adjusted_pog": 0.0030145335895721864,
-            "high_loss_lift": -56.49566880930518,
+            "high_loss_lift": null,
             "total_variation": 0.01452774064171123
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1496
+          "train_target_cells": 1496,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 7,
+            "undefined_fold_count": 3,
+            "train_target_cells": 1496,
+            "valid_train_target_cells": 1089,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 10,
+            "high_count_b": 24,
+            "joint_high_count": 10,
+            "expected_joint_count": 0.22774245305122906,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 3
+          }
         }
       },
       "exact_configuration": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
@@ -2861,10 +3885,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.7387284797679993,
         "adjusted_pog": 0.003066643305084741,
-        "high_loss_lift": -50.8735238545111,
+        "high_loss_lift": null,
         "total_variation": 0.015425423728813557
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 2950,
+        "valid_train_target_cells": 2117,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 4,
+          "both_marginal_high_loss_rates_zero": 2
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 50,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.47457480646039124,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -2956,11 +4004,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6322241728146649,
             "adjusted_pog": 0.0009619922782188495,
-            "high_loss_lift": -59.83291809851089,
+            "high_loss_lift": null,
             "total_variation": 0.01162588885053504
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2897
+          "train_target_cells": 2897,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 2897,
+            "valid_train_target_cells": 2328,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 19,
+            "high_count_b": 44,
+            "joint_high_count": 19,
+            "expected_joint_count": 0.3268312650310507,
+            "min_high_count_a": 0,
+            "min_high_count_b": 1,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -3016,7 +4087,28 @@
             "total_variation": 0.010444219350331824
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2863
+          "train_target_cells": 2863,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 2863,
+            "valid_train_target_cells": 2863,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 31,
+            "high_count_b": 46,
+            "joint_high_count": 31,
+            "expected_joint_count": 0.5351786824381871,
+            "min_high_count_a": 2,
+            "min_high_count_b": 3,
+            "min_joint_high_count": 2,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
@@ -3041,10 +4133,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.6677746833014849,
         "adjusted_pog": 0.001203870336805558,
-        "high_loss_lift": -62.8076334039684,
+        "high_loss_lift": null,
         "total_variation": 0.01103854166666667
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 18,
+        "undefined_fold_count": 2,
+        "train_target_cells": 5760,
+        "valid_train_target_cells": 5191,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 2
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 50,
+        "high_count_b": 90,
+        "joint_high_count": 50,
+        "expected_joint_count": 0.8620099474692378,
+        "min_high_count_a": 0,
+        "min_high_count_b": 1,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 2
+      }
     },
     {
       "aggregation": {
@@ -3136,11 +4251,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5075118504747472,
             "adjusted_pog": 0.0014995893909626676,
-            "high_loss_lift": -78.68877524259113,
+            "high_loss_lift": null,
             "total_variation": 0.014847600336794834
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 3563
+          "train_target_cells": 3563,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 7,
+            "undefined_fold_count": 3,
+            "train_target_cells": 3563,
+            "valid_train_target_cells": 2542,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 14,
+            "high_count_b": 45,
+            "joint_high_count": 14,
+            "expected_joint_count": 0.18521676386908634,
+            "min_high_count_a": 0,
+            "min_high_count_b": 4,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 3
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -3192,11 +4330,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6500996437745152,
             "adjusted_pog": 0.001484872455596276,
-            "high_loss_lift": -101.83654753479594,
+            "high_loss_lift": null,
             "total_variation": 0.012583591767691004
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 3547
+          "train_target_cells": 3547,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 3547,
+            "valid_train_target_cells": 2826,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 16,
+            "high_count_b": 35,
+            "joint_high_count": 16,
+            "expected_joint_count": 0.16599379279117474,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
@@ -3221,10 +4382,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.5786453107889916,
         "adjusted_pog": 0.0014922474824191245,
-        "high_loss_lift": -90.87499068554396,
+        "high_loss_lift": null,
         "total_variation": 0.01371814345991561
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 15,
+        "undefined_fold_count": 5,
+        "train_target_cells": 7110,
+        "valid_train_target_cells": 5368,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 5
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 30,
+        "high_count_b": 80,
+        "joint_high_count": 30,
+        "expected_joint_count": 0.3512105566602611,
+        "min_high_count_a": 0,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 5
+      }
     },
     {
       "aggregation": {
@@ -3320,7 +4504,28 @@
             "total_variation": 0.030837807531380754
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 3585
+          "train_target_cells": 3585,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 3585,
+            "valid_train_target_cells": 3585,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 38,
+            "high_count_b": 82,
+            "joint_high_count": 35,
+            "expected_joint_count": 0.9019025025080352,
+            "min_high_count_a": 1,
+            "min_high_count_b": 5,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -3376,7 +4581,28 @@
             "total_variation": 0.030155721194879085
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 3515
+          "train_target_cells": 3515,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 3515,
+            "valid_train_target_cells": 3515,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 42,
+            "high_count_b": 78,
+            "joint_high_count": 35,
+            "expected_joint_count": 0.9664620216569884,
+            "min_high_count_a": 3,
+            "min_high_count_b": 4,
+            "min_joint_high_count": 2,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "Claude-3-5-Sonnet-20240620 (scratchpad with freeze values)",
@@ -3404,7 +4630,28 @@
         "high_loss_lift": -39.83504394041014,
         "total_variation": 0.03050012676056338
       },
-      "train_near_bi_share": 0.9
+      "train_near_bi_share": 0.9,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 7100,
+        "valid_train_target_cells": 7100,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 80,
+        "high_count_b": 160,
+        "joint_high_count": 70,
+        "expected_joint_count": 1.8683645241650235,
+        "min_high_count_a": 1,
+        "min_high_count_b": 4,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -3496,11 +4743,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6015104151295086,
             "adjusted_pog": 0.004535386151129944,
-            "high_loss_lift": -103.73989455184534,
+            "high_loss_lift": null,
             "total_variation": 0.025216807909604514
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1416
+          "train_target_cells": 1416,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 1416,
+            "valid_train_target_cells": 569,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 2,
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 10,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.04190297507370678,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -3552,11 +4823,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5706811935574704,
             "adjusted_pog": 0.004941998066939891,
-            "high_loss_lift": -62.88119561104806,
+            "high_loss_lift": null,
             "total_variation": 0.025308743169398906
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1464
+          "train_target_cells": 1464,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1464,
+            "valid_train_target_cells": 881,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 20,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.09454365373871872,
+            "min_high_count_a": 0,
+            "min_high_count_b": 1,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         }
       },
       "exact_configuration": "Kimi-K2-Instruct (zero shot with freeze values)",
@@ -3581,10 +4875,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.5858388941637225,
         "adjusted_pog": 0.0047420805416666665,
-        "high_loss_lift": -78.91471264367816,
+        "high_loss_lift": null,
         "total_variation": 0.025263541666666667
       },
-      "train_near_bi_share": 1.0
+      "train_near_bi_share": 1.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 2880,
+        "valid_train_target_cells": 1450,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 8,
+          "both_marginal_high_loss_rates_zero": 2
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 30,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.1364466288124255,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -3676,11 +4994,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6336021507864372,
             "adjusted_pog": 0.002151461231652841,
-            "high_loss_lift": -68.05214968152866,
+            "high_loss_lift": null,
             "total_variation": 0.019054562858966177
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 1567
+          "train_target_cells": 1567,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 1567,
+            "valid_train_target_cells": 628,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 2,
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 19,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.06394341983105661,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -3732,11 +5074,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6529501558581814,
             "adjusted_pog": 0.0031892128969539858,
-            "high_loss_lift": -73.6504854368932,
+            "high_loss_lift": null,
             "total_variation": 0.020347699287103047
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 1543
+          "train_target_cells": 1543,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1543,
+            "valid_train_target_cells": 927,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 1,
+              "model_a_marginal_high_loss_rate_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 21,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.09586684406826446,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         }
       },
       "exact_configuration": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
@@ -3761,10 +5127,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.6432014986403605,
         "adjusted_pog": 0.0026663328778135055,
-        "high_loss_lift": -71.3895498392283,
+        "high_loss_lift": null,
         "total_variation": 0.01969614147909968
       },
-      "train_near_bi_share": 0.8
+      "train_near_bi_share": 0.8,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 3110,
+        "valid_train_target_cells": 1555,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 3,
+          "model_a_marginal_high_loss_rate_zero": 7
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 40,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.15981026389932107,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -3860,7 +5250,28 @@
             "total_variation": 0.013206064356435645
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 2424
+          "train_target_cells": 2424,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 2424,
+            "valid_train_target_cells": 2424,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 34,
+            "high_count_b": 59,
+            "joint_high_count": 34,
+            "expected_joint_count": 0.9007498381712847,
+            "min_high_count_a": 1,
+            "min_high_count_b": 4,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -3916,7 +5327,28 @@
             "total_variation": 0.012381022823330519
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 2366
+          "train_target_cells": 2366,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 2366,
+            "valid_train_target_cells": 2366,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 36,
+            "high_count_b": 51,
+            "joint_high_count": 36,
+            "expected_joint_count": 0.8494992651880949,
+            "min_high_count_a": 2,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 2,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "GPT-4o-2024-05-13 (zero shot with freeze values)",
@@ -3944,7 +5376,28 @@
         "high_loss_lift": -48.88628591311264,
         "total_variation": 0.012798538622129438
       },
-      "train_near_bi_share": 0.95
+      "train_near_bi_share": 0.95,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 4790,
+        "valid_train_target_cells": 4790,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 70,
+        "high_count_b": 110,
+        "joint_high_count": 70,
+        "expected_joint_count": 1.7502491033593797,
+        "min_high_count_a": 1,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -4036,11 +5489,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5401679518118491,
             "adjusted_pog": 0.0026904401823281913,
-            "high_loss_lift": -47.28829966329966,
+            "high_loss_lift": null,
             "total_variation": 0.020643338008415148
           },
           "train_near_bi_share": 0.7,
-          "train_target_cells": 1426
+          "train_target_cells": 1426,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 1426,
+            "valid_train_target_cells": 594,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_b_marginal_high_loss_rate_zero": 2,
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 15,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.10263355426308511,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -4092,11 +5569,36 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.56789610510521,
             "adjusted_pog": 0.0033348260814606745,
-            "high_loss_lift": -39.405522288755826,
+            "high_loss_lift": null,
             "total_variation": 0.022547471910112356
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 1424
+          "train_target_cells": 1424,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 7,
+            "undefined_fold_count": 3,
+            "train_target_cells": 1424,
+            "valid_train_target_cells": 1002,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 1,
+              "both_marginal_high_loss_rates_zero": 1,
+              "model_b_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 15,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.1441125908613175,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         }
       },
       "exact_configuration": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
@@ -4121,10 +5623,35 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.5540222992819354,
         "adjusted_pog": 0.0030124070315789477,
-        "high_loss_lift": -42.339337928153725,
+        "high_loss_lift": null,
         "total_variation": 0.021594736842105264
       },
-      "train_near_bi_share": 0.8
+      "train_near_bi_share": 0.8,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 11,
+        "undefined_fold_count": 9,
+        "train_target_cells": 2850,
+        "valid_train_target_cells": 1596,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_b_marginal_high_loss_rate_zero": 3,
+          "model_a_marginal_high_loss_rate_zero": 5,
+          "both_marginal_high_loss_rates_zero": 1
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 30,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.24674614512440263,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -4216,11 +5743,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.4507970618214144,
             "adjusted_pog": 0.002363558077723801,
-            "high_loss_lift": -37.8430463576159,
+            "high_loss_lift": null,
             "total_variation": 0.021348299791811243
           },
           "train_near_bi_share": 0.6,
-          "train_target_cells": 1441
+          "train_target_cells": 1441,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 5,
+            "undefined_fold_count": 5,
+            "train_target_cells": 1441,
+            "valid_train_target_cells": 755,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4,
+              "model_b_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 17,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.10818014095944417,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -4272,11 +5823,36 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.52522094025561,
             "adjusted_pog": 0.0037473901049685098,
-            "high_loss_lift": -48.2891376451078,
+            "high_loss_lift": null,
             "total_variation": 0.019133030090972707
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 1429
+          "train_target_cells": 1429,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 7,
+            "undefined_fold_count": 3,
+            "train_target_cells": 1429,
+            "valid_train_target_cells": 1005,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 1,
+              "both_marginal_high_loss_rates_zero": 1,
+              "model_b_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 13,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.1230196234901076,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         }
       },
       "exact_configuration": "DeepSeek-V3.1 (zero shot with freeze values)",
@@ -4301,10 +5877,35 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.48785341104875424,
         "adjusted_pog": 0.0030525810627177693,
-        "high_loss_lift": -43.80800189393939,
+        "high_loss_lift": null,
         "total_variation": 0.020245296167247386
       },
-      "train_near_bi_share": 0.7
+      "train_near_bi_share": 0.7,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 12,
+        "undefined_fold_count": 8,
+        "train_target_cells": 2870,
+        "valid_train_target_cells": 1760,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 5,
+          "both_marginal_high_loss_rates_zero": 1,
+          "model_b_marginal_high_loss_rate_zero": 2
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 30,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.2311997644495518,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -4396,11 +5997,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.38450216793037084,
             "adjusted_pog": 0.003945128259847149,
-            "high_loss_lift": -57.04783861671469,
+            "high_loss_lift": null,
             "total_variation": 0.021233568489124045
           },
           "train_near_bi_share": 0.7,
-          "train_target_cells": 1701
+          "train_target_cells": 1701,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1701,
+            "valid_train_target_cells": 1041,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 26,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.15659888917302342,
+            "min_high_count_a": 0,
+            "min_high_count_b": 1,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -4452,11 +6076,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5693885412836968,
             "adjusted_pog": 0.00386816806098283,
-            "high_loss_lift": -62.27081784386617,
+            "high_loss_lift": null,
             "total_variation": 0.019246417998815865
           },
           "train_near_bi_share": 1.0,
-          "train_target_cells": 1689
+          "train_target_cells": 1689,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1689,
+            "valid_train_target_cells": 1345,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 1,
+              "both_marginal_high_loss_rates_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 24,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.20420951271722748,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Gemini-2.5-Pro (zero shot with freeze values)",
@@ -4481,10 +6129,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.4766181220878244,
         "adjusted_pog": 0.003906784373156343,
-        "high_loss_lift": -59.99205783738474,
+        "high_loss_lift": null,
         "total_variation": 0.020243510324483776
       },
-      "train_near_bi_share": 0.85
+      "train_near_bi_share": 0.85,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 3390,
+        "valid_train_target_cells": 2386,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 5,
+          "both_marginal_high_loss_rates_zero": 1
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 50,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.36080840189025093,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -4576,11 +6248,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.4456090305692861,
             "adjusted_pog": 0.0025236060339777397,
-            "high_loss_lift": -43.84638515674984,
+            "high_loss_lift": null,
             "total_variation": 0.022129173989455186
           },
           "train_near_bi_share": 0.7,
-          "train_target_cells": 1707
+          "train_target_cells": 1707,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1707,
+            "valid_train_target_cells": 1042,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 34,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.19134374632220447,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -4632,11 +6327,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5022154030856475,
             "adjusted_pog": 0.003738319166177335,
-            "high_loss_lift": -44.85076204523107,
+            "high_loss_lift": null,
             "total_variation": 0.022618027011156783
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 1703
+          "train_target_cells": 1703,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1703,
+            "valid_train_target_cells": 1356,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 36,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.28404378143521436,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
@@ -4661,10 +6379,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.4738790166089821,
         "adjusted_pog": 0.003130250158357772,
-        "high_loss_lift": -44.41433138726717,
+        "high_loss_lift": null,
         "total_variation": 0.022373313782991205
       },
-      "train_near_bi_share": 0.75
+      "train_near_bi_share": 0.75,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 3410,
+        "valid_train_target_cells": 2398,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 70,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.47538752775741877,
+        "min_high_count_a": 0,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -4756,11 +6497,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6222313246722804,
             "adjusted_pog": 0.002935795325779035,
-            "high_loss_lift": 1.0,
+            "high_loss_lift": null,
             "total_variation": 0.03954645892351275
           },
           "train_near_bi_share": 0.7,
-          "train_target_cells": 1765
+          "train_target_cells": 1765,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 5,
+            "undefined_fold_count": 5,
+            "train_target_cells": 1765,
+            "valid_train_target_cells": 913,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4,
+              "model_b_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 7,
+            "high_count_b": 33,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.12131814030502934,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -4812,11 +6577,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.6778926419646257,
             "adjusted_pog": 0.0036957818840579735,
-            "high_loss_lift": 1.0,
+            "high_loss_lift": null,
             "total_variation": 0.03655159420289855
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 1725
+          "train_target_cells": 1725,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1725,
+            "valid_train_target_cells": 1390,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 1,
+              "model_b_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 13,
+            "high_count_b": 27,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.19320831927193244,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         }
       },
       "exact_configuration": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
@@ -4841,10 +6630,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.6497430072881244,
         "adjusted_pog": 0.0033114333810888258,
-        "high_loss_lift": 1.0,
+        "high_loss_lift": null,
         "total_variation": 0.03806618911174785
       },
-      "train_near_bi_share": 0.8
+      "train_near_bi_share": 0.8,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 13,
+        "undefined_fold_count": 7,
+        "train_target_cells": 3490,
+        "valid_train_target_cells": 2303,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 5,
+          "model_b_marginal_high_loss_rate_zero": 2
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 60,
+        "joint_high_count": 0,
+        "expected_joint_count": 0.3145264595769618,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 20
+      }
     },
     {
       "aggregation": {
@@ -4936,11 +6749,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.4454747751452275,
             "adjusted_pog": 0.0029054280284689002,
-            "high_loss_lift": -36.27255381604697,
+            "high_loss_lift": null,
             "total_variation": 0.02700840909090909
           },
           "train_near_bi_share": 0.3,
-          "train_target_cells": 1672
+          "train_target_cells": 1672,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1672,
+            "valid_train_target_cells": 1022,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 40,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.22581568938269442,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -4992,11 +6828,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.49091409641433364,
             "adjusted_pog": 0.003900818658760428,
-            "high_loss_lift": -41.0558882235529,
+            "high_loss_lift": null,
             "total_variation": 0.029442932061978545
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 1678
+          "train_target_cells": 1678,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1678,
+            "valid_train_target_cells": 1336,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 40,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.31707601331163965,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Gemini-2.5-Flash (zero shot with freeze values)",
@@ -5021,10 +6880,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.4682351277092753,
         "adjusted_pog": 0.0034040147382089557,
-        "high_loss_lift": -38.98270426915465,
+        "high_loss_lift": null,
         "total_variation": 0.028227850746268657
       },
-      "train_near_bi_share": 0.55
+      "train_near_bi_share": 0.55,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 3350,
+        "valid_train_target_cells": 2358,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 80,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.5428917026943341,
+        "min_high_count_a": 0,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -5120,7 +7002,28 @@
             "total_variation": 0.04859093893630991
           },
           "train_near_bi_share": 0.2,
-          "train_target_cells": 1523
+          "train_target_cells": 1523,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1523,
+            "valid_train_target_cells": 1523,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 28,
+            "high_count_b": 64,
+            "joint_high_count": 24,
+            "expected_joint_count": 1.2471502574136863,
+            "min_high_count_a": 1,
+            "min_high_count_b": 3,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -5176,7 +7079,28 @@
             "total_variation": 0.04251956074124914
           },
           "train_near_bi_share": 0.4,
-          "train_target_cells": 1457
+          "train_target_cells": 1457,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1457,
+            "valid_train_target_cells": 1457,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 32,
+            "high_count_b": 56,
+            "joint_high_count": 26,
+            "expected_joint_count": 1.308488933686503,
+            "min_high_count_a": 2,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 2,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "Claude-3-Opus-20240229 (zero shot with freeze values)",
@@ -5204,7 +7128,28 @@
         "high_loss_lift": -23.929695756098862,
         "total_variation": 0.0456224832214765
       },
-      "train_near_bi_share": 0.3
+      "train_near_bi_share": 0.3,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 2980,
+        "valid_train_target_cells": 2980,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 60,
+        "high_count_b": 120,
+        "joint_high_count": 50,
+        "expected_joint_count": 2.5556391911001892,
+        "min_high_count_a": 1,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -5296,11 +7241,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.521321874648465,
             "adjusted_pog": 0.00369353302756654,
-            "high_loss_lift": -38.74712933523371,
+            "high_loss_lift": null,
             "total_variation": 0.028352138783269958
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 2104
+          "train_target_cells": 2104,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 2104,
+            "valid_train_target_cells": 1303,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 54,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.1693605135667954,
+            "min_high_count_a": 0,
+            "min_high_count_b": 4,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -5352,11 +7320,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5578351255778766,
             "adjusted_pog": 0.003403641267806265,
-            "high_loss_lift": -40.470554926387315,
+            "high_loss_lift": null,
             "total_variation": 0.025969658119658116
           },
           "train_near_bi_share": 0.9,
-          "train_target_cells": 2106
+          "train_target_cells": 2106,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 2106,
+            "valid_train_target_cells": 883,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 6
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 46,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.09979350544564353,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
@@ -5381,10 +7372,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.5395871730943892,
         "adjusted_pog": 0.003548518289786222,
-        "high_loss_lift": -39.443279745567025,
+        "high_loss_lift": null,
         "total_variation": 0.027160332541567696
       },
-      "train_near_bi_share": 0.9
+      "train_near_bi_share": 0.9,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 4210,
+        "valid_train_target_cells": 2186,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 10
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 100,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.26915401901243896,
+        "min_high_count_a": 0,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -5476,11 +7490,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5019267285203997,
             "adjusted_pog": 0.002672523240800516,
-            "high_loss_lift": -45.604318032122414,
+            "high_loss_lift": null,
             "total_variation": 0.01880245319561007
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 3098
+          "train_target_cells": 3098,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 7,
+            "undefined_fold_count": 3,
+            "train_target_cells": 3098,
+            "valid_train_target_cells": 2193,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2,
+              "both_marginal_high_loss_rates_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 18,
+            "high_count_b": 57,
+            "joint_high_count": 18,
+            "expected_joint_count": 0.42149825250127826,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 3
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -5532,11 +7570,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.5063429848056198,
             "adjusted_pog": 0.0032921891311266708,
-            "high_loss_lift": -63.883198146882364,
+            "high_loss_lift": null,
             "total_variation": 0.01899267982176957
           },
           "train_near_bi_share": 0.8,
-          "train_target_cells": 3142
+          "train_target_cells": 3142,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 9,
+            "undefined_fold_count": 1,
+            "train_target_cells": 3142,
+            "valid_train_target_cells": 2850,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 22,
+            "high_count_b": 53,
+            "joint_high_count": 22,
+            "expected_joint_count": 0.46216974248051723,
+            "min_high_count_a": 0,
+            "min_high_count_b": 1,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 1
+          }
         }
       },
       "exact_configuration": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
@@ -5561,10 +7622,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.5041504267973487,
         "adjusted_pog": 0.0029845409054487172,
-        "high_loss_lift": -55.93444064308134,
+        "high_loss_lift": null,
         "total_variation": 0.01889823717948718
       },
-      "train_near_bi_share": 0.8
+      "train_near_bi_share": 0.8,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 16,
+        "undefined_fold_count": 4,
+        "train_target_cells": 6240,
+        "valid_train_target_cells": 5043,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 3,
+          "both_marginal_high_loss_rates_zero": 1
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 40,
+        "high_count_b": 110,
+        "joint_high_count": 40,
+        "expected_joint_count": 0.8836679949817955,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 4
+      }
     },
     {
       "aggregation": {
@@ -5656,11 +7741,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.4144109032029536,
             "adjusted_pog": 0.004718327942332892,
-            "high_loss_lift": -52.45711252653928,
+            "high_loss_lift": null,
             "total_variation": 0.04980235910878113
           },
           "train_near_bi_share": 0.5,
-          "train_target_cells": 1526
+          "train_target_cells": 1526,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1526,
+            "valid_train_target_cells": 942,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 3,
+              "model_a_marginal_high_loss_rate_zero": 1
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 6,
+            "high_count_b": 24,
+            "joint_high_count": 6,
+            "expected_joint_count": 0.12486222169215119,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -5712,11 +7821,35 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.3776130404608766,
             "adjusted_pog": 0.004575316795212767,
-            "high_loss_lift": -57.26942675159235,
+            "high_loss_lift": null,
             "total_variation": 0.050598803191489364
           },
           "train_near_bi_share": 0.5,
-          "train_target_cells": 1504
+          "train_target_cells": 1504,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 4,
+            "undefined_fold_count": 6,
+            "train_target_cells": 1504,
+            "valid_train_target_cells": 628,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 2,
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 4,
+            "high_count_b": 26,
+            "joint_high_count": 4,
+            "expected_joint_count": 0.10015627941782788,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "DeepSeek-V3 (scratchpad with freeze values)",
@@ -5741,10 +7874,34 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.3961455614326289,
         "adjusted_pog": 0.004647341551155114,
-        "high_loss_lift": -54.38203821656051,
+        "high_loss_lift": null,
         "total_variation": 0.05019768976897689
       },
-      "train_near_bi_share": 0.5
+      "train_near_bi_share": 0.5,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 10,
+        "undefined_fold_count": 10,
+        "train_target_cells": 3030,
+        "valid_train_target_cells": 1570,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "both_marginal_high_loss_rates_zero": 5,
+          "model_a_marginal_high_loss_rate_zero": 5
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 10,
+        "high_count_b": 50,
+        "joint_high_count": 10,
+        "expected_joint_count": 0.22501850110997906,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -5840,7 +7997,28 @@
             "total_variation": 0.06907920792079209
           },
           "train_near_bi_share": 0.1,
-          "train_target_cells": 2424
+          "train_target_cells": 2424,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 2424,
+            "valid_train_target_cells": 2424,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 34,
+            "high_count_b": 117,
+            "joint_high_count": 25,
+            "expected_joint_count": 1.549973568763284,
+            "min_high_count_a": 1,
+            "min_high_count_b": 5,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -5896,7 +8074,28 @@
             "total_variation": 0.06737193575655115
           },
           "train_near_bi_share": 0.3,
-          "train_target_cells": 2366
+          "train_target_cells": 2366,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 2366,
+            "valid_train_target_cells": 2366,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 36,
+            "high_count_b": 113,
+            "joint_high_count": 25,
+            "expected_joint_count": 1.6238706125805145,
+            "min_high_count_a": 2,
+            "min_high_count_b": 4,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "GPT-4o-2024-05-13 (scratchpad with freeze values)",
@@ -5924,7 +8123,28 @@
         "high_loss_lift": -16.10450914359011,
         "total_variation": 0.06823590814196243
       },
-      "train_near_bi_share": 0.2
+      "train_near_bi_share": 0.2,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 4790,
+        "valid_train_target_cells": 4790,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 70,
+        "high_count_b": 230,
+        "joint_high_count": 50,
+        "expected_joint_count": 3.1738441813437985,
+        "min_high_count_a": 1,
+        "min_high_count_b": 4,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -6020,7 +8240,31 @@
             "total_variation": 0.09482222222222221
           },
           "train_near_bi_share": 0.1,
-          "train_target_cells": 585
+          "train_target_cells": 585,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 585,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 7,
+              "both_marginal_high_loss_rates_zero": 3
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 15,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -6076,7 +8320,31 @@
             "total_variation": 0.10394876033057852
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 605
+          "train_target_cells": 605,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 0,
+            "undefined_fold_count": 10,
+            "train_target_cells": 605,
+            "valid_train_target_cells": 0,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "both_marginal_high_loss_rates_zero": 1,
+              "model_a_marginal_high_loss_rate_zero": 9
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 0,
+            "high_count_b": 25,
+            "joint_high_count": 0,
+            "expected_joint_count": 0.0,
+            "min_high_count_a": 0,
+            "min_high_count_b": 0,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 10
+          }
         }
       },
       "exact_configuration": "Qwen2.5-72B-Instruct-Turbo (scratchpad with freeze values)",
@@ -6104,7 +8372,31 @@
         "high_loss_lift": null,
         "total_variation": 0.09946218487394957
       },
-      "train_near_bi_share": 0.05
+      "train_near_bi_share": 0.05,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 0,
+        "undefined_fold_count": 20,
+        "train_target_cells": 1190,
+        "valid_train_target_cells": 0,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 16,
+          "both_marginal_high_loss_rates_zero": 4
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 0,
+        "high_count_b": 40,
+        "joint_high_count": 0,
+        "expected_joint_count": 0.0,
+        "min_high_count_a": 0,
+        "min_high_count_b": 0,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 20
+      }
     },
     {
       "aggregation": {
@@ -6196,11 +8488,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.13023253226917975,
             "adjusted_pog": 0.0026882462705801113,
-            "high_loss_lift": -28.878448918717375,
+            "high_loss_lift": null,
             "total_variation": 0.03701880870165746
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1448
+          "train_target_cells": 1448,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1448,
+            "valid_train_target_cells": 894,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 48,
+            "joint_high_count": 8,
+            "expected_joint_count": 0.2769709062391989,
+            "min_high_count_a": 0,
+            "min_high_count_b": 2,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -6252,11 +8567,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.2925626498907364,
             "adjusted_pog": 0.004401106680307264,
-            "high_loss_lift": -35.37888652393473,
+            "high_loss_lift": null,
             "total_variation": 0.03642954958100559
           },
           "train_near_bi_share": 0.2,
-          "train_target_cells": 1432
+          "train_target_cells": 1432,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1432,
+            "valid_train_target_cells": 1141,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 42,
+            "joint_high_count": 12,
+            "expected_joint_count": 0.3622482161744186,
+            "min_high_count_a": 0,
+            "min_high_count_b": 3,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
@@ -6281,10 +8619,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.21094667408656487,
         "adjusted_pog": 0.0035399185298611124,
-        "high_loss_lift": -32.52316602316602,
+        "high_loss_lift": null,
         "total_variation": 0.03672581597222223
       },
-      "train_near_bi_share": 0.1
+      "train_near_bi_share": 0.1,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 2880,
+        "valid_train_target_cells": 2035,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 90,
+        "joint_high_count": 20,
+        "expected_joint_count": 0.6392191224136176,
+        "min_high_count_a": 0,
+        "min_high_count_b": 2,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -6380,7 +8741,28 @@
             "total_variation": 0.09079809586342745
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1523
+          "train_target_cells": 1523,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1523,
+            "valid_train_target_cells": 1523,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 28,
+            "high_count_b": 83,
+            "joint_high_count": 14,
+            "expected_joint_count": 1.5246931918693882,
+            "min_high_count_a": 1,
+            "min_high_count_b": 6,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -6436,7 +8818,28 @@
             "total_variation": 0.09089533287577213
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1457
+          "train_target_cells": 1457,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1457,
+            "valid_train_target_cells": 1457,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 32,
+            "high_count_b": 77,
+            "joint_high_count": 16,
+            "expected_joint_count": 1.6939941649890666,
+            "min_high_count_a": 2,
+            "min_high_count_b": 5,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         }
       },
       "exact_configuration": "GPT-4-Turbo-2024-04-09 (scratchpad with freeze values)",
@@ -6464,7 +8867,28 @@
         "high_loss_lift": -9.308812742921383,
         "total_variation": 0.09084563758389262
       },
-      "train_near_bi_share": 0.0
+      "train_near_bi_share": 0.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 2980,
+        "valid_train_target_cells": 2980,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 60,
+        "high_count_b": 160,
+        "joint_high_count": 30,
+        "expected_joint_count": 3.218687356858455,
+        "min_high_count_a": 1,
+        "min_high_count_b": 5,
+        "min_joint_high_count": 1,
+        "zero_joint_fold_count": 0
+      }
     },
     {
       "aggregation": {
@@ -6560,7 +8984,28 @@
             "total_variation": 0.1343325596816976
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1508
+          "train_target_cells": 1508,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1508,
+            "valid_train_target_cells": 1508,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 28,
+            "high_count_b": 157,
+            "joint_high_count": 21,
+            "expected_joint_count": 2.9583212982489604,
+            "min_high_count_a": 1,
+            "min_high_count_b": 12,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -6616,7 +9061,28 @@
             "total_variation": 0.1295849514563107
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1442
+          "train_target_cells": 1442,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1442,
+            "valid_train_target_cells": 1442,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 32,
+            "high_count_b": 123,
+            "joint_high_count": 19,
+            "expected_joint_count": 2.782438623562112,
+            "min_high_count_a": 2,
+            "min_high_count_b": 7,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 1
+          }
         }
       },
       "exact_configuration": "Claude-3-Opus-20240229 (scratchpad with freeze values)",
@@ -6644,7 +9110,28 @@
         "high_loss_lift": -5.86753507723568,
         "total_variation": 0.13201186440677967
       },
-      "train_near_bi_share": 0.0
+      "train_near_bi_share": 0.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 2950,
+        "valid_train_target_cells": 2950,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 60,
+        "high_count_b": 280,
+        "joint_high_count": 40,
+        "expected_joint_count": 5.7407599218110725,
+        "min_high_count_a": 1,
+        "min_high_count_b": 7,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 1
+      }
     },
     {
       "aggregation": {
@@ -6740,7 +9227,28 @@
             "total_variation": 0.21420223243598163
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1523
+          "train_target_cells": 1523,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1523,
+            "valid_train_target_cells": 1523,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 28,
+            "high_count_b": 142,
+            "joint_high_count": 6,
+            "expected_joint_count": 2.564008328493803,
+            "min_high_count_a": 1,
+            "min_high_count_b": 9,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -6796,7 +9304,28 @@
             "total_variation": 0.21698009608785174
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1457
+          "train_target_cells": 1457,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1457,
+            "valid_train_target_cells": 1457,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 32,
+            "high_count_b": 148,
+            "joint_high_count": 4,
+            "expected_joint_count": 3.210139536691044,
+            "min_high_count_a": 2,
+            "min_high_count_b": 10,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 6
+          }
         }
       },
       "exact_configuration": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
@@ -6824,7 +9353,28 @@
         "high_loss_lift": -0.9352018095729268,
         "total_variation": 0.21556040268456375
       },
-      "train_near_bi_share": 0.0
+      "train_near_bi_share": 0.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 2980,
+        "valid_train_target_cells": 2980,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 60,
+        "high_count_b": 290,
+        "joint_high_count": 10,
+        "expected_joint_count": 5.774147865184847,
+        "min_high_count_a": 1,
+        "min_high_count_b": 9,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 10
+      }
     },
     {
       "aggregation": {
@@ -6916,11 +9466,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.14108491516319654,
             "adjusted_pog": 0.004210346514352667,
-            "high_loss_lift": -6.304955367886228,
+            "high_loss_lift": null,
             "total_variation": 0.1487448740480375
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1707
+          "train_target_cells": 1707,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 6,
+            "undefined_fold_count": 4,
+            "train_target_cells": 1707,
+            "valid_train_target_cells": 1042,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 4
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 8,
+            "high_count_b": 242,
+            "joint_high_count": 8,
+            "expected_joint_count": 1.162337343732796,
+            "min_high_count_a": 0,
+            "min_high_count_b": 18,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 4
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -6972,11 +9545,34 @@
           "train_diversity": {
             "adjusted_loss_corr": -0.19448148955036582,
             "adjusted_pog": 0.004831377568995892,
-            "high_loss_lift": -6.696860877705272,
+            "high_loss_lift": null,
             "total_variation": 0.1374119201409278
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1703
+          "train_target_cells": 1703,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 8,
+            "undefined_fold_count": 2,
+            "train_target_cells": 1703,
+            "valid_train_target_cells": 1356,
+            "reason": "one_or_more_included_fold_lifts_undefined",
+            "reason_counts": {
+              "model_a_marginal_high_loss_rate_zero": 2
+            },
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 12,
+            "high_count_b": 218,
+            "joint_high_count": 12,
+            "expected_joint_count": 1.5638145873093345,
+            "min_high_count_a": 0,
+            "min_high_count_b": 15,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 2
+          }
         }
       },
       "exact_configuration": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
@@ -7001,10 +9597,33 @@
       "train_diversity": {
         "adjusted_loss_corr": -0.1677518847178444,
         "adjusted_pog": 0.004520497800586512,
-        "high_loss_lift": -6.5265666570082566,
+        "high_loss_lift": null,
         "total_variation": 0.1430850439882698
       },
-      "train_near_bi_share": 0.0
+      "train_near_bi_share": 0.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 14,
+        "undefined_fold_count": 6,
+        "train_target_cells": 3410,
+        "valid_train_target_cells": 2398,
+        "reason": "one_or_more_included_fold_lifts_undefined",
+        "reason_counts": {
+          "model_a_marginal_high_loss_rate_zero": 6
+        },
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 20,
+        "high_count_b": 460,
+        "joint_high_count": 20,
+        "expected_joint_count": 2.7261519310421303,
+        "min_high_count_a": 0,
+        "min_high_count_b": 15,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 6
+      }
     },
     {
       "aggregation": {
@@ -7100,7 +9719,28 @@
             "total_variation": 0.3581165462902167
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1523
+          "train_target_cells": 1523,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1523,
+            "valid_train_target_cells": 1523,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 28,
+            "high_count_b": 745,
+            "joint_high_count": 21,
+            "expected_joint_count": 13.532390604278937,
+            "min_high_count_a": 1,
+            "min_high_count_b": 57,
+            "min_joint_high_count": 1,
+            "zero_joint_fold_count": 0
+          }
         },
         "b_to_a": {
           "aggregation": {
@@ -7156,7 +9796,28 @@
             "total_variation": 0.3543023335621139
           },
           "train_near_bi_share": 0.0,
-          "train_target_cells": 1457
+          "train_target_cells": 1457,
+          "high_loss_diagnostics": {
+            "threshold": 0.25,
+            "aggregation": "train-target-weighted mean of fold lifts",
+            "included_fold_count": 10,
+            "defined_fold_count": 10,
+            "undefined_fold_count": 0,
+            "train_target_cells": 1457,
+            "valid_train_target_cells": 1457,
+            "reason": "",
+            "reason_counts": {},
+            "count_diagnostics_available": true,
+            "counts_are_repeated_training_exposures": true,
+            "high_count_a": 32,
+            "high_count_b": 665,
+            "joint_high_count": 19,
+            "expected_joint_count": 14.453765085681553,
+            "min_high_count_a": 2,
+            "min_high_count_b": 57,
+            "min_joint_high_count": 0,
+            "zero_joint_fold_count": 1
+          }
         }
       },
       "exact_configuration": "Claude-3-Haiku-20240307 (scratchpad with freeze values)",
@@ -7184,7 +9845,28 @@
         "high_loss_lift": -0.3858264313409089,
         "total_variation": 0.356251677852349
       },
-      "train_near_bi_share": 0.0
+      "train_near_bi_share": 0.0,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "aggregation": "train-target-weighted mean of fold lifts",
+        "included_fold_count": 20,
+        "defined_fold_count": 20,
+        "undefined_fold_count": 0,
+        "train_target_cells": 2980,
+        "valid_train_target_cells": 2980,
+        "reason": "",
+        "reason_counts": {},
+        "count_diagnostics_available": true,
+        "counts_are_repeated_training_exposures": true,
+        "high_count_a": 60,
+        "high_count_b": 1410,
+        "joint_high_count": 40,
+        "expected_joint_count": 27.98615568996049,
+        "min_high_count_a": 1,
+        "min_high_count_b": 57,
+        "min_joint_high_count": 0,
+        "zero_joint_fold_count": 1
+      }
     }
   ],
   "provenance": {

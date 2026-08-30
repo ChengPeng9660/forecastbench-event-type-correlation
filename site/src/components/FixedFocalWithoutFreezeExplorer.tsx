@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { useHistoryRestore } from "../lib/useHistoryRestore";
+import { highLossAssociationReason, highLossAxis, isHighLossMetric } from "../lib/highLoss";
+import { HighLossNotice } from "./HighLossNotice";
 import type {
   FixedFocalAggregationView,
   FixedFocalWithoutFreezeData,
@@ -149,18 +151,21 @@ export function FixedFocalWithoutFreezeExplorer({ data }: { data: FixedFocalWith
   );
   const xs = points.map((point) => fixedFocalPointView(point, foldView).train_diversity[metric] as number);
   const ys = points.map((point) => fixedFocalOutcomeValue(point, foldView, method, outcome));
-  const pearson = pearsonCorrelation(xs, ys);
-  const spearman = spearmanCorrelation(xs, ys);
+  const associationReason = isHighLossMetric(metric) ? highLossAssociationReason(xs, ys) : null;
+  const pearson = associationReason ? null : pearsonCorrelation(xs, ys);
+  const spearman = associationReason ? null : spearmanCorrelation(xs, ys);
   const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : finiteExtent(xs);
   const yDomain = finiteExtent(ys, outcome === "gain_vs_base");
-  const xTicks = linearTicks(xDomain);
+  const lossAxis = isHighLossMetric(metric) ? highLossAxis(xs, [MARGIN.left, WIDTH - MARGIN.right]) : null;
+  const xPosition = lossAxis?.position ?? ((value: number) => linearPosition(value, xDomain, [MARGIN.left, WIDTH - MARGIN.right]));
+  const xTicks = lossAxis?.ticks ?? linearTicks(xDomain);
   const yTicks = linearTicks(yDomain);
   const selected = points.find((point) => point.partner_model === selectedPartner) ?? points[0];
   const selectedView = selected ? fixedFocalPointView(selected, foldView) : null;
   const selectedScore = selectedView?.aggregation[method];
   const missing = sampled.filter((point) => {
     const view = fixedFocalPointView(point, foldView);
-    return view.train_diversity[metric] === null;
+    return !Number.isFinite(view.train_diversity[metric]);
   }).length;
 
   useEffect(() => {
@@ -238,17 +243,22 @@ export function FixedFocalWithoutFreezeExplorer({ data }: { data: FixedFocalWith
           <div><span>WEIGHTED GAIN</span><strong className={(activeSummary?.gainVsBase ?? 0) >= 0 ? "positive" : "negative"}>{signedPercent(activeSummary?.gainVsBase ?? null)}</strong><small>vs selected fixed base</small></div>
         </div>
 
+        <HighLossNotice metric={metric} values={xs} missingCount={missing} totalCount={sampled.length} associationReason={associationReason} diagnostics={sampled.flatMap((point) => {
+          const diagnostics = fixedFocalPointView(point, foldView).high_loss_diagnostics;
+          return diagnostics ? [diagnostics] : [];
+        })} />
+
         <div className="freeze-diversity-layout">
           <div className="freeze-diversity-chart-wrap">
-            {points.length >= 2 ? <svg className="freeze-diversity-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${data.evaluation.diversity_metrics[metric].label} versus ${outcome === "gain_vs_base" ? "fraction gain versus fixed focal base" : "aggregation Brier Index"}`}>
+            {points.length >= 1 ? <svg className="freeze-diversity-chart" data-x-scale={lossAxis ? "signed-log" : "linear"} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${data.evaluation.diversity_metrics[metric].label} versus ${outcome === "gain_vs_base" ? "fraction gain versus fixed focal base" : "aggregation Brier Index"}`}>
               {yTicks.map((tick) => { const y = linearPosition(tick, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]); return <g key={`y-${tick}`}><line className="freeze-diversity-grid" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={y} y2={y} /><text className="freeze-diversity-tick" x={MARGIN.left - 12} y={y + 4} textAnchor="end">{outcome === "gain_vs_base" ? signedPercent(tick) : tick.toFixed(1)}</text></g>; })}
-              {xTicks.map((tick) => { const x = linearPosition(tick, xDomain, [MARGIN.left, WIDTH - MARGIN.right]); return <g key={`x-${tick}`}><line className="freeze-diversity-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="freeze-diversity-tick" x={x} y={HEIGHT - MARGIN.bottom + 22} textAnchor="middle">{scatterMetricLabel(metric, tick)}</text></g>; })}
+              {xTicks.map((tick) => { const x = xPosition(tick); return <g key={`x-${tick}`}><line className="freeze-diversity-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="freeze-diversity-tick" x={x} y={HEIGHT - MARGIN.bottom + 22} textAnchor="middle">{scatterMetricLabel(metric, tick)}</text></g>; })}
               {outcome === "gain_vs_base" && yDomain[0] <= 0 && yDomain[1] >= 0 && <line className="freeze-diversity-zero-line" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={linearPosition(0, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} y2={linearPosition(0, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} />}
               {points.map((point) => {
                 const view = fixedFocalPointView(point, foldView);
                 const xValue = view.train_diversity[metric] as number;
                 const yValue = fixedFocalOutcomeValue(point, foldView, method, outcome);
-                const x = linearPosition(xValue, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+                const x = xPosition(xValue);
                 const y = linearPosition(yValue, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
                 const color = FREEZE_PROVIDER_COLORS[point.partner_provider] ?? "#665f6d";
                 const active = selected?.partner_model === point.partner_model;

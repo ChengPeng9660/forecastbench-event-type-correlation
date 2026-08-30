@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { useHistoryRestore } from "../lib/useHistoryRestore";
+import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson } from "../lib/highLoss";
+import { HighLossNotice } from "./HighLossNotice";
 import type {
   AggregationMethodId,
   MetricId,
@@ -80,13 +82,7 @@ function mean(values: number[]) {
 }
 
 function pearson(x: number[], y: number[]) {
-  if (x.length < 2 || x.length !== y.length) return null;
-  const xMean = mean(x);
-  const yMean = mean(y);
-  const numerator = x.reduce((total, value, index) => total + (value - xMean) * (y[index] - yMean), 0);
-  const xScale = Math.sqrt(x.reduce((total, value) => total + (value - xMean) ** 2, 0));
-  const yScale = Math.sqrt(y.reduce((total, value) => total + (value - yMean) ** 2, 0));
-  return xScale && yScale ? numerator / (xScale * yScale) : null;
+  return rawPearson(x, y);
 }
 
 function extent(values: number[], includeZero = false): [number, number] {
@@ -265,7 +261,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
   ).map((item) => item.id)), [focalPoints]);
   const points = useMemo(() => focalPoints.filter((point) => matchesGroup(point, group)), [focalPoints, group]);
   const definedPoints = useMemo(() => points.filter((point) =>
-    point.metrics[metric].complementarity !== null && Number.isFinite(point.brier_index[method])
+    Number.isFinite(point.metrics[metric].complementarity) && Number.isFinite(point.brier_index[method])
   ), [method, metric, points]);
   // Marker orientation follows the selected focal model, not canonical pair order.
   const pairFamilies = new Map<PairGroupId, readonly [ModelFamily, ModelFamily]>(
@@ -316,9 +312,15 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
   const yDomain = extent(yValues.length ? yValues : [0]);
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
   const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
-  const xScale = (value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth;
+  const lossAxis = isHighLossMetric(metric) ? highLossAxis(xValues, [MARGIN.left, WIDTH - MARGIN.right]) : null;
+  const xScale = lossAxis?.position ?? ((value: number) => MARGIN.left + ((value - xDomain[0]) / (xDomain[1] - xDomain[0])) * plotWidth);
   const yScale = (value: number) => MARGIN.top + (1 - (value - yDomain[0]) / (yDomain[1] - yDomain[0])) * plotHeight;
-  const correlation = pearson(xValues, yValues);
+  const maximumDirections = data.cross_fit.split.repetitions * (foldView === "combined" ? 2 : 1);
+  const retainedDirections = definedPoints.every((point) => point.cross_fit !== undefined)
+    ? definedPoints.map((point) => point.cross_fit!.included_fold_count) : undefined;
+  const associationReason = isHighLossMetric(metric)
+    ? highLossAssociationReason(xValues, yValues, retainedDirections, maximumDirections) : null;
+  const correlation = associationReason ? null : pearson(xValues, yValues);
   const maxOverlap = Math.max(1, ...definedPoints.map((point) => point.n_overlap));
   const metricMeta = METRICS.find((item) => item.id === metric) ?? METRICS[0];
   const groupMeta = GROUPS.find((item) => item.id === group) ?? GROUPS[0];
@@ -405,12 +407,14 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
         </div>
       </div>
 
+      <HighLossNotice metric={metric} values={xValues} missingCount={points.filter((point) => !Number.isFinite(point.metrics[metric].complementarity)).length} totalCount={points.length} retainedDirections={retainedDirections} maximumDirections={maximumDirections} associationReason={associationReason} diagnostics={points.flatMap((point) => point.high_loss_diagnostics ? [point.high_loss_diagnostics] : [])} />
+
       <div className="pair-aggregation-chart-wrap">
         <div className="pair-group-legend">
           {(Object.keys(FAMILY_COLORS) as ModelFamily[]).map((family) => <span key={family}><i style={{ background: FAMILY_COLORS[family] }} /> {family}</span>)}
           <small>Left = selected model · right = partner · area = test support</small>
         </div>
-        {definedPoints.length ? <svg className="pair-aggregation-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} Brier Index for ${activeSampleLabel}, ${foldViewMeta.label}`}>
+        {definedPoints.length ? <svg className="pair-aggregation-chart" data-x-scale={lossAxis ? "signed-log" : "linear"} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta.label} versus ${data.methods[method].label} Brier Index for ${activeSampleLabel}, ${foldViewMeta.label}`}>
           <defs>
             {[...pairFamilies].map(([pairGroup, families]) => <linearGradient id={`pair-fill-${pairGroup}`} key={pairGroup} x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="50%" stopColor={FAMILY_COLORS[families[0]]} />
@@ -418,7 +422,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
             </linearGradient>)}
           </defs>
           {ticks(yDomain).map((tick) => <g key={`y-${tick}`}><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={yScale(tick)} y2={yScale(tick)} className="gain-grid-line" /><text x={MARGIN.left - 14} y={yScale(tick) + 4} textAnchor="end" className="gain-axis-text">{tick.toFixed(2)}</text></g>)}
-          {ticks(xDomain).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
+          {(lossAxis?.ticks ?? ticks(xDomain)).map((tick) => <g key={`x-${tick}`}><line x1={xScale(tick)} x2={xScale(tick)} y1={MARGIN.top} y2={MARGIN.top + plotHeight} className="gain-grid-line vertical" /><text x={xScale(tick)} y={MARGIN.top + plotHeight + 27} textAnchor="middle" className="gain-axis-text">{metricValue(tick, metric)}</text></g>)}
           {definedPoints.map((point) => {
             const key = `${point.model_a}::${point.model_b}`;
             const aggregationBi = point.brier_index[method];
@@ -433,7 +437,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, 
           })}
           <text x={MARGIN.left + plotWidth / 2} y={HEIGHT - 20} textAnchor="middle" className="gain-axis-title">{metricMeta.axis} · Lower diversity → Higher diversity</text>
           <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">Aggregation Brier Index (higher is better)</text>
-        </svg> : <div className="aggregation-empty-state"><strong>No eligible partners in this sample.</strong><span>Choose All eligible or another pair group.</span></div>}
+        </svg> : <div className="aggregation-empty-state"><strong>{points.length ? "No defined chart coordinates for the selected partners." : "No eligible partners in this sample."}</strong><span>{points.length ? "Their scores remain available; choose another diversity metric or outcome." : "Choose All eligible or another pair group."}</span></div>}
       </div>
 
       <div className="aggregation-overview">

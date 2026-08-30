@@ -30,6 +30,7 @@ from statistics import pstdev
 from typing import Any, Iterable, Mapping
 
 from analysis.closed_form_aggregation import single_brier, write_csv
+from analysis.high_loss_diagnostics import fold_diagnostics, high_loss_details
 from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 from analysis.market_diversity_performance import (
     adjusted_brier,
@@ -40,6 +41,7 @@ from analysis.market_diversity_performance import (
 )
 from analysis.metrics import brier_index, pearson_correlation
 from analysis.pair_aggregation import (
+    adjusted_loss,
     dependence_support,
     event_fold,
     score_aggregation_support,
@@ -149,6 +151,13 @@ def _metadata(name: str, source: Mapping[str, Mapping[str, str]]) -> dict[str, s
     }
 
 
+def _high_loss_details(first, second, keys):
+    return high_loss_details(
+        [adjusted_loss(first[key], float(first[key]["prediction"])) for key in keys],
+        [adjusted_loss(second[key], float(second[key]["prediction"])) for key in keys],
+    )
+
+
 def _market_bi(
     market_panel: Mapping[tuple[str, ...], Mapping[str, str]],
     keys: list[tuple[str, ...]],
@@ -199,6 +208,7 @@ def fixed_block(
                     "date_min": min(key[0][:10] for key in keys),
                     "date_max": max(key[0][:10] for key in keys),
                     "diversity": diversity,
+                    "high_loss_diagnostics": _high_loss_details(panel[first], panel[second], keys),
                     "aggregation_bi": method_bi,
                     "market_bi": pair_market_bi,
                     "aggregation_minus_market_bi": method_bi - pair_market_bi,
@@ -349,6 +359,7 @@ def crossfit_block(
                             "n_train": len(train_keys),
                             "n_test": len(test_keys),
                             "train_diversity": diversity,
+                            "high_loss_diagnostics": _high_loss_details(panel[first], panel[second], train_keys),
                             "test_aggregation_bi": method_bi,
                             "test_market_bi": pair_market_bi,
                             "test_aggregation_minus_market_bi": method_bi - pair_market_bi,
@@ -407,6 +418,15 @@ def crossfit_block(
             )
             for metric in METRICS
         }
+        high_loss_diagnostics = fold_diagnostics(
+            [row["train_diversity"]["high_loss_diversity"] for row in records],
+            [row["n_train"] for row in records],
+            details=[row.get("high_loss_diagnostics") for row in records],
+            reasons=[row.get("high_loss_diagnostics", {}).get("reason", "") for row in records],
+            aggregation="equal-fold mean of fold lifts",
+        )
+        if high_loss_diagnostics["undefined_fold_count"]:
+            diversity["high_loss_diversity"] = None
         rows.append(
             {
                 "pair_id": records[0]["pair_id"],
@@ -421,6 +441,7 @@ def crossfit_block(
                 "mean_n_train": _mean(row["n_train"] for row in records),
                 "mean_n_test": _mean(row["n_test"] for row in records),
                 "mean_train_diversity": diversity,
+                "high_loss_diagnostics": high_loss_diagnostics,
                 "aggregation_bi": aggregation_mean,
                 "aggregation_bi_sd": pstdev(aggregation_values),
                 "market_bi": market_mean,
@@ -460,6 +481,8 @@ def _csv_rows(rows: list[dict[str, Any]], diversity_field: str) -> list[dict[str
     for row in rows:
         diversity = row[diversity_field]
         flattened = {key: value for key, value in row.items() if key != diversity_field}
+        if "high_loss_diagnostics" in flattened:
+            flattened["high_loss_diagnostics"] = json.dumps(flattened["high_loss_diagnostics"], separators=(",", ":"))
         flattened.update({f"diversity_{metric}": diversity.get(metric) for metric in METRICS})
         output.append(flattened)
     return output

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
+import { HighLossRawNotice } from "./HighLossNotice";
 import { colorForScore, textColorForScore } from "../lib/metrics";
 import { crossTypeAssetUrl } from "../lib/data";
 import type { CrossTypeCell, CrossTypeData, CrossTypeMetricId } from "../types/data";
@@ -133,6 +134,7 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
         </div>
       </div>
 
+      <HighLossRawNotice metric={selectedMetricId} />
       <div className="cross-type-layout">
         <div>
           <div className="cross-type-legend"><span>Rank reversal</span><i /><span>Stable ordering</span><small>Spearman −1 to +1</small></div>
@@ -207,6 +209,7 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
         </aside>}
       </div>
       <ResearchDetails>
+        {selectedMetricId === "high_loss_lift" && <p>These cells show Spearman correlations of raw lift rankings, not lift itself. Their −1 to +1 color scale is unchanged. Sparse high-loss counts and tied zero-joint values can limit how informative the underlying rankings are.</p>}
         <p>Color encodes Spearman rank stability; insufficient cells are never colored or interpreted. These are descriptive comparisons across event types, not out-of-sample predictions.</p>
         <p>Top/top and directional statistics use the manifest quartile ({Math.round(data.manifest.thresholds.quartile * 100)}%). Headline cells require at least {data.manifest.thresholds.headline_min_defined_pairs} common defined model pairs; reporting begins at {data.manifest.thresholds.reporting_min_defined_pairs}.</p>
       </ResearchDetails>

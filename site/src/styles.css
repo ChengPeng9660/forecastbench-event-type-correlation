@@ -1103,6 +1103,22 @@ footer a { color: var(--purple-deep); }
   footer { align-items: flex-start; flex-direction: column; justify-content: center; padding-top: 28px; padding-bottom: 28px; }
 }
 
+.high-loss-notice {
+  margin: 14px 0 20px;
+  padding: 12px 16px;
+  border-left: 3px solid #a36c05;
+  background: #fffbf1;
+  color: #43351e;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.high-loss-notice p { margin: 0; }
+.high-loss-notice p + p, .high-loss-notice details { margin-top: 6px; }
+.high-loss-notice summary { cursor: pointer; color: #714d07; font-weight: 600; }
+.high-loss-notice details[open] p { margin-top: 8px; }
+.high-loss-association-warning { font-weight: 600; }
+.configuration-pair-coverage-warning { color: #714d07; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

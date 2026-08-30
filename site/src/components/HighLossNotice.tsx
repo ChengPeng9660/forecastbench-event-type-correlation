@@ -15,13 +15,14 @@ export function HighLossNotice({ metric, values, missingCount = 0, totalCount, r
   if (!isHighLossMetric(metric)) return null;
   const zeroJoint = values.filter((value) => value === 1).length;
   const sparse = highLossSparseCount(diagnostics);
-  const countsAvailable = diagnostics.some((d) => d.high_count_a !== undefined && d.high_count_b !== undefined);
+  const countsAvailable = diagnostics.some((d) => (d.high_count_a !== undefined && d.high_count_b !== undefined)
+    || (d.min_high_count_a !== undefined && d.min_high_count_b !== undefined));
   const lowDirections = maximumDirections ? retainedDirections?.filter((n) => n < maximumDirections / 2).length ?? 0 : 0;
   return <div className="high-loss-notice" role="note" aria-label="High-loss metric diagnostics">
     <p><strong>High-loss diversity: signed-log spacing.</strong> Tick labels and values are raw 1 − lift; no values are clipped.
       {missingCount > 0 && <> <strong>{missingCount}{totalCount === undefined ? "" : ` / ${totalCount}`} candidates have an undefined high-loss coordinate and are not plotted.</strong></>}
       {lowDirections > 0 && <> {lowDirections} plotted pairs retain fewer than half of the attempted directions.</>}
-      {sparse > 0 && <> {sparse} pairs have fewer than 5 high-loss records on at least one side in an included sample.</>}
+      {sparse > 0 && <> {sparse} candidate pairs have fewer than 5 high-loss records on at least one side in an included sample.</>}
     </p>
     {associationReason && <p className="high-loss-association-warning">{associationReason}</p>}
     <details><summary>How to interpret this metric</summary>

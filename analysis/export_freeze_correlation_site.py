@@ -10,6 +10,7 @@ import math
 from pathlib import Path
 from typing import Any
 
+from analysis.high_loss_diagnostics import decode_diagnostics
 from analysis.closed_form_aggregation import aggregate_pairs
 from analysis.freeze_exposed_market_aggregation import add_model_reference_fields
 from analysis.pair_aggregation import family, sha256_file
@@ -134,6 +135,7 @@ def read_csv_rows(path: Path) -> list[dict[str, str]]:
 
 def directional_pair_indexes(
     fold_path: Path,
+    *, include_combined: bool = False,
 ) -> dict[str, dict[tuple[str, str], dict[str, Any]]]:
     string_fields = {
         "experiment",
@@ -152,6 +154,8 @@ def directional_pair_indexes(
         "freeze_exposure",
         "base_model_configuration",
         "partner_model_configuration",
+        "train_high_loss_lift_reason",
+        "train_high_loss_diagnostics",
     }
     integer_fields = {"repetition", "seed", "n_train", "n_test", "primary_configuration"}
     fold_rows: list[dict[str, Any]] = []
@@ -170,14 +174,26 @@ def directional_pair_indexes(
                 typed[field] = float(value)
         fold_rows.append(typed)
     output: dict[str, dict[tuple[str, str], dict[str, Any]]] = {}
-    for direction, train_fold in (("a_to_b", "A"), ("b_to_a", "B")):
-        selected = [row for row in fold_rows if row["train_fold"] == train_fold]
+    directions = [("a_to_b", "A"), ("b_to_a", "B")]
+    if include_combined:
+        directions.append(("combined", None))
+    for direction, train_fold in directions:
+        selected = [row for row in fold_rows if train_fold is None or row["train_fold"] == train_fold]
         aggregated = add_model_reference_fields(aggregate_pairs(selected))
         output[direction] = {
             (str(row["model_b"]), str(row["method"])): row
             for row in aggregated
         }
     return output
+
+
+def strict_high_loss_indexes(pair_index, fold_path):
+    """Preserve saved score fields; refresh only high-loss support from its folds."""
+    indexes = directional_pair_indexes(fold_path, include_combined=True)
+    for key, row in indexes.pop("combined").items():
+        pair_index[key]["train_high_loss_lift_complementarity"] = row["train_high_loss_lift_complementarity"]
+        pair_index[key]["high_loss_diagnostics"] = row["high_loss_diagnostics"]
+    return indexes
 
 
 def aggregation_scores(
@@ -208,6 +224,7 @@ def aggregation_scores(
             metric: optional_float(anchor[f"train_{metric}_complementarity"])
             for metric in DIVERSITY_METRICS
         },
+        "high_loss_diagnostics": decode_diagnostics(anchor.get("high_loss_diagnostics")),
         "train_bi_gap": float(anchor["train_bi_gap"]),
         "train_near_bi_share": float(anchor["train_near_bi_share"]),
         "near_bi": float(anchor["train_bi_gap"]) <= 2.0,
@@ -300,7 +317,7 @@ def build_payload(
         for row in pair_rows
     }
     resolved_fold_path = fold_path or pair_path.with_name("fold_method_results.csv.gz")
-    direction_indexes = directional_pair_indexes(resolved_fold_path)
+    direction_indexes = strict_high_loss_indexes(pair_index, resolved_fold_path)
 
     points: list[dict[str, Any]] = []
     for row in similarities:
@@ -351,6 +368,7 @@ def build_payload(
                     for metric in DIVERSITY_METRICS
                 },
                 "train_bi_gap": float(anchor["train_bi_gap"]),
+                "high_loss_diagnostics": decode_diagnostics(anchor.get("high_loss_diagnostics")),
                 "train_near_bi_share": float(anchor["train_near_bi_share"]),
                 "near_bi": float(anchor["train_bi_gap"]) <= 2.0,
                 "aggregation": aggregation,
@@ -545,7 +563,7 @@ def build_without_freeze_base_payload(
         (row["model_b"], row["method"]): row
         for row in pair_rows
     }
-    direction_indexes = directional_pair_indexes(fold_path)
+    direction_indexes = strict_high_loss_indexes(pair_index, fold_path)
     partner_names = sorted(
         {row["model_b"] for row in pair_rows if row["method"] == "anchor"},
         key=str.casefold,

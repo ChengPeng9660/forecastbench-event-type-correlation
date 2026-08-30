@@ -212,6 +212,7 @@ def build_payload(
                 "date_max": max(key[0][:10] for key in keys),
                 "prediction_pearson": prediction_r,
                 "diversity": metrics,
+                "high_loss_diagnostics": dependence["high_loss_diagnostics"],
                 "model": {
                     "raw_brier": raw_brier(panel[name], keys),
                     "adjusted_brier": model_adjusted,

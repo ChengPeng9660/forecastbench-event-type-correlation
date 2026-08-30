@@ -57,7 +57,17 @@
       "partner": "Claude-3-5-Sonnet-20240620",
       "partner_adjusted_brier": 0.15331747173102653,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.002500867117376064
+      "raw_gain_fraction": 0.002500867117376064,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 7380,
+        "reason": "",
+        "high_count_a": 799,
+        "high_count_b": 637,
+        "joint_high_count": 157,
+        "expected_joint_count": 68.96517615176151,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.139872925893962,
@@ -90,7 +100,17 @@
       "partner": "Claude-3-5-Sonnet-20241022",
       "partner_adjusted_brier": 0.15247536405603143,
       "partner_family": "Claude",
-      "raw_gain_fraction": -0.0010560389561312452
+      "raw_gain_fraction": -0.0010560389561312452,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 3726,
+        "reason": "",
+        "high_count_a": 419,
+        "high_count_b": 232,
+        "joint_high_count": 56,
+        "expected_joint_count": 26.089103596349972,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.1409096782397289,
@@ -123,7 +143,17 @@
       "partner": "Claude-3-7-Sonnet-20250219",
       "partner_adjusted_brier": 0.1564943158147139,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.014668981949747112
+      "raw_gain_fraction": 0.014668981949747112,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 7791,
+        "reason": "",
+        "high_count_a": 988,
+        "high_count_b": 692,
+        "joint_high_count": 193,
+        "expected_joint_count": 87.75458862790398,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.1417793356268029,
@@ -156,7 +186,17 @@
       "partner": "Claude-3-Haiku-20240307",
       "partner_adjusted_brier": 0.1951574619374528,
       "partner_family": "Claude",
-      "raw_gain_fraction": -0.04768783237568506
+      "raw_gain_fraction": -0.04768783237568506,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 2464,
+        "reason": "",
+        "high_count_a": 265,
+        "high_count_b": 701,
+        "joint_high_count": 62,
+        "expected_joint_count": 75.3916396103896,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13341592997050844,
@@ -189,7 +229,17 @@
       "partner": "Claude-3-Opus-20240229",
       "partner_adjusted_brier": 0.155152336707556,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.01411411009064154
+      "raw_gain_fraction": 0.01411411009064154,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 2464,
+        "reason": "",
+        "high_count_a": 265,
+        "high_count_b": 383,
+        "joint_high_count": 62,
+        "expected_joint_count": 41.1911525974026,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13779378978063403,
@@ -222,7 +272,17 @@
       "partner": "Claude-Haiku-4-5-20251001",
       "partner_adjusted_brier": 0.1369319953838653,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.0709579008706597
+      "raw_gain_fraction": 0.0709579008706597,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 4065,
+        "reason": "",
+        "high_count_a": 569,
+        "high_count_b": 506,
+        "joint_high_count": 207,
+        "expected_joint_count": 70.82755227552275,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13453850815278412,
@@ -255,7 +315,17 @@
       "partner": "Claude-Opus-4-1-20250805",
       "partner_adjusted_brier": 0.1430199751583081,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.06310744186352957
+      "raw_gain_fraction": 0.06310744186352957,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 6485,
+        "reason": "",
+        "high_count_a": 815,
+        "high_count_b": 774,
+        "joint_high_count": 230,
+        "expected_joint_count": 97.272166538165,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.1478912337628583,
@@ -288,7 +358,17 @@
       "partner": "Claude-Opus-4-20250514",
       "partner_adjusted_brier": 0.22180694792833322,
       "partner_family": "Claude",
-      "raw_gain_fraction": -0.08043705246734793
+      "raw_gain_fraction": -0.08043705246734793,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 1234,
+        "reason": "",
+        "high_count_a": 134,
+        "high_count_b": 382,
+        "joint_high_count": 32,
+        "expected_joint_count": 41.48136142625608,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.1417464506578177,
@@ -321,7 +401,17 @@
       "partner": "Claude-Opus-4-5-20251101",
       "partner_adjusted_brier": 0.14602649551768043,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.04663477832657875
+      "raw_gain_fraction": 0.04663477832657875,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 1628,
+        "reason": "",
+        "high_count_a": 218,
+        "high_count_b": 114,
+        "joint_high_count": 36,
+        "expected_joint_count": 15.265356265356266,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13929589506374832,
@@ -354,7 +444,17 @@
       "partner": "Claude-Sonnet-4-20250514",
       "partner_adjusted_brier": 0.17078649507807198,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.01072440129621976
+      "raw_gain_fraction": 0.01072440129621976,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 6091,
+        "reason": "",
+        "high_count_a": 731,
+        "high_count_b": 1280,
+        "joint_high_count": 269,
+        "expected_joint_count": 153.61681168937778,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13465485639726768,
@@ -387,7 +487,17 @@
       "partner": "Claude-Sonnet-4-5-20250929",
       "partner_adjusted_brier": 0.12549924262039314,
       "partner_family": "Claude",
-      "raw_gain_fraction": 0.09225059059855775
+      "raw_gain_fraction": 0.09225059059855775,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 4065,
+        "reason": "",
+        "high_count_a": 569,
+        "high_count_b": 250,
+        "joint_high_count": 103,
+        "expected_joint_count": 34.99384993849939,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13590916422402943,
@@ -420,7 +530,17 @@
       "partner": "GPT-4-Turbo-2024-04-09",
       "partner_adjusted_brier": 0.15683811873426773,
       "partner_family": "GPT",
-      "raw_gain_fraction": -0.004309810286245705
+      "raw_gain_fraction": -0.004309810286245705,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 2464,
+        "reason": "",
+        "high_count_a": 265,
+        "high_count_b": 360,
+        "joint_high_count": 61,
+        "expected_joint_count": 38.717532467532465,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.1425737839590242,
@@ -453,7 +573,17 @@
       "partner": "GPT-4o-2024-05-13",
       "partner_adjusted_brier": 0.16327984671225643,
       "partner_family": "GPT",
-      "raw_gain_fraction": -0.020385800302823758
+      "raw_gain_fraction": -0.020385800302823758,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 3726,
+        "reason": "",
+        "high_count_a": 419,
+        "high_count_b": 797,
+        "joint_high_count": 149,
+        "expected_joint_count": 89.6250670960816,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13363440986966277,
@@ -486,7 +616,17 @@
       "partner": "GPT-5-2025-08-07",
       "partner_adjusted_brier": 0.13050458925727196,
       "partner_family": "GPT",
-      "raw_gain_fraction": 0.05943420301410246
+      "raw_gain_fraction": 0.05943420301410246,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 2830,
+        "reason": "",
+        "high_count_a": 329,
+        "high_count_b": 139,
+        "joint_high_count": 61,
+        "expected_joint_count": 16.159363957597172,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.1352538110200195,
@@ -519,7 +659,17 @@
       "partner": "GPT-5-Mini-2025-08-07",
       "partner_adjusted_brier": 0.13280798195140567,
       "partner_family": "GPT",
-      "raw_gain_fraction": 0.06780097449875828
+      "raw_gain_fraction": 0.06780097449875828,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 5274,
+        "reason": "",
+        "high_count_a": 684,
+        "high_count_b": 351,
+        "joint_high_count": 144,
+        "expected_joint_count": 45.522184300341294,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13876915300884116,
@@ -552,7 +702,17 @@
       "partner": "GPT-5-Nano-2025-08-07",
       "partner_adjusted_brier": 0.15258322110875616,
       "partner_family": "GPT",
-      "raw_gain_fraction": 0.043443851892065205
+      "raw_gain_fraction": 0.043443851892065205,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 5274,
+        "reason": "",
+        "high_count_a": 684,
+        "high_count_b": 965,
+        "joint_high_count": 198,
+        "expected_joint_count": 125.15358361774744,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.14970431714384574,
@@ -585,7 +745,17 @@
       "partner": "GPT-5.1-2025-11-13",
       "partner_adjusted_brier": 0.17070077378899134,
       "partner_family": "GPT",
-      "raw_gain_fraction": -0.005409086872845386
+      "raw_gain_fraction": -0.005409086872845386,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 2444,
+        "reason": "",
+        "high_count_a": 355,
+        "high_count_b": 473,
+        "joint_high_count": 135,
+        "expected_joint_count": 68.70499181669395,
+        "count_diagnostics_available": true
+      }
     },
     {
       "aggregate_adjusted_brier": 0.13857939829636134,
@@ -618,7 +788,17 @@
       "partner": "claude-3-5-haiku-20241022",
       "partner_adjusted_brier": 0.18100995800671982,
       "partner_family": "Claude",
-      "raw_gain_fraction": -0.012408327515229772
+      "raw_gain_fraction": -0.012408327515229772,
+      "high_loss_diagnostics": {
+        "threshold": 0.25,
+        "n_targets": 1234,
+        "reason": "",
+        "high_count_a": 134,
+        "high_count_b": 355,
+        "joint_high_count": 18,
+        "expected_joint_count": 38.54943273905997,
+        "count_diagnostics_available": true
+      }
     }
   ],
   "provenance": {

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
+import { HighLossNotice } from "./HighLossNotice";
 import { finiteExtent, linearPosition, linearTicks } from "./FreezeMarketCorrelationExplorer";
+import { highLossAxis, isHighLossMetric, type HighLossDiagnostics } from "../lib/highLoss";
 import { useHistoryRestore } from "../lib/useHistoryRestore";
 import type {
   UpperLeftCrossfitPairRow,
@@ -22,6 +24,7 @@ interface DisplayRow {
   method: UpperLeftPairMethodId;
   methodLabel: string;
   diversity: Record<UpperLeftPairDiversityMetricId, number | null>;
+  highLossDiagnostics?: HighLossDiagnostics;
   aggregationBi: number;
   marketBi: number;
   deltaBi: number;
@@ -43,6 +46,7 @@ function fixedDisplay(row: UpperLeftFixedPairRow): DisplayRow {
     method: row.method,
     methodLabel: row.method_label,
     diversity: row.diversity,
+    highLossDiagnostics: row.high_loss_diagnostics,
     aggregationBi: row.aggregation_bi,
     marketBi: row.market_bi,
     deltaBi: row.aggregation_minus_market_bi,
@@ -65,6 +69,7 @@ function crossfitDisplay(row: UpperLeftCrossfitPairRow): DisplayRow {
     method: row.method,
     methodLabel: row.method_label,
     diversity: row.mean_train_diversity,
+    highLossDiagnostics: row.high_loss_diagnostics,
     aggregationBi: row.aggregation_bi,
     marketBi: row.market_bi,
     deltaBi: row.aggregation_minus_market_bi,
@@ -176,13 +181,15 @@ function PairBlock({
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}${window.location.hash}`);
   }
 
-  const filtered = useMemo(() => rows
+  const candidates = useMemo(() => rows
     .filter((row) => row.method === method)
     .filter((row) => row.modelA === focal || row.modelB === focal)
-    .filter((row) => !crossfit || (row.evaluationCount ?? 0) >= minimumDirections)
-    .filter((row) => row.diversity[metric] !== null)
+    .filter((row) => !crossfit || (row.evaluationCount ?? 0) >= minimumDirections), [rows, method, focal, crossfit, minimumDirections]);
+  const missingMetricCount = candidates.filter((row) => row.diversity[metric] === null || !Number.isFinite(row.diversity[metric])).length;
+  const filtered = useMemo(() => candidates
+    .filter((row) => row.diversity[metric] !== null && Number.isFinite(row.diversity[metric]) && Number.isFinite(row.aggregationBi))
     .map((row) => row.modelA === focal ? row : { ...row, modelA: row.modelB, modelB: row.modelA })
-    .sort((a, b) => b.deltaBi - a.deltaBi), [rows, method, focal, metric, crossfit, minimumDirections]);
+    .sort((a, b) => b.deltaBi - a.deltaBi), [candidates, focal, metric]);
   const selected = filtered.find((row) => row.pairId === selectedPair) ?? filtered[0] ?? null;
   const xValues = filtered.map((row) => row.diversity[metric] as number);
   const yValues = filtered.map((row) => row.aggregationBi);
@@ -193,6 +200,9 @@ function PairBlock({
     metric === "prediction_diversity" || metric === "adjusted_pog" ? Math.max(0, rawX[0] - xPadding) : rawX[0] - xPadding,
     rawX[1] + xPadding,
   ];
+  const highLossScale = isHighLossMetric(metric) ? highLossAxis(xValues, [MARGIN.left, WIDTH - MARGIN.right]) : null;
+  const xPosition = (raw: number) => highLossScale?.position(raw) ?? linearPosition(raw, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+  const xTicks = highLossScale?.ticks ?? linearTicks(xDomain, 6);
   const rawY = finiteExtent(yValues);
   const yPadding = Math.max((rawY[1] - rawY[0]) * 0.13, 0.25);
   const yDomain: [number, number] = [rawY[0] - yPadding, rawY[1] + yPadding];
@@ -222,6 +232,7 @@ function PairBlock({
         <div><dt>PAIR-MATCHED MARKET</dt><dd>{marketLine?.toFixed(2) ?? "—"}</dd><small>mean across visible pair supports</small></div>
         <div><dt>{crossfit ? "MAX OOS DIRECTIONS" : "FIXED MODELS"}</dt><dd>{crossfit ? data.crossfit.maximum_pair_evaluations : data.fixed.models.length}</dd><small>{crossfit ? "10 splits × 2 directions" : "exact configurations"}</small></div>
       </dl>
+      <HighLossNotice metric={metric} values={xValues} missingCount={missingMetricCount} totalCount={candidates.length} retainedDirections={crossfit ? filtered.map((row) => row.evaluationCount ?? 0) : undefined} maximumDirections={crossfit ? data.crossfit.maximum_pair_evaluations : undefined} diagnostics={candidates.flatMap((row) => row.highLossDiagnostics ? [row.highLossDiagnostics] : [])} />
 
       <div className="upper-left-visual-row">
         <div className="upper-left-chart-wrap">
@@ -230,18 +241,18 @@ function PairBlock({
               const y = linearPosition(tick, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
               return <g key={`y-${tick}`}><line className="upper-left-grid" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={y} y2={y} /><text className="upper-left-tick" x={MARGIN.left - 12} y={y + 4} textAnchor="end">{tick.toFixed(1)}</text></g>;
             })}
-            {linearTicks(xDomain, 6).map((tick) => {
-              const x = linearPosition(tick, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+            {xTicks.map((tick) => {
+              const x = xPosition(tick);
               return <g key={`x-${tick}`}><line className="upper-left-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="upper-left-tick" x={x} y={HEIGHT - MARGIN.bottom + 23} textAnchor="middle">{formatMetric(metric, tick)}</text></g>;
             })}
             {filtered.map((row) => {
               const xValue = row.diversity[metric] as number;
-              const x = linearPosition(xValue, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
+              const x = xPosition(xValue);
               const y = linearPosition(row.aggregationBi, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
               const label = `${row.modelB}\n${row.methodLabel}\n${data.metrics[metric].label}: ${formatMetric(metric, xValue)}\nAggregation BI: ${row.aggregationBi.toFixed(2)}\nMarket BI: ${row.marketBi.toFixed(2)}\nΔBI: ${row.deltaBi >= 0 ? "+" : ""}${row.deltaBi.toFixed(2)}`;
               return <g className={`upper-left-point-hit ${selected?.pairId === row.pairId ? "selected" : ""}`} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} onClick={() => setSelectedPair(row.pairId)} onFocus={() => setSelectedPair(row.pairId)} key={row.pairId}>{row.beatsMarket ? <path className="upper-left-point beats" d={pointPath(true)} /> : <circle className="upper-left-point" r={6.7} />}<circle className="upper-left-hit-target" r={13} /><title>{label}</title></g>;
             })}
-            <text className="upper-left-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 16} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity</text>
+            <text className="upper-left-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 16} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity{highLossScale ? " · signed-log display; raw ticks" : ""}</text>
             <text className="upper-left-axis-label" transform={`translate(18 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">Aggregation Brier Index ↑</text>
           </svg> : <div className="upper-left-empty">{unavailableFocal ? "The linked exact configuration is not available in this block. Choose a listed configuration to explore other published results." : "No eligible partner for this focal model and metric."}</div>}
         </div>
@@ -249,6 +260,11 @@ function PairBlock({
         <aside className="upper-left-inspector" aria-live="polite">
           <p className="eyebrow">SELECTED PARTNER</p>
           {selected ? <><h4>{selected.modelB.split(" (")[0]}</h4><p>{selected.modelB.includes(" (") ? selected.modelB.split(" (")[1].replace(/\)$/, "") : "Exact configuration"}</p><dl><div><dt>{data.metrics[metric].label}</dt><dd>{formatMetric(metric, selected.diversity[metric] as number)}</dd></div><div><dt>Aggregation BI ↑</dt><dd>{selected.aggregationBi.toFixed(2)}</dd></div><div><dt>Pair-matched market BI ↑</dt><dd>{selected.marketBi.toFixed(2)}</dd></div><div><dt>ΔBI vs market</dt><dd className={selected.beatsMarket ? "positive" : "negative"}>{selected.deltaBi >= 0 ? "+" : ""}{selected.deltaBi.toFixed(2)}</dd></div><div><dt>{crossfit ? "OOS directions" : "Pair cells"}</dt><dd>{crossfit ? `${selected.evaluationCount}/${selected.maximumEvaluations}` : Math.round(selected.support).toLocaleString()}</dd></div>{crossfit && <><div><dt>A→B / B→A</dt><dd>{selected.aToB?.count ?? 0} / {selected.bToA?.count ?? 0}</dd></div><div><dt>Pair-matched win share</dt><dd>{((selected.beatMarketShare ?? 0) * 100).toFixed(1)}%</dd></div></>}</dl></> : <p>No selected pair.</p>}
+          {isHighLossMetric(metric) && selected?.highLossDiagnostics && <dl>
+            <div><dt>{crossfit ? "Min marginal high-loss counts A / B" : "Marginal high-loss counts A / B"}</dt><dd>{(crossfit ? selected.highLossDiagnostics.min_high_count_a : selected.highLossDiagnostics.high_count_a) ?? "—"} / {(crossfit ? selected.highLossDiagnostics.min_high_count_b : selected.highLossDiagnostics.high_count_b) ?? "—"}</dd></div>
+            <div><dt>{crossfit ? "Min joint high-loss count" : "Joint high-loss count"}</dt><dd>{(crossfit ? selected.highLossDiagnostics.min_joint_high_count : selected.highLossDiagnostics.joint_high_count) ?? "—"}</dd></div>
+            {crossfit && <div><dt>Defined high-loss directions</dt><dd>{selected.highLossDiagnostics.defined_fold_count ?? "—"} / {selected.highLossDiagnostics.included_fold_count ?? "—"}</dd></div>}
+          </dl>}
         </aside>
       </div>
 

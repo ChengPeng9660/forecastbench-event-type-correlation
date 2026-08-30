@@ -22,6 +22,7 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from analysis.high_loss_diagnostics import fold_diagnostics, high_loss_details
 from analysis.metrics import (
     adjusted_pog,
     brier_index,
@@ -383,6 +384,7 @@ def dependence_support(
         "bi_gap": bi_gap,
         "model_a_bi": bi_a,
         "model_b_bi": bi_b,
+        "high_loss_diagnostics": high_loss_details(loss_a, loss_b, high_loss_threshold),
         "metrics": {
             "adjusted_pog": {"raw": pog, "complementarity": pog, "reason": ""},
             "high_loss_lift": {
@@ -425,6 +427,12 @@ def aggregate_cross_fit_records(
         raise ValueError("cross-fit aggregation requires at least one fold record")
     test_total = sum(record["n_test"] for record in records)
     train_total = sum(record["n_train"] for record in records)
+    high_loss_diagnostics = fold_diagnostics(
+        [record["metrics"]["high_loss_lift"]["raw"] for record in records],
+        [record["n_train"] for record in records],
+        reasons=[record["metrics"]["high_loss_lift"].get("reason", "") for record in records],
+        details=[record.get("high_loss_diagnostics") for record in records],
+    )
     metric_values: dict[str, dict[str, float | None]] = {}
     for metric in DIVERSITY_METRICS:
         metric_records = [
@@ -439,6 +447,9 @@ def aggregate_cross_fit_records(
             "raw": weighted_average(metric_records, "raw", "weight"),
             "complementarity": weighted_average(metric_records, "complementarity", "weight"),
         }
+        if metric == "high_loss_lift" and high_loss_diagnostics["undefined_fold_count"]:
+            metric_values[metric] = {"raw": None, "complementarity": None,
+                                     "reason": high_loss_diagnostics["reason"]}
 
     brier_methods = ("model_a", "model_b", *METHODS)
     adjusted_briers = {
@@ -476,6 +487,7 @@ def aggregate_cross_fit_records(
             "weight",
         ),
         "metrics": metric_values,
+        "high_loss_diagnostics": high_loss_diagnostics,
         "adjusted_brier": adjusted_briers,
         "brier_index": brier_indices,
         "best_single_side": next(iter(best_sides)) if len(best_sides) == 1 else "mixed",
@@ -614,6 +626,7 @@ def build_cross_fit(
                     "train_model_a_bi": train["model_a_bi"],
                     "train_model_b_bi": train["model_b_bi"],
                     "metrics": train["metrics"],
+                    "high_loss_diagnostics": train["high_loss_diagnostics"],
                     **test,
                 }
                 records.append(record)
@@ -766,6 +779,7 @@ def build_payload(
                 "near_bi": dependence["near_bi"],
                 "bi_gap": dependence["bi_gap"],
                 "metrics": dependence["metrics"],
+                "high_loss_diagnostics": dependence["high_loss_diagnostics"],
                 "adjusted_brier": aggregation["adjusted_brier"],
                 "brier_index": aggregation["brier_index"],
                 "best_single_side": aggregation["best_single_side"],

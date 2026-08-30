@@ -22,11 +22,14 @@ export function findPair(pairs: PairMetrics[], a: string, b: string): PairMetric
 }
 
 export function dependenceScore(value: number | null, metric: MetricDefinition, values: number[]): number {
-  if (value === null || values.length === 0) return Number.NEGATIVE_INFINITY;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
+  if (value === null || !Number.isFinite(value) || values.length === 0) return Number.NEGATIVE_INFINITY;
+  const transform = metric.id === "high_loss_lift" ? (v: number) => Math.log1p(v) : (v: number) => v;
+  const valid = values.filter((v) => Number.isFinite(v) && (metric.id !== "high_loss_lift" || v >= 0)).map(transform);
+  if (!valid.length || (metric.id === "high_loss_lift" && value < 0)) return Number.NEGATIVE_INFINITY;
+  const min = Math.min(...valid);
+  const max = Math.max(...valid);
   if (max === min) return 0.5;
-  const normalized = (value - min) / (max - min);
+  const normalized = (transform(value) - min) / (max - min);
   return metric.direction === "higher" ? normalized : 1 - normalized;
 }
 
@@ -39,10 +42,22 @@ export function sortPairs(pairs: PairMetrics[], metric: MetricDefinition): PairM
   return [...pairs].sort((left, right) => {
     const leftValue = left.metrics[metric.id].value;
     const rightValue = right.metrics[metric.id].value;
-    if (leftValue === null) return 1;
-    if (rightValue === null) return -1;
+    const leftMissing = leftValue === null || !Number.isFinite(leftValue);
+    const rightMissing = rightValue === null || !Number.isFinite(rightValue);
+    if (leftMissing && rightMissing) return 0;
+    if (leftMissing) return 1;
+    if (rightMissing) return -1;
     return metric.direction === "higher" ? rightValue - leftValue : leftValue - rightValue;
   });
+}
+
+export function highLossDiagnosticLabel(pair: PairMetrics): string {
+  const d = pair.diagnostics;
+  if (d.high_loss_rate_a == null || d.high_loss_rate_b == null) return "High-loss marginal counts unavailable; total overlap does not establish reliability.";
+  const a = Math.round(d.high_loss_rate_a * pair.n_overlap);
+  const b = Math.round(d.high_loss_rate_b * pair.n_overlap);
+  const joint = d.joint_high_loss_count ?? (d.joint_high_loss_rate == null ? "unavailable" : Math.round(d.joint_high_loss_rate * pair.n_overlap));
+  return `Marginal high-loss counts: ${a} / ${b}; joint: ${joint}. ${Math.min(a, b) < 5 ? "Sparse marginal counts (<5); interpret lift cautiously." : "Counts refer to shared forecast targets, not necessarily independent events."}`;
 }
 
 export function formatMetric(value: number | null, metricId: MetricId): string {

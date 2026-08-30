@@ -44,7 +44,7 @@ function filtersFromQuery(query: URLSearchParams): Filters {
 
 const METRIC_DESCRIPTIONS: Record<MetricId, string> = {
   adjusted_pog: "Measures whether two models excel on different questions. Lower gain means higher model dependence; larger gain indicates more ex post complementarity.",
-  high_loss_lift: "Measures how often two models incur severe errors together. Higher lift means higher model dependence; 1 indicates approximate independence.",
+  high_loss_lift: "Shared adjusted-loss exceedances relative to their marginal rates. Higher lift means greater severe-error dependence; 1 is the independence reference, not proof of independence. Rare high-loss records can make lift unstable.",
   adjusted_loss_corr: "Measures alignment in question-level difficulty-adjusted Brier losses. Higher correlation means higher model dependence.",
   total_variation: "Mean absolute probability difference on shared questions: mean |p − q|. Ranges from 0 to 1; higher TV means greater prediction diversity, not necessarily better aggregation.",
 };

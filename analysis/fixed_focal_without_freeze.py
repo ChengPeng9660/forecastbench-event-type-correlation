@@ -16,6 +16,7 @@ import math
 from pathlib import Path
 from typing import Any, Iterable
 
+from analysis.high_loss_diagnostics import decode_diagnostics
 from analysis.closed_form_aggregation import (
     aggregate_pairs,
     correlation,
@@ -181,6 +182,7 @@ def fixed_view(
         "train_diversity": {
             metric: anchor[f"train_{metric}_complementarity"] for metric in METRICS
         },
+        "high_loss_diagnostics": decode_diagnostics(anchor.get("high_loss_diagnostics")),
         "train_bi_gap": float(anchor["train_bi_gap"]),
         "train_near_bi_share": float(anchor["train_near_bi_share"]),
         "near_bi": float(anchor["train_bi_gap"]) <= 2.0,

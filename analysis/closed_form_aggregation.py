@@ -24,6 +24,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from analysis.high_loss_diagnostics import decode_diagnostics, fold_diagnostics
 from analysis.metrics import brier_index
 from analysis.pair_aggregation import (
     adjusted_loss,
@@ -412,6 +413,8 @@ def evaluate_pair(
                         "n_test": len(test_keys),
                         "train_near_bi": dependence["near_bi"],
                         "train_bi_gap": dependence["bi_gap"],
+                        "train_high_loss_lift_reason": dependence["metrics"]["high_loss_lift"]["reason"],
+                        "train_high_loss_diagnostics": json.dumps(dependence["high_loss_diagnostics"], separators=(",", ":")),
                         "anchor": anchor_name,
                         "partner": partner_name,
                         "train_anchor_adjusted_brier": single_brier(anchor_panel, train_keys),
@@ -441,11 +444,19 @@ def aggregate_pairs(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for (pair_id, method), group in sorted(grouped.items()):
         test_total = sum(record["n_test"] for record in group)
         train_total = sum(record["n_train"] for record in group)
+        high_loss_diagnostics = fold_diagnostics(
+            [record["train_high_loss_lift_complementarity"] for record in group],
+            [record["n_train"] for record in group],
+            reasons=[record.get("train_high_loss_lift_reason", "") for record in group],
+            details=[decode_diagnostics(record.get("train_high_loss_diagnostics")) for record in group],
+        )
 
         def test_weighted(field: str) -> float:
             return sum(record[field] * record["n_test"] for record in group) / test_total
 
         def train_weighted(field: str) -> float | None:
+            if field == "train_high_loss_lift_complementarity" and high_loss_diagnostics["undefined_fold_count"]:
+                return None
             values = [(record[field], record["n_train"]) for record in group if record[field] is not None]
             total = sum(weight for _, weight in values)
             return sum(value * weight for value, weight in values) / total if total else None
@@ -468,6 +479,7 @@ def aggregate_pairs(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "pair_group": group[0]["pair_group"],
                 "method": method,
                 "fold_records": len(group),
+                "high_loss_diagnostics": json.dumps(high_loss_diagnostics, separators=(",", ":")),
                 "train_target_cells": train_total,
                 "test_target_cells": test_total,
                 "train_near_bi_share": sum(record["train_near_bi"] for record in group) / len(group),

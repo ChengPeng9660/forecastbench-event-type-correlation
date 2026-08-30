@@ -24,6 +24,14 @@ const higher: MetricDefinition = {
 const lower: MetricDefinition = { ...higher, id: "adjusted_loss_corr", direction: "lower" };
 
 describe("model-dependence metric helpers", () => {
+  it("compresses lift colors only, while preserving raw zero, values, and ranking", () => {
+    const lift = orientMetricToDependence({ ...higher, id: "high_loss_lift" });
+    expect(dependenceScore(9, lift, [0, 9, 99])).toBeCloseTo(0.5);
+    expect(formatMetric(99, "high_loss_lift")).toBe("99.00");
+    expect(sortPairs([pair("zero", 0), pair("extreme", 99), pair("middle", 9)], lift).map((p) => p.row_id)).toEqual(["extreme", "middle", "zero"]);
+    expect(dependenceScore(NaN, lift, [0, 1])).toBe(Number.NEGATIVE_INFINITY);
+  });
+
   it("renders zero TV as a valid heatmap cell rather than missing support", () => {
     const zeroPair = pair("zero", 0);
     const models: Model[] = [zeroPair.a, zeroPair.b].map((id, release_order) => ({ id, name: id, provider: "Test", family: "Test", release_order, n_targets: 100, n_dates: 3 }));

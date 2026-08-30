@@ -1,12 +1,15 @@
+import type { HighLossDiagnostics } from "../lib/highLoss";
+
 export type MetricId = "adjusted_pog" | "high_loss_lift" | "adjusted_loss_corr" | "total_variation";
 export type ModelFamily = "GPT" | "Claude" | "Gemini" | "Qwen" | "DeepSeek" | "Kimi";
 
 export interface FocalGainMetricValue {
-  raw: number;
-  complementarity: number;
+  raw: number | null;
+  complementarity: number | null;
 }
 
 export interface FocalGainPoint {
+  high_loss_diagnostics?: HighLossDiagnostics;
   partner: string;
   partner_family: "GPT" | "Claude";
   n_overlap: number;
@@ -99,6 +102,7 @@ export interface PairAggregationMethod {
 }
 
 export interface PairAggregationPoint {
+  high_loss_diagnostics?: HighLossDiagnostics;
   model_a: string;
   model_b: string;
   family_a: ModelFamily;
@@ -808,6 +812,7 @@ export interface GlobalPairMatrixCompact {
 }
 
 export interface FreezeMarketCorrelationPoint {
+  high_loss_diagnostics?: HighLossDiagnostics;
   model: string;
   exact_configuration: string;
   prompt_type: "zero_shot" | "scratchpad";
@@ -852,6 +857,7 @@ export interface FreezeAggregationScore {
 }
 
 export interface FreezeMarketDirectionPoint {
+  high_loss_diagnostics?: HighLossDiagnostics;
   base_name: string;
   partner_name: string;
   market_brier_index: number;
@@ -874,6 +880,7 @@ export interface FixedBaseAggregationScore {
 }
 
 export interface FixedBaseAggregationView {
+  high_loss_diagnostics?: HighLossDiagnostics;
   base_name: string;
   partner_name: string;
   base_brier_index: number;
@@ -1105,6 +1112,7 @@ export type MarketInformationType =
 export type MarketPromptType = "zero_shot" | "scratchpad" | "unspecified";
 
 export interface MarketDiversityPerformancePoint {
+  high_loss_diagnostics?: HighLossDiagnostics;
   canonical_model_version: string;
   exact_configuration: string;
   model_configuration: string;
@@ -1187,6 +1195,7 @@ export interface UpperLeftPairModel {
 }
 
 export interface UpperLeftFixedPairRow {
+  high_loss_diagnostics?: HighLossDiagnostics;
   pair_id: string;
   model_a: string;
   model_b: string;
@@ -1203,6 +1212,7 @@ export interface UpperLeftFixedPairRow {
 }
 
 export interface UpperLeftCrossfitPairRow {
+  high_loss_diagnostics?: HighLossDiagnostics;
   pair_id: string;
   model_a: string;
   model_b: string;

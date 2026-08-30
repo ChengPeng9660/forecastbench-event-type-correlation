@@ -1,4 +1,5 @@
-import { formatMetric, sortPairs } from "../lib/metrics";
+import { formatMetric, highLossDiagnosticLabel, sortPairs } from "../lib/metrics";
+import { HighLossRawNotice } from "./HighLossNotice";
 import type { MetricDefinition, Model, PairMetrics } from "../types/data";
 
 interface PairRankingProps {
@@ -15,6 +16,7 @@ export function PairRanking({ pairs, metric, models, selectedPair, onSelectPair 
   const rendered = ranked.slice(0, 200);
   return (
     <div className="ranking-wrap">
+      <HighLossRawNotice metric={metric.id} />
       <p className="scale-note">Showing the {Math.min(200, ranked.length).toLocaleString()} highest-dependence pairs out of {ranked.length.toLocaleString()}. The CSV download includes every pair under the active filters.</p>
       <table className="ranking-table">
         <thead>
@@ -29,7 +31,7 @@ export function PairRanking({ pairs, metric, models, selectedPair, onSelectPair 
             >
               <td><span className="rank-number">{String(index + 1).padStart(2, "0")}</span></td>
               <td><button type="button" onClick={() => onSelectPair(pair)}>{names.get(pair.a)} <span>×</span> {names.get(pair.b)}</button></td>
-              <td className="metric-number">{formatMetric(pair.metrics[metric.id].value, metric.id)}</td>
+              <td className="metric-number" title={metric.id === "high_loss_lift" ? highLossDiagnosticLabel(pair) : undefined}>{formatMetric(pair.metrics[metric.id].value, metric.id)}</td>
               <td>{pair.n_overlap.toLocaleString()}</td>
               <td>{pair.diagnostics.near_bi === null ? "—" : pair.diagnostics.near_bi ? "Yes" : "No"}</td>
             </tr>

@@ -26,6 +26,7 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from analysis.high_loss_diagnostics import fold_diagnostics, high_loss_details, oriented_diagnostics
 from analysis.market_diversity_performance import read_exact_panel
 from analysis.metrics import adjusted_pog, brier_index, high_loss_lift, pearson_correlation, total_variation
 from analysis.pair_aggregation import KEY, event_fold, predictions, sha256_file
@@ -144,6 +145,7 @@ def _half_summary(cells: list[PairCell]) -> dict[str, Any]:
     up, down = [cell for cell in cells if cell.second >= cell.first], [cell for cell in cells if cell.second < cell.first]
     return {
         "n": n, "adjustment": adjustment, "scores": scores,
+        "high_loss_diagnostics": high_loss_details(first_loss, second_loss),
         "bi_gap": abs(a - b) if a is not None and b is not None else None,
         "diversity": {
             "prediction_diversity": None if prediction_r is None else 1 - prediction_r,
@@ -232,6 +234,7 @@ def evaluate_prepared_pair(
                 "n_train": train["n"], "n_test": test["n"], "train_bi_gap": train["bi_gap"],
                 "train_near_bi": train["bi_gap"] is not None and train["bi_gap"] <= 2.0,
                 "train_diversity": train["diversity"], "train_metric_reasons": train["metric_reasons"],
+                "train_high_loss_diagnostics": train["high_loss_diagnostics"],
                 "train_cf_statistics": train["cf_statistics"], "test_cf_statistics": test["cf_statistics"],
                 "first": test["scores"]["first"], "second": test["scores"]["second"], "market": test["scores"]["market"],
                 "methods": {**{method: test["scores"][method] for method in FIXED_METHODS}, "best_single": test["scores"][best]},
@@ -287,10 +290,17 @@ def aggregate_view(folds: list[dict[str, Any]], reverse: bool = False) -> dict[s
         valid_support[metric] = support
         reasons[metric] = dict(Counter(row["train_metric_reasons"][metric] for row in folds if row["train_metric_reasons"][metric]))
     min_train, min_test = min(row["n_train"] for row in folds), min(row["n_test"] for row in folds)
+    high_loss_diagnostics = fold_diagnostics(
+        [row["train_diversity"]["high_loss_lift"] for row in folds],
+        [row["n_train"] for row in folds],
+        reasons=[row["train_metric_reasons"]["high_loss_lift"] for row in folds],
+        details=[row.get("train_high_loss_diagnostics") for row in folds],
+    )
     return {"fold_count": len(folds), "fold_ids": [row["fold_id"] for row in folds],
             "train_target_cells": train_total, "test_target_cells": sum(test_weights),
             "min_train_rows": min_train, "min_test_rows": min_test, "small_support": min(min_train, min_test) < 50,
             "train_diversity": diversity, "train_diversity_target_cells": valid_support, "train_metric_reasons": reasons,
+            "high_loss_diagnostics": oriented_diagnostics(high_loss_diagnostics, reverse),
             "train_bi_gap": math.fsum(row["train_bi_gap"] * row["n_train"] for row in folds) / train_total if all(row["train_bi_gap"] is not None for row in folds) else None,
             **references, "methods": methods}
 

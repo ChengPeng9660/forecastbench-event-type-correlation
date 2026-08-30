@@ -23,6 +23,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from analysis.high_loss_diagnostics import details_from_metric_row
 
 KEY = ("date", "source", "event_id", "horizon")
 PAIR_METRICS = (
@@ -162,9 +163,11 @@ def build_payload(panel_path: Path, pair_path: Path, focal: str, weight: float) 
             raise ValueError(f"non-positive focal Brier denominator for {partner}")
 
         pog = float(metric_row["adjusted_pog"])
-        lift = float(metric_row["adjusted_high_loss_lift_025"])
+        lift_text = metric_row["adjusted_high_loss_lift_025"].strip()
+        lift = float(lift_text) if lift_text else None
         corr = float(metric_row["adjusted_loss_pearson_corr"])
         tv = float(metric_row["total_variation"])
+        high_loss_diagnostics = details_from_metric_row(metric_row, reverse=metric_row["model_a"] != focal)
         points.append(
             {
                 "partner": partner,
@@ -180,9 +183,11 @@ def build_payload(panel_path: Path, pair_path: Path, focal: str, weight: float) 
                 "aggregate_adjusted_brier": aggregate_brier,
                 "gain_fraction": (focal_brier - aggregate_brier) / focal_brier,
                 "raw_gain_fraction": (focal_raw_brier - aggregate_raw_brier) / focal_raw_brier,
+                "high_loss_diagnostics": high_loss_diagnostics,
                 "metrics": {
                     "adjusted_pog": {"raw": pog, "complementarity": pog},
-                    "high_loss_lift": {"raw": lift, "complementarity": 1 - lift},
+                    "high_loss_lift": {"raw": lift, "complementarity": None if lift is None else 1 - lift,
+                                       "reason": high_loss_diagnostics["reason"]},
                     "adjusted_loss_corr": {"raw": corr, "complementarity": -corr},
                     "total_variation": {"raw": tv, "complementarity": tv},
                 },

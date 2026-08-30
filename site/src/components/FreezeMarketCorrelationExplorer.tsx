@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
+import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
+import { HighLossNotice } from "./HighLossNotice";
 import type {
   FreezeAggregationMethodId,
   FreezeDiversityMetricId,
@@ -80,40 +82,11 @@ export function linearTicks(domain: [number, number], count = 5) {
 }
 
 export function pearsonCorrelation(xs: number[], ys: number[]): number | null {
-  if (xs.length !== ys.length || xs.length < 2) return null;
-  const meanX = xs.reduce((sum, value) => sum + value, 0) / xs.length;
-  const meanY = ys.reduce((sum, value) => sum + value, 0) / ys.length;
-  let covariance = 0;
-  let varianceX = 0;
-  let varianceY = 0;
-  xs.forEach((x, index) => {
-    const dx = x - meanX;
-    const dy = ys[index] - meanY;
-    covariance += dx * dy;
-    varianceX += dx * dx;
-    varianceY += dy * dy;
-  });
-  const denominator = Math.sqrt(varianceX * varianceY);
-  return denominator ? covariance / denominator : null;
-}
-
-function tiedRanks(values: number[]) {
-  const ranked = values.map((value, index) => ({ value, index })).sort((a, b) => a.value - b.value);
-  const result = Array<number>(values.length);
-  let start = 0;
-  while (start < ranked.length) {
-    let end = start + 1;
-    while (end < ranked.length && ranked[end].value === ranked[start].value) end += 1;
-    const averageRank = (start + 1 + end) / 2;
-    for (let index = start; index < end; index += 1) result[ranked[index].index] = averageRank;
-    start = end;
-  }
-  return result;
+  return rawPearson(xs, ys);
 }
 
 export function spearmanCorrelation(xs: number[], ys: number[]): number | null {
-  if (xs.length !== ys.length || xs.length < 2) return null;
-  return pearsonCorrelation(tiedRanks(xs), tiedRanks(ys));
+  return rawSpearman(xs, ys);
 }
 
 export function freezeAggregationOutcomeValue(
@@ -140,6 +113,7 @@ export function freezeMarketPointView(
     model_brier_index: point.model_brier_index,
     model_gain_vs_market: point.model_gain_vs_market,
     train_diversity: point.train_diversity,
+    high_loss_diagnostics: point.high_loss_diagnostics,
     train_bi_gap: point.train_bi_gap,
     train_near_bi_share: point.train_near_bi_share,
     near_bi: point.near_bi,
@@ -312,11 +286,14 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
     aggregationOutcome,
     foldView,
   ));
-  const scatterPearson = pearsonCorrelation(scatterX, scatterY);
-  const scatterSpearman = spearmanCorrelation(scatterX, scatterY);
+  const associationReason = isHighLossMetric(diversityMetric) ? highLossAssociationReason(scatterX, scatterY) : null;
+  const scatterPearson = associationReason ? null : pearsonCorrelation(scatterX, scatterY);
+  const scatterSpearman = associationReason ? null : spearmanCorrelation(scatterX, scatterY);
   const xDomain: [number, number] = diversityMetric === "total_variation" ? [0, 1] : finiteExtent(scatterX);
   const yDomain = finiteExtent(scatterY, aggregationOutcome === "gain_vs_market");
-  const xTicks = linearTicks(xDomain);
+  const lossAxis = isHighLossMetric(diversityMetric) ? highLossAxis(scatterX, [SCATTER_MARGIN.left, SCATTER_WIDTH - SCATTER_MARGIN.right]) : null;
+  const xPosition = lossAxis?.position ?? ((value: number) => linearPosition(value, xDomain, [SCATTER_MARGIN.left, SCATTER_WIDTH - SCATTER_MARGIN.right]));
+  const xTicks = lossAxis?.ticks ?? linearTicks(xDomain);
   const yTicks = linearTicks(yDomain);
   const selectedAggregation = scatterPoints.find(
     (point) => point.exact_configuration === selectedAggregationConfiguration,
@@ -329,7 +306,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   const missingDiversityCount = filtered.filter(
     (point) => {
       const view = freezeMarketPointView(point, foldView);
-      return (!nearBiOnly || view.near_bi) && view.train_diversity[diversityMetric] === null;
+      return (!nearBiOnly || view.near_bi) && !Number.isFinite(view.train_diversity[diversityMetric]);
     },
   ).length;
 
@@ -524,9 +501,15 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
             <div><span>WEIGHTED GAIN</span><strong className={(selectedMethodSummary?.gainVsMarket ?? 0) >= 0 ? "positive" : "negative"}>{signedPercent(selectedMethodSummary?.gainVsMarket ?? null)}</strong><small>vs fixed market base</small></div>
           </div>
 
-          <div className="freeze-diversity-layout">
+        <HighLossNotice metric={diversityMetric} values={scatterX} missingCount={missingDiversityCount} totalCount={filtered.filter((point) => !nearBiOnly || freezeMarketPointView(point, foldView).near_bi).length} associationReason={associationReason} diagnostics={filtered.flatMap((point) => {
+          const view = freezeMarketPointView(point, foldView);
+          return (!nearBiOnly || view.near_bi) && view.high_loss_diagnostics ? [view.high_loss_diagnostics] : [];
+        })} />
+
+        <div className="freeze-diversity-layout">
             <div className="freeze-diversity-chart-wrap">
-              {scatterPoints.length >= 2 ? <svg
+              {scatterPoints.length >= 1 ? <svg
+                data-x-scale={lossAxis ? "signed-log" : "linear"}
                 className="freeze-diversity-chart"
                 viewBox={`0 0 ${SCATTER_WIDTH} ${SCATTER_HEIGHT}`}
                 role="img"
@@ -537,7 +520,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
                   return <g key={`y-${tick}`}><line className="freeze-diversity-grid" x1={SCATTER_MARGIN.left} x2={SCATTER_WIDTH - SCATTER_MARGIN.right} y1={y} y2={y} /><text className="freeze-diversity-tick" x={SCATTER_MARGIN.left - 12} y={y + 4} textAnchor="end">{aggregationOutcome === "gain_vs_market" ? signedPercent(tick) : tick.toFixed(1)}</text></g>;
                 })}
                 {xTicks.map((tick) => {
-                  const x = linearPosition(tick, xDomain, [SCATTER_MARGIN.left, SCATTER_WIDTH - SCATTER_MARGIN.right]);
+                  const x = xPosition(tick);
                   return <g key={`x-${tick}`}><line className="freeze-diversity-grid" x1={x} x2={x} y1={SCATTER_MARGIN.top} y2={SCATTER_HEIGHT - SCATTER_MARGIN.bottom} /><text className="freeze-diversity-tick" x={x} y={SCATTER_HEIGHT - SCATTER_MARGIN.bottom + 22} textAnchor="middle">{scatterMetricLabel(diversityMetric, tick)}</text></g>;
                 })}
                 {aggregationOutcome === "gain_vs_market" && yDomain[0] <= 0 && yDomain[1] >= 0 && <line
@@ -551,7 +534,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
                   const pointView = freezeMarketPointView(point, foldView);
                   const xValue = pointView.train_diversity[diversityMetric] as number;
                   const yValue = freezeAggregationOutcomeValue(point, aggregationMethod, aggregationOutcome, foldView);
-                  const x = linearPosition(xValue, xDomain, [SCATTER_MARGIN.left, SCATTER_WIDTH - SCATTER_MARGIN.right]);
+                  const x = xPosition(xValue);
                   const y = linearPosition(yValue, yDomain, [SCATTER_HEIGHT - SCATTER_MARGIN.bottom, SCATTER_MARGIN.top]);
                   const color = FREEZE_PROVIDER_COLORS[point.provider] ?? "#665f6d";
                   const isSelected = selectedAggregation?.exact_configuration === point.exact_configuration;

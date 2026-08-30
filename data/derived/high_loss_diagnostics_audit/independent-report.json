@@ -1,0 +1,2480 @@
+{
+  "passed": true,
+  "baseline_ref": "7c5eed04e87416a86fd5bdddb5c709ad7732230a",
+  "audit_report_sha256": "6013bf96ce9ff1def56306aba56cef920fb5ecb4b9aee3502d1a52ca70c2064f",
+  "file_count": 246,
+  "files": [
+    {
+      "file": "pair-aggregation/all-six-family-pairs.json",
+      "before_sha256": "e31bc332f899201c6eabec5e67f6c5c4e3bd718ffb3c7efe46708c9b524a9e16",
+      "after_sha256": "833330ac74515d2d2fa4f0a950b85c11f090db4719720ad46b3aef20e5ebad09",
+      "preserved_scalars": 129281,
+      "diagnostic_objects": 1664,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "pair-aggregation/fixed-focal-without-freeze.json",
+      "before_sha256": "a9e2c900d93ec5d4e12164fd602e2a04c109f200dbd91702f6370bd5788c8809",
+      "after_sha256": "804d517cf4faa644d378b11b61aa284038422cb4f9e2f110e450dcab0634e19c",
+      "preserved_scalars": 102785,
+      "diagnostic_objects": 2022,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 258
+    },
+    {
+      "file": "polymarket-aggregation/freeze-exposed-correlation.json",
+      "before_sha256": "ca623cbb9ae23987400b9e982c7a6a960849f84ecdcf009b74f87b3fd008eaa0",
+      "after_sha256": "fe41d55b418d07a283387653cdaa46bd33eb54751e8bb2202da165fb5b4627dc",
+      "preserved_scalars": 4887,
+      "diagnostic_objects": 117,
+      "coordinates_changed_to_null": 74,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "polymarket-aggregation/without-freeze-base.json",
+      "before_sha256": "f6fe1de47086f6cab1efba2b5b16cfad04e09d18aa0e891c3da0f35e8b14ef5b",
+      "after_sha256": "701283c9887eb146553b73778aedab464b0c968d6528083df2fa691e3954c2a4",
+      "preserved_scalars": 4454,
+      "diagnostic_objects": 108,
+      "coordinates_changed_to_null": 50,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "pair-aggregation/upper-left-model-pairs.json",
+      "before_sha256": "5c7a8112e934721138d6b39f6ec9c998933959e8a93ff040749ed40d1f642856",
+      "after_sha256": "85becdc5eb460bc4133ad36562fc112962a0da8653b95f63f37aaa6fc8f68db1",
+      "preserved_scalars": 51165,
+      "diagnostic_objects": 1796,
+      "coordinates_changed_to_null": 804,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "polymarket-aggregation/freeze-baseline.json",
+      "before_sha256": "66591662873c8d276aa678d8681ba9065b06fccbc50dd947066ab1a8590c0bbe",
+      "after_sha256": "450ff5b8c77e9e96263407c9340a0f66f7cf893f7362c1d775e98b3d395e9c76",
+      "preserved_scalars": 10645,
+      "diagnostic_objects": 80,
+      "coordinates_changed_to_null": 54,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "polymarket-aggregation/market-diversity-performance.json",
+      "before_sha256": "a061383c84cac9e5647319d4c7886309c94f7a409f20b839fcbf7b8a1535db67",
+      "after_sha256": "0d2932cb60ba481f3e0ba32555b4a4eb8470bc682a841c5b14ba759a435b84dc",
+      "preserved_scalars": 5704,
+      "diagnostic_objects": 238,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "focal-gain/gpt-4-1-2025-04-14.json",
+      "before_sha256": "992d86fde8ebfb43f9728193d06f269b43e85ad021f2a0900b4a4dfb6fa23496",
+      "after_sha256": "cd2e47bf41d60e9a0f40707506318fd38840e5ddd8869b820e9192eb20e47353",
+      "preserved_scalars": 403,
+      "diagnostic_objects": 18,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-fb804fae2beb4c386cfa.json",
+      "before_sha256": "d5190e03be230a28f638a02a6754eb21e453c4ebf0eafc6f381ab30925fa7979",
+      "after_sha256": "263056693da5a356bb1b517aa00351526734e244352481e0ff9bdae078f141ab",
+      "preserved_scalars": 42529,
+      "diagnostic_objects": 456,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-acb685f45f61ae24a58c.json",
+      "before_sha256": "1c2e20addf7fbdc279835772bae8a48eb374eb5ca1fe555e189930e6d9deb145",
+      "after_sha256": "fdaf299a20b33c0861eb3712f7891f402409820a84171301c4bb561df78303d1",
+      "preserved_scalars": 42816,
+      "diagnostic_objects": 461,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9cff12edc7aaf3911a38.json",
+      "before_sha256": "f796f2575c556e9ac006ba608f5eacb8a528ea019f0108152813fc056daeccaa",
+      "after_sha256": "fe5a3efe8985793b3d9a5cf32217c3218c3404c4581db07c46865b7324f84ddc",
+      "preserved_scalars": 40165,
+      "diagnostic_objects": 428,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1dbbdedfb4cd8e37b6de.json",
+      "before_sha256": "7f0bf4a5c4449ab310d51ed4d258d3e9c237b8db96c2f7c2fab866fb087678f7",
+      "after_sha256": "4d7df249ed3677662254b5dd5dc183c21d53c09e25088d2ff0940420ba12bddc",
+      "preserved_scalars": 42491,
+      "diagnostic_objects": 458,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-162eda995e0e11ab9ef7.json",
+      "before_sha256": "f4e4dfb25ad5df1bb6f41cd791e67ea74572b7cb5faa1627c3b38df5fc8d9144",
+      "after_sha256": "1087151d086e03294a04f09df20e9774f81a117d195c827248b89e6b9c9b941d",
+      "preserved_scalars": 16848,
+      "diagnostic_objects": 142,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-cd72b3e46ff8c551dd3b.json",
+      "before_sha256": "d261659e708e81d8d4fddc7d3df88ac1d7f987cb511daff109ea1997c10af6ae",
+      "after_sha256": "769e32709ded2af63df0fd11a2bcfca135e3ca5ee370bf55d120bb3352f0edfe",
+      "preserved_scalars": 88734,
+      "diagnostic_objects": 987,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3badff53e4fefc3da151.json",
+      "before_sha256": "5f9b92d5b9399536a8def00d1d2cf00e256f3ca39d48fd1f48f988a55e63afdf",
+      "after_sha256": "b6d8144594248d560dd5dd4fa213cc92ec17f8c1d69734ecc2f658f5f1e771a0",
+      "preserved_scalars": 42687,
+      "diagnostic_objects": 460,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-24975dc3a250410f90ad.json",
+      "before_sha256": "b6bdfb06986e203f3c59be83392f4c574e963c6950223bc3dde8a9b76739b312",
+      "after_sha256": "fb47ba57038f91cd7ed843bff11db1bda6c5c1f3d15a54d7da2f00e677160e7c",
+      "preserved_scalars": 44712,
+      "diagnostic_objects": 485,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-88b43c1523e5270c63d5.json",
+      "before_sha256": "14873c377b2669ef311ef15182017c1383a462b970c5ccf1a08a14f1e11ceaec",
+      "after_sha256": "c18ae956bc88332f8610a982a23a48c20e3d5a8e701c127defe7e66bc25ee2d9",
+      "preserved_scalars": 42920,
+      "diagnostic_objects": 461,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-44c1f77946b0ffc1c530.json",
+      "before_sha256": "e74e4b366de9745aad414c255fbd90cf57eefb3eb75d0690e48835480d734539",
+      "after_sha256": "547d97cbca2c4821d34115bba629e3dfdd977bb84be197a5eca983ab16041453",
+      "preserved_scalars": 88859,
+      "diagnostic_objects": 1001,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7274a3ed3911981eebb4.json",
+      "before_sha256": "58c58eef50d4eddd678474014acd45517c19e0c2f10efcb2ac80052dbff6a4cd",
+      "after_sha256": "41ce3d90324accad6fb8631481f019979ccf7f8c417acf8acd756991d89b3443",
+      "preserved_scalars": 87483,
+      "diagnostic_objects": 974,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-cb38340ca1f055d924fa.json",
+      "before_sha256": "e6190ebfe6c5b406fcc98feb964b017a21bc0cd5b2d34a26c3913fedf3a57d43",
+      "after_sha256": "69313ce12a388b97ba29cd57ebee8e0ff1245400912074d9c2a110c9ad47dddb",
+      "preserved_scalars": 91593,
+      "diagnostic_objects": 1038,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-74615c88ac08b69bc863.json",
+      "before_sha256": "c016cecccda37b03f5ff29927c330b1d8ee758815b71539533d6d55d8c5999a1",
+      "after_sha256": "3ee31046666864ae737c05cb5d181549d11362e030a3f62cfe0c30fb9c44cc4f",
+      "preserved_scalars": 46160,
+      "diagnostic_objects": 478,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6bc052baeed4f755a934.json",
+      "before_sha256": "87bbc903162eb5df9cd0b51c5d4263f8f8572cff72a9ad86f4ee28b833d9d70d",
+      "after_sha256": "7f1489ab6cda605830a5690b8a619706c20ca7018567f00cb570516eb74c2cdc",
+      "preserved_scalars": 48685,
+      "diagnostic_objects": 524,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d8a1f9ea6ccd4457ddd1.json",
+      "before_sha256": "3cc0d6c701d962025441483165b6ad46ebfb16f068f79c217db733e7b2c0d281",
+      "after_sha256": "046b44fc1021f50200e52106e3f98867f4820efa13d696af617d90331440e05f",
+      "preserved_scalars": 47840,
+      "diagnostic_objects": 503,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-edd16263b692437f23fa.json",
+      "before_sha256": "b9126b7d95ab6f82cf2a9e4d399db9406bf71417729dd17f911ca590b7a3bcd2",
+      "after_sha256": "b8fac3149ffa2fdb3fbc38463d43311145bedc2ba6d19dbd663e51766faab051",
+      "preserved_scalars": 47290,
+      "diagnostic_objects": 505,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8b257236a33de5a2c960.json",
+      "before_sha256": "e42d212815e8172b126c9953924e3c5bf72c8ce2d835b8c293d75ab541da025d",
+      "after_sha256": "12bc989f77e037edd355823a72835b59c31edd1e556a9ce60d578705f615f059",
+      "preserved_scalars": 45777,
+      "diagnostic_objects": 474,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8fd8ea6be75b6feb9896.json",
+      "before_sha256": "ed80e774f3e67b6b7590f9b825e3956de08cb5ca1a6a8aefe8ae94384016542c",
+      "after_sha256": "96732c9f75ca18f9c386f8991d7c95045b74d94857b9a0b279b098f22ca36a61",
+      "preserved_scalars": 46861,
+      "diagnostic_objects": 500,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5a79bd0508e056bbb539.json",
+      "before_sha256": "5402be3ee41eb174ae5a14184aa67df9bb54d12301d857abb1fca6deed07fe32",
+      "after_sha256": "f66a0dd4d342d64ad18d5d2f2bc8b7fa0cc1c870eace62aabe4fe8a898665abf",
+      "preserved_scalars": 65619,
+      "diagnostic_objects": 710,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f824185addf63ebb3ab9.json",
+      "before_sha256": "1c08697e3b42dafbf61ac672fc4f92e5c5b2dcfbfe235fc55f932f855d6ebcab",
+      "after_sha256": "c3c421812448a584692021074b089b5009974b48e11e4a34708a1b65dae78068",
+      "preserved_scalars": 62793,
+      "diagnostic_objects": 688,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c69cb9c59bcda90a7019.json",
+      "before_sha256": "3458b80472260323d50a358683b7fca8fa6363a24505ad8c42240ff7ea343e0e",
+      "after_sha256": "2ac3dd19afe228548986902eb91445af7cabb431fd882f4518071eef58e4ef87",
+      "preserved_scalars": 48794,
+      "diagnostic_objects": 521,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-502fb870b3937ec5b0d2.json",
+      "before_sha256": "f1f082f6e9f0e5c6ca2992b27f0e89d47ea8912f373e946dc18458f215cbadf1",
+      "after_sha256": "add03a24d2abcca3f03a11e7d8bf915611e8ac4ff9f577c6f9e9563f33ccbbe5",
+      "preserved_scalars": 36249,
+      "diagnostic_objects": 376,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7d891d434148da7c434e.json",
+      "before_sha256": "c902839f2e1eb5e5aee3c46aebdf056c468f9856eee5e6be7c818cdef2e4c265",
+      "after_sha256": "bb71a25ced1518d588d13576a1422869ae0735607a99d8ce2f8a3d0fad3671e0",
+      "preserved_scalars": 33481,
+      "diagnostic_objects": 340,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1241c1c2310f6d31e844.json",
+      "before_sha256": "faf2f78aff9635838345b01add14322903568f6904dd954d3a7daade83f9bd13",
+      "after_sha256": "66016c16ae795fb695d9db4774035ca554508052d39353e25e92a7a8a25bbf94",
+      "preserved_scalars": 44534,
+      "diagnostic_objects": 465,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c4d44cbc4d0a35129e49.json",
+      "before_sha256": "b633006913d6828208c8fcdccaebb8aa3bccb731d00b0ac3eb843169aeb6fa4e",
+      "after_sha256": "baeda8198e307d6120161d447a96f79402325bd6fc54d292333399915b3f53be",
+      "preserved_scalars": 58457,
+      "diagnostic_objects": 640,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-cdda43305af7fb34cfdb.json",
+      "before_sha256": "d25a2e539658e842a8f228b1194dca43f19651c6193ba12288b12961f78da3b2",
+      "after_sha256": "7afa57133ca0fcbc5956ff46c4012486d7b89be3fc1ca91aecff49145c459340",
+      "preserved_scalars": 54480,
+      "diagnostic_objects": 590,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-63355e374a7cf042ac06.json",
+      "before_sha256": "09f579f9c17c1fda91266263e74fe0934b023dba0f15cc5fa4b34470c227493c",
+      "after_sha256": "7f69225bbaf26ecd402e3add015fb5fdd9eed08845c33c2ee54a69c5f7b2122d",
+      "preserved_scalars": 61981,
+      "diagnostic_objects": 687,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a3e029225a0878c6286e.json",
+      "before_sha256": "57641ad5526f40c4d60f155bc41b30588df71aeba84676e95cdf838224ca130e",
+      "after_sha256": "cd58d1a9b49b6f110ac6005fe69f82424aaab6346f575a861368d4f1575efa88",
+      "preserved_scalars": 42270,
+      "diagnostic_objects": 451,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-fbb1de9c1201b8b50199.json",
+      "before_sha256": "54a365402fb0c81de4c262c609a2a0a7a67d3672f57685710ed4a7be50e8c059",
+      "after_sha256": "cdd8787436c9a82d60a81ef18c442f8348d0513cfda1d25cb5325e8a29d263e0",
+      "preserved_scalars": 42114,
+      "diagnostic_objects": 451,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e62e2588793a78ece052.json",
+      "before_sha256": "d6c9660f7f13f05775b3e94830624dd8e04d7a01a09598dc11307a65531cc9eb",
+      "after_sha256": "3a840186aa51988122a4a95a4c7b75b1513de7abe641bcfc90caee2fb98768bf",
+      "preserved_scalars": 58369,
+      "diagnostic_objects": 639,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-022dfde5365415ad903e.json",
+      "before_sha256": "a441f99a03b574284b4d8d0642363d217cf36175c610d73628ca46ee50419fca",
+      "after_sha256": "fa932a6b1ac2ea7db7c769ddf8d18ecf797b3252c998053fb95a8a27d308d38c",
+      "preserved_scalars": 58037,
+      "diagnostic_objects": 634,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-09635265b4d60f59b34a.json",
+      "before_sha256": "30ff535ee8bed68642c9a87c2c4809bf8e6717802dfe6aaab136d1789404d13f",
+      "after_sha256": "93d01c334c8bc86fa20b52503052f92c6044660f1cff60c49b74456a76f3252d",
+      "preserved_scalars": 60143,
+      "diagnostic_objects": 664,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1a4b73d1cc23ffbe0142.json",
+      "before_sha256": "8e5f98708994685e6f6123c88557ce26eb5bf81913cb081c314d786a690bf173",
+      "after_sha256": "5c30c1b6101f52d3654bfdb5c4d5ee3716a3ebbda75a1d432bcca1fee71f65fc",
+      "preserved_scalars": 25202,
+      "diagnostic_objects": 237,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a22d9dafad4967d13f9d.json",
+      "before_sha256": "65b31b04a3ba79250bed7312dba54a2868a9230964382e1cdd6d927be8bd15df",
+      "after_sha256": "cef253c9dd8aec79361231eabbd58992c48e605bb0977e1d98e42db30e408ccf",
+      "preserved_scalars": 24681,
+      "diagnostic_objects": 236,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a401198bf84f024fdd6d.json",
+      "before_sha256": "973555839a31dbaac714d160f8e47ffc3c26d7ab54f0fd7b3909393c9f8f1c47",
+      "after_sha256": "440e917bc32e20bdf414a2afb1eea18a4bee31485eceacff826b9acc26863a7f",
+      "preserved_scalars": 22103,
+      "diagnostic_objects": 207,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-15693de8894b880de275.json",
+      "before_sha256": "9469f9289eb4b42f7cb620d7219fdee1bd0670686d43aa0dd1473b5b2e9c9b0a",
+      "after_sha256": "3abf3db600e5f13af8f1d0507077356cbb9fb2b4ab5227b265e3713c075e3bcb",
+      "preserved_scalars": 22699,
+      "diagnostic_objects": 217,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f120e581a7b631e760da.json",
+      "before_sha256": "ab00027207e79ecfe79d3db677e873dc5e8e47bda61ed35d571f21c613547b08",
+      "after_sha256": "5e9eb14c1f51df7f8a5e7e8991acafa7462ffdbe8a1ae6652edb709b33882c9a",
+      "preserved_scalars": 34448,
+      "diagnostic_objects": 343,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d4777719179132ec845c.json",
+      "before_sha256": "5da75cc51c73ae44f27adceed712bbf68d6e3e30b67522d52c8b68835123e2e7",
+      "after_sha256": "6fd6f3d340894bcc3aec39f41a9ef9dd0620cc1436b0c4a8e6039f6aff2b6263",
+      "preserved_scalars": 36257,
+      "diagnostic_objects": 376,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b85f19b34a8adcc39a7f.json",
+      "before_sha256": "aa7891996373f4f0a99239ca184a2be1bc452bc53492c0236ae30f5caa49bddd",
+      "after_sha256": "f15199cc8f81c16471a1e5abdf2ba72d8e47aa8b432e78a81f1c0e4de6fbf818",
+      "preserved_scalars": 17349,
+      "diagnostic_objects": 146,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7c5f8e7fa06e983ac44b.json",
+      "before_sha256": "b3168eec6a1283a0ad060f1f041bfeeb840225154fc5ba6c2e9e914c736afa27",
+      "after_sha256": "4464ef9866be311232cda76bc2480e5703d407fe0227266d2507f3b06d8261f5",
+      "preserved_scalars": 18093,
+      "diagnostic_objects": 159,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-62f95aec3d2b5b0ebc4e.json",
+      "before_sha256": "572111ff5421b71d0527f9e5a766c41b57d407edc098a26423b8eb2821862c66",
+      "after_sha256": "60d0788da3cc283356dcc4d56a3dac3db106c7a5f40e69c012e98abdb72354b8",
+      "preserved_scalars": 18664,
+      "diagnostic_objects": 164,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-19cfdff3797db9ac691f.json",
+      "before_sha256": "9649e01de6f77b884a4e0affb35d56cbb8911a2f4097883f931d59d5318f281b",
+      "after_sha256": "7b8ffa4d0ccdea259203bc4d7a83c7919e30807b4bb22f03746cad5cdda14b19",
+      "preserved_scalars": 21841,
+      "diagnostic_objects": 197,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1abc198f1af066114c3e.json",
+      "before_sha256": "11388c74d3a27310fb158c447e1239eaefad1994c947007ac0a61ad913db0ce4",
+      "after_sha256": "0c47bf71b97d5a5c8dce75ba16dbda5c1b4ebcf4ac1c653359d91e3b5b7aaf8c",
+      "preserved_scalars": 22577,
+      "diagnostic_objects": 213,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d4b332de85cfb6255898.json",
+      "before_sha256": "fafc39dd329bb8be8a8612b5cc02af0fdb7cec59e1e80d87afcdfd5c1cda6289",
+      "after_sha256": "6400078e09b4213e01dec1fa0129f953a49b56d30a186cef44e2c9b732267ffb",
+      "preserved_scalars": 26134,
+      "diagnostic_objects": 249,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a68feda1f366687ff39d.json",
+      "before_sha256": "9fe17796d49af73544d672a7a50b91329992f767d5040c7d9c703464cddc68fb",
+      "after_sha256": "488fa9aca608a292e017d1936f4c55c0cc1158eb3bad9c378096122454f5a0a6",
+      "preserved_scalars": 26878,
+      "diagnostic_objects": 264,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-873c2c44a1017e8afe11.json",
+      "before_sha256": "39ff9db33dec6b2b85b1ce32445be46f8cf3ad987f8454094831f3a554be0f9a",
+      "after_sha256": "3b76312cde4dce506110dda74ed282c98265e3de8a20b8fbaa03bc228793837d",
+      "preserved_scalars": 38837,
+      "diagnostic_objects": 398,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b583d72bd5bb1b264a17.json",
+      "before_sha256": "7b1d8426e6ea0a2a77e11408d76bac1fe5e121ec96d500fdd312433b891dcdb0",
+      "after_sha256": "cac765695385868fb2969d78538042f218dbf6aba58035fbe6a03bfdb208fc42",
+      "preserved_scalars": 38982,
+      "diagnostic_objects": 405,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6bd3957fc94a995b84d3.json",
+      "before_sha256": "eefc861ffba5a6b89abae48160ac35e66c36046c4c7207f25cda25eb7c1988bc",
+      "after_sha256": "2ac691d35c994eb24f094eddca14f89bd7ce85307bbeae9e26bfa2df7962e2cf",
+      "preserved_scalars": 24656,
+      "diagnostic_objects": 229,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-ce63f420055cdcbb9c3e.json",
+      "before_sha256": "03d93a9e0226f8f0255cf5a262444d7d99a7dc41b4a7e01e47b4c97f3ecd46b0",
+      "after_sha256": "1ff9a6d485a73b7bc16fe5721e43ea1d2f1f27cfd4a3c37e2092d5f4d055200f",
+      "preserved_scalars": 25052,
+      "diagnostic_objects": 243,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-44fe5f9af68162bc1b3b.json",
+      "before_sha256": "38b58bd22d63fc1bbdab95c58bea260f913040753de2d073673e33124c4e01cf",
+      "after_sha256": "2e7ea9b4f180cbea9fb42e826fb50441c921cb95134505c9ee667c9de11a7e4c",
+      "preserved_scalars": 35442,
+      "diagnostic_objects": 355,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-af7dd6bebe257ebf183f.json",
+      "before_sha256": "51210d008cecbf8eea305a12705f7358ba3cb5d28db48f245d71a98189e46ce7",
+      "after_sha256": "1cdf9300a14fc56de0d1175b02258b0fe2c9c5a232a5e538c991c3471528dde0",
+      "preserved_scalars": 34546,
+      "diagnostic_objects": 351,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d9bbc125e9fdbc695a17.json",
+      "before_sha256": "9c8c4e80e818ef520aa2d0b78bf1161d444848b1e39b024c02f0ead45a4a3200",
+      "after_sha256": "c8a841dc3af2dcc03734828fdc298e0cf2d8d1c068b27eef352c4d0a08836276",
+      "preserved_scalars": 35415,
+      "diagnostic_objects": 355,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9a9b6b3bc6a684198dd4.json",
+      "before_sha256": "f58c6b87557a3c1bc23b482b56fa47e012d6999fbfca8728978026b8d915de62",
+      "after_sha256": "92c2b62d77b5e3d6dd46a64048f46cef36e14e19d33ee8792fae25f82be42896",
+      "preserved_scalars": 37064,
+      "diagnostic_objects": 378,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-54bf250bc90200878c96.json",
+      "before_sha256": "f498f3c65d0ddfed9f4afa2a9455949078c3dad185f8a446b2467f6367d81f09",
+      "after_sha256": "1aba23af340743a3f16c5a452462060290f3b4ec749d14e7299b773ae02c6f4c",
+      "preserved_scalars": 33377,
+      "diagnostic_objects": 339,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d1ee98c3e43e428f5389.json",
+      "before_sha256": "c6e56703bc2865034d4390a66df27ef50c3d6332d087a0318ec4dccdd3737c40",
+      "after_sha256": "abeeb6886bbde76a0b40f5b2c42687264d4a84138866ee51faaf0f1d66fc81ad",
+      "preserved_scalars": 36031,
+      "diagnostic_objects": 362,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5024ad7ac05d5bd1a531.json",
+      "before_sha256": "4ef0c4a3a5bf362b97fccf90aea1dd6f071dbea4725357e959859767019bfd76",
+      "after_sha256": "d7c5e5050e242c98a484d716b4278701ae8c1cb50a7aaeab5647e2399ce7741e",
+      "preserved_scalars": 32850,
+      "diagnostic_objects": 332,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6eb8386cf3d59942cd79.json",
+      "before_sha256": "59c994060abe2601fedade79524ad427b9417878bfef8d9337731088a48844f3",
+      "after_sha256": "40ecd0a83ebc4e705eb4551bcd5cfd46a6daa29351cadc72a50d25727edf51cc",
+      "preserved_scalars": 25077,
+      "diagnostic_objects": 235,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b7bfeb56cdaeba45f6a9.json",
+      "before_sha256": "bd4c175c5b4702cc164a76e172ee0c65112533369e129f9a9826c45de70349ca",
+      "after_sha256": "cfaab27814986003d7d4ca643c8db123fb450d6bbe705d2766ad37b57a1d5ccf",
+      "preserved_scalars": 23224,
+      "diagnostic_objects": 218,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6bbdd5663fb191fd0046.json",
+      "before_sha256": "ae5c4bc9d1a9bb91b549154249e4e966fc61ee87539c0cfb03bf24f801e1c136",
+      "after_sha256": "737d13b68e03d0c239caa4420aeca2d04b76351987b5a4b8df2c3f5c508400ec",
+      "preserved_scalars": 43772,
+      "diagnostic_objects": 471,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-586e30c9ca897a224de2.json",
+      "before_sha256": "98149d68093c56ab4eaaa0a565bf1cc13bdaee7e4991c565bb3fb1b6e7d20bac",
+      "after_sha256": "a7330d6b76007de94999dfaf9f751ca8f0da84fa9751d4e3273d6ecf119339c9",
+      "preserved_scalars": 45305,
+      "diagnostic_objects": 492,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0227cf096665a2dcbc40.json",
+      "before_sha256": "49f45f7950b590be0c40b8c81731dcd825437a7588e5e0c775a9c54be8b7c1d4",
+      "after_sha256": "b08eeebe7d92e108fd0ea33032cb0e6fac14d6a8a9851e257653a8149e412167",
+      "preserved_scalars": 40198,
+      "diagnostic_objects": 427,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a84a076b8262ce454d8f.json",
+      "before_sha256": "8db8ddb3e65d8ddc0ee91d41255086560040789f3e08ed3b58fc1d349d0a2906",
+      "after_sha256": "33bce5a3eaa33802a83046497123d7d1db0b31342567fd7dcaa28d561c81c076",
+      "preserved_scalars": 45735,
+      "diagnostic_objects": 498,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7ec31a94b99cf5c0c4b3.json",
+      "before_sha256": "15ac50010d9b150ed3de6a841007b20c51a7b9380714812c539b36d81235ae25",
+      "after_sha256": "9d7ed8693b934edf2525b64c30291d6afeea16d0e2b7debc187131e2b23e9c65",
+      "preserved_scalars": 43139,
+      "diagnostic_objects": 466,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5a71b2e8f6057684cb06.json",
+      "before_sha256": "0c333cbece77c5bacafef0e8112522808cdffb2a6bc0701b355096aa9ba7d8d7",
+      "after_sha256": "97ee21f253c04fc2e878018b18f5be6a758fcccf576bcf7f0a78786222976008",
+      "preserved_scalars": 38125,
+      "diagnostic_objects": 402,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5273f631ce96fc9c8a57.json",
+      "before_sha256": "cc4b10f1717f048d9bfd746e12de679bb467c33fac34c805dca43b636854388d",
+      "after_sha256": "78434aed7961c494d49b74f314a19ebd27d421c8305af14df34316e7708e82ba",
+      "preserved_scalars": 43166,
+      "diagnostic_objects": 463,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-2241387820d5e02d513e.json",
+      "before_sha256": "862543acd454ea42a03f5555087dce2a4237ebc8abe540019da1852045e67fdc",
+      "after_sha256": "b6d3a4bea2f0e6c4842b7f5c0856496f0cc89462c638ee549fa751d659429782",
+      "preserved_scalars": 43423,
+      "diagnostic_objects": 466,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-06904fda6088627b4e93.json",
+      "before_sha256": "d5b3c2ac4c13a9bc611c47082f070fce02be46ec063a0588a28c586209c6d375",
+      "after_sha256": "3571bcabfe280febbb40b9e4a9df031885f3796254db7c96069cadb798f21e0a",
+      "preserved_scalars": 44469,
+      "diagnostic_objects": 482,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-303740a4088bf3d19f5a.json",
+      "before_sha256": "e1c431ca71af2972cec36849e96d975ddeda0924a8b308f34363fd2e461667a3",
+      "after_sha256": "bebac4e4cc3be1e6fbb8fbb18fe1688cce0ada4256825334d2e8d18789990bc0",
+      "preserved_scalars": 44908,
+      "diagnostic_objects": 487,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0b9c163a7e212bf3453b.json",
+      "before_sha256": "8ba6e6c2b6ce2b5763b78ddf55bab3a6c949d34644b7dc62ab1ac58568279aba",
+      "after_sha256": "e7652d25256a4932e63b45df601c9c6bcb5f7c9021cc6e8c99945a2526af06d2",
+      "preserved_scalars": 44803,
+      "diagnostic_objects": 486,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-445b1df8fa77137ebaf6.json",
+      "before_sha256": "920020c3cc708030ad769504b4171aa1e6d238cfecf5b7298a13a93cf4528173",
+      "after_sha256": "50cb141f0750d16b2877d21b69696f80c7c17a984180ec9a59bfa26d5b76c2f2",
+      "preserved_scalars": 45170,
+      "diagnostic_objects": 491,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-46f71aa4444d5c9d267c.json",
+      "before_sha256": "b0f6e44eaf81ec301fb20cb0fe43b53deea7568127f4c109986b15de6892030a",
+      "after_sha256": "897e8af412e012da75c972a9793c4c24ab1fedcb6f3d49a01370248d287111ce",
+      "preserved_scalars": 30011,
+      "diagnostic_objects": 303,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-818876f253fae781a63b.json",
+      "before_sha256": "825eecdb1fffc9ed49e4e9907af0373b377046845746a13eae48c7b44e3d58db",
+      "after_sha256": "8d5fe4ea93ac5c2bff7362021ed36c9f9fd5783aaa2af09506c8ee1eedc800c7",
+      "preserved_scalars": 22538,
+      "diagnostic_objects": 209,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-437ee8fbe567a6991d95.json",
+      "before_sha256": "4e3e2dcacfaf633459e63b2e1494e2e70974b46c0ed3398d5785bfc85ec0ed21",
+      "after_sha256": "f55efe9987c79b2fbcb96a057f0fa32e3f9b6469ef5e6ba7350dbeb7ed1932d6",
+      "preserved_scalars": 27693,
+      "diagnostic_objects": 276,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-29e3e153976c84393c5a.json",
+      "before_sha256": "fb5eb5e0aa94d60719e0634b54ac20a2017d8beecc2ac522f66a30bd9cac5000",
+      "after_sha256": "1cdf6e7b56ed0a07f2eb4f1b5f78c2d27bad7b8b045e5f2f9338cb170c0c11aa",
+      "preserved_scalars": 25548,
+      "diagnostic_objects": 247,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-154f1cc816e6e45efc53.json",
+      "before_sha256": "e05a41f42171aed45911b2e171a734c4e1c3a90ba5df40609f22d3481bac3756",
+      "after_sha256": "e09686fcbf5dea1070ec59410ab5fabb1c5c045a75b74c2879893867fad2ec53",
+      "preserved_scalars": 33770,
+      "diagnostic_objects": 342,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d73b3b46d3d4127b1102.json",
+      "before_sha256": "66deb3f997198d1ec10df80e7e192fb1a794b36b79bd453e3d68e620d8c5464a",
+      "after_sha256": "e01253826016711e246e0d3e648a7f8070de0aef3d823b961770f83af4e8a75c",
+      "preserved_scalars": 32229,
+      "diagnostic_objects": 327,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6c7669644d2343123688.json",
+      "before_sha256": "fe7b03f7088e420651fd8b413a0e12f7e800b81750ab66d57a78fb58d32dd35d",
+      "after_sha256": "f84bdf2c1bdf9cf6656f8281a30ddec52b3492536627d42d8a0b14702f5db3ca",
+      "preserved_scalars": 32737,
+      "diagnostic_objects": 333,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-798c74dd709672f93a65.json",
+      "before_sha256": "bef51f644caf8c8632eaefaed66e1734f17878e27d220a2606a7529da84fac77",
+      "after_sha256": "ecff1eed674d0e0a221819433eefb4a8af29798e7e9362825696a9faa16b828c",
+      "preserved_scalars": 28804,
+      "diagnostic_objects": 288,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-730fe0d84f5017018ea8.json",
+      "before_sha256": "160921301e6cd8fa5b5adf0161dcb6f3f7e9f3f6410533d69bea43f38a3fb55e",
+      "after_sha256": "b010aedbe4b7a7053f6c58b581edd6baaee8d51ea53ccc90740276564ed5d7b0",
+      "preserved_scalars": 32937,
+      "diagnostic_objects": 334,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f8923e32c7834808adfa.json",
+      "before_sha256": "c3934311bc82f940a18ba116c73bf6064fee7d0eda376d6ab5937e38edbfdb0a",
+      "after_sha256": "3f969fd01efd831d45b1357e0c4a26277b79001f36048066dd76e58d2ab2e569",
+      "preserved_scalars": 33643,
+      "diagnostic_objects": 349,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-533fced24b9421ab099e.json",
+      "before_sha256": "0e9631df11f8a4338f4cdce84c3528d2e99640e2bf9a310f8f7bb3c518c8d3bb",
+      "after_sha256": "e55b7500bd9a1d5157dd3c630140be8ac860a526b94caa39805cda277152fbcd",
+      "preserved_scalars": 32717,
+      "diagnostic_objects": 326,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7779fa16ecbecf612b9a.json",
+      "before_sha256": "cf0b35b4c9deeadec6bea6b28c7ebc145d3552fc88d7f7c442f4697e64176d3e",
+      "after_sha256": "8ce894b12af664b5468b4265d398ef80da2128a0c79756d8652581868eed8916",
+      "preserved_scalars": 33172,
+      "diagnostic_objects": 339,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-316de2ab63e39caea7f7.json",
+      "before_sha256": "3f4f8fcf8da3db4aa2f7a3f908f5bc9dfdf1a95e3b54d75f4eba699bfbc6b2b8",
+      "after_sha256": "658fcbeb16d67b3169dc1be12dfd3a2982fed1ecb887eaddf32cddb087f9bf39",
+      "preserved_scalars": 31384,
+      "diagnostic_objects": 313,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8eea15aa69fcd7a585f4.json",
+      "before_sha256": "dbd252e6fac239cc75264495a8e4495f132d1dffa92500f25c2b0e9f9514d3b5",
+      "after_sha256": "76e19a36dc5025373ba49d5ed858a0de17039708d9bfc46b1da46b2bd06718c0",
+      "preserved_scalars": 32193,
+      "diagnostic_objects": 330,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6da81f32f179f5816d29.json",
+      "before_sha256": "6e403117ed54d8c389038637123b444b31018717124a7d2d94591af7deae3648",
+      "after_sha256": "2f9efd901cd61f57f8e7da05c03c5aa1478ad37839554abc5c3c966b8946068d",
+      "preserved_scalars": 22599,
+      "diagnostic_objects": 206,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-26535e453bf6766f850d.json",
+      "before_sha256": "b28815b096a2f7773b106ac41e11693a28ce121c5e65ab76447692586bef5fca",
+      "after_sha256": "a9cdad47afbb15457174a4c9a7c2563c295c80f65a327da6420ab05a67e1c5a5",
+      "preserved_scalars": 22829,
+      "diagnostic_objects": 215,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c534f919f5dd3e6877ee.json",
+      "before_sha256": "e78a72d78ccfd229e91170fd8308054e8c0cb20120df8b9ddba4324836d1536c",
+      "after_sha256": "aedafb3f9b29f42b7dd392af7ba00542e01f1c874585062da8b67c8be44f844e",
+      "preserved_scalars": 21052,
+      "diagnostic_objects": 195,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0784d6bae407d3ef8d91.json",
+      "before_sha256": "8138daed650cd52ec0513ee90d5f573dd355530f181aebac0a26071b998a5011",
+      "after_sha256": "6761238a90f3f9c9b462b69167e424d32fe78deabd5fdb77017903137dfdfe1e",
+      "preserved_scalars": 20838,
+      "diagnostic_objects": 192,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-91fcc093a45b1a16ee36.json",
+      "before_sha256": "15b364041edf5dea7a6202d4888f274366e30a79e7ed4a0e7407fad87b822d2d",
+      "after_sha256": "f20039eb0e85d049e53b5c954d72deaad97e2f22b93dff056743f38db5379645",
+      "preserved_scalars": 28958,
+      "diagnostic_objects": 286,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-90483a7fce3e1640a107.json",
+      "before_sha256": "176ab82de5b105ef6d3c58fd2aec25121596a6e3be3fb8b83c0f17ce5af57655",
+      "after_sha256": "661045e00c44339cc39cccf87cfe62bc2eceacc3a3ec3a87fbd5da446686a89a",
+      "preserved_scalars": 26820,
+      "diagnostic_objects": 262,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1f526d2cc0ff68a44a72.json",
+      "before_sha256": "1e6f15461323851ba211dc4c7aa57ff524fae901df35daf768c4b6a8ccac1bc7",
+      "after_sha256": "0087a9a7966e5eced252675e3d1a0981b70f818477a07146c25e0491680fec1d",
+      "preserved_scalars": 34842,
+      "diagnostic_objects": 359,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b8c33ac459d41de7ec56.json",
+      "before_sha256": "1c7b94cd865c98aff3591f370cdc5b8735d73d0d48327e6bd1d504d226bcbf4f",
+      "after_sha256": "9ef86cbee36d34c9eb4cabf750f3137db4ddd46af45b47338d7d3594c0531490",
+      "preserved_scalars": 36682,
+      "diagnostic_objects": 383,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-89399270fe218d6aa09c.json",
+      "before_sha256": "8b56188add87e18b2498effdff78ac8bcef7471991a17765c701bbd7f1311bb7",
+      "after_sha256": "42d1ccba09f53a94e3f61db46e6d6bfd8af907c9bc68371f99587b9c7e01f798",
+      "preserved_scalars": 36428,
+      "diagnostic_objects": 379,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-47692e6eea61bddbb557.json",
+      "before_sha256": "107943bf86c236edac14c86fbc439be7dedd987b618cb96ad92a042574452436",
+      "after_sha256": "2ba13a9928ecd607605acbde0e0b3e09b919c949a6d5d3b1744312925ec60bf7",
+      "preserved_scalars": 31480,
+      "diagnostic_objects": 315,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-763dbfffda2991a325c8.json",
+      "before_sha256": "0a0b5300a52c1afe5949630b1a80d21e122ac96bc319d9133baf378def91afd0",
+      "after_sha256": "8099106f29bb857e6c982f15ec39dde388471cabe8afe0f3ff3db5e310dc7fdc",
+      "preserved_scalars": 43335,
+      "diagnostic_objects": 466,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7510b15f53e3b3dd18f6.json",
+      "before_sha256": "69d5fd77322092406cbd29031b52c8781ae4f53bae639b22e12b8a817204b441",
+      "after_sha256": "e43a482d9783031eefe617b3c17d63d498e822871d1146d03186167eeb631170",
+      "preserved_scalars": 43887,
+      "diagnostic_objects": 474,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-33c17932a635b8b35cac.json",
+      "before_sha256": "0c7f8897758af9c1fd7b073a890158cea5f65f77dd6d6c68de141be8064a4038",
+      "after_sha256": "12c233df6a1511c355c07624694b361f2323ed1941cc04d701211a3f7639c07b",
+      "preserved_scalars": 35403,
+      "diagnostic_objects": 366,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-dc8089e46d1beb31249a.json",
+      "before_sha256": "44697004baf57f37bc4066bad3e6bdb93927ec8b5aee1316e9fe3d60bb939924",
+      "after_sha256": "682e4f229fcf0dd65e2d330c824a6e196a4531b4e1dcbdd07dc5724a9281cec3",
+      "preserved_scalars": 43957,
+      "diagnostic_objects": 474,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1e8839504830e6e394d2.json",
+      "before_sha256": "22b2be4d46e31c254ba952db36708ebc62316b35762fb792d6763be28a729f96",
+      "after_sha256": "348236d8da600abf5d38308005202878f288e8bb5cee05f16a877799d0c16647",
+      "preserved_scalars": 56835,
+      "diagnostic_objects": 619,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1b6ce4d86d503bd2dcbf.json",
+      "before_sha256": "65531e6f0533496a9b6d1bf8dc779d4ee0ef868a6e0194b7c24fb2acc5da236e",
+      "after_sha256": "b10c6252b4c44bc9a75dbf2ba1b9291dcf9e5127d3bd48fef0415083d598f7a0",
+      "preserved_scalars": 42808,
+      "diagnostic_objects": 461,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9709703c110cdb8287dc.json",
+      "before_sha256": "8219105a4f32d511a0acb10ce226b7e426a46ef25ee4c64fd164356d18d5e858",
+      "after_sha256": "c0d11469c5cb00596367b2b823177332bcab09d0a092bbcc2ad81b6ab5ea166d",
+      "preserved_scalars": 44861,
+      "diagnostic_objects": 488,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3b557e7755ff1d58dd58.json",
+      "before_sha256": "d4bb8d44a9e877d011b5f04d93c27de761894a6acb97613f871ca83e962c6708",
+      "after_sha256": "93086748f4cefa0235c28928fde8730a326b43d2ef589a3a1a7bdc2f2ac80c1d",
+      "preserved_scalars": 57927,
+      "diagnostic_objects": 635,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-ec50f81c5c92ad16867b.json",
+      "before_sha256": "e95e8966779c1aa148cb64d16fb0f14650a6de106903086b34b731df9494d544",
+      "after_sha256": "cdd8a6e63bba95d6dab7b44427e7d7d651c0b3009937f80f74e58ecf764174ff",
+      "preserved_scalars": 49217,
+      "diagnostic_objects": 517,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b4d963e4c1745bebf9a9.json",
+      "before_sha256": "566fab23cbdf1f6808c0c77e132f55e099b7f289ca93e1ba324cf6c0749dd515",
+      "after_sha256": "dc138d25bd6d9bf940802f5dcaf567b3af2b16cdcf5cac1f7a3baa9e830fc5af",
+      "preserved_scalars": 59963,
+      "diagnostic_objects": 660,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-255de8a1d2e273099b23.json",
+      "before_sha256": "8660ee35c1426c8344a1aae42e8122574d27fc50e29cbf6dd0c6227e2a52a28e",
+      "after_sha256": "0e8b1d18146e088f7ceb263b8223ad3ae4bf0604c98b1030624cdf5bc660f0f5",
+      "preserved_scalars": 48021,
+      "diagnostic_objects": 501,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7d7965052aaf74a63d15.json",
+      "before_sha256": "1496e1875e1187518455f79b63ef16c6bdac878374d589e43cf2abed87248001",
+      "after_sha256": "c256ca35d603e9b476be64fab7adc8828e1888382796509a5b6940654e462479",
+      "preserved_scalars": 50625,
+      "diagnostic_objects": 548,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1095729deb9a8be2816b.json",
+      "before_sha256": "a77a5a2362498dbb797114866492d841b81562374dda06ac156707ba49f139a8",
+      "after_sha256": "a7aaff5b69f9f5612409c40c79539c9311eb133c61b54d4368bf2f65bcca881d",
+      "preserved_scalars": 65777,
+      "diagnostic_objects": 712,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b33c5f8fc29bc958eb4a.json",
+      "before_sha256": "76f0092177e5ee7d394437d2ebd758b493a185097b514581dfc5d0ef9c207093",
+      "after_sha256": "f8777fa2c21cb363831395a79c76d9c1a7500df560cc65318c323b491e7bf330",
+      "preserved_scalars": 66807,
+      "diagnostic_objects": 740,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7f9da7f18b0756ba725d.json",
+      "before_sha256": "3763d369ba3831a8b5a2dba2adfe93d9e13d9205b2b109f0ba162252780b6e40",
+      "after_sha256": "02be1516b4e7e387047f8eb1990241bc6ac4c70b7ca36dfe3cb3552d257d4165",
+      "preserved_scalars": 18773,
+      "diagnostic_objects": 162,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-403e1536080dbcd75ca3.json",
+      "before_sha256": "9503a33ea453302a4f7557aa8b6df0f80edf4efbf5033de22acc1b294f815c64",
+      "after_sha256": "e4b2e1e19e2ef2229e5fcf5ef2872a3684f1a38ece917033dc6e5b63fdebb758",
+      "preserved_scalars": 19050,
+      "diagnostic_objects": 169,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9704c0b0eb2e01cf6b46.json",
+      "before_sha256": "6c15b840e70f481a8eaa49ce2495c9069cbaec67b1831dc6550417fe6ef9ded3",
+      "after_sha256": "951b693e91a9bf120a22d6e111291a3817e78ccde922d5fdf3694ccfa840df00",
+      "preserved_scalars": 18759,
+      "diagnostic_objects": 162,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-75ebf1bb38584efd6d8c.json",
+      "before_sha256": "2f740501388dbd1f0880cb3260972fc4413e60d9ebb889628156b40c4a16dad3",
+      "after_sha256": "d4b9ac3f221b6b850b6595c2a32cce445059c1b93c069910df84cf16d5fe1a7c",
+      "preserved_scalars": 19825,
+      "diagnostic_objects": 179,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7e85b32a1bc3b17340a3.json",
+      "before_sha256": "ff03536798c76ff3b1ab9d7bcc5eb9b918a195f162bf200e8e56e57a761b71be",
+      "after_sha256": "c424f8e57f47f8d23ffbcedf8c0b131c6f8ee9a7aa5cd3673ce638120ed7aa4a",
+      "preserved_scalars": 68888,
+      "diagnostic_objects": 760,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9b287794a9735929aee1.json",
+      "before_sha256": "481833678beec24616498e265c799ad09a83dd4310415779cd9d40cef413cf74",
+      "after_sha256": "f7c43592d090cbe7fd3750d4bb27b6dd511a1ee1d8448558671fde944c6447dc",
+      "preserved_scalars": 39251,
+      "diagnostic_objects": 416,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-90183555549199ea49a3.json",
+      "before_sha256": "609a6d03640cf7e3d8aac5f18abce2394210d63b82889e3bc9667a85c61e06e2",
+      "after_sha256": "2dd812c8723b709803146b122b3fd076c44d3b6a8618b1a540ac9cfb4619fb42",
+      "preserved_scalars": 43103,
+      "diagnostic_objects": 464,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-ce1f23e73c072a105aea.json",
+      "before_sha256": "ba22f668db8f009053b09480643d0322f934de90b479125776dea5572488002c",
+      "after_sha256": "6503810361d273f49610b940677589488abe5fd9d28280b14790b8563ab970fd",
+      "preserved_scalars": 43546,
+      "diagnostic_objects": 469,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8a18650dbc23f7454895.json",
+      "before_sha256": "1633638f95cd96312a735c0a79b3fdb671c3947b4af98976c80376ed20ee1398",
+      "after_sha256": "79dbee0bec92de2f694a32e3df4b53e0b584bfd9dd89cc727292ab82506fb507",
+      "preserved_scalars": 71618,
+      "diagnostic_objects": 795,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f7b9e6c0bbc62d59c540.json",
+      "before_sha256": "da5a17d72fb095d8c1794ab7cd3c04e180e7b95fd0b543d3dfd35a387f33576e",
+      "after_sha256": "862099141ed87b815711da680aa7d43a8c4a472352f026f7833aee734f96974f",
+      "preserved_scalars": 69497,
+      "diagnostic_objects": 762,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-713964baac89d476e40b.json",
+      "before_sha256": "d38a3c352ef8c1664744aa172f375debe293c663f2328b4bab9017d961cfdf8c",
+      "after_sha256": "c658eed3e8b69568b00e195942fe9bb53a509177b485d55877ce3f41c9591cb1",
+      "preserved_scalars": 69336,
+      "diagnostic_objects": 770,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9fc9bb8c6dcb47370092.json",
+      "before_sha256": "98d5faf5ef3a9815743f0e40ea9bbfe47d17a616adb355bdd8fd869847bada09",
+      "after_sha256": "c46062b3a2a2fc0787aa73e292277f0ffd03135b43bbc5c16a5725ca18a98d2d",
+      "preserved_scalars": 16669,
+      "diagnostic_objects": 141,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d958bba082ce34224801.json",
+      "before_sha256": "47b959ec7df4a4fe81e29f2fed56656837113bd138077f787a758eb68dc8bb6a",
+      "after_sha256": "c8df1189103a49cc1957654a68c814f563b52dafb7255ec5f56fcdb57f9a0314",
+      "preserved_scalars": 16193,
+      "diagnostic_objects": 134,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-4d751e51047323ad8b7e.json",
+      "before_sha256": "ac48931b3f672df524340c90e8ff191345aadebc2d684116e5b3f90a204383a8",
+      "after_sha256": "394ff62195c3ae84d57f0ebc67e52ce4445d79c259131f6a5019a7d51abc4888",
+      "preserved_scalars": 18234,
+      "diagnostic_objects": 162,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-dfcb327803012350822b.json",
+      "before_sha256": "5f877aa863b84e0bc7a361de2c8951162ed9f4d367ac6f87b6c5ca41f6ed6802",
+      "after_sha256": "9b7d5a01746be98d4a6309257a688a35649aa4cba9b7fbb2eb0e8404105b9347",
+      "preserved_scalars": 17708,
+      "diagnostic_objects": 156,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6956bb711a3bbdbd5387.json",
+      "before_sha256": "0e0da9d7174618d29916058147f70346e5e750b67a96452c7940319fde5f6d4f",
+      "after_sha256": "2a3c215f31c92ea422a69a9799e07873eb016f02e00650edbc68881bd91d3f73",
+      "preserved_scalars": 28050,
+      "diagnostic_objects": 270,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e14638a8e78b71ccede1.json",
+      "before_sha256": "3abdd71dd6dcd868f1e83aee9edbc442ae81f323b51fdf38502a9f0e95d0778b",
+      "after_sha256": "86be23f6d14e8862cd60834e571318bb58bfa95c64248b59222bee0947801888",
+      "preserved_scalars": 29573,
+      "diagnostic_objects": 297,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8e53c89480b8f355ea8d.json",
+      "before_sha256": "d7d6d839ff9d782087573d62d166db64c723b132ce901c20e4fde0918728e072",
+      "after_sha256": "7984b7bec41edcd8bc2dc8a787056c3a37de67130be800c7b8a9325d298ee8af",
+      "preserved_scalars": 32935,
+      "diagnostic_objects": 328,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7f76dfc85597b6590059.json",
+      "before_sha256": "3cb6c7d38383ec601e6f7771a9abdb3f508cff73b4fe4a880dd279aab8305f7c",
+      "after_sha256": "c138e28881314a62c927a4c9ccb33a245af1f9a1ed2649e00f9c50c1b541d291",
+      "preserved_scalars": 32981,
+      "diagnostic_objects": 336,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7266e298f4b93af4cc03.json",
+      "before_sha256": "12c299ddee46b590fcc96c9662f1520124da51735a8693312583a75cba73a677",
+      "after_sha256": "37f90c8980b34c053f9d75c93163e4f5dff151a868d2067ca553fc15b8b2687d",
+      "preserved_scalars": 32530,
+      "diagnostic_objects": 330,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b5a9f2c83621877badce.json",
+      "before_sha256": "0b04526a8fd0bca8e6c910c3fd3b5d582f2fde2ea75636c04011054a4ef6e1bd",
+      "after_sha256": "ca22b5a98d1f1357d414b0a9878e502fc84ff06c7c43fb57ce922d974172f061",
+      "preserved_scalars": 32172,
+      "diagnostic_objects": 326,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-bd61431744a203de1331.json",
+      "before_sha256": "06738fc954e34097abdb1d80e6f2e30ddb4565da5bca7f2ed6a2e9f88221c721",
+      "after_sha256": "9c46ce7a65cae722014a9617ee43ec640b96f8901e04c5f5c28e66e59adc1b59",
+      "preserved_scalars": 23483,
+      "diagnostic_objects": 218,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-ff9f1bd24136b9c6ecdb.json",
+      "before_sha256": "c041b21aad7f79d34923068d2bdfd9480016243e6f1db2c76a0085c4da03d13e",
+      "after_sha256": "d0159be3c959441f6de0d560a0c6a90afadc1feef3cb3487c563b40561fa4f44",
+      "preserved_scalars": 24703,
+      "diagnostic_objects": 240,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-09c80123f9367a8b296e.json",
+      "before_sha256": "8bc5b1f9c58f13f8cbd382b72fff202feb06bbb2a11775407c5bae4e47dd6271",
+      "after_sha256": "e6b5373b970a857c9e2b668d581828f65b14322ea8cd178312800f15cb1f9dcb",
+      "preserved_scalars": 24639,
+      "diagnostic_objects": 229,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-980c8bc5c04fe5612a7c.json",
+      "before_sha256": "b2af6da6c2bf67293a04f0795d60f4e40fd5ea2eee95e1df6b80e6e516007482",
+      "after_sha256": "52fb17154e44732fb62c3b9049a66211fd21099d258e0fafe233cb4faf3b4e23",
+      "preserved_scalars": 24478,
+      "diagnostic_objects": 234,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d2a08e712a939e9705e3.json",
+      "before_sha256": "2f2ebab5a141e9f9dabf91ad233e6655aca75f0752ec3111eb7b779ed1dc7c10",
+      "after_sha256": "40fe232ecfde333f43065ac939eac3d266b5cbc6b59bfcd2d671f185985eff15",
+      "preserved_scalars": 24349,
+      "diagnostic_objects": 235,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5948bb179ad28528cbf0.json",
+      "before_sha256": "ac14ca9b16a14abdfb8f79584638d2a9d976867fcfcb9cfabdc98a911c1b7d15",
+      "after_sha256": "61c2d372e1bfcaf6de3e408dfce09554eb39258fc318b9a30aaa07c5bcd117f0",
+      "preserved_scalars": 21855,
+      "diagnostic_objects": 204,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f248764a334de58aa162.json",
+      "before_sha256": "cf371004153e3f378827888616973fdf66e49746f3875355f784ed795db9e3bd",
+      "after_sha256": "c4e293fa368be004b70adb0a1424a95eb7b8c5e94505b7e1bba15b9654aeced0",
+      "preserved_scalars": 22569,
+      "diagnostic_objects": 206,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9656947a63b1b10a41d9.json",
+      "before_sha256": "b931c26fe3834b2f230cf4e89a9612adf813b0b9eb5fcdbe4d3262adc2f73f45",
+      "after_sha256": "1e8a5c30f6feae0ad52a4864141c80847624e39d0f1372c0632de19977c28e97",
+      "preserved_scalars": 23630,
+      "diagnostic_objects": 226,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-dd6e6d63feffd66797fd.json",
+      "before_sha256": "e14f30543036c169e69e0769bf09ecee344fcba183a91c7932aef92bc7ed7e53",
+      "after_sha256": "c89d1641ff57a1275a78d5d848e08066cce31a6a4e4927f63eb5862fb832deef",
+      "preserved_scalars": 25640,
+      "diagnostic_objects": 251,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0a9085d2af818123f8f4.json",
+      "before_sha256": "d6b7cdba930955764bc23e5c2cd1b215408a98c2bf41d2ff788c878f46b1b818",
+      "after_sha256": "5298ec5728494fa2888df56c5d0a32d4f280547ebbab13eb0471b29eb1d7da61",
+      "preserved_scalars": 21591,
+      "diagnostic_objects": 199,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-6b0fb0a7f32cd5670a5a.json",
+      "before_sha256": "0f2073660547937649dabf3abb8f2c2b275f37269ff9e5ebaf0d48b5bbe38bfa",
+      "after_sha256": "e1995940f6a19c8b3c6a150075cf0492a62e2ce704dbf125309e76e6ea0959e5",
+      "preserved_scalars": 24612,
+      "diagnostic_objects": 229,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7530d11942b140deaff5.json",
+      "before_sha256": "5333c2d2a1f00ae0f7cbd2037316a1ad3c1a08b3427a42f4176f6b1a877ce88d",
+      "after_sha256": "3d012a4a3eef16c80eb9c1c1559f8593161f44e9070f03cb24f31302eface3fa",
+      "preserved_scalars": 24292,
+      "diagnostic_objects": 232,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-2161d237faa1b5ad8d3e.json",
+      "before_sha256": "d387100e4437fe73d207e2f462606ca05a98315a7fbb317f7a87a5471aa366d2",
+      "after_sha256": "610ac6cf1db32973de9b4f399ec2828c93f8fa9f0b91d6f67c010635655adc02",
+      "preserved_scalars": 27957,
+      "diagnostic_objects": 275,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-152958c190817146a42c.json",
+      "before_sha256": "ba684876f16160db50a5c7494547ed19c4defc8e8f38d22577b2fa055db4e170",
+      "after_sha256": "c75dfd0a89d01a38d69b6e67cae1c45635dfeb4817b754163bd3037319dbec9f",
+      "preserved_scalars": 22993,
+      "diagnostic_objects": 213,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b47abbf5ed88d419a205.json",
+      "before_sha256": "049849bb73584b316950b750b767ae576fc925225d3e283dc6d491764c58568b",
+      "after_sha256": "67b8304466490f3cb9458253955e7178715b74664b05df4133cd0d5be4e6f02f",
+      "preserved_scalars": 26023,
+      "diagnostic_objects": 246,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-35d9439b49f2fe843a62.json",
+      "before_sha256": "7df74620fe35624eeac3eafd2b52e3fbee867edc10a0e470e92260e92953b3d4",
+      "after_sha256": "1a477af338ecb476836d348e2afe263d7d59f8f18b2194a1151bafcd2e7ff8d6",
+      "preserved_scalars": 26184,
+      "diagnostic_objects": 248,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f81cec453765de3abca7.json",
+      "before_sha256": "c56f5a99f9ccdb680e892b81749aaeb716ad5c0b072343fdcde6ec9f6bdc39bd",
+      "after_sha256": "d9f7a1e9472e05c0229edac964db64c8450b319155c16b7da7f0bae3f4238d3f",
+      "preserved_scalars": 23683,
+      "diagnostic_objects": 228,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-98cfa2c97d3c6a87c32f.json",
+      "before_sha256": "78d534282f6c2b7ea0118f38d1a406e0c674e72d854ccf5731959d2c281aadbd",
+      "after_sha256": "06e79bb8cd3388bfd1ee06115589bd7e5b7d76477d634c1580c95b96d95e9362",
+      "preserved_scalars": 24596,
+      "diagnostic_objects": 237,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8d6bc0896d7b7b0c917d.json",
+      "before_sha256": "8d3d39d1e0b4a33cbd468cafc87d70f801303aff12478e4537373720c4af50ea",
+      "after_sha256": "2ff30fffcfab98f2a638c5500a0c298dc86bb82dbdad93e49becca111397fac4",
+      "preserved_scalars": 34525,
+      "diagnostic_objects": 348,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d2f9e832199badbaec96.json",
+      "before_sha256": "8900bc686fff0e02fc1e82e47f425c98e368a4ceaecc81938de6ab39199308a6",
+      "after_sha256": "0765f44b07f1556aca65c17f8743e83f20643afd2fdaf0e40210454a788a93cc",
+      "preserved_scalars": 33479,
+      "diagnostic_objects": 343,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-79dc9868a7a38846e6cf.json",
+      "before_sha256": "c50d127bafe7b5eb15ab223a49da6225096a0f47d946c93502e17a8adf9881ef",
+      "after_sha256": "a64df32e0b506ccb01ed42bc3e7a5aaaf4f3f129110dd1c7a86d9cc9c6e4baca",
+      "preserved_scalars": 25090,
+      "diagnostic_objects": 234,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-201834172076bbcb7702.json",
+      "before_sha256": "b7388aa1f1a929fdd5b6189cf9df4a91af93284199d06bb436bf2fa7a23fe117",
+      "after_sha256": "3e4760f44247c87633d95deafb4be70725427f633db8fb6863940cca4c332792",
+      "preserved_scalars": 25600,
+      "diagnostic_objects": 249,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-2aafbd9a28ae575a60c3.json",
+      "before_sha256": "913b82e46632062ac9409110ffc20f36f060923dec08b077caaf9e67f72c7a25",
+      "after_sha256": "bd6a2af0745fa8f377dbd7d8e8f3e2852cbdcd657bcf6dab9d7c30b96e935944",
+      "preserved_scalars": 27514,
+      "diagnostic_objects": 270,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-2309c2e5e45c691ab70b.json",
+      "before_sha256": "1a846484ffe4674c5f12cb60c2ed70f8148e4a10de5aaf6440c3071dd431baf1",
+      "after_sha256": "a0d8b6dc5ba10ed62cd55a9a6852fa09d135be5ccdf3f6beac7f45b965ed0715",
+      "preserved_scalars": 34556,
+      "diagnostic_objects": 355,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7e48725ae32fb12da6cf.json",
+      "before_sha256": "a01b112abe680fd71bac40176519e386da1f64987b62cfd6cdf9e7198dccf79a",
+      "after_sha256": "70f14702ae3eea09c18d9fa95d8143d845922a450eb333cee5899fba7652f6b1",
+      "preserved_scalars": 37039,
+      "diagnostic_objects": 388,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-f3b960039457edc18805.json",
+      "before_sha256": "2affd32b6b61c1ab886e676f883d22d25190692837c76250d723705c71233314",
+      "after_sha256": "75e1c592b9cacdd23a1dfc0f3731b078e0d3089268bb2f9c098e53beb6de71a8",
+      "preserved_scalars": 35026,
+      "diagnostic_objects": 361,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9ed97a3ee73433767b22.json",
+      "before_sha256": "22492ee3c25d601838b0e578333f74c4c228b25cc2933bd7e4b4b92649f37ef6",
+      "after_sha256": "0b809c6742e04ce8eba1b554408ebe97b72a2ede6fa789fc8c51daa6cbadb4be",
+      "preserved_scalars": 27759,
+      "diagnostic_objects": 266,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-032a7c54fbe6179ca80d.json",
+      "before_sha256": "d3b2091faad11805105cd729544c34a270771574061a208baf514daef950695b",
+      "after_sha256": "4efa59350c6e736b0e70867f13e3176b6200e67022bde07bca6968dd17c47d73",
+      "preserved_scalars": 40735,
+      "diagnostic_objects": 431,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8ccdfad7b878689f8328.json",
+      "before_sha256": "8eddce557a42a1f082fb3c80225be66b3af0c94f1fb6560c1b781a2fd8132217",
+      "after_sha256": "82fc34615572704a6e42ae8c0e988f51bb84fa625c6b779e8985ed0a62d464c6",
+      "preserved_scalars": 38047,
+      "diagnostic_objects": 396,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-ab303738cfbadfd6dad5.json",
+      "before_sha256": "bf42373bf163e659c091a4cc4126f850e1aeb7468d043fd2b8f412465eeab483",
+      "after_sha256": "0d62cfe7260f74f7d1171e708cd3533eca2defcfb1e1d884ffe3e9f26ad124de",
+      "preserved_scalars": 42140,
+      "diagnostic_objects": 449,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-99a9d64b12d7ce309280.json",
+      "before_sha256": "0d3290d651e63f136bffe758361382f8a986ca73e90c4b75d8e086526fe500cc",
+      "after_sha256": "64cc930fe32e75a77e7af9fdb23d0b8b974ec7d8fbb58400ceb7c6db8174aff4",
+      "preserved_scalars": 45952,
+      "diagnostic_objects": 495,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-fa8d5bb43de30dee3dd2.json",
+      "before_sha256": "272f6d15509f474a90373b137aab70df801c6a1e91e59bfea4a95e009111b1f5",
+      "after_sha256": "32b167dad0198420f24db97ebb759b269c45c03b95817fffe3b7d9fb74ab0a57",
+      "preserved_scalars": 43510,
+      "diagnostic_objects": 466,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d6bc29a6b3f0c00cb0aa.json",
+      "before_sha256": "b78d00011bf4dcf4c95731a5bddbdffe2b7e999b53144c099534faea377b2a0c",
+      "after_sha256": "182cb6815eca74f213e3300e662b517e2cae3772188ab792f7b724e3669c5fae",
+      "preserved_scalars": 39930,
+      "diagnostic_objects": 421,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e4c8fd5149a34588b134.json",
+      "before_sha256": "a041dc46d382bb734b09ec360e72b1076cabf81920db0d54129efa04692eab7b",
+      "after_sha256": "42a1dc5b5257c1656ea4fb999660e0c54fdefa67f7f336e1f166a4dd8b72144e",
+      "preserved_scalars": 42750,
+      "diagnostic_objects": 457,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-144947f50efa74d27c20.json",
+      "before_sha256": "d51769ed90f947827781cb89d061b641bbfb2e7e28de9eca5998c3c7e9a14e69",
+      "after_sha256": "fdd0877ac79382278ea02d25bfeb8608e76be25610f0bf1d98c8b5815f4542e5",
+      "preserved_scalars": 48496,
+      "diagnostic_objects": 531,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e4e024879a228de657fe.json",
+      "before_sha256": "e0fa2bb3edd831f5cfd19e1320e7a11dfa99510bd49863fc4447ce5640f26e5d",
+      "after_sha256": "ca5e15dcea83b06b61d43a401db73e707907387f7e492763d2f266fb942b7c67",
+      "preserved_scalars": 22718,
+      "diagnostic_objects": 207,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-abb593f50cc0df890317.json",
+      "before_sha256": "f27d25f6614c9292ac0ff7c6d2781a9ed093b80002b3c90ed996923aae8aded9",
+      "after_sha256": "1d3245e1780033bf6c9bb2dae709ca52b81e9c3da7ea6ce6a25e2fc670dbc4fb",
+      "preserved_scalars": 22542,
+      "diagnostic_objects": 205,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-47dd2059323531a88ca4.json",
+      "before_sha256": "94e00d82ed206b11a9a4daf10237003874561155443cde5fbaa96f21f070480f",
+      "after_sha256": "d9270aba52d9c7ae92576c1b7bff7452db6eecec2aa037bcb55ffd31cdf5564c",
+      "preserved_scalars": 34455,
+      "diagnostic_objects": 359,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-11abd343d1be78cd5483.json",
+      "before_sha256": "278501a05f89c14aeb985a15e7ec7d48577d553f86c317a5e6ffd0266cac6b52",
+      "after_sha256": "3339c799df8f44fcb0614e402cd8cdbf8fbca3695b8aa98f3e2ae9530cf52010",
+      "preserved_scalars": 48058,
+      "diagnostic_objects": 502,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1d55c90cb42616074297.json",
+      "before_sha256": "4c319fe0863eaf78102eb99d2250bdcbc1f2a1f42dd2414f37068c61312abec1",
+      "after_sha256": "c3041bfb25f02c79be6ea7c526a024688de3bb4d4b8e07fb6561c12604762cff",
+      "preserved_scalars": 44443,
+      "diagnostic_objects": 469,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-358d88492eb5a6499f83.json",
+      "before_sha256": "ee6ad13aa8a68dc192de06ca4aa7da726d729a710f2eb08dd1b363f61485be04",
+      "after_sha256": "8fa1a7dc497259c63548ae46977e38fd15629bd0e276fa02b20700bf093c7909",
+      "preserved_scalars": 46745,
+      "diagnostic_objects": 485,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d833449e88ad1fcb7fae.json",
+      "before_sha256": "e74a0162e6920fb120f2ee03e793ad81642a483bf9dd0e0c451c6f298cc5fc97",
+      "after_sha256": "29112dc4c51ac86e2091b54501e3a70b6eb7bfecddb161d52268d664f724886c",
+      "preserved_scalars": 48664,
+      "diagnostic_objects": 524,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-fa3f8ce74d4ca2f5c0de.json",
+      "before_sha256": "f37adf3950327e6ad9f6ea66f618ce7c17df62da394543ef50030a45f032a4b1",
+      "after_sha256": "4448ad75e175ffb05dc86d7211c797b80193ef87721b50c268a65d57092a3f89",
+      "preserved_scalars": 45002,
+      "diagnostic_objects": 467,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0937464f4f750d864bc2.json",
+      "before_sha256": "fa18a0bca2f4976381b99aa335948b424c336f7c71b8b7762b96f3c609c16d43",
+      "after_sha256": "7c7e286341003f4cba660cdc91dbf4f787662d0001838cb96e20ea013362227c",
+      "preserved_scalars": 42019,
+      "diagnostic_objects": 441,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-4677f653e279abaf1972.json",
+      "before_sha256": "20f736d90a4853b556f2f5d78f5e442bcb84df0d393dcf37755d18acc4fa00d0",
+      "after_sha256": "644dd72a63fe2349b0d7bf20a58faeb44e87a791103dcc1015863feb9c20e1b9",
+      "preserved_scalars": 51219,
+      "diagnostic_objects": 538,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7b065b98458a26aa53f4.json",
+      "before_sha256": "73301f9e9c26122b69be26e58959671b23a5f9508e9f88a1e817718574b0ded2",
+      "after_sha256": "4d578e9f798f825c6a491189c2ef7ce24c7cb6ba6ae8422428bff03d634eca64",
+      "preserved_scalars": 59831,
+      "diagnostic_objects": 657,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c76997cc10a877f6deeb.json",
+      "before_sha256": "fa7fd6e86f2c6b1978421cddfbbcd2ab23277b007941dbccd26febda43324e82",
+      "after_sha256": "4c5744b8d60769585ec5998ab83f9051967fb5f36ba54b77a0b866cd50f63ab3",
+      "preserved_scalars": 45774,
+      "diagnostic_objects": 489,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-ce7f380c01842ed00de8.json",
+      "before_sha256": "8b0eeaf7d9f3866089360aa3963c3d3c117bda66ee3dfa1c84877ff570a7bf99",
+      "after_sha256": "28b7f7d7f70ed692977e1d20d4ba208b10d5ceaf69ccac137c293082e7e814c6",
+      "preserved_scalars": 40449,
+      "diagnostic_objects": 420,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-4d765ee68a8b1c3a0c13.json",
+      "before_sha256": "36e441178ceed0512e378b0e9e47b0ad869075d32ddaf783e2adfbf3d8e40c04",
+      "after_sha256": "cbb8d6137700799422087ff34eea333fceb4405549cb06a890bc7c3fca6a7ded",
+      "preserved_scalars": 51531,
+      "diagnostic_objects": 556,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c751bbbb83fb3c7a2d0d.json",
+      "before_sha256": "3de342391c6abdeb907b7211dbec02a8c1e65e672f2f16eebec1663534e40afa",
+      "after_sha256": "cb31da4cb683ff4606488b65d75e2a3b452ac19c59e4bd33dcd4d41ef917c441",
+      "preserved_scalars": 50896,
+      "diagnostic_objects": 547,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c760695204337fcec8d7.json",
+      "before_sha256": "e300f4ec53374404c86fc0a86af3b068652850b12f9e99ea839db47e89d86cd4",
+      "after_sha256": "789ac540fa96083a6b8e63b45af2dcc509b5c303ec68a17c9393a40b2d44f957",
+      "preserved_scalars": 26427,
+      "diagnostic_objects": 254,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e8f2c3e9fbc9c7b7a7e0.json",
+      "before_sha256": "5a5fc57597c66ab713a722a2ffdf721230c806f4669f3388516877b97e77732f",
+      "after_sha256": "ba25a85c80507c981abf2d6da2d3390413c0a0a2054c8f24a492a0101c1c7fde",
+      "preserved_scalars": 25122,
+      "diagnostic_objects": 241,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3891b9319266141b1489.json",
+      "before_sha256": "3ddcab28e9593fcad44530ff1266fdc0220de3431d88cc7fc7e923002dc1589a",
+      "after_sha256": "ad8f2649c1537e2ceac223d943d14ec2d55f232f3af8b4e53ec8cd36f03b3a33",
+      "preserved_scalars": 31042,
+      "diagnostic_objects": 305,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-307f986d05e1c8673d79.json",
+      "before_sha256": "322af222b5d8968f42c5d6f3d71d27ab019e729099c6fa43486be8d2ac0c8fe4",
+      "after_sha256": "0428335c6b1e11bb7c37d27087d0f05079158f94c6b56011d744fa7cba470e72",
+      "preserved_scalars": 28537,
+      "diagnostic_objects": 281,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a107521d3c6cddd49d5f.json",
+      "before_sha256": "17346f2c4a4050d458d3d0b742b500edd95e9629aeab5ab94208753860d7bcf9",
+      "after_sha256": "b4478b46dcc0ce6c1cbacb3666d786ce9993bcf11dd510cc4d6b5c35487767ba",
+      "preserved_scalars": 30166,
+      "diagnostic_objects": 292,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a9e18145853ad77df06a.json",
+      "before_sha256": "bbaf33bf2b705dde7cf360b4e2da03b01a1b97b555e6ff768bc895112e6535a5",
+      "after_sha256": "ee5e2280c0192e888c66543656728f5a577f6e79c9b545c943eab2d17ec67599",
+      "preserved_scalars": 31724,
+      "diagnostic_objects": 321,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-17648ebd9d4336a2afc8.json",
+      "before_sha256": "f8c169e2cddc0be8c52a96964ce109605c883214048925f7c572da1cf6f00c07",
+      "after_sha256": "e708636d6e864bdece2a80fdee0b74b5ab64920412f03a3a23820fc68db91fa3",
+      "preserved_scalars": 45360,
+      "diagnostic_objects": 482,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-37b410c2cd7abafd1f65.json",
+      "before_sha256": "c8179d712f517a169374c11f5adf65a16094b08231fcd0d43e80a8cf70b712c5",
+      "after_sha256": "d7ed97e948d4afdc6f1e1be0f550c458b1d7772cb04e0b4b54a3a9bac1bd0888",
+      "preserved_scalars": 38310,
+      "diagnostic_objects": 394,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0187fe9efd492d54045b.json",
+      "before_sha256": "2cd5549482a6045e879180e9072acdbbbd0676288d7e97bd5eeee784598b1919",
+      "after_sha256": "d6d2ac775ca4e599dab4c78f81bbf7f94ffc0126bd81f564534441640bda4051",
+      "preserved_scalars": 45688,
+      "diagnostic_objects": 474,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-1b02147893125269aa51.json",
+      "before_sha256": "3cf4984c7776e68942d4fc8cdcfb128a94d1a1e1085bf6dc4f8990a55cececa7",
+      "after_sha256": "600b2f124abe68af4c850dcb0289ec9862bf02649461f5d0b0849ec83e84e145",
+      "preserved_scalars": 45427,
+      "diagnostic_objects": 482,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e5f418cd17af9dca111d.json",
+      "before_sha256": "399e75329b7c2997588c79dec4411ba9bcc16832acc979a27511753c9693dd53",
+      "after_sha256": "ba55127fa629dd68b3e080ce06e2a36447f6dcefdea1e033416aaa46304d0f51",
+      "preserved_scalars": 25920,
+      "diagnostic_objects": 253,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-815c17df55c431c77aa0.json",
+      "before_sha256": "fb07fd2f95d46b780989b40d7519dc351ce26c0ee1030a777c974601f2893ba9",
+      "after_sha256": "0ee5135b7ad68f37d4b5a5747fcf2367dae032364a7e8e097b93dcbe5124aa1f",
+      "preserved_scalars": 21242,
+      "diagnostic_objects": 193,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8fa7a5908017fae0e81e.json",
+      "before_sha256": "6ebf92ae02be555fdcaff8dd2ae7bdce219ed574c90077a5c9f548833aa66a4e",
+      "after_sha256": "5c08c86ca7aab52674457a481366157b79d2c185e8bafb12bd2c984a674a4de9",
+      "preserved_scalars": 26212,
+      "diagnostic_objects": 250,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-fae26a3cf2d181da9de8.json",
+      "before_sha256": "1c6ff129934d6b0cdb5c2fad7ebd65472d4944a13fb0c36bf7809d70437a1c08",
+      "after_sha256": "e376e2ec56c4a34212db115d22ea724cd715f886fe9b3224aadefc97ab5ff911",
+      "preserved_scalars": 25821,
+      "diagnostic_objects": 250,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-24de86c0ec9a6782a4a3.json",
+      "before_sha256": "bd5abdd18312e1e73ff7f9750ba12050a78ea78ab253f4356c85d251a7bcb873",
+      "after_sha256": "d50ba0d7e535b364fb1c4d8ed1aae78fd32cade980aaf09e13dc3c1da20e53ee",
+      "preserved_scalars": 43462,
+      "diagnostic_objects": 467,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7134f5b8dbaea10ae122.json",
+      "before_sha256": "4f321cff8e002b2e1a1b27125bac4549e95cfb6a0b76f33a23414b092cd9a17c",
+      "after_sha256": "b10c1d1841697800a16b996f0eee5bcb40b4a05c2fef0e3b49c9ba80967877a8",
+      "preserved_scalars": 42323,
+      "diagnostic_objects": 452,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e2f0e761038d0cf24fb1.json",
+      "before_sha256": "a62ba8c375ab908f167adba9c2de7efcfc206e81e3b939698747c5abf69f059b",
+      "after_sha256": "ff02afba1a7b00089be6b18b9944534d39b70715da0afecb05a41bf18e82ee62",
+      "preserved_scalars": 43324,
+      "diagnostic_objects": 465,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-41785b55c8a3be6488b4.json",
+      "before_sha256": "d1dc7c086a903b1d9c90c345c3218fab4c92d59fea6ffb68283f04ea9483aec3",
+      "after_sha256": "5d38f93c294279fa1d379ef144cd7247bf93f136897d95ddc6c9ee69b4f67512",
+      "preserved_scalars": 43033,
+      "diagnostic_objects": 462,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b1220520fde3e90e93cc.json",
+      "before_sha256": "7e3824e4870a6a64be7263bb08cd78a6da4621f545b70fd45b10ba4a3fd7e2ca",
+      "after_sha256": "506acdb257ae31b69bed113f213e7d4d6105c20afa1373cf46600ba0c91e48bc",
+      "preserved_scalars": 42850,
+      "diagnostic_objects": 461,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-4795431dc544956e9867.json",
+      "before_sha256": "196b395938385f3c500120a4a30ef9902434be78593913f074b6b6af9792f0cd",
+      "after_sha256": "2bf4c04e48ece10ff5cc119afd3d077e86c2b5f26817fb22f2c1b4e5290155ae",
+      "preserved_scalars": 44625,
+      "diagnostic_objects": 482,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0d072c4241f8b36f87ee.json",
+      "before_sha256": "fb8524d17d609d3011eab623d575991136e6b4aed3a2db853328900dcae40bee",
+      "after_sha256": "bb2b4efb77eac2c7c16c09a56a7d4ab92f4ceb44fcab75252f3ef89d5a8cc754",
+      "preserved_scalars": 43041,
+      "diagnostic_objects": 462,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c1c6ccab297d1f862adf.json",
+      "before_sha256": "a0e565c1a6e8b87045e4c49f92ec7e382e89dc3f02fd4846c0d9423ee03db333",
+      "after_sha256": "1bcd637d45eaca7fb5aa2aae57f69fff249ef2988a5d0c7a116ad82f180958c1",
+      "preserved_scalars": 43589,
+      "diagnostic_objects": 468,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-86b1016fa3dc1ddefbaa.json",
+      "before_sha256": "513c40f8decbe2411271406e6f1ea66eb5bdf80f854089d3618d15a444bdec58",
+      "after_sha256": "ac51c65ff4d2645f7afb2e26f8ce04833f6efc9dfb168117ba70b2a175234ac9",
+      "preserved_scalars": 43529,
+      "diagnostic_objects": 468,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5b10ce385a430050d681.json",
+      "before_sha256": "66d3974dc097b291a6ae653cc541ee145a090f15311fde9e6b582dc9a1cbf655",
+      "after_sha256": "75b3f0c2472823bec252d6d208869706de418733107db4ffa0e8eca0800a5b03",
+      "preserved_scalars": 42173,
+      "diagnostic_objects": 450,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-65a7606bbd20da7c56bc.json",
+      "before_sha256": "8332a0f467232f888fa564b4685055f62f09d99674f6bd9abf88a5f8cea3dc75",
+      "after_sha256": "e86cfea4216a0f07aef34f496765a6ea8c9ebd6518a83043ab14da65746f3005",
+      "preserved_scalars": 39303,
+      "diagnostic_objects": 416,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-af6ca0e666f0a425d99e.json",
+      "before_sha256": "940b816dbf30faaf721db83026b6770f4c7df3412a9d0daa425f615fbade6742",
+      "after_sha256": "0dc53f6312cb8759c0386b77222b73a0a5c343721a0c918e527ff032dc0e0a2e",
+      "preserved_scalars": 44643,
+      "diagnostic_objects": 484,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3b465cdcfbf67e98a789.json",
+      "before_sha256": "6d55460967963fd2d400c178b9b45e2d19fdbbf0bd9208604130cd77d7189f0c",
+      "after_sha256": "36ff7165da0a3a1acd6baaf5cea54670d7243d4609ac97df8067864bcecbb8e8",
+      "preserved_scalars": 43453,
+      "diagnostic_objects": 468,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-4784fbdf0541555bca38.json",
+      "before_sha256": "f4d15289bd4453536dc072ad3c800faff76b321f47f78f2a76ca4bdadbc6fe0e",
+      "after_sha256": "4d8459109b8f8733710baeee90130a61063756460d2e68aac2ce102b74e80ff6",
+      "preserved_scalars": 43587,
+      "diagnostic_objects": 470,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a71d13a8776894a27d12.json",
+      "before_sha256": "e748df7b0ce0232219b8af8dae92869aa6e85ba29bd78c463391f2a9f833c5d6",
+      "after_sha256": "004f9c81d0bda4365e3b28fa385e803dcc778422efb414c69bdf8e20777abe11",
+      "preserved_scalars": 30587,
+      "diagnostic_objects": 303,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-5ac0ee60548e3aedf300.json",
+      "before_sha256": "edf11a8eb7a3312c057e5b40c8338893b7d877bde6ff6259668cf60eed344672",
+      "after_sha256": "a8a5d7d6e36ddd12797a213ce2b505faec3f15e7e081c0609c1d7cf86a3c8434",
+      "preserved_scalars": 33193,
+      "diagnostic_objects": 341,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b9a5389a2b357a7b98df.json",
+      "before_sha256": "753d19a0994bffa047f988e6d79b7a57346fb003d099743a28b7629bc051b595",
+      "after_sha256": "dd322ef818179ddbc343de86c065917c0fb6f5592ba3502648fd71c24e11e88a",
+      "preserved_scalars": 47878,
+      "diagnostic_objects": 500,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-8b80dad8982666eb0a5c.json",
+      "before_sha256": "c2ba82ee8a0b9d715e4e05a4d6a5c1be05f81ef4a7cb38d5abd51f45a058a05a",
+      "after_sha256": "cac7fbfeb887cf3266d42ce25626157e73816e6d740d2f6ebc48278e1b404758",
+      "preserved_scalars": 51568,
+      "diagnostic_objects": 562,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b6d101a9a2dbc635fd95.json",
+      "before_sha256": "bd9993a708c8beb6f74edceb8a952dc9b9f21172ede3c6b7f6bae2fe25f53476",
+      "after_sha256": "62df88aaf7ebe32e4c1ae2bc145c7c6a4bc964e717977644b95c1c93b901a54a",
+      "preserved_scalars": 35153,
+      "diagnostic_objects": 363,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-9846a17b566a0bb2d161.json",
+      "before_sha256": "5ce5e2ad8e29e87c10c8b4293de1569ed755eca1b4d9bfea7124d3f10a1b4b1c",
+      "after_sha256": "bc633e957a37d14aef0aa0c512b4400df87f809ca6a53aadb7990f64550b2c32",
+      "preserved_scalars": 27903,
+      "diagnostic_objects": 273,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b8fee7aa8a1302a63c5c.json",
+      "before_sha256": "c34c867806c7651044aef8f6413487469796cab1e1539672e5f3556574a2de03",
+      "after_sha256": "2e1ca2215a843238239bb43b80cf9409e885df14aad6494868ae7c27f834f7bd",
+      "preserved_scalars": 33887,
+      "diagnostic_objects": 338,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-21d495634f0c7511b154.json",
+      "before_sha256": "fd8b8332f866fa6f07d75180383ee7606a3faae569cbb51b759f74ce62191328",
+      "after_sha256": "bafd0cefb0f1725527cf65b65144b1b10d0f1f4221ba947ed40c6b65e74f8274",
+      "preserved_scalars": 32387,
+      "diagnostic_objects": 328,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-a2d6022afc36d89403c8.json",
+      "before_sha256": "d8652c1921e7e3064ee681014a0b8dd5840e28b45852589b448a97438bca6622",
+      "after_sha256": "63a2116dd2ff3d8ac7bf965ef30f64395425d225aba6ca86a84daf5e61b2d392",
+      "preserved_scalars": 39403,
+      "diagnostic_objects": 410,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3d68b412a03e50ffa79d.json",
+      "before_sha256": "34ac55b772f48f7eae699a4c1845dd1cf051c2f3aeb29a69d5df0b3b39a7f845",
+      "after_sha256": "a98bb4e4ad2ab3049c394dd5f37d58961ff35be8d118bc62283a193b8b15b841",
+      "preserved_scalars": 38539,
+      "diagnostic_objects": 401,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0c05b2403462f90fb6a6.json",
+      "before_sha256": "30dce7a0b56930d6c83b59d977a5cacc20dacd55306308fe25d994412af08d62",
+      "after_sha256": "4b93b9d26107b240433f6c6795f5f26ea2113f5630842da304a0556bdec6dad8",
+      "preserved_scalars": 38325,
+      "diagnostic_objects": 389,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-aa63bafe3e8e5558aa4c.json",
+      "before_sha256": "6613ab7696dea6fa8f7c22ef23470925cca717cc809283aca75c7cee6dce3b9f",
+      "after_sha256": "bfaca0d2a0451aa3c5062e4dc891b2bdbbaee21049ebb66cf2f3929779d487a7",
+      "preserved_scalars": 39975,
+      "diagnostic_objects": 420,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-7ad7938edbca223ee66e.json",
+      "before_sha256": "54d61a6a753961a31c86996d354a1b7d8b0ef60b00906f0916f33a5cf9b7f050",
+      "after_sha256": "3d49e7182815d102ffd579f8ce2d273fd0265f3967d03dfb0eca917499a6bd3c",
+      "preserved_scalars": 43446,
+      "diagnostic_objects": 469,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-545d2596ea97a68710cf.json",
+      "before_sha256": "430df4eb99acc6080b2ce3bd91e3346b832bb0ee1679886870e5fe4fac152850",
+      "after_sha256": "31c8d9932fb2eefb20444f2e07a170bb37021bb3de8f6db3bd8e7493a54a44dd",
+      "preserved_scalars": 43621,
+      "diagnostic_objects": 470,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b06d5ee81baa25aa57a0.json",
+      "before_sha256": "54567181f8e8df7bb5745434486964a419390b889e817ec1d5e3fccf164de623",
+      "after_sha256": "928f965a0fea06c144c4bb7db6e8a52c863054f8f558b66c5c8352b7089fef6f",
+      "preserved_scalars": 43816,
+      "diagnostic_objects": 473,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-b247b09c1075c627a886.json",
+      "before_sha256": "d8d0990fc9c5fee9059db38d9ac2c793537b88c74e4ed569a4c3f9a43b3ac581",
+      "after_sha256": "03fb7a18e5f7538ff3127461c8db1062f5789fd7666cf1838399c5646afe55f9",
+      "preserved_scalars": 43062,
+      "diagnostic_objects": 461,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-fa5b8959c83105920836.json",
+      "before_sha256": "45970f0eba97c1095a1cd6c0ef655142e6583c68acb5e4f70a7bb7855876a8e3",
+      "after_sha256": "6e069b54fcf7ef1f618a0749c4d20584091171118b6a08084311256239ac0bbc",
+      "preserved_scalars": 41547,
+      "diagnostic_objects": 444,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-74c9511163bf26d56b92.json",
+      "before_sha256": "e4e7f2b4cf3498d8bb5a1b261e8fb32efd42437111afec32dd1be18f10643a97",
+      "after_sha256": "5bcd192143dc248a7a19c1f3fa1e25fdd6c96ed3d1d04fb7762d5eab069e4c0f",
+      "preserved_scalars": 43455,
+      "diagnostic_objects": 467,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3b67e8edc019b1c21a66.json",
+      "before_sha256": "19c3ac40699c23378131e3af4e47c3d29b41b12f6b4ae51e205f5ebc0bbb5369",
+      "after_sha256": "4542a0d08213f0184a38903a34703e00514e8f888a36e94e03cc3a0086f07058",
+      "preserved_scalars": 32438,
+      "diagnostic_objects": 328,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-62a2ea6b73ec6a0ea781.json",
+      "before_sha256": "7cd8e24e617e619a8ac8f65a8ab03c9da219f1d9da83e0b388611fe42f6dd2d8",
+      "after_sha256": "5fb7a90502dbbcca920e3328f49e67d62e39dbe8754b193066c9a8ff2eb51847",
+      "preserved_scalars": 26014,
+      "diagnostic_objects": 249,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-45629bb299dd52221f29.json",
+      "before_sha256": "0302c003ed895e6f3ce6e0641dc8a43c3e7885daaa115cb3af68beb011ce6eee",
+      "after_sha256": "2759f8c7c8cccae5160494d5c17b978140a4b731df79789fad9447a4e961aeac",
+      "preserved_scalars": 29062,
+      "diagnostic_objects": 280,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-87e11576ceea339a72d8.json",
+      "before_sha256": "56cef11c032ce6693940df676ce93f1dd132ef3551fc58549241097b5bb7e78d",
+      "after_sha256": "0c1973b0b839f3f912dd339c13d3e6ef30aa551a8dbec7ed897f3feeccc03b2f",
+      "preserved_scalars": 29330,
+      "diagnostic_objects": 290,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-be3423e7e42595cac0ff.json",
+      "before_sha256": "2485b681d05a8c975564983f91712d0032816f73d3ab16559906073dcb0814fc",
+      "after_sha256": "4d1fbceae27540ee7e42eca6bf4a892c876892bc30222d8dd6e7cc7762bbd446",
+      "preserved_scalars": 43430,
+      "diagnostic_objects": 445,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-e3c66434f7451a16b706.json",
+      "before_sha256": "58d8e4ca9b6a049f27678c8f371b37cc32fe58b204bbb38fc2f8afbeda4e8225",
+      "after_sha256": "0b38a1cff26a98f5b86893009245cf36e4e50cafc97725265e69154bc444b734",
+      "preserved_scalars": 44042,
+      "diagnostic_objects": 464,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-d359c61f93e53c1c4fb5.json",
+      "before_sha256": "98532cab6034072f2598058c48559615af9f289af1fd94078687e22ea6425b3d",
+      "after_sha256": "7f6dbb9b1ddb193fc07d64390e36a9d40f6ebb304544fca7b13a7504700d0428",
+      "preserved_scalars": 58277,
+      "diagnostic_objects": 623,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-3d17498ddc500d1532a8.json",
+      "before_sha256": "157769cb4f81065cc943feb154733b4648ed00ab705c71e6c4bb3c8c6df35d94",
+      "after_sha256": "4d33c9462c2f06c2a6c618503e64a0a6d96136eca765d938d223cf713bce4cc0",
+      "preserved_scalars": 61129,
+      "diagnostic_objects": 659,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-23aaea6ed7ff728d0551.json",
+      "before_sha256": "f2c75fcf8c68540d70bbb9fc81e0c89c5a2b7eec83a783659dcbffe0ed773905",
+      "after_sha256": "b02054795001f3aeac2dae0e31668ff44f9d2afe4af536ef6e60b8c6c0234aee",
+      "preserved_scalars": 24945,
+      "diagnostic_objects": 242,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-0709ebb37ae7273a7861.json",
+      "before_sha256": "db2911584c5590eb73c1cdedbd5cbefb32a68b3c17da6b4c05cfbd3582469fc1",
+      "after_sha256": "2e874643d1159d9ff565d3371c18ad1a6ea909e078458795681c0cc020d8d75e",
+      "preserved_scalars": 23257,
+      "diagnostic_objects": 220,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-cc2afed81e99e5d4bb0a.json",
+      "before_sha256": "9e7c5fee898ccac8ba058c9775a4dcc2d85f53d74bb2b3045854dabb64721be8",
+      "after_sha256": "1adb176d58498ebfcb41616632e1b8deb2631b5c260fd99a9b5e8835c2ae99dc",
+      "preserved_scalars": 33235,
+      "diagnostic_objects": 332,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-c093090c56ced219eee2.json",
+      "before_sha256": "e8ef9cffe2128efc709ac0714b45b6b89e454ac259ebe8b9753e3081cb632d30",
+      "after_sha256": "0de35948b5f78e4c1e05e79b3bbfc5292d36a52ec4dec54fc93004a5229e2fc0",
+      "preserved_scalars": 30564,
+      "diagnostic_objects": 305,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    },
+    {
+      "file": "configuration-pair-aggregation/configurations/c-27a9d25b59737ca98f33.json",
+      "before_sha256": "c081a3e7760b81b923edbe1dcc9f42c2bb03647e43ea2a7d866151adacf8c551",
+      "after_sha256": "7898ddc7f7b3d10398f4de701568a180eb2ef438467587f2624682320140a312",
+      "preserved_scalars": 33113,
+      "diagnostic_objects": 329,
+      "coordinates_changed_to_null": 0,
+      "derived_high_loss_summary_fields_changed": 0,
+      "high_loss_summaries_recomputed": 0
+    }
+  ],
+  "errors": [],
+  "preserved_scalars": 9351090,
+  "coordinates_changed_to_null": 982,
+  "independent_market_fold_sources": {
+    "checked_views": 1733,
+    "undefined_views": 1432,
+    "saved_fold_files_checked": 2
+  },
+  "limitations": [
+    "Every changed legacy market coordinate is grounded in original checksummed folds or clean-cache counts on unchanged published selections; aggregation forecasts and weights are not refit.",
+    "Raw clean-cache source provenance remains the original experiment's responsibility."
+  ]
+}

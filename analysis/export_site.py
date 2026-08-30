@@ -100,7 +100,7 @@ def stable_row_id(dimension: str, slice_id: str, model_a: str, model_b: str) -> 
 
 
 def as_float(value: object) -> float | None:
-    text = str(value or "").strip()
+    text = "" if value is None else str(value).strip()
     if not text:
         return None
     number = float(text)

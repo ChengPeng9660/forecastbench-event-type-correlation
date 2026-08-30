@@ -1,4 +1,5 @@
 import type { FreezeAggregationMethodId, FreezeFoldView, MarketDiversityPerformancePoint, MarketPerformanceDiversityMetricId } from "./data";
+import type { HighLossDiagnostics } from "../lib/highLoss";
 
 export type ConfigurationIdentity = Pick<MarketDiversityPerformancePoint, "exact_configuration" | "canonical_model_version" | "model_configuration" | "provider" | "prompt_type" | "prompt_label" | "information_type" | "information_label">;
 export type ConfigurationPairSample = "all" | "near_bi";
@@ -18,6 +19,7 @@ export interface ConfigurationPairManifest {
 export interface ConfigurationPairScores { raw_brier: number | null; adjusted_brier: number | null; brier_index: number | null }
 export interface ConfigurationPairMethodScores extends ConfigurationPairScores { gain_vs_base: number | null; gain_vs_partner: number | null; gain_vs_market: number | null; beats_market: boolean }
 export interface ConfigurationPairView {
+  high_loss_diagnostics?: HighLossDiagnostics;
   fold_count: number;
   fold_ids: string[];
   train_target_cells: number;

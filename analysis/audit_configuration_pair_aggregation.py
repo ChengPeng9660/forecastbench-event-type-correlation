@@ -12,9 +12,12 @@ import csv
 import gzip
 import json
 import math
+import subprocess
 from collections import Counter
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+
+from analysis.audit_high_loss_refresh import audit_refresh
 
 
 METHODS = ("simple_mean", "log_odds_mean", "ec_w0_56", "piecewise_odds",
@@ -444,15 +447,23 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
     catalog_points = {row["exact_configuration"]: row for row in catalog["points"]}
     panels, market = read_clean_intermediate(derived / "clean_panel.csv.gz")
     errors = []
+    diagnostics_refresh = None
+    if "diagnostics_refresh" in manifest.get("provenance", {}):
+        try:
+            diagnostics_refresh = audit_refresh(Path(__file__).resolve().parents[1], site_data, manifest)
+            errors.extend(f"diagnostics refresh: {error}" for error in diagnostics_refresh["errors"])
+        except (ValueError, KeyError, OSError, subprocess.SubprocessError) as error:
+            errors.append(f"diagnostics refresh provenance invalid: {error}")
+    refresh_verified = diagnostics_refresh is not None and diagnostics_refresh["passed"]
     for field, path in (("clean_intermediate_sha256", derived / "clean_panel.csv.gz"),
                         ("fold_results_sha256", derived / "fold-results-manifest.json")):
         if field in manifest.get("audit", {}) and manifest["audit"][field] != file_sha256(path):
             errors.append(f"manifest.audit.{field}: input/artifact checksum mismatch")
-    if manifest.get("provenance", {}).get("catalog_sha256", file_sha256(catalog_path)) != file_sha256(catalog_path):
+    if not refresh_verified and manifest.get("provenance", {}).get("catalog_sha256", file_sha256(catalog_path)) != file_sha256(catalog_path):
         errors.append("manifest provenance catalog checksum mismatch")
     producer_path = Path(__file__).with_name("configuration_pair_aggregation.py")
     recorded_producer = manifest.get("provenance", {}).get("producer_sha256")
-    if recorded_producer is not None and recorded_producer != file_sha256(producer_path):
+    if not refresh_verified and recorded_producer is not None and recorded_producer != file_sha256(producer_path):
         errors.append("manifest provenance producer checksum differs from current source")
     errors.extend(compare_expected({"schema_version": 1, "method_order": list(METHODS), "metric_order": list(METRICS),
                                     "split": {"repetitions": 10, "seeds": list(SEEDS), "minimum_fold_overlap": 1, "near_bi_gap": 2}},
@@ -532,8 +543,13 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
     fold_artifacts = audit_fold_artifacts(derived, supports, panels, market, sample_ids)
     errors.extend(fold_artifacts["errors"])
     baseline = read_json(baseline_path)["files"]
+    refresh_files = {row["file"]: row for row in diagnostics_refresh["files"]} if refresh_verified else {}
+    refreshed_baseline = [relative for relative, expected in baseline.items()
+                          if relative in refresh_files and refresh_files[relative]["before_sha256"] == expected
+                          and file_sha256(site_data / relative) == refresh_files[relative]["after_sha256"]]
     old_changed = [relative for relative, expected in baseline.items()
-                   if not (site_data / relative).is_file() or file_sha256(site_data / relative) != expected]
+                   if relative not in refreshed_baseline
+                   and (not (site_data / relative).is_file() or file_sha256(site_data / relative) != expected)]
     errors.extend(f"pre-existing public JSON changed: {relative}" for relative in old_changed)
     statuses = Counter(row["status"] for row in supports.values())
     histogram = Counter(len(row["folds"]) for row in supports.values())
@@ -557,7 +573,9 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
                                                 for row in supports.values()),
             "sampled_unordered_pairs": len(samples), "sampled_results": samples,
             "fold_artifacts": fold_artifacts,
-            "pre_existing_public_json": {"checked": len(baseline), "changed_or_missing": old_changed, "passed": not old_changed},
+            "pre_existing_public_json": {"checked": len(baseline), "changed_or_missing": old_changed,
+                                          "verified_diagnostics_only_refresh": refreshed_baseline, "passed": not old_changed},
+            "diagnostics_refresh": diagnostics_refresh,
             "shard_files": file_reports, "errors": errors,
             "limitations": ["Original processed forecast JSON was not re-read; the producer's provenance-cleaned intermediate is the numeric input.",
                             "Every public pair's identity, support, fold availability, train Near-BI mask and gain arithmetic is checked; complete forecast arithmetic is independently recomputed on the reported deterministic sample.",
