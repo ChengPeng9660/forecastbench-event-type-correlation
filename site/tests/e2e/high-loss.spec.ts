@@ -86,7 +86,7 @@ test("real GPT-5.1 high-loss data keeps raw extremes, strict missingness, and sp
   await sparse.focus();
   await expect(valueFor(inspector, "High-loss diversity")).toHaveText("1.000");
   await expect(valueFor(inspector, "Aggregation BI ↑")).toHaveText("78.40");
-  await expect(valueFor(inspector, "Gain vs base")).toHaveText("−45.8%");
+  await expect(valueFor(inspector, "Gain vs base")).toHaveText("-45.8%");
   await expect(valueFor(inspector, "Min marginal high-loss counts A / B")).toHaveText("2 / 1");
   await expect(valueFor(inspector, "Min joint high-loss count")).toHaveText("0");
   await expect(valueFor(inspector, "Defined high-loss directions")).toHaveText("1 / 1");
