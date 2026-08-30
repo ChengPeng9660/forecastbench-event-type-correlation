@@ -151,9 +151,17 @@ resource-related timeout, and all five cases in that test file passed on an
 isolated rerun without changing assertions. Forty producer/independent fixtures
 include constant-vector edge cases and train-only fitting checks.
 
-The longer independent full-artifact audit was still running when the user
-requested an immediate push. Its completion must be established from a passed
-`data/derived/configuration_pair_aggregation_audit/report.json`, not inferred
-from the checks above. The interrupted broad browser run is not reported as a
-completed full-suite pass. GitHub Actions runs the full release suites and the
-GitHub Pages deployment; no Aggrena deployment is part of this release.
+The longer independent full-artifact audit completed after the user requested
+the immediate push. The passed
+`data/derived/configuration_pair_aggregation_audit/report.json` records zero
+errors across 238 configurations, 239 JSON files, 56,406 directed partner records,
+and all 196,210 fold records. Identity, common support, event splits, training
+Near-BI masks, schema, and reported gain arithmetic were checked for every pair.
+An independent implementation directly recomputed 18 sampled pairs and 356
+folds in both base orientations (712 fixed-base evaluations); all matched.
+All 1,428 overview model/market score checks matched at tolerance 1e-12, and the
+112 pre-existing public JSON files remained byte-identical.
+
+The interrupted broad browser run is not reported as a completed full-suite
+pass. GitHub Actions runs the full release suites and the GitHub Pages deployment;
+no Aggrena deployment is part of this release.
