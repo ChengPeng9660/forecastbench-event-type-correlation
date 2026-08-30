@@ -747,9 +747,9 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .freeze-diversity-tick { fill: var(--quiet); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .freeze-diversity-axis-label { fill: var(--muted); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .015em; }
 .freeze-diversity-point { cursor: pointer; outline: none; }
-.freeze-diversity-point circle, .freeze-diversity-point rect { stroke: #fff; stroke-width: 2; opacity: .82; transition: opacity .15s ease, stroke-width .15s ease, filter .15s ease; }
-.freeze-diversity-point:hover circle, .freeze-diversity-point:hover rect, .freeze-diversity-point:focus circle, .freeze-diversity-point:focus rect { opacity: 1; filter: drop-shadow(0 2px 3px rgba(48, 28, 62, .22)); }
-.freeze-diversity-point.selected circle, .freeze-diversity-point.selected rect { opacity: 1; stroke: var(--ink); stroke-width: 3; filter: drop-shadow(0 2px 3px rgba(48, 28, 62, .25)); }
+.freeze-diversity-point circle, .freeze-diversity-point rect, .freeze-diversity-point polygon { stroke: #fff; stroke-width: 2; opacity: .82; transition: opacity .15s ease, stroke-width .15s ease, filter .15s ease; }
+.freeze-diversity-point:hover circle, .freeze-diversity-point:hover rect, .freeze-diversity-point:hover polygon, .freeze-diversity-point:focus circle, .freeze-diversity-point:focus rect, .freeze-diversity-point:focus polygon { opacity: 1; filter: drop-shadow(0 2px 3px rgba(48, 28, 62, .22)); }
+.freeze-diversity-point.selected circle, .freeze-diversity-point.selected rect, .freeze-diversity-point.selected polygon { opacity: 1; stroke: var(--ink); stroke-width: 3; filter: drop-shadow(0 2px 3px rgba(48, 28, 62, .25)); }
 .freeze-diversity-empty { min-height: 350px; display: grid; place-items: center; color: var(--quiet); font-size: 11px; }
 .freeze-diversity-inspector { padding: 20px 19px; border-top: 3px solid var(--gold); background: #fff; box-shadow: 0 12px 31px rgba(55, 32, 72, .06); }
 .freeze-diversity-inspector h5 { overflow-wrap: anywhere; margin: 0; font-size: 17px; font-weight: 620; letter-spacing: -.025em; line-height: 1.2; }
@@ -765,6 +765,8 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .freeze-diversity-legend i { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); }
 .freeze-diversity-legend i.scratchpad { border-radius: 1px; transform: rotate(45deg); }
 .freeze-diversity-legend i.zero-shot { border: 1px solid var(--ink); background: #fff; }
+.freeze-diversity-legend i.above-market { width: 0; height: 0; border-right: 5px solid transparent; border-bottom: 9px solid var(--ink); border-left: 5px solid transparent; border-radius: 0; background: none; }
+.freeze-diversity-legend i.at-or-below-market { background: var(--ink); }
 .freeze-diversity-note { margin: 13px 0 0; color: var(--muted); font-size: 9px; line-height: 1.65; }
 .freeze-diversity-note strong { color: var(--ink); }
 .freeze-correlation-audit { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; margin-top: 31px; padding-top: 15px; border-top: 1px solid var(--line-strong); }

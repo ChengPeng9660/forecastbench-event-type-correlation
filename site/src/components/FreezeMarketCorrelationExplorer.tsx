@@ -555,7 +555,9 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
                   const y = linearPosition(yValue, yDomain, [SCATTER_HEIGHT - SCATTER_MARGIN.bottom, SCATTER_MARGIN.top]);
                   const color = FREEZE_PROVIDER_COLORS[point.provider] ?? "#665f6d";
                   const isSelected = selectedAggregation?.exact_configuration === point.exact_configuration;
-                  const pointLabel = `${point.model}, ${point.prompt_label}: diversity ${scatterMetricLabel(diversityMetric, xValue)}, ${aggregationOutcome === "gain_vs_market" ? `gain ${signedPercent(yValue)}` : `BI ${yValue.toFixed(2)}`}`;
+                  const aggregationBi = pointView.aggregation[aggregationMethod].brier_index;
+                  const beatsMarket = aggregationBi > pointView.market_brier_index;
+                  const pointLabel = `${point.model}, ${point.prompt_label}: diversity ${scatterMetricLabel(diversityMetric, xValue)}, ${aggregationOutcome === "gain_vs_market" ? `gain ${signedPercent(yValue)}` : `BI ${yValue.toFixed(2)}`}; aggregation BI ${aggregationBi.toFixed(2)} ${beatsMarket ? "above" : "at or below"} matched market BI ${pointView.market_brier_index.toFixed(2)}`;
                   return <g
                     className={`freeze-diversity-point ${isSelected ? "selected" : ""}`}
                     role="button"
@@ -568,8 +570,8 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
                     transform={`translate(${x} ${y})`}
                     key={point.exact_configuration}
                   >
-                    {point.prompt_type === "scratchpad"
-                      ? <rect x={-6} y={-6} width={12} height={12} rx={1.5} fill={color} transform="rotate(45)" />
+                    {beatsMarket
+                      ? <polygon points="0,-8.5 8,6.5 -8,6.5" fill={color} />
                       : <circle r={6.5} fill={color} />}
                     <title>{pointLabel}</title>
                   </g>;
@@ -597,7 +599,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
           </div>
 
           <div className="freeze-diversity-legend">
-            <span><i className="zero-shot" /> Zero shot</span><span><i className="scratchpad" /> Scratchpad</span>
+            <span><i className="above-market" /> Aggregation BI &gt; matched market BI</span><span><i className="at-or-below-market" /> Aggregation BI ≤ matched market BI</span>
             {providers.map((item) => <span key={item}><i style={{ backgroundColor: FREEZE_PROVIDER_COLORS[item] ?? "#665f6d" }} /> {item}</span>)}
           </div>
         </div>
