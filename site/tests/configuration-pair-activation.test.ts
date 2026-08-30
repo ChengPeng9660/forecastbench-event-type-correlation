@@ -6,6 +6,9 @@ import payload from "../public/data/polymarket-aggregation/market-diversity-perf
 import type { MarketDiversityPerformanceData } from "../src/types/data";
 import { configurations, fixtureFetch } from "./fixtures/configuration-pair";
 
+// The standalone market block loads independently; this suite isolates pair-shard activation.
+vi.mock("../src/components/ModelMarketAggregationExplorer", () => ({ ModelMarketAggregationExplorer: () => null }));
+
 const original = payload as unknown as MarketDiversityPerformanceData;
 const data: MarketDiversityPerformanceData = { ...original, points: configurations.map((item) => ({ ...original.points[0], ...item })) };
 beforeEach(() => vi.stubGlobal("fetch", vi.fn(fixtureFetch)));

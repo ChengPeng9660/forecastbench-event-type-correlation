@@ -9,14 +9,14 @@ test("keeps the original market metrics and all configuration filters with TV", 
     await expect(diversity.getByRole("button", { name: label, exact: true })).toBeVisible();
   }
   await diversity.getByRole("button", { name: "Total variation (TV)", exact: true }).click();
-  await expect(section.getByRole("img")).toHaveAccessibleName(/Total variation \(TV\)/);
+  await expect(section.locator(".market-performance-chart")).toHaveAccessibleName(/Total variation \(TV\)/);
   await expect(diversity.getByRole("button", { name: "Total variation (TV)", exact: true })).toHaveAttribute("aria-pressed", "true");
   await section.getByLabel("Market performance provider").selectOption("OpenAI");
   await section.getByRole("group", { name: "Market performance prompt filter" }).getByRole("button", { name: "Zero shot", exact: true }).click();
   await expect(section.getByLabel("Market performance provider")).toHaveValue("OpenAI");
   await expect(section.getByRole("group", { name: "Market performance prompt filter" }).getByRole("button", { name: "Zero shot", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(section.locator(".market-performance-hit").first()).toBeAttached();
-  await expect(section.locator(".market-performance-baseline")).toBeAttached();
+  await expect(section.locator(".market-performance-chart .market-performance-baseline")).toBeAttached();
   const dimensions = await page.evaluate(() => ({ page: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth }));
   expect(dimensions.page).toBeLessThanOrEqual(dimensions.viewport + 1);
 });

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { HighLossNotice } from "./HighLossNotice";
 import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
+import { ModelMarketAggregationExplorer } from "./ModelMarketAggregationExplorer";
+import "../modelMarketAggregation.css";
 import { existingAggregationHref, existingLinksForConfiguration } from "../lib/existingAggregationLinks";
 import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
 import {
@@ -134,9 +136,14 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
   const missingMetricCount = candidates.filter((point) => point.diversity[metric] === null || !Number.isFinite(point.diversity[metric])).length;
   const filtered = useMemo(() => candidates.filter((point) => point.diversity[metric] !== null
     && Number.isFinite(point.diversity[metric]) && Number.isFinite(point.model[outcome])), [candidates, metric, outcome]);
-  const selected = filtered.find((point) => point.exact_configuration === selectedConfiguration)
-    ?? filtered[0]
-    ?? null;
+  const selected = data.points.find((point) => point.exact_configuration === selectedConfiguration) ?? null;
+  const selectedUnavailableNotice = selected && !candidates.includes(selected)
+    ? "The selected exact configuration is outside the current provider, prompt, or information filters. Its selection is preserved; no other configuration is highlighted."
+    : selected && !filtered.includes(selected)
+      ? "The selected exact configuration has an undefined diversity or performance value in this overview and is not plotted. Its selection remains linked to model + market aggregation below."
+      : selected && filtered.length < 2
+        ? "The overview needs at least two configurations with defined chart values. The selected exact configuration is preserved."
+        : null;
   const xValues = filtered.map((point) => point.diversity[metric] as number);
   const yValues = filtered.map((point) => point.model[outcome]);
   const baseline = weightedMarketBaseline(filtered, outcome);
@@ -217,6 +224,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
           <p className="eyebrow">SELECTED CONFIGURATION</p>
           <h3>{selected.canonical_model_version}</h3>
           <p>{selected.information_label} · {selected.prompt_label}</p>
+          {selectedUnavailableNotice && <p className="model-market-unavailable">{selectedUnavailableNotice}</p>}
           <dl>
             <div><dt>{data.metrics[metric].label}</dt><dd>{selectedX === null ? "—" : formatX(metric, selectedX)}</dd></div>
             <div><dt>Raw Brier ↓</dt><dd>{selected.model.raw_brier.toFixed(3)}</dd></div>
@@ -256,6 +264,11 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <p><strong>Interpretation.</strong> Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
       </ResearchDetails>
       {pinnedBase && <MarketConfigurationAggregationExplorer base={pinnedBase} />}
+      <ModelMarketAggregationExplorer
+        selectedConfiguration={selectedConfiguration || null}
+        onSelectConfiguration={setSelectedConfiguration}
+        filters={{ provider, prompt, information }}
+      />
     </section>
   );
 }
