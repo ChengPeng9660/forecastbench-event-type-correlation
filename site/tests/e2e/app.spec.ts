@@ -22,6 +22,7 @@ const crossTypeMetrics = [
   { id: "adjusted_pog", label: "Adjusted Pairwise Oracle Gain", dependence_direction: "lower" },
   { id: "high_loss_lift", label: "Adjusted High-loss Lift", dependence_direction: "higher" },
   { id: "adjusted_loss_corr", label: "Adjusted-loss Correlation", dependence_direction: "higher" },
+  { id: "total_variation", label: "Total variation (TV)", dependence_direction: "lower" },
 ];
 
 const crossTypeSamples = [
@@ -194,7 +195,7 @@ function globalBaselineFixture() {
     audit_json: "global-baseline/audit.json",
   };
   const matrixModels = publishedModels.filter((model) => !model.name.startsWith("LLM Crowd")).slice(0, 35);
-  const matrixFields = ["model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi", "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason", "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason"];
+  const matrixFields = ["model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi", "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason", "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason", "total_variation", "tv_reason"];
   const pairMatrix = (globalScope: "official_full" | "seven_topic_union") => ({
     schema_version: "1.0.0",
     global_scope: globalScope,
@@ -202,7 +203,7 @@ function globalBaselineFixture() {
     fields: matrixFields,
     pairs: matrixModels.flatMap((left, leftIndex) => matrixModels.slice(leftIndex + 1).map((right, offset) => {
       const index = leftIndex * matrixModels.length + offset;
-      return [left.id, right.id, 70 + index % 180, 2 + index % 5, true, index % 4 !== 0, null, null, .01 + (index % 80) / 1000, null, .8 + (index % 90) / 50, null, -.3 + (index % 60) / 100, null];
+      return [left.id, right.id, 70 + index % 180, 2 + index % 5, true, index % 4 !== 0, null, null, .01 + (index % 80) / 1000, null, .8 + (index % 90) / 50, null, -.3 + (index % 60) / 100, null, .02 + (index % 80) / 100, null];
     })),
   });
   const profiles = crossTypeTopics.map((topic, topicIndex) => ({
@@ -312,9 +313,11 @@ test("explores the Polymarket freeze baseline across models, methods, and folds"
   await expect(section.getByRole("row", { name: /Piecewise Odds/ })).toHaveClass(/active/);
   await section.getByRole("button", { name: "B→A" }).click();
   await expect(section).toContainText("Ten B-train → A-test evaluations averaged");
-  await section.getByRole("button", { name: "Same-sample diagnostic" }).click();
-  await expect(section.getByRole("button", { name: "B→A" })).toHaveCount(0);
-  await expect(section.getByRole("button", { name: "Near-BI (0)" })).toBeDisabled();
+  await expect(section.getByRole("button", { name: "Same-sample diagnostic" })).toHaveCount(0);
+  await expect(section.getByRole("button", { name: "B→A" })).toHaveClass(/active/);
+  await expect(section.getByRole("button", { name: "Near-BI (1)" })).toBeEnabled();
+  await section.getByRole("tab", { name: "Total variation (TV)", exact: true }).click();
+  await expect(section.getByRole("img")).toHaveAccessibleName(/Total variation \(TV\)/);
   await expect(section.getByText("Aggregation Brier Index (higher is better)")).toBeVisible();
   const outcomeGroup = section.getByRole("group", { name: "Polymarket chart outcome" });
   await expect(outcomeGroup.getByRole("button")).toHaveCount(3);
@@ -431,7 +434,7 @@ test("explores descriptive stability across seven event types without inventing 
 
   const section = page.getByTestId("cross-type-stability");
   await expect(section.getByRole("heading", { name: "Dependence across event types" })).toBeVisible();
-  await expect(section.getByRole("tab")).toHaveCount(3);
+  await expect(section.getByRole("tab")).toHaveCount(4);
   await expect(section.getByRole("group", { name: "Cross-type sample" }).getByRole("button")).toHaveCount(2);
   await expect(section.locator(".cross-type-cell")).toHaveCount(49);
   await expect(section.locator("button.cross-type-cell.limited")).toHaveCount(2);

@@ -132,6 +132,10 @@
               "high_loss_lift": {
                 "complementarity": -4.140463519202025,
                 "raw": 5.140463519202025
+              },
+              "total_variation": {
+                "complementarity": 0.14701172378253027,
+                "raw": 0.14701172378253027
               }
             },
             "model_a": "Polymarket Freeze",
@@ -230,6 +234,10 @@
               "high_loss_lift": {
                 "complementarity": -9.613786388788643,
                 "raw": 10.613786388788643
+              },
+              "total_variation": {
+                "complementarity": 0.12289511153298528,
+                "raw": 0.12289511153298528
               }
             },
             "model_a": "Polymarket Freeze",
@@ -328,6 +336,10 @@
               "high_loss_lift": {
                 "complementarity": -4.815854813539147,
                 "raw": 5.815854813539147
+              },
+              "total_variation": {
+                "complementarity": 0.15146674150996353,
+                "raw": 0.15146674150996353
               }
             },
             "model_a": "Polymarket Freeze",
@@ -426,6 +438,10 @@
               "high_loss_lift": {
                 "complementarity": -0.4205914407147334,
                 "raw": 1.4205914407147335
+              },
+              "total_variation": {
+                "complementarity": 0.26826428102429417,
+                "raw": 0.26826428102429417
               }
             },
             "model_a": "Polymarket Freeze",
@@ -524,6 +540,10 @@
               "high_loss_lift": {
                 "complementarity": -4.136555849782219,
                 "raw": 5.136555849782219
+              },
+              "total_variation": {
+                "complementarity": 0.16354333552199607,
+                "raw": 0.16354333552199607
               }
             },
             "model_a": "Polymarket Freeze",
@@ -622,6 +642,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.14684737569060774,
+                "raw": 0.14684737569060774
               }
             },
             "model_a": "Polymarket Freeze",
@@ -720,6 +744,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.1298568245125348,
+                "raw": 0.1298568245125348
               }
             },
             "model_a": "Polymarket Freeze",
@@ -818,6 +846,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.15726935615321921,
+                "raw": 0.15726935615321921
               }
             },
             "model_a": "Polymarket Freeze",
@@ -916,6 +948,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.11764330110497237,
+                "raw": 0.11764330110497237
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1014,6 +1050,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.15731882352941173,
+                "raw": 0.15731882352941173
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1112,6 +1152,10 @@
               "high_loss_lift": {
                 "complementarity": -3.3433215356823727,
                 "raw": 4.343321535682373
+              },
+              "total_variation": {
+                "complementarity": 0.19743970994475138,
+                "raw": 0.19743970994475138
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1210,6 +1254,10 @@
               "high_loss_lift": {
                 "complementarity": -2.5183493439941693,
                 "raw": 3.5183493439941693
+              },
+              "total_variation": {
+                "complementarity": 0.1688328956007879,
+                "raw": 0.1688328956007879
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1308,6 +1356,10 @@
               "high_loss_lift": {
                 "complementarity": -4.616287606584279,
                 "raw": 5.616287606584279
+              },
+              "total_variation": {
+                "complementarity": 0.12449217405164169,
+                "raw": 0.12449217405164169
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1406,6 +1458,10 @@
               "high_loss_lift": {
                 "complementarity": -3.663624919497445,
                 "raw": 4.663624919497445
+              },
+              "total_variation": {
+                "complementarity": 0.15381947194719472,
+                "raw": 0.15381947194719472
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1504,6 +1560,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.14859091940976163,
+                "raw": 0.14859091940976163
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1602,6 +1662,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.13653659766959578,
+                "raw": 0.13653659766959578
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1700,6 +1764,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.17915293204452254,
+                "raw": 0.17915293204452254
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1798,6 +1866,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.12926129032258063,
+                "raw": 0.12926129032258063
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1896,6 +1968,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.14312630553901132,
+                "raw": 0.14312630553901132
               }
             },
             "model_a": "Polymarket Freeze",
@@ -1994,6 +2070,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.14495259128386337,
+                "raw": 0.14495259128386337
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2092,6 +2172,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.1095140586797066,
+                "raw": 0.1095140586797066
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2190,6 +2274,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.18002078853046594,
+                "raw": 0.18002078853046594
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2288,6 +2376,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.12417539454806313,
+                "raw": 0.12417539454806313
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2386,6 +2478,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.16298974358974358,
+                "raw": 0.16298974358974358
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2484,6 +2580,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.17463705014749262,
+                "raw": 0.17463705014749262
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2582,6 +2682,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.17551512625871418,
+                "raw": 0.17551512625871418
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2673,6 +2777,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.08692465753424657,
+                "raw": 0.08692465753424657
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2775,6 +2883,10 @@
               "high_loss_lift": {
                 "complementarity": -5.266376109558226,
                 "raw": 6.266376109558226
+              },
+              "total_variation": {
+                "complementarity": 0.14231753741139405,
+                "raw": 0.14231753741139405
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2873,6 +2985,10 @@
               "high_loss_lift": {
                 "complementarity": -10.916483140211955,
                 "raw": 11.916483140211955
+              },
+              "total_variation": {
+                "complementarity": 0.12143871273071463,
+                "raw": 0.12143871273071463
               }
             },
             "model_a": "Polymarket Freeze",
@@ -2971,6 +3087,10 @@
               "high_loss_lift": {
                 "complementarity": -3.862866922412985,
                 "raw": 4.8628669224129855
+              },
+              "total_variation": {
+                "complementarity": 0.1532996898787708,
+                "raw": 0.1532996898787708
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3069,6 +3189,10 @@
               "high_loss_lift": {
                 "complementarity": 0.37890371454792915,
                 "raw": 0.6210962854520707
+              },
+              "total_variation": {
+                "complementarity": 0.268286547700755,
+                "raw": 0.268286547700755
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3167,6 +3291,10 @@
               "high_loss_lift": {
                 "complementarity": -4.233820379087183,
                 "raw": 5.233820379087183
+              },
+              "total_variation": {
+                "complementarity": 0.1633860672614962,
+                "raw": 0.1633860672614962
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3265,6 +3393,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.14227653631284914,
+                "raw": 0.14227653631284914
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3363,6 +3495,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.11558016997167138,
+                "raw": 0.11558016997167138
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3461,6 +3597,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.1449186426819297,
+                "raw": 0.1449186426819297
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3559,6 +3699,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.11331180167597765,
+                "raw": 0.11331180167597765
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3657,6 +3801,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.15770543046357616,
+                "raw": 0.15770543046357616
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3755,6 +3903,10 @@
               "high_loss_lift": {
                 "complementarity": -4.086065525587933,
                 "raw": 5.086065525587933
+              },
+              "total_variation": {
+                "complementarity": 0.18595691340782122,
+                "raw": 0.18595691340782122
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3853,6 +4005,10 @@
               "high_loss_lift": {
                 "complementarity": -2.5290625875560675,
                 "raw": 3.529062587556067
+              },
+              "total_variation": {
+                "complementarity": 0.16817947838023337,
+                "raw": 0.16817947838023337
               }
             },
             "model_a": "Polymarket Freeze",
@@ -3951,6 +4107,10 @@
               "high_loss_lift": {
                 "complementarity": -3.3740508307759915,
                 "raw": 4.3740508307759915
+              },
+              "total_variation": {
+                "complementarity": 0.11370785646538098,
+                "raw": 0.11370785646538098
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4049,6 +4209,10 @@
               "high_loss_lift": {
                 "complementarity": -4.5472425089934605,
                 "raw": 5.5472425089934605
+              },
+              "total_variation": {
+                "complementarity": 0.15330540997464073,
+                "raw": 0.15330540997464073
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4147,6 +4311,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.12756754675467546,
+                "raw": 0.12756754675467546
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4245,6 +4413,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.12475625258250148,
+                "raw": 0.12475625258250148
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4343,6 +4515,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.16711955079271873,
+                "raw": 0.16711955079271873
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4441,6 +4617,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.14111744966442955,
+                "raw": 0.14111744966442955
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4539,6 +4719,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.12704470313424007,
+                "raw": 0.12704470313424007
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4637,6 +4821,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.12846247044917258,
+                "raw": 0.12846247044917258
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4735,6 +4923,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.09759271099744245,
+                "raw": 0.09759271099744245
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4833,6 +5025,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.16640207612456748,
+                "raw": 0.16640207612456748
               }
             },
             "model_a": "Polymarket Freeze",
@@ -4931,6 +5127,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.12900752148997136,
+                "raw": 0.12900752148997136
               }
             },
             "model_a": "Polymarket Freeze",
@@ -5029,6 +5229,10 @@
               "high_loss_lift": {
                 "complementarity": null,
                 "raw": null
+              },
+              "total_variation": {
+                "complementarity": 0.17329090909090908,
+                "raw": 0.17329090909090908
               }
             },
             "model_a": "Polymarket Freeze",
@@ -5127,6 +5331,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.16095941002949854,
+                "raw": 0.16095941002949854
               }
             },
             "model_a": "Polymarket Freeze",
@@ -5225,6 +5433,10 @@
               "high_loss_lift": {
                 "complementarity": 1.0,
                 "raw": 0.0
+              },
+              "total_variation": {
+                "complementarity": 0.15816027654698242,
+                "raw": 0.15816027654698242
               }
             },
             "model_a": "Polymarket Freeze",
@@ -5338,6 +5550,10 @@
           "high_loss_lift": {
             "complementarity": -4.698148962201605,
             "raw": 5.698148962201605
+          },
+          "total_variation": {
+            "complementarity": 0.14468660598179453,
+            "raw": 0.14468660598179453
           }
         },
         "model_a": "Polymarket Freeze",
@@ -5446,6 +5662,10 @@
           "high_loss_lift": {
             "complementarity": -10.14045912748651,
             "raw": 11.14045912748651
+          },
+          "total_variation": {
+            "complementarity": 0.12216587677725117,
+            "raw": 0.12216587677725117
           }
         },
         "model_a": "Polymarket Freeze",
@@ -5554,6 +5774,10 @@
           "high_loss_lift": {
             "complementarity": -4.314151426742848,
             "raw": 5.314151426742848
+          },
+          "total_variation": {
+            "complementarity": 0.15238115330520394,
+            "raw": 0.15238115330520394
           }
         },
         "model_a": "Polymarket Freeze",
@@ -5662,6 +5886,10 @@
           "high_loss_lift": {
             "complementarity": -0.029697332923559135,
             "raw": 1.029697332923559
+          },
+          "total_variation": {
+            "complementarity": 0.2682751677852349,
+            "raw": 0.2682751677852349
           }
         },
         "model_a": "Polymarket Freeze",
@@ -5770,6 +5998,10 @@
           "high_loss_lift": {
             "complementarity": -4.184111024009512,
             "raw": 5.184111024009512
+          },
+          "total_variation": {
+            "complementarity": 0.16346644295302012,
+            "raw": 0.16346644295302012
           }
         },
         "model_a": "Polymarket Freeze",
@@ -5878,6 +6110,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.14457465277777778,
+            "raw": 0.14457465277777778
           }
         },
         "model_a": "Polymarket Freeze",
@@ -5986,6 +6222,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.12277865168539326,
+            "raw": 0.12277865168539326
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6094,6 +6334,10 @@
           "high_loss_lift": {
             "complementarity": null,
             "raw": null
+          },
+          "total_variation": {
+            "complementarity": 0.15110408163265304,
+            "raw": 0.15110408163265304
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6202,6 +6446,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.11548958333333334,
+            "raw": 0.11548958333333334
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6310,6 +6558,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1575108552631579,
+            "raw": 0.1575108552631579
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6418,6 +6670,10 @@
           "high_loss_lift": {
             "complementarity": -3.75976914869576,
             "raw": 4.75976914869576
+          },
+          "total_variation": {
+            "complementarity": 0.19173020833333332,
+            "raw": 0.19173020833333332
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6526,6 +6782,10 @@
           "high_loss_lift": {
             "complementarity": -2.523587329185339,
             "raw": 3.523587329185339
+          },
+          "total_variation": {
+            "complementarity": 0.16851342281879195,
+            "raw": 0.16851342281879195
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6634,6 +6894,10 @@
           "high_loss_lift": {
             "complementarity": -3.9156826705131214,
             "raw": 4.915682670513122
+          },
+          "total_variation": {
+            "complementarity": 0.1190777619047619,
+            "raw": 0.1190777619047619
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6742,6 +7006,10 @@
           "high_loss_lift": {
             "complementarity": -4.100084046167084,
             "raw": 5.100084046167084
+          },
+          "total_variation": {
+            "complementarity": 0.15356555323590815,
+            "raw": 0.15356555323590815
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6850,6 +7118,10 @@
           "high_loss_lift": {
             "complementarity": null,
             "raw": null
+          },
+          "total_variation": {
+            "complementarity": 0.13791480446927376,
+            "raw": 0.13791480446927376
           }
         },
         "model_a": "Polymarket Freeze",
@@ -6958,6 +7230,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.13065333441935484,
+            "raw": 0.13065333441935484
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7066,6 +7342,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1731432991202346,
+            "raw": 0.1731432991202346
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7174,6 +7454,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.13507236842105264,
+            "raw": 0.13507236842105264
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7282,6 +7566,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.13505687240356082,
+            "raw": 0.13505687240356082
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7390,6 +7678,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1367221238938053,
+            "raw": 0.1367221238938053
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7498,6 +7790,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1036875,
+            "raw": 0.1036875
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7606,6 +7902,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.17309154929577464,
+            "raw": 0.17309154929577464
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7714,6 +8014,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1265931899641577,
+            "raw": 0.1265931899641577
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7822,6 +8126,10 @@
           "high_loss_lift": {
             "complementarity": null,
             "raw": null
+          },
+          "total_variation": {
+            "complementarity": 0.1682268907563025,
+            "raw": 0.1682268907563025
           }
         },
         "model_a": "Polymarket Freeze",
@@ -7930,6 +8238,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1677982300884956,
+            "raw": 0.1677982300884956
           }
         },
         "model_a": "Polymarket Freeze",
@@ -8038,6 +8350,10 @@
           "high_loss_lift": {
             "complementarity": 1.0,
             "raw": 0.0
+          },
+          "total_variation": {
+            "complementarity": 0.1667776269230769,
+            "raw": 0.1667776269230769
           }
         },
         "model_a": "Polymarket Freeze",
@@ -8139,6 +8455,10 @@
           "high_loss_lift": {
             "complementarity": null,
             "raw": null
+          },
+          "total_variation": {
+            "complementarity": 0.08692465753424657,
+            "raw": 0.08692465753424657
           }
         },
         "model_a": "Polymarket Freeze",
@@ -9697,6 +10017,18 @@
       }
     ]
   },
+  "diversity_metrics": {
+    "total_variation": {
+      "cross_fit_support": "training keys only",
+      "formula": "mean(abs(p_freeze - p_model)) on original paired Bernoulli probabilities",
+      "higher_is_more_diverse": true,
+      "label": "Total variation (TV)",
+      "range": [
+        0.0,
+        1.0
+      ]
+    }
+  },
   "generated_at": "2026-08-26",
   "methods": {
     "best_single": {
@@ -9924,6 +10256,11 @@
           "complementarity": -4.654411764705882,
           "raw": 5.654411764705882,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.14468660598179453,
+          "raw": 0.14468660598179453,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10005,6 +10342,11 @@
         "high_loss_lift": {
           "complementarity": -11.057142857142859,
           "raw": 12.057142857142859,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.12216587677725119,
+          "raw": 0.12216587677725119,
           "reason": ""
         }
       },
@@ -10088,6 +10430,11 @@
           "complementarity": -4.642857142857144,
           "raw": 5.642857142857144,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.15238115330520394,
+          "raw": 0.15238115330520394,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10169,6 +10516,11 @@
         "high_loss_lift": {
           "complementarity": 0.08024691358024683,
           "raw": 0.9197530864197532,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.2682751677852349,
+          "raw": 0.2682751677852349,
           "reason": ""
         }
       },
@@ -10252,6 +10604,11 @@
           "complementarity": -4.398550724637682,
           "raw": 5.398550724637682,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.16346644295302012,
+          "raw": 0.16346644295302012,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10333,6 +10690,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.14457465277777778,
+          "raw": 0.14457465277777778,
           "reason": ""
         }
       },
@@ -10416,6 +10778,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.12277865168539327,
+          "raw": 0.12277865168539327,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10498,6 +10865,11 @@
           "complementarity": null,
           "raw": null,
           "reason": "model_a_marginal_high_loss_rate_zero"
+        },
+        "total_variation": {
+          "complementarity": 0.15110408163265304,
+          "raw": 0.15110408163265304,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10579,6 +10951,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.11548958333333334,
+          "raw": 0.11548958333333334,
           "reason": ""
         }
       },
@@ -10662,6 +11039,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.1575108552631579,
+          "raw": 0.1575108552631579,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10743,6 +11125,11 @@
         "high_loss_lift": {
           "complementarity": -3.8,
           "raw": 4.8,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.19173020833333332,
+          "raw": 0.19173020833333332,
           "reason": ""
         }
       },
@@ -10826,6 +11213,11 @@
           "complementarity": -2.5476190476190474,
           "raw": 3.5476190476190474,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.16851342281879195,
+          "raw": 0.16851342281879195,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -10907,6 +11299,11 @@
         "high_loss_lift": {
           "complementarity": -3.8461538461538467,
           "raw": 4.846153846153847,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.11907776190476191,
+          "raw": 0.11907776190476191,
           "reason": ""
         }
       },
@@ -10990,6 +11387,11 @@
           "complementarity": -4.164420485175201,
           "raw": 5.164420485175201,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.15356555323590815,
+          "raw": 0.15356555323590815,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11072,6 +11474,11 @@
           "complementarity": null,
           "raw": null,
           "reason": "model_a_marginal_high_loss_rate_zero"
+        },
+        "total_variation": {
+          "complementarity": 0.13791480446927373,
+          "raw": 0.13791480446927373,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11153,6 +11560,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.13065333441935484,
+          "raw": 0.13065333441935484,
           "reason": ""
         }
       },
@@ -11236,6 +11648,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.1731432991202346,
+          "raw": 0.1731432991202346,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11317,6 +11734,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.13507236842105264,
+          "raw": 0.13507236842105264,
           "reason": ""
         }
       },
@@ -11400,6 +11822,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.13505687240356085,
+          "raw": 0.13505687240356085,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11481,6 +11908,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.1367221238938053,
+          "raw": 0.1367221238938053,
           "reason": ""
         }
       },
@@ -11564,6 +11996,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.1036875,
+          "raw": 0.1036875,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11645,6 +12082,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.17309154929577467,
+          "raw": 0.17309154929577467,
           "reason": ""
         }
       },
@@ -11728,6 +12170,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.1265931899641577,
+          "raw": 0.1265931899641577,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11810,6 +12257,11 @@
           "complementarity": null,
           "raw": null,
           "reason": "model_a_marginal_high_loss_rate_zero"
+        },
+        "total_variation": {
+          "complementarity": 0.1682268907563025,
+          "raw": 0.1682268907563025,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11892,6 +12344,11 @@
           "complementarity": 1.0,
           "raw": 0.0,
           "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.1677982300884956,
+          "raw": 0.1677982300884956,
+          "reason": ""
         }
       },
       "model_a": "Polymarket Freeze",
@@ -11973,6 +12430,11 @@
         "high_loss_lift": {
           "complementarity": 1.0,
           "raw": 0.0,
+          "reason": ""
+        },
+        "total_variation": {
+          "complementarity": 0.16677762692307693,
+          "raw": 0.16677762692307693,
           "reason": ""
         }
       },

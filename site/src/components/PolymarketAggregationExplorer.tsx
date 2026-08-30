@@ -35,6 +35,7 @@ const METRICS: Array<{ id: MetricId; label: string; axis: string }> = [
   { id: "adjusted_pog", label: "Adjusted POG", axis: "Adjusted pairwise oracle gain" },
   { id: "high_loss_lift", label: "High-loss lift", axis: "Complementarity orientation · 1 − lift" },
   { id: "adjusted_loss_corr", label: "Loss correlation", axis: "Complementarity orientation · − correlation" },
+  { id: "total_variation", label: "Total variation (TV)", axis: "Mean absolute probability difference · TV" },
 ];
 
 export type PolymarketOutcomeId = "aggregation_bi" | "gain_vs_polymarket" | "gain_vs_model";
@@ -60,7 +61,6 @@ const OUTCOMES: Array<{ id: PolymarketOutcomeId; label: string; axis: string; co
   },
 ];
 
-type EvaluationMode = "cross_fit" | "same_sample";
 export type PolymarketFoldView = "combined" | "a_to_b" | "b_to_a";
 
 const FOLD_VIEWS: Array<{ id: PolymarketFoldView; label: string; detail: string }> = [
@@ -113,7 +113,7 @@ function percent(value: number | null, digits = 1) {
 }
 
 function metricValue(value: number, metric: MetricId) {
-  return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
+  return metric === "adjusted_pog" || metric === "total_variation" ? value.toFixed(3) : value.toFixed(2);
 }
 
 function shortModel(model: string) {
@@ -132,13 +132,9 @@ export function polymarketOutcomeValue(
 
 export function selectPolymarketPoints(
   data: PolymarketAggregationData,
-  evaluation: EvaluationMode,
   foldView: PolymarketFoldView,
   nearBiOnly: boolean,
 ) {
-  if (evaluation === "same_sample") {
-    return data.points.filter((point) => !nearBiOnly || point.near_bi);
-  }
   if (foldView === "combined") {
     return nearBiOnly ? data.cross_fit.near_bi_points : data.cross_fit.eligible_points;
   }
@@ -186,7 +182,6 @@ interface PolymarketAggregationExplorerProps {
 }
 
 export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExplorerProps) {
-  const [evaluation, setEvaluation] = useState<EvaluationMode>("cross_fit");
   const [foldView, setFoldView] = useState<PolymarketFoldView>("combined");
   const [group, setGroup] = useState<PolymarketPairGroup>("all");
   const [model, setModel] = useState("");
@@ -196,13 +191,11 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
   const [nearBiOnly, setNearBiOnly] = useState(false);
   const [selectedModel, setSelectedModel] = useState("");
 
-  const nearBiCount = evaluation === "cross_fit"
-    ? data.cross_fit.audit.near_bi_pairs_any_train_fold
-    : data.pair_scope.near_bi_pair_count;
+  const nearBiCount = data.cross_fit.audit.near_bi_pairs_any_train_fold;
 
   const sourcePoints = useMemo(
-    () => selectPolymarketPoints(data, evaluation, foldView, nearBiOnly),
-    [data, evaluation, foldView, nearBiOnly],
+    () => selectPolymarketPoints(data, foldView, nearBiOnly),
+    [data, foldView, nearBiOnly],
   );
   const points = useMemo(() => sourcePoints.filter((point) =>
     (group === "all" || point.pair_group === group)
@@ -227,7 +220,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
 
   useEffect(() => {
     if (selected) setSelectedModel(selected.model_b);
-  }, [evaluation, foldView, group, model, nearBiOnly, method, metric, outcome, selected?.model_b]);
+  }, [foldView, group, model, nearBiOnly, method, metric, outcome, selected?.model_b]);
 
   useEffect(() => {
     if (group === "all") return;
@@ -240,7 +233,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
 
   const xValues = definedPoints.map((point) => point.metrics[metric].complementarity as number);
   const yValues = definedPoints.map((point) => polymarketOutcomeValue(point, method, outcome) as number);
-  const xDomain = extent(xValues.length ? xValues : [0, 1]);
+  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : extent(xValues.length ? xValues : [0, 1]);
   const yDomain = extent(yValues.length ? yValues : [0, 1], outcome !== "aggregation_bi");
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
   const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
@@ -269,22 +262,17 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
       </div>
 
       <div className="aggregation-evaluation-bar">
-        <div className="aggregation-evaluation-toggle" role="group" aria-label="Polymarket aggregation evaluation design">
-          <button type="button" className={evaluation === "cross_fit" ? "active" : ""} onClick={() => { setEvaluation("cross_fit"); setSelectedModel(""); }}>Cross-fit OOS</button>
-          <button type="button" className={evaluation === "same_sample" ? "active" : ""} onClick={() => { setEvaluation("same_sample"); setSelectedModel(""); }}>Same-sample diagnostic</button>
-        </div>
-        <p>{evaluation === "cross_fit"
-          ? `${data.cross_fit.split.repetitions} repeated splits · train diversity → test performance`
-          : "Same-outcome diagnostic; not out-of-sample evidence."}</p>
+        <strong>Cross-fit OOS</strong>
+        <p>{data.cross_fit.split.repetitions} repeated splits · train diversity → test performance</p>
       </div>
 
-      {evaluation === "cross_fit" && <div className="aggregation-fold-bar">
+      <div className="aggregation-fold-bar">
         <span>FOLD VIEW</span>
         <div className="aggregation-fold-toggle" role="group" aria-label="Polymarket cross-fit fold view">
           {FOLD_VIEWS.map((item) => <button type="button" className={foldView === item.id ? "active" : ""} onClick={() => { setFoldView(item.id); setSelectedModel(""); }} key={item.id}>{item.label}</button>)}
         </div>
         <small>{foldMeta.detail}</small>
-      </div>}
+      </div>
 
       <div className="polymarket-controls">
         <div className="pair-group-tabs" role="tablist" aria-label="Polymarket paired model family">
@@ -305,7 +293,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
         </div>
       </div>
 
-      {!nearBiCount && <p className="polymarket-near-bi-note"><strong>No Near-BI pairs.</strong> {evaluation === "cross_fit" ? "No training fold" : "No same-sample pair"} is within {data.near_bi.threshold_bi_points.toFixed(1)} BI points of Polymarket Freeze on common support.</p>}
+      {!nearBiCount && <p className="polymarket-near-bi-note"><strong>No Near-BI pairs.</strong> No training fold is within {data.near_bi.threshold_bi_points.toFixed(1)} BI points of Polymarket Freeze on common support.</p>}
 
       <div className="polymarket-chart-controls">
         <label className="research-method-select">
@@ -363,11 +351,11 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
         </div>
 
         <dl className="polymarket-selection-summary">
-          <div><dt>MODEL PAIRS</dt><dd>{points.length}</dd><small>{group === "all" ? "all six model families" : `${GROUPS.find((item) => item.id === group)?.label} models`} · {evaluation === "cross_fit" ? foldMeta.label : "same sample"}</small></div>
+          <div><dt>MODEL PAIRS</dt><dd>{points.length}</dd><small>{group === "all" ? "all six model families" : `${GROUPS.find((item) => item.id === group)?.label} models`} · {foldMeta.label}</small></div>
           <div><dt>WEIGHTED BI ↑</dt><dd>{activeSummary?.weightedBi?.toFixed(2) ?? "—"}</dd><small>absolute aggregation Brier Index</small></div>
           <div><dt>GAIN VS POLYMARKET</dt><dd className={(activeSummary?.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsPolymarket ?? null)}</dd><small>fractional adjusted-Brier reduction</small></div>
           <div><dt>GAIN VS MODEL</dt><dd className={(activeSummary?.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsModel ?? null)}</dd><small>same pool, model as denominator</small></div>
-          <div><dt>DIVERSITY–{outcomeMeta.correlation} r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? `train complementarity vs opposite-fold ${outcomeMeta.label.toLowerCase()}` : `same-sample complementarity vs ${outcomeMeta.label.toLowerCase()}`}</small></div>
+          <div><dt>DIVERSITY–{outcomeMeta.correlation} r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>train diversity vs opposite-fold {outcomeMeta.label.toLowerCase()}</small></div>
         </dl>
       </div>
 
@@ -378,7 +366,8 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
           <div><span>FREEZE LEAD</span><strong>{data.provenance.snapshot_audit.freeze_to_due_lag_days.median.toFixed(0)} days</strong><small>{data.provenance.snapshot_audit.freeze_to_due_lag_days.minimum}–{data.provenance.snapshot_audit.freeze_to_due_lag_days.maximum} days before due date</small></div>
           <div><span>REPEATED OOS</span><strong>{data.cross_fit.split.repetitions} × 2 folds</strong><small>event-disjoint · both directions</small></div>
         </div>
-        <p><strong>Evaluation.</strong> Every recurring date for a market remains in one fold. Diversity and Near-BI use the training fold; performance uses the opposite fold. The same-sample view uses the same outcomes for both and is a diagnostic only.</p>
+        <p><strong>Evaluation.</strong> Every recurring date for a market remains in one fold. Diversity and Near-BI use the training fold; performance uses the opposite fold. Combined averages A→B and B→A.</p>
+        <p><strong>Total variation.</strong> TV is the mean absolute probability difference between the model and market on training questions. It ranges from 0 to 1; higher values mean greater prediction diversity.</p>
         <p><strong>Interpretation.</strong> Higher BI is better; positive gain means lower adjusted Brier than the named denominator. Best Single is a hindsight benchmark. Correlations describe associations, not causal effects.</p>
       </ResearchDetails>
     </section>

@@ -82,7 +82,7 @@ function assertSelectedLabel(marker: SVGGElement, point: PairAggregationPoint, f
 }
 
 describe("aggregation marker focal-left orientation", () => {
-  it("covers all 15 cross-family and six same-family groups in the real same-sample data", () => {
+  it("retains all 15 cross-family and six same-family groups in the archived source data", () => {
     expect(groups).toHaveLength(21);
     expect(groups.filter((item) => !item.sameFamily)).toHaveLength(15);
     expect(groups.filter((item) => item.sameFamily)).toHaveLength(6);
@@ -90,12 +90,11 @@ describe("aggregation marker focal-left orientation", () => {
       .toEqual(new Set(groups.map((item) => item.group)));
   });
 
-  it.each(groups)("keeps $group focal-left when either constituent is selected", ({ group }) => {
-    // Same-sample data has universal six-family support; cross-fit support is narrower.
-    const point = payload.points.find((item) => item.pair_group === group && isDefined(item));
+  it.each(groups.filter(({ group }) => payload.cross_fit.eligible_points.some((point) => point.pair_group === group && isDefined(point))))("keeps $group focal-left when either constituent is selected", ({ group }) => {
+    const point = payload.cross_fit.eligible_points.find((item) => item.pair_group === group && isDefined(item));
     expect(point, `No real-data representative for ${group}`).toBeDefined();
     const pair = point!;
-    window.history.replaceState(null, "", `/?gain_eval=same_sample&gain_model=${encodeURIComponent(pair.model_a)}`);
+    window.history.replaceState(null, "", `/?gain_model=${encodeURIComponent(pair.model_a)}`);
     const { container } = render(createElement(PairAggregationExplorer, {
       data: payload,
       nearBiOnly: false,

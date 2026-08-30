@@ -1,0 +1,120 @@
+{
+  "audit": "Additive total-variation market regression and fold export audit",
+  "schema_version": "1.0.0",
+  "tolerance": 1e-12,
+  "allowed_changed_fields": [
+    "fold_results_sha256",
+    "generated_at",
+    "pair_results_sha256",
+    "summary_sha256"
+  ],
+  "raw_input_hashes_checked": true,
+  "passed": true,
+  "files_checked": 5,
+  "numeric_tv_values": 2510,
+  "files": [
+    {
+      "file": "polymarket-aggregation/freeze-exposed-correlation.json",
+      "baseline_sha256": "fc3c43d6d8a3456c5a8fffa2a7572911d8f31835ccae8fcc23183f94d9ed0d2d",
+      "current_sha256": "ca623cbb9ae23987400b9e982c7a6a960849f84ecdcf009b74f87b3fd008eaa0",
+      "passed": true,
+      "old_value_differences": [],
+      "tv_contract": {
+        "passed": true,
+        "numeric_values": 156,
+        "minimum": 4.974658425035263e-18,
+        "maximum": 0.3581165462902167,
+        "errors": []
+      }
+    },
+    {
+      "file": "polymarket-aggregation/without-freeze-base.json",
+      "baseline_sha256": "6a9ce8ac999d3bc1a5bdd32ddefc19148076277c0d3b8ee24c86d974655e27c2",
+      "current_sha256": "f6fe1de47086f6cab1efba2b5b16cfad04e09d18aa0e891c3da0f35e8b14ef5b",
+      "passed": true,
+      "old_value_differences": [],
+      "tv_contract": {
+        "passed": true,
+        "numeric_values": 108,
+        "minimum": 0.060340768702814,
+        "maximum": 0.18295371269951424,
+        "errors": []
+      }
+    },
+    {
+      "file": "polymarket-aggregation/freeze-baseline.json",
+      "baseline_sha256": "a7c71ab66107c67702b78e14efe40299583776831d9568f626f5ad630353e848",
+      "current_sha256": "66591662873c8d276aa678d8681ba9065b06fccbc50dd947066ab1a8590c0bbe",
+      "passed": true,
+      "old_value_differences": [],
+      "tv_contract": {
+        "passed": true,
+        "numeric_values": 212,
+        "minimum": 0.08692465753424657,
+        "maximum": 0.268286547700755,
+        "errors": []
+      }
+    },
+    {
+      "file": "polymarket-aggregation/market-diversity-performance.json",
+      "baseline_sha256": "2c1d2b60c07e548778ba31754e1798f17160c4af3a0d957929128b2eb3c3e9fe",
+      "current_sha256": "a061383c84cac9e5647319d4c7886309c94f7a409f20b839fcbf7b8a1535db67",
+      "passed": true,
+      "old_value_differences": [],
+      "tv_contract": {
+        "passed": true,
+        "numeric_values": 238,
+        "minimum": 5.058639934979347e-18,
+        "maximum": 0.4325517719298245,
+        "errors": []
+      }
+    },
+    {
+      "file": "pair-aggregation/upper-left-model-pairs.json",
+      "baseline_sha256": "8d55c44799cd9dc284d0af05d8d770fbc0d871373d8d2ea65d3251cc8eb2bf59",
+      "current_sha256": "5c7a8112e934721138d6b39f6ec9c998933959e8a93ff040749ed40d1f642856",
+      "passed": true,
+      "old_value_differences": [],
+      "tv_contract": {
+        "passed": true,
+        "numeric_values": 1796,
+        "minimum": 0.0025,
+        "maximum": 0.06873399912203687,
+        "errors": []
+      }
+    }
+  ],
+  "fold_consistency": [
+    {
+      "artifact": "market_freeze",
+      "fold_rows": 10920,
+      "pair_rows": 546,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "artifact": "without_freeze_base_",
+      "fold_rows": 10080,
+      "pair_rows": 504,
+      "passed": true,
+      "errors": []
+    },
+    {
+      "artifact": "upper_left_pairs",
+      "fold_rows": 11744,
+      "pair_rows": 1428,
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "derived_freeze_summary": {
+    "checked": false,
+    "reason": "optional baseline-derived-summary not provided"
+  },
+  "limitations": [
+    "Artifact checks do not re-read original forecast JSON or replace source-imputation audits.",
+    "Old-field regression covers the public JSONs and optional derived summary; no pre-upgrade fold CSV is compared.",
+    "Train-key and outcome-independence properties also require the synthetic unit tests.",
+    "Ten repeated folds reuse targets; record counts are not independent statistical sample sizes."
+  ]
+}

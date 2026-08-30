@@ -6,11 +6,14 @@ from pathlib import Path
 import pytest
 
 from analysis.export_freeze_correlation_site import (
+    DIVERSITY_METRICS,
+    aggregation_scores,
     build_payload,
     build_without_freeze_base_payload,
 )
 from analysis.pair_aggregation import dependence_support, event_fold
-from analysis.closed_form_aggregation import evaluate_pair
+from analysis.closed_form_aggregation import aggregate_pairs, evaluate_pair
+from analysis.freeze_exposed_market_aggregation import add_model_reference_fields
 
 
 def test_freeze_correlation_site_payload_matches_released_experiment() -> None:
@@ -166,6 +169,7 @@ def test_freeze_correlation_export_locks_market_anchor_exact_prompts_and_train_f
     }
 
     source_fields = {
+        "total_variation": "train_total_variation_complementarity",
         "adjusted_pog": "train_adjusted_pog_complementarity",
         "high_loss_lift": "train_high_loss_lift_complementarity",
         "adjusted_loss_corr": "train_adjusted_loss_corr_complementarity",
@@ -259,7 +263,7 @@ def test_freeze_market_fold_diversity_uses_only_the_training_keys() -> None:
         assert set(train_keys).isdisjoint(test_keys)
         expected = dependence_support(market, model, train_keys, 2.0, 0.25)
         assert record["train_bi_gap"] == pytest.approx(expected["bi_gap"])
-        for metric in ("adjusted_pog", "high_loss_lift", "adjusted_loss_corr"):
+        for metric in DIVERSITY_METRICS:
             observed = record[f"train_{metric}_complementarity"]
             expected_value = expected["metrics"][metric]["complementarity"]
             if expected_value is None:
@@ -272,7 +276,30 @@ def test_freeze_market_fold_diversity_uses_only_the_training_keys() -> None:
         for key in test_keys:
             changed_market[key]["outcome"] = str(1 - int(changed_market[key]["outcome"]))
             changed_model[key]["outcome"] = str(1 - int(changed_model[key]["outcome"]))
+            changed_market[key]["prediction"] = "0"
+            changed_model[key]["prediction"] = "1"
         unchanged = dependence_support(
             changed_market, changed_model, train_keys, 2.0, 0.25
         )
         assert unchanged == expected
+
+    # The same generic exporter feeds both with-freeze market pairs and the
+    # same-version without-freeze-base combined/directional views.
+    for train_fold in (None, "A", "B"):
+        selected = [row for row in records if train_fold is None or row["train_fold"] == train_fold]
+        pairs = add_model_reference_fields(aggregate_pairs(selected))
+        index = {(row["model_b"], row["method"]): row for row in pairs}
+        exported = aggregation_scores(
+            index,
+            "GPT-Test (zero shot with freeze values)",
+            base_name="fixed base",
+            partner_name="GPT-Test (zero shot with freeze values)",
+        )
+        relevant_keys = keys if train_fold is None else split[train_fold]
+        expected_tv = sum(
+            abs(float(market[key]["prediction"]) - float(model[key]["prediction"]))
+            for key in relevant_keys
+        ) / len(relevant_keys)
+        assert exported["train_diversity"]["total_variation"] == pytest.approx(expected_tv)
+    assert DIVERSITY_METRICS["total_variation"]["range"] == [0.0, 1.0]
+    assert DIVERSITY_METRICS["total_variation"]["label"] == "Total variation (TV)"

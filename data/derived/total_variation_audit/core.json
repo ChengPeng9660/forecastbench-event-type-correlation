@@ -1,0 +1,473 @@
+{
+  "audit": "TV additive core data regression",
+  "tolerance": 1e-12,
+  "files_checked": 93,
+  "passed": true,
+  "files": [
+    {
+      "file": "event-types/climate_weather.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/entertainment_culture.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/finance_economics.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/health_science.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_acled.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_dbnomics.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_fred.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_infer.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_manifold.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_metaculus.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_polymarket.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_wikipedia.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/official_source_yahoo_finance.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/origin_type_dataset.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/origin_type_market.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/politics_conflict.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/sports.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "event-types/technology_ai.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/summary.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "cross-type/summary.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/pair-matrices/official_full.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/pair-matrices/seven_topic_union.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-04529271c59f.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-053c89805c23.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-05bcc48ff6e5.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-05d476e35038.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-067cec3d920e.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-1133a988055e.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-1327a2256ab1.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-141905ecaf50.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-14c43b6fbaea.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-162eda995e0e.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-1982b0897833.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-212d976ab56f.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-2609f7b2c90d.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-2673f7adab79.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-29e11ffd28bd.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-30b22f7eaedf.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-373ceb1e93fd.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-3a8fc11881e0.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-3b9f2e7f3246.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-428468ff2bf7.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-480bfb73b3c9.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-4973eaa8e3ba.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-4cc7ba3fbff8.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-5397516d6b66.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-578dfe52357a.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-598c1f6ddf28.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-59b8d2646c71.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-65987e132401.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-66462d08dc57.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-66e6293ebabd.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-671c77b45c99.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-6a31eaeafa02.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-6c9f0d592b9e.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-7020a0f966a0.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-79448501633c.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-82ee262512a5.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-94017b30895f.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-97effa48de43.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-9b816f4a6295.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-9c3534697719.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-9cbe524bc40b.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-a1417ba24fa8.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-a208d7a5691d.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-a3bda6bae463.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-ae18b690c932.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-af5950a758ba.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-aff0141c1db6.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-b3cf2d9147b2.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-b490be7f673d.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-b6562900ea66.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-b76a45f2b4b2.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-b90f08c417b4.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-bb19cddaf077.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-c22226db460e.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-c4660ed0e412.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-c4a1571ba4ba.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-c8e7cf815ccc.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-cada5739cf58.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-cd40178d5b8c.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-d2e90294cfd4.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-dd2b8d444fc9.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-df9bf331b6c6.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-dfe826c35622.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-e058ba8175c4.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-e9cb69d903bb.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-efc6d97b839b.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-f011d1a6002f.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-f0311033bb98.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-f24e45c2ffe1.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "global-baseline/partner-profiles/m-f7d79f342a93.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    },
+    {
+      "file": "focal-gain/gpt-4-1-2025-04-14.json",
+      "unchanged_existing_results": true,
+      "errors": []
+    }
+  ]
+}

@@ -50,6 +50,7 @@ function toPairs(payload: GlobalPairMatrixCompact, rows: GlobalPairMatrixRow[]):
       adjusted_pog: { value: row.adjusted_pog, se: null, ci95: null, reason: row.pog_reason },
       high_loss_lift: { value: row.high_loss_lift, se: null, ci95: null, reason: row.lift_reason },
       adjusted_loss_corr: { value: row.adjusted_loss_corr, se: null, ci95: null, reason: row.corr_reason },
+      total_variation: { value: row.total_variation, se: null, ci95: null, reason: row.tv_reason },
     },
     diagnostics: { mean_bi_gap: null, near_bi: row.near_bi },
     row_id: `${payload.global_scope}::${row.model_a_id}::${row.model_b_id}`,

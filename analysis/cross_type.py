@@ -45,6 +45,10 @@ METRICS: dict[str, dict[str, str | int]] = {
         "column": "adjusted_loss_pearson_corr", "reason": "corr_reason", "direction": 1,
         "label": "Adjusted-loss correlation",
     },
+    "total_variation": {
+        "column": "total_variation", "reason": "tv_reason", "direction": -1,
+        "label": "Total variation (TV)",
+    },
 }
 SAMPLE_LABELS = {
     "near_bi_both": "Near-BI in both",
@@ -106,7 +110,7 @@ def as_bool(value: object) -> bool | None:
 
 
 def as_float(value: object) -> float | None:
-    text = str(value or "").strip()
+    text = "" if value is None else str(value).strip()
     if not text:
         return None
     result = float(text)

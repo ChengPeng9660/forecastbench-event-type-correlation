@@ -1,6 +1,6 @@
 {
-  "built_at": "2026-08-24T06:36:28Z",
-  "commit_sha": "439e3a6142d3c00a39fa65fb1da1c234b97d3ffc",
+  "built_at": "2026-08-30T00:00:00+00:00",
+  "commit_sha": "60154fb79dec51bb2d941aee27ad45dc2e9fbe9f",
   "dataset_version": "question_fixed_effects_latest_2026-04-14.json",
   "event_types": [
     {
@@ -131,7 +131,7 @@
     }
   ],
   "fixture": false,
-  "metric_version": "three-adjusted-pair-metrics-v1",
+  "metric_version": "three-adjusted-metrics-plus-predictive-tv-v2",
   "metrics": [
     {
       "description": "Measures whether two models excel on different questions—the ex post complementarity available at the question level.",
@@ -161,6 +161,18 @@
       "id": "adjusted_loss_corr",
       "label": "Adjusted-loss Correlation",
       "short_label": "Loss correlation"
+    },
+    {
+      "description": "Mean absolute difference between the two models' probabilities on identical targets. Bernoulli TV is outcome-free; higher values mean more predictive diversity, not necessarily better forecasts.",
+      "direction": "higher",
+      "domain": [
+        0.0,
+        1.0
+      ],
+      "format": ".3f",
+      "id": "total_variation",
+      "label": "Total variation (TV)",
+      "short_label": "TV diversity"
     }
   ],
   "model_definition": "exact_model_version_one_zero_shot_representative_v1",

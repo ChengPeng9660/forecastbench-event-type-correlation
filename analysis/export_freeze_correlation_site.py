@@ -73,6 +73,13 @@ AGGREGATION_METHOD_METADATA = {
 }
 
 DIVERSITY_METRICS = {
+    "total_variation": {
+        "label": "Total variation (TV)",
+        "axis": "Mean |p_base − p_partner|",
+        "formula": "mean(abs(p_base - p_partner)) on original paired Bernoulli probabilities",
+        "range": [0.0, 1.0],
+        "orientation": "higher means greater base–partner diversity",
+    },
     "adjusted_pog": {
         "label": "Adjusted POG",
         "axis": "Adjusted pairwise oracle gain",
@@ -331,6 +338,7 @@ def build_payload(
                 "n_common": int(row["n"]),
                 "prediction_pearson": row["prediction_pearson"],
                 "mean_absolute_difference": row["mean_absolute_difference"],
+                "total_variation": row["mean_absolute_difference"],
                 "root_mean_squared_difference": row["root_mean_squared_difference"],
                 "exact_copy_share": row["exact_copy_share"],
                 "market_mean_probability": row["market_mean_probability"],
@@ -339,15 +347,8 @@ def build_payload(
                 "model_brier_index": float(partner["brier_index"]),
                 "model_gain_vs_market": float(partner["gain_vs_anchor"]),
                 "train_diversity": {
-                    "adjusted_pog": optional_float(
-                        anchor["train_adjusted_pog_complementarity"]
-                    ),
-                    "high_loss_lift": optional_float(
-                        anchor["train_high_loss_lift_complementarity"]
-                    ),
-                    "adjusted_loss_corr": optional_float(
-                        anchor["train_adjusted_loss_corr_complementarity"]
-                    ),
+                    metric: optional_float(anchor[f"train_{metric}_complementarity"])
+                    for metric in DIVERSITY_METRICS
                 },
                 "train_bi_gap": float(anchor["train_bi_gap"]),
                 "train_near_bi_share": float(anchor["train_near_bi_share"]),
@@ -477,6 +478,7 @@ def build_payload(
             "support_weighted_mean_absolute_difference": support_weighted(
                 "mean_absolute_difference"
             ),
+            "support_weighted_total_variation": support_weighted("total_variation"),
             "correlation_minimum": min(correlations),
             "correlation_maximum": max(correlations),
             "imputed_rows_excluded_all_configurations": summary["provenance"][

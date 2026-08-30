@@ -75,8 +75,8 @@ describe("global-baseline data loader", () => {
       schema_version: "1.0.0",
       global_scope: "official_full",
       models: [{ id: "model-a", name: "A", organization: "Org" }, { id: "model-b", name: "B", organization: "Org" }],
-      fields: ["model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi", "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason", "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason"],
-      pairs: [["model-a", "model-b", 100, 2, true, true, null, null, .1, null, 1.2, null, .3, null]],
+      fields: ["model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi", "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason", "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason", "total_variation", "tv_reason"],
+      pairs: [["model-a", "model-b", 100, 2, true, true, null, null, .1, null, 1.2, null, .3, null, .125, null]],
     };
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify(compact), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
@@ -86,6 +86,7 @@ describe("global-baseline data loader", () => {
       eligible: true, near_bi: true, bi_reason: null, insufficient_overlap_reason: null,
       adjusted_pog: .1, pog_reason: null, high_loss_lift: 1.2, lift_reason: null,
       adjusted_loss_corr: .3, corr_reason: null,
+      total_variation: .125, tv_reason: null,
     }]);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });

@@ -34,7 +34,7 @@ METHODS = (
     "cf_directional",
     "best_single",
 )
-METRICS = ("adjusted_pog", "high_loss_lift", "adjusted_loss_corr")
+METRICS = ("adjusted_pog", "high_loss_lift", "adjusted_loss_corr", "total_variation")
 PROVIDERS = {
     "GPT": "OpenAI",
     "Claude": "Anthropic",
@@ -95,6 +95,11 @@ DIVERSITY_METADATA = {
     "adjusted_loss_corr": {
         "label": "Loss Correlation",
         "axis": "Complementarity orientation · − adjusted-loss correlation",
+        "orientation": "higher means greater base–partner diversity",
+    },
+    "total_variation": {
+        "label": "Total variation (TV)",
+        "axis": "Mean absolute forecast difference · TV",
         "orientation": "higher means greater base–partner diversity",
     },
 }

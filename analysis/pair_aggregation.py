@@ -22,7 +22,13 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from analysis.metrics import adjusted_pog, brier_index, high_loss_lift, pearson_correlation
+from analysis.metrics import (
+    adjusted_pog,
+    brier_index,
+    high_loss_lift,
+    pearson_correlation,
+    total_variation,
+)
 
 
 KEY = ("date", "source", "event_id", "horizon")
@@ -41,6 +47,12 @@ METHODS = (
     "piecewise_odds",
     "best_single",
     "past_only_best_single",
+)
+DIVERSITY_METRICS = (
+    "adjusted_pog",
+    "high_loss_lift",
+    "adjusted_loss_corr",
+    "total_variation",
 )
 
 # ForecastBench's 2024-07-21 files used OpenAI's moving ``GPT-4o`` alias.
@@ -355,6 +367,10 @@ def dependence_support(
     pog = adjusted_pog(loss_a, loss_b)
     lift, _, _, _, _, lift_reason = high_loss_lift(loss_a, loss_b, high_loss_threshold)
     correlation, correlation_reason = pearson_correlation(loss_a, loss_b)
+    variation = total_variation(
+        [float(first_panel[key]["prediction"]) for key in common],
+        [float(second_panel[key]["prediction"]) for key in common],
+    )
     brier_a = official_mean(zip(origins, loss_a))
     brier_b = official_mean(zip(origins, loss_b))
     bi_a, bi_reason_a = brier_index(brier_a)
@@ -378,6 +394,11 @@ def dependence_support(
                 "raw": correlation,
                 "complementarity": None if correlation is None else -correlation,
                 "reason": correlation_reason,
+            },
+            "total_variation": {
+                "raw": variation,
+                "complementarity": variation,
+                "reason": "",
             },
         },
     }
@@ -405,7 +426,7 @@ def aggregate_cross_fit_records(
     test_total = sum(record["n_test"] for record in records)
     train_total = sum(record["n_train"] for record in records)
     metric_values: dict[str, dict[str, float | None]] = {}
-    for metric in ("adjusted_pog", "high_loss_lift", "adjusted_loss_corr"):
+    for metric in DIVERSITY_METRICS:
         metric_records = [
             {
                 "raw": record["metrics"][metric]["raw"],

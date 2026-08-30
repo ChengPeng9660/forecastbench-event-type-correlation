@@ -41,6 +41,7 @@ export const FREEZE_DIVERSITY_METRICS: FreezeDiversityMetricId[] = [
   "adjusted_pog",
   "high_loss_lift",
   "adjusted_loss_corr",
+  "total_variation",
 ];
 
 export const FREEZE_PROVIDER_COLORS: Record<string, string> = {
@@ -149,7 +150,7 @@ export function freezeMarketPointView(
 }
 
 export function scatterMetricLabel(metric: FreezeDiversityMetricId, value: number) {
-  return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
+  return metric === "adjusted_pog" || metric === "total_variation" ? value.toFixed(3) : value.toFixed(2);
 }
 
 export function sortFreezeCorrelationPoints(
@@ -313,7 +314,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
   ));
   const scatterPearson = pearsonCorrelation(scatterX, scatterY);
   const scatterSpearman = spearmanCorrelation(scatterX, scatterY);
-  const xDomain = finiteExtent(scatterX);
+  const xDomain: [number, number] = diversityMetric === "total_variation" ? [0, 1] : finiteExtent(scatterX);
   const yDomain = finiteExtent(scatterY, aggregationOutcome === "gain_vs_market");
   const xTicks = linearTicks(xDomain);
   const yTicks = linearTicks(yDomain);

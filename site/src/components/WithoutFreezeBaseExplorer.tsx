@@ -125,7 +125,7 @@ export function WithoutFreezeBaseExplorer({ data }: { data: FixedBaseAggregation
   const ys = points.map((point) => fixedBaseOutcomeValue(point, foldView, method, outcome));
   const pearson = pearsonCorrelation(xs, ys);
   const spearman = spearmanCorrelation(xs, ys);
-  const xDomain = finiteExtent(xs);
+  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : finiteExtent(xs);
   const yDomain = finiteExtent(ys, outcome === "gain_vs_base");
   const xTicks = linearTicks(xDomain);
   const yTicks = linearTicks(yDomain);

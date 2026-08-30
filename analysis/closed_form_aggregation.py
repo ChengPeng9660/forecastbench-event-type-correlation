@@ -59,7 +59,12 @@ DIAGNOSTIC_METHODS = (
     "oracle_directional",
 )
 ALL_METHODS = (*DIAGNOSTIC_METHODS, *DEPLOYABLE_METHODS)
-COMPLEMENTARITY_METRICS = ("adjusted_pog", "high_loss_lift", "adjusted_loss_corr")
+COMPLEMENTARITY_METRICS = (
+    "adjusted_pog",
+    "high_loss_lift",
+    "adjusted_loss_corr",
+    "total_variation",
+)
 
 
 def _weighted_rows(

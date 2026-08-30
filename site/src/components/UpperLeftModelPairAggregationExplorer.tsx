@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { finiteExtent, linearPosition, linearTicks } from "./FreezeMarketCorrelationExplorer";
+import { useHistoryRestore } from "../lib/useHistoryRestore";
 import type {
   UpperLeftCrossfitPairRow,
   UpperLeftFixedPairRow,
@@ -79,7 +80,7 @@ function crossfitDisplay(row: UpperLeftCrossfitPairRow): DisplayRow {
 }
 
 function formatMetric(metric: UpperLeftPairDiversityMetricId, value: number) {
-  return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
+  return metric === "adjusted_pog" || metric === "total_variation" ? value.toFixed(3) : value.toFixed(2);
 }
 
 function downloadRows(rows: DisplayRow[], metric: UpperLeftPairDiversityMetricId, filename: string) {
@@ -116,6 +117,7 @@ function PairBlock({
   rows,
   data,
   crossfit,
+  location,
 }: {
   index: string;
   title: string;
@@ -124,7 +126,9 @@ function PairBlock({
   rows: DisplayRow[];
   data: UpperLeftModelPairAggregationData;
   crossfit: boolean;
+  location: { base: string | null; view: string | null; minimumDirections: number };
 }) {
+  const blockRef = useRef<HTMLElement>(null);
   const [metric, setMetric] = useState<UpperLeftPairDiversityMetricId>("prediction_diversity");
   const [method, setMethod] = useState<UpperLeftPairMethodId>("piecewise_odds");
   const availableModels = useMemo(() => models.filter((model) => rows.some((row) => row.modelA === model.name || row.modelB === model.name)), [models, rows]);
@@ -132,9 +136,45 @@ function PairBlock({
     (row.modelA === model.name || row.modelB === model.name)
     && (!crossfit || (row.evaluationCount ?? 0) >= 10)
   )))?.name ?? availableModels[0]?.name ?? "", [availableModels, rows, crossfit]);
-  const [focal, setFocal] = useState(defaultFocal);
-  const [minimumDirections, setMinimumDirections] = useState(crossfit ? 10 : 1);
+  const [focal, setFocal] = useState(location.base ?? defaultFocal);
+  const [minimumDirections, setMinimumDirections] = useState(crossfit ? location.minimumDirections : 1);
   const [selectedPair, setSelectedPair] = useState("");
+  const unavailableFocal = focal !== "" && !availableModels.some((model) => model.name === focal);
+
+  useEffect(() => {
+    setFocal(location.base ?? defaultFocal);
+    setSelectedPair("");
+  }, [location, defaultFocal]);
+
+  useEffect(() => {
+    setMinimumDirections(crossfit ? location.minimumDirections : 1);
+  }, [location, crossfit]);
+
+  useEffect(() => {
+    if (window.location.hash !== "#upper-left-pairs" || location.view !== (crossfit ? "crossfit" : "fixed")) return;
+    const frame = window.requestAnimationFrame(() => blockRef.current?.scrollIntoView?.({ block: "start" }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [location, crossfit]);
+
+  function selectFocal(value: string) {
+    setFocal(value);
+    setSelectedPair("");
+    const params = new URLSearchParams(window.location.search);
+    params.set("upper_left_base", value);
+    params.set("upper_left_view", crossfit ? "crossfit" : "fixed");
+    if (crossfit) params.set("upper_left_min_directions", String(minimumDirections));
+    window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}${window.location.hash}`);
+  }
+
+  function selectMinimumDirections(value: number) {
+    setMinimumDirections(value);
+    setSelectedPair("");
+    const params = new URLSearchParams(window.location.search);
+    params.set("upper_left_base", focal);
+    params.set("upper_left_view", "crossfit");
+    params.set("upper_left_min_directions", String(value));
+    window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}${window.location.hash}`);
+  }
 
   const filtered = useMemo(() => rows
     .filter((row) => row.method === method)
@@ -149,7 +189,7 @@ function PairBlock({
   const marketLine = filtered.length ? filtered.reduce((sum, row) => sum + row.marketBi, 0) / filtered.length : null;
   const rawX = finiteExtent(xValues);
   const xPadding = Math.max((rawX[1] - rawX[0]) * 0.07, 0.005);
-  const xDomain: [number, number] = [
+  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : [
     metric === "prediction_diversity" || metric === "adjusted_pog" ? Math.max(0, rawX[0] - xPadding) : rawX[0] - xPadding,
     rawX[1] + xPadding,
   ];
@@ -160,18 +200,20 @@ function PairBlock({
   const meanBi = filtered.length ? filtered.reduce((sum, row) => sum + row.aggregationBi, 0) / filtered.length : null;
 
   return (
-    <article className="upper-left-pair-block">
+    <article className="upper-left-pair-block" id={`upper-left-${crossfit ? "crossfit" : "fixed"}`} ref={blockRef}>
       <div className="upper-left-block-heading">
         <span>{index}</span>
         <div><p className="eyebrow">{crossfit ? "TRAIN-SELECTED · OOS" : "FIXED CONFIGURATIONS · FULL SAMPLE"}</p><h3>{title}</h3><p>{crossfit ? "Select on the training fold; evaluate on the opposite fold." : "Preselected configurations, evaluated on the full sample."}</p></div>
       </div>
 
       <div className={`upper-left-controls ${crossfit ? "crossfit" : ""}`}>
-        <label><span>FOCAL MODEL</span><select aria-label={`${title} focal model`} value={focal} onChange={(event) => { setFocal(event.target.value); setSelectedPair(""); }}>{availableModels.map((model) => <option value={model.name} key={model.name}>{model.canonical_model_version} · {model.prompt_label}</option>)}</select></label>
+        <label><span>FOCAL MODEL</span><select aria-label={`${title} focal model`} value={focal} onChange={(event) => selectFocal(event.target.value)}>{unavailableFocal && <option value={focal}>{focal} · not in this block</option>}{availableModels.map((model) => <option value={model.name} key={model.name}>{model.canonical_model_version} · {model.information_label} · {model.prompt_label}</option>)}</select></label>
         <label><span>AGGREGATION</span><select aria-label={`${title} aggregation method`} value={method} onChange={(event) => { setMethod(event.target.value as UpperLeftPairMethodId); setSelectedPair(""); }}>{data.methods.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
         <div><span>DIVERSITY · X</span><div className="upper-left-metric-tabs">{(Object.keys(data.metrics) as UpperLeftPairDiversityMetricId[]).map((id) => <button type="button" className={metric === id ? "active" : ""} aria-pressed={metric === id} onClick={() => setMetric(id)} key={id}>{data.metrics[id].label}</button>)}</div></div>
-        {crossfit && <label><span>MIN OOS DIRECTIONS</span><select aria-label="Minimum OOS directions" value={minimumDirections} onChange={(event) => { setMinimumDirections(Number(event.target.value)); setSelectedPair(""); }}>{[1, 5, 10, 15, 20].map((value) => <option value={value} key={value}>{value} / 20</option>)}</select></label>}
+        {crossfit && <label><span>MIN OOS DIRECTIONS</span><select aria-label="Minimum OOS directions" value={minimumDirections} onChange={(event) => selectMinimumDirections(Number(event.target.value))}>{[1, 5, 10, 15, 20].map((value) => <option value={value} key={value}>{value} / 20</option>)}</select></label>}
       </div>
+
+      {location.base && <p className="research-scope upper-left-linked-configuration">Focal exact configuration: <strong>{focal}</strong>. {unavailableFocal ? "This configuration has no published results in this block; no other configuration has been substituted." : "Using the existing pair results and their original evaluation support."} {crossfit && `Minimum: ${minimumDirections} / 20 OOS directions. Each point reports its actual available directions; not every pair appears in all 20.`}</p>}
 
       <dl className="upper-left-kpis">
         <div><dt>VISIBLE PAIRS</dt><dd>{filtered.length}</dd><small>one fixed focal model</small></div>
@@ -201,7 +243,7 @@ function PairBlock({
             })}
             <text className="upper-left-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 16} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity</text>
             <text className="upper-left-axis-label" transform={`translate(18 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">Aggregation Brier Index ↑</text>
-          </svg> : <div className="upper-left-empty">No eligible partner for this focal model and metric.</div>}
+          </svg> : <div className="upper-left-empty">{unavailableFocal ? "The linked exact configuration is not available in this block. Choose a listed configuration to explore other published results." : "No eligible partner for this focal model and metric."}</div>}
         </div>
 
         <aside className="upper-left-inspector" aria-live="polite">
@@ -218,11 +260,22 @@ function PairBlock({
 }
 
 export function UpperLeftModelPairAggregationExplorer({ data }: { data: UpperLeftModelPairAggregationData }) {
+  const readLocation = (params = new URLSearchParams(window.location.search)) => {
+    const candidate = Number(params.get("upper_left_min_directions"));
+    return { base: params.get("upper_left_base") || null, view: params.get("upper_left_view"), minimumDirections: [1, 5, 10, 15, 20].includes(candidate) ? candidate : 10 };
+  };
+  const [location, setLocation] = useState(() => readLocation());
+  useHistoryRestore((params) => setLocation(readLocation(params)));
+  useEffect(() => {
+    const restore = () => setLocation(readLocation());
+    window.addEventListener("hashchange", restore);
+    return () => window.removeEventListener("hashchange", restore);
+  }, []);
   return (
     <section className="upper-left-pairs-section" id="upper-left-pairs">
       <div className="section-heading upper-left-section-heading"><div><p className="eyebrow">SELECTED MODEL PAIRS</p><h2>Which model pairs beat the market?</h2></div><p>Compare four pools using fixed or train-selected configurations. Market comparisons use each pair's shared Polymarket events.</p></div>
-      <PairBlock index="01" title={data.fixed.title} description={data.fixed.description} models={data.fixed.models} rows={data.fixed.rows.map(fixedDisplay)} data={data} crossfit={false} />
-      <PairBlock index="02" title={data.crossfit.title} description={data.crossfit.description} models={data.crossfit.models} rows={data.crossfit.rows.map(crossfitDisplay)} data={data} crossfit />
+      <PairBlock index="01" title={data.fixed.title} description={data.fixed.description} models={data.fixed.models} rows={data.fixed.rows.map(fixedDisplay)} data={data} crossfit={false} location={location} />
+      <PairBlock index="02" title={data.crossfit.title} description={data.crossfit.description} models={data.crossfit.models} rows={data.crossfit.rows.map(crossfitDisplay)} data={data} crossfit location={location} />
       <p className="research-scope">Triangles mark a higher BI than the pair-matched market, not statistical significance. Dataset questions are excluded.</p>
       <ResearchDetails>
         <p><strong>Market reference.</strong> {data.market_reference.interpretation} Each pair includes only valid freeze-time Polymarket targets, and its aggregation and market scores use exactly the same support.</p>

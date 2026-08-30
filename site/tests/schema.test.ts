@@ -46,9 +46,11 @@ describe("static data contract", () => {
         const pog = pair.metrics.adjusted_pog.value;
         const lift = pair.metrics.high_loss_lift.value;
         const corr = pair.metrics.adjusted_loss_corr.value;
+        const tv = pair.metrics.total_variation.value;
         expect(pog === null || Number.isFinite(pog)).toBe(true);
         expect(lift === null || lift >= 0).toBe(true);
         expect(corr === null || (corr >= -1 && corr <= 1)).toBe(true);
+        expect(tv === null || (Number.isFinite(tv) && tv >= 0 && tv <= 1)).toBe(true);
       }
     }
   }, 120_000);
@@ -83,7 +85,7 @@ describe("cross-event-type stability contract", () => {
     }
   });
 
-  it.skipIf(!crossTypePublished)("keeps the 7-topic, 3-metric, 2-sample stability matrix auditable", () => {
+  it.skipIf(!crossTypePublished)("keeps the 7-topic, 4-metric, 2-sample stability matrix auditable", () => {
     const crossManifest = JSON.parse(readFileSync(crossTypeManifestPath, "utf8")) as CrossTypeManifest;
     const summary = JSON.parse(readFileSync(join(dataRoot, crossManifest.summary_json), "utf8")) as CrossTypeSummary;
     const topicIds = crossManifest.topics.map((topic) => topic.id);
@@ -93,7 +95,8 @@ describe("cross-event-type stability contract", () => {
     expect(crossManifest.schema_version).toBe(summary.schema_version);
     expect(topicIds).toHaveLength(7);
     expect(new Set(topicIds).size).toBe(7);
-    expect(metricIds).toHaveLength(3);
+    expect(metricIds).toHaveLength(4);
+    expect(metricIds).toContain("total_variation");
     expect(sampleIds).toHaveLength(2);
     expect(crossManifest.samples.filter((sample) => sample.primary)).toHaveLength(1);
     expect(summary.topic_ids).toEqual(topicIds);
@@ -156,6 +159,7 @@ const expectedPairMatrixFields = [
   "model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi",
   "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason",
   "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason",
+  "total_variation", "tv_reason",
 ];
 
 describe("global-baseline stability contract", () => {
@@ -198,7 +202,8 @@ describe("global-baseline stability contract", () => {
     expect(globalManifest.schema_version).toBe(summary.schema_version);
     expect(scopeIds).toHaveLength(2);
     expect(topicIds).toHaveLength(7);
-    expect(metricIds).toHaveLength(3);
+    expect(metricIds).toHaveLength(4);
+    expect(metricIds).toContain("total_variation");
     expect(sampleIds).toHaveLength(2);
     expect(comparisonIds).toEqual(["leave_topic_out", "inclusive_global"]);
     expect(globalManifest.comparison_modes.filter((mode) => mode.primary).map((mode) => mode.id)).toEqual(["leave_topic_out"]);
@@ -273,6 +278,8 @@ describe("global-baseline stability contract", () => {
       const liftReasonIndex = payload.fields.indexOf("lift_reason");
       const corrIndex = payload.fields.indexOf("adjusted_loss_corr");
       const corrReasonIndex = payload.fields.indexOf("corr_reason");
+      const tvIndex = payload.fields.indexOf("total_variation");
+      const tvReasonIndex = payload.fields.indexOf("tv_reason");
       const seen = new Set<string>();
       const matrixModelIds = new Set(payload.models.map((model) => model.id));
       for (const row of payload.pairs) {
@@ -290,12 +297,15 @@ describe("global-baseline stability contract", () => {
         const pog = row[pogIndex];
         const lift = row[liftIndex];
         const corr = row[corrIndex];
+        const tv = row[tvIndex];
         expect(pog === null || Number.isFinite(pog)).toBe(true);
         expect(lift === null || (Number.isFinite(lift) && Number(lift) >= 0)).toBe(true);
         expect(corr === null || (Number(corr) >= -1 && Number(corr) <= 1)).toBe(true);
+        expect(tv === null || (Number.isFinite(tv) && Number(tv) >= 0 && Number(tv) <= 1)).toBe(true);
         if (pog === null) expect(row[pogReasonIndex]).toEqual(expect.any(String));
         if (lift === null) expect(row[liftReasonIndex]).toEqual(expect.any(String));
         if (corr === null) expect(row[corrReasonIndex]).toEqual(expect.any(String));
+        if (tv === null) expect(row[tvReasonIndex]).toEqual(expect.any(String));
       }
       expect(seen.size).toBe(2_415);
       expect(record.path).toBe(relativePath.replace("global-baseline/", ""));

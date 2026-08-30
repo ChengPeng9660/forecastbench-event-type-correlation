@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
+import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
+import { existingAggregationHref, existingLinksForConfiguration } from "../lib/existingAggregationLinks";
 import {
   finiteExtent,
   linearPosition,
@@ -25,6 +27,7 @@ const METRICS: MarketPerformanceDiversityMetricId[] = [
   "adjusted_pog",
   "high_loss_lift",
   "adjusted_loss_corr",
+  "total_variation",
 ];
 
 const INFORMATION_ORDER: MarketInformationType[] = [
@@ -55,7 +58,7 @@ const PROMPTS: Array<{ id: "all" | MarketPromptType; label: string }> = [
 ];
 
 function formatX(metric: MarketPerformanceDiversityMetricId, value: number) {
-  return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
+  return metric === "adjusted_pog" || metric === "total_variation" ? value.toFixed(3) : value.toFixed(2);
 }
 
 function formatY(outcome: MarketPerformanceOutcomeId, value: number) {
@@ -103,6 +106,15 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
   const [prompt, setPrompt] = useState<"all" | MarketPromptType>("all");
   const [information, setInformation] = useState<"all" | MarketInformationType>("all");
   const [selectedConfiguration, setSelectedConfiguration] = useState(data.points[0]?.exact_configuration ?? "");
+  const [pinnedBaseConfiguration, setPinnedBaseConfiguration] = useState<string | null>(null);
+  const [aggregationScrollRequest, setAggregationScrollRequest] = useState(0);
+  const pinnedBase = data.points.find((point) => point.exact_configuration === pinnedBaseConfiguration) ?? null;
+  const activateConfiguration = (exact: string) => { setSelectedConfiguration(exact); setPinnedBaseConfiguration(exact); };
+  useEffect(() => {
+    if (!aggregationScrollRequest) return;
+    const frame = window.requestAnimationFrame(() => document.getElementById("configuration-pair-aggregation")?.scrollIntoView?.({ block: "start" }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [aggregationScrollRequest]);
 
   const providers = useMemo(
     () => [...new Set(data.points.map((point) => point.provider))].sort(),
@@ -125,7 +137,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
   const yValues = filtered.map((point) => point.model[outcome]);
   const baseline = weightedMarketBaseline(filtered, outcome);
   const rawXDomain = finiteExtent(xValues);
-  const xDomain: [number, number] = metric === "prediction_diversity" || metric === "adjusted_pog"
+  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : metric === "prediction_diversity" || metric === "adjusted_pog"
     ? [Math.max(0, rawXDomain[0]), rawXDomain[1]]
     : rawXDomain;
   const rawYDomain = finiteExtent(baseline === null ? yValues : [...yValues, baseline]);
@@ -137,6 +149,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
   const pearson = pearsonCorrelation(xValues, yValues);
   const spearman = spearmanCorrelation(xValues, yValues);
   const selectedX = selected?.diversity[metric] ?? null;
+  const aggregationLinks = selected ? existingLinksForConfiguration(selected.exact_configuration) : [];
 
   return (
     <section className="market-performance-section" id="market-performance">
@@ -155,7 +168,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
       </div>
 
       <div className="market-performance-axis-controls">
-        <div><span>DIVERSITY · X</span><div className="market-performance-tabs">{METRICS.map((id) => <button className={metric === id ? "active" : ""} type="button" onClick={() => setMetric(id)} key={id}>{data.metrics[id].label}</button>)}</div></div>
+        <div><span>DIVERSITY · X</span><div className="market-performance-tabs" role="group" aria-label="Market performance diversity metric">{METRICS.map((id) => <button className={metric === id ? "active" : ""} type="button" aria-pressed={metric === id} onClick={() => setMetric(id)} key={id}>{data.metrics[id].label}</button>)}</div></div>
         <div><span>PERFORMANCE · Y</span><div className="market-performance-tabs"><button className={outcome === "raw_brier" ? "active" : ""} type="button" onClick={() => setOutcome("raw_brier")}>Raw Brier Score ↓</button><button className={outcome === "brier_index" ? "active" : ""} type="button" onClick={() => setOutcome("brier_index")}>Brier Index ↑</button></div></div>
       </div>
 
@@ -185,7 +198,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
               const x = linearPosition(xValue, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
               const y = linearPosition(yValue, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
               const label = `${point.canonical_model_version}\n${point.information_label} · ${point.prompt_label}\n${data.metrics[metric].label}: ${formatX(metric, xValue)}\nModel ${data.outcomes[outcome].label}: ${formatY(outcome, yValue)}\nMatched market: ${formatY(outcome, point.matched_market[outcome])}\nn = ${point.n_common}`;
-              return <g className="market-performance-hit" transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} onClick={() => setSelectedConfiguration(point.exact_configuration)} onFocus={() => setSelectedConfiguration(point.exact_configuration)} key={point.exact_configuration}><PointGlyph point={point} selected={selected?.exact_configuration === point.exact_configuration} /><circle className="market-performance-hit-target" r={12} /><title>{label}</title></g>;
+              return <g className="market-performance-hit" data-configuration={point.exact_configuration} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={selected?.exact_configuration === point.exact_configuration} aria-controls="configuration-pair-aggregation" onClick={() => activateConfiguration(point.exact_configuration)} onFocus={() => setSelectedConfiguration(point.exact_configuration)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activateConfiguration(point.exact_configuration); } }} key={point.exact_configuration}><PointGlyph point={point} selected={selected?.exact_configuration === point.exact_configuration} /><circle className="market-performance-hit-target" r={12} /><title>{label}</title></g>;
             })}
             <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 15} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity</text>
             <text className="market-performance-axis-label" transform={`translate(20 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">{data.outcomes[outcome].axis}</text>
@@ -207,6 +220,14 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
             <div><dt>Date range</dt><dd>{selected.date_min}<br />{selected.date_max}</dd></div>
           </dl>
           <small>{selected.exact_configuration}</small>
+          <div className="market-performance-aggregation-links">
+            <button type="button" className="market-performance-aggregation-cta" aria-controls="configuration-pair-aggregation" onClick={() => { activateConfiguration(selected.exact_configuration); setAggregationScrollRequest((value) => value + 1); }}>Explore aggregation ↓</button>
+            {aggregationLinks.length > 0 && <p className="eyebrow">EARLIER EXPERIMENTS</p>}
+            {aggregationLinks.map((link) => <div key={`${link.page}-${link.evaluation}`}>
+              <a href={existingAggregationHref(link)}>{link.label} →</a>
+              <small>{link.evaluation === "cross_fit" ? "Cross-fit OOS" : "Full-sample descriptive"} · {link.methods.length} published methods. {link.scope === "all_events" ? "Dataset + market questions: broader support than this overview." : "Polymarket questions only; each pair uses its own matched support."}</small>
+            </div>)}
+          </div>
         </aside>}
       </div>
 
@@ -218,8 +239,10 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
       <ResearchDetails>
         <p><strong>How to read it.</strong> Color distinguishes the information shown to the model; shape distinguishes the prompt. Repeated model names are intentional exact configurations, not duplicate rows. Model and market scores use identical non-imputed support with a valid freeze-time Polymarket probability.</p>
         <p><strong>Market reference.</strong> The dashed line is the support-weighted matched-market benchmark under the active filters, recomputed after every filter change. Because model coverage differs, the selected-point panel reports its own matched-market score; use that value for exact comparisons.</p>
+        <p><strong>Total variation.</strong> TV is the mean absolute probability difference between the model and its matched market forecast. It ranges from 0 to 1 and uses no outcomes. Higher TV means greater prediction diversity; it is distinct from 1 − prediction correlation.</p>
         <p><strong>Interpretation.</strong> Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
       </ResearchDetails>
+      {pinnedBase && <MarketConfigurationAggregationExplorer base={pinnedBase} />}
     </section>
   );
 }

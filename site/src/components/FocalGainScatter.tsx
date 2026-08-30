@@ -9,6 +9,7 @@ const METRICS: Array<{ id: MetricId; label: string; axis: string; raw: string }>
   { id: "adjusted_pog", label: "Adjusted POG", axis: "Adjusted pairwise oracle gain", raw: "Adjusted POG" },
   { id: "high_loss_lift", label: "High-loss lift", axis: "Complementarity orientation · 1 − lift", raw: "Raw high-loss lift" },
   { id: "adjusted_loss_corr", label: "Loss correlation", axis: "Complementarity orientation · − correlation", raw: "Raw loss correlation" },
+  { id: "total_variation", label: "Total variation (TV)", axis: "Mean absolute probability difference · TV", raw: "Total variation (TV)" },
 ];
 
 function mean(values: number[]) {
@@ -59,7 +60,7 @@ function ticks([low, high]: [number, number], count = 5) {
 }
 
 function formatMetric(value: number, metric: MetricId) {
-  return metric === "adjusted_pog" ? value.toFixed(3) : value.toFixed(2);
+  return metric === "adjusted_pog" || metric === "total_variation" ? value.toFixed(3) : value.toFixed(2);
 }
 
 function formatPercent(value: number) {
@@ -93,7 +94,7 @@ export function FocalGainScatter({ data }: { data: FocalGainData }) {
 
   const xValues = points.map((point) => point.metrics[metric].complementarity);
   const yValues = points.map((point) => point.gain_fraction);
-  const xDomain = extent(xValues);
+  const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : extent(xValues);
   const yDomain = extent(yValues, true);
   const plotWidth = WIDTH - MARGIN.left - MARGIN.right;
   const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;

@@ -46,6 +46,7 @@ const METRIC_DESCRIPTIONS: Record<MetricId, string> = {
   adjusted_pog: "Measures whether two models excel on different questions. Lower gain means higher model dependence; larger gain indicates more ex post complementarity.",
   high_loss_lift: "Measures how often two models incur severe errors together. Higher lift means higher model dependence; 1 indicates approximate independence.",
   adjusted_loss_corr: "Measures alignment in question-level difficulty-adjusted Brier losses. Higher correlation means higher model dependence.",
+  total_variation: "Mean absolute probability difference on shared questions: mean |p − q|. Ranges from 0 to 1; higher TV means greater prediction diversity, not necessarily better aggregation.",
 };
 
 const TOPIC_DEFINITIONS: Record<string, string> = {
@@ -426,8 +427,8 @@ export default function App() {
         <ResearchPanel page="methods" active={activePage} visited={visitedPages}>
         <section className="method-section" id="methods">
           <div className="section-heading">
-            <div><p className="eyebrow">MEASURING DIVERSITY</p><h2>Three complementary lenses</h2></div>
-            <p>Shared errors, loss alignment, and oracle complementarity answer different questions.</p>
+            <div><p className="eyebrow">MEASURING DIVERSITY</p><h2>Four complementary lenses</h2></div>
+            <p>Shared errors, loss alignment, oracle complementarity, and probability differences answer different questions.</p>
           </div>
           <div className="method-list">
             {appData.manifest.metrics.map((item, index) => (

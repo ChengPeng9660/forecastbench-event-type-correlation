@@ -11,6 +11,7 @@ from analysis.freeze_exposed_market_aggregation import (
     is_freeze_exposed_configuration,
     select_primary_configurations,
     similarity_diagnostics,
+    summarize_similarity_rows,
 )
 
 
@@ -52,6 +53,19 @@ def test_similarity_diagnostics_detects_exact_copy() -> None:
     result = similarity_diagnostics(market, model, keys)
     assert result["exact_copy_share"] == pytest.approx(1)
     assert result["mean_absolute_difference"] == pytest.approx(0)
+    assert result["total_variation"] == pytest.approx(0)
+
+
+def test_similarity_total_variation_is_original_probability_distance_on_requested_support() -> None:
+    keys = [("2026-01-01", "polymarket", str(index), "") for index in range(3)]
+    market = {key: {"prediction": str(value)} for key, value in zip(keys, (0.0, 0.5, 1.0))}
+    model = {key: {"prediction": str(value)} for key, value in zip(keys, (1.0, 0.25, 0.0))}
+    result = similarity_diagnostics(market, model, keys[:2])
+    assert result["total_variation"] == pytest.approx(0.625)
+    assert result["total_variation"] == result["mean_absolute_difference"]
+    aggregate = summarize_similarity_rows([result], "test")
+    assert aggregate["macro_total_variation"] == pytest.approx(0.625)
+    assert aggregate["support_weighted_total_variation"] == pytest.approx(0.625)
 
 
 def test_imputed_filter_keeps_real_duplicate_and_drops_imputed_only(tmp_path: Path) -> None:

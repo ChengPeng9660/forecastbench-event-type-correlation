@@ -1,4 +1,4 @@
-"""Compute the three audited ForecastBench dependence metrics by topic.
+"""Compute three adjusted-loss metrics and predictive TV diversity by topic.
 
 Input 1 is the scored panel produced by :mod:`analysis.scoring`.  Input 2 is a
 derived taxonomy with the required key, provenance, and eligibility columns:
@@ -87,6 +87,8 @@ OUTPUT_FIELDS = [
     "adjusted_loss_pearson_corr",
     "corr_reason",
     "metric_status",
+    "total_variation",
+    "tv_reason",
 ]
 
 
@@ -98,6 +100,13 @@ class Observation:
     horizon: str
     origin_type: str
     adjusted_brier: float
+    prediction: float | None = None
+
+    def __post_init__(self) -> None:
+        if self.prediction is not None and (
+            not math.isfinite(self.prediction) or not 0 <= self.prediction <= 1
+        ):
+            raise ValueError("prediction must be a finite probability in [0, 1]")
 
     @property
     def target_key(self) -> tuple[str, str, str, str]:
@@ -133,6 +142,8 @@ class PairAccumulator:
     sum_a: float = 0.0
     sum_b: float = 0.0
     sum_min: float = 0.0
+    sum_tv: float = 0.0
+    n_tv_observations: int = 0
     running_mean_a: float = 0.0
     running_mean_b: float = 0.0
     running_m2_a: float = 0.0
@@ -190,6 +201,9 @@ class PairAccumulator:
             self.sum_a += a
             self.sum_b += b
             self.sum_min += min(a, b)
+            if row_a.prediction is not None and row_b.prediction is not None:
+                self.sum_tv += abs(row_a.prediction - row_b.prediction)
+                self.n_tv_observations += 1
             high_a = a > high_loss_threshold
             high_b = b > high_loss_threshold
             self.high_a += int(high_a)
@@ -213,6 +227,22 @@ def normalize_origin(value: str) -> str:
 
 def mean(values: Sequence[float]) -> float:
     return sum(values) / len(values)
+
+
+def total_variation(first: Sequence[float], second: Sequence[float]) -> float:
+    """Mean per-target Bernoulli TV: E[|p_a - p_b|] on aligned targets.
+
+    This uses probabilities, not outcomes or adjusted losses. It is neither
+    TV between marginal histograms of forecasts nor 1 - Pearson correlation.
+    Missing probabilities must not be silently imputed or dropped.
+    """
+
+    if not len(first) or len(first) != len(second):
+        raise ValueError("total_variation requires equal non-empty probability vectors")
+    for values in (first, second):
+        if any(not math.isfinite(value) or not 0 <= value <= 1 for value in values):
+            raise ValueError("total_variation requires finite probabilities in [0, 1]")
+    return math.fsum(abs(a - b) for a, b in zip(first, second)) / len(first)
 
 
 def adjusted_pog(loss_a: Sequence[float], loss_b: Sequence[float]) -> float:
@@ -321,6 +351,8 @@ def _empty_metrics(reason: str) -> dict[str, Any]:
         "adjusted_loss_pearson_corr": "",
         "corr_reason": reason,
         "metric_status": "not_estimable",
+        "total_variation": "",
+        "tv_reason": reason,
     }
 
 
@@ -383,6 +415,14 @@ def compute_pair_topic_row(
     result["adjusted_pog"] = adjusted_pog(loss_a, loss_b)
     result["pog_reason"] = ""
 
+    probabilities_a = [row.prediction for row in common_a]
+    probabilities_b = [row.prediction for row in common_b]
+    tv_reason = "missing_prediction_probabilities" if any(
+        value is None for value in (*probabilities_a, *probabilities_b)
+    ) else ""
+    result["total_variation"] = "" if tv_reason else total_variation(probabilities_a, probabilities_b)
+    result["tv_reason"] = tv_reason
+
     lift, rate_a, rate_b, joint_rate, joint_count, lift_reason = high_loss_lift(
         loss_a, loss_b, high_loss_threshold
     )
@@ -437,7 +477,7 @@ def compute_pair_topic_row(
             }
         )
 
-    undefined = [name for name, reason in (("BI", bi_reasons), ("lift", lift_reason), ("corr", corr_reason)) if reason]
+    undefined = [name for name, reason in (("BI", bi_reasons), ("lift", lift_reason), ("corr", corr_reason), ("TV", tv_reason)) if reason]
     result["metric_status"] = (
         "eligible_all_metrics" if not undefined else "eligible_partial:" + ",".join(undefined)
     )
@@ -635,6 +675,7 @@ def stream_pair_accumulators(
                 horizon=raw["horizon"].strip(),
                 origin_type=taxonomy_origin,
                 adjusted_brier=adjusted_brier,
+                prediction=float(raw["prediction"]) if raw.get("prediction", "").strip() else None,
             )
             inserted_any = False
             for slice_dimension, slice_id in taxonomy_value.slices():
@@ -739,6 +780,11 @@ def finalize_accumulated_pair_row(
     n = accumulator.n_overlap
     result["adjusted_pog"] = min(accumulator.sum_a / n, accumulator.sum_b / n) - accumulator.sum_min / n
     result["pog_reason"] = ""
+    tv_reason = "" if accumulator.n_tv_observations == n else "missing_prediction_probabilities"
+    # Sum/subtract sufficient statistics can stray beyond an endpoint by one
+    # ULP; probabilities were validated at ingestion, so only roundoff is clipped.
+    result["total_variation"] = "" if tv_reason else max(0.0, min(1.0, accumulator.sum_tv / n))
+    result["tv_reason"] = tv_reason
 
     rate_a = accumulator.high_a / n
     rate_b = accumulator.high_b / n
@@ -824,6 +870,7 @@ def finalize_accumulated_pair_row(
             ("BI", bi_reasons),
             ("lift", lift_reason),
             ("corr", corr_reason),
+            ("TV", tv_reason),
         )
         if reason
     ]

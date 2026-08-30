@@ -15,6 +15,22 @@ beforeEach(() => window.history.replaceState(null, "", "/"));
 afterEach(cleanup);
 
 describe("aggregation Near-BI control", () => {
+  it("cleans legacy evaluation links and never reads archived points", () => {
+    window.history.replaceState(null, "", "/?gain_eval=same_sample&gain_fold=b_to_a&near_bi=0#gain");
+    const crossFitOnly = { ...payload };
+    Object.defineProperty(crossFitOnly, "points", { get: () => { throw new Error("Archived points must not be used by the explorer"); } });
+    render(createElement(PairAggregationExplorer, {
+      data: crossFitOnly,
+      nearBiOnly: false,
+      onNearBiOnlyChange: vi.fn(),
+    }));
+    expect(new URLSearchParams(window.location.search).has("gain_eval")).toBe(false);
+    expect(screen.queryByRole("button", { name: "Same-sample diagnostic" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "B→A" })).toHaveClass("active");
+    expect(screen.getByRole("button", { name: "Combined" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Total variation (TV)" })).toBeInTheDocument();
+  });
+
   it("offers Gemini and Kimi as focal families and pair filters", () => {
     render(createElement(PairAggregationExplorer, {
       data: payload,

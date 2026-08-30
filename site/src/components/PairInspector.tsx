@@ -15,7 +15,7 @@ export function PairInspector({ pair, models, manifest }: PairInspectorProps) {
       <aside className="inspector empty-inspector">
         <p className="eyebrow">PAIR DETAIL</p>
         <h3>Select a model pair</h3>
-        <p>Choose a heatmap cell or a ranking row below to inspect all three metrics, sample size, and near-BI diagnostics.</p>
+        <p>Choose a heatmap cell or a ranking row below to inspect all four metrics, sample size, and near-BI diagnostics.</p>
       </aside>
     );
   }

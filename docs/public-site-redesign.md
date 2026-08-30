@@ -84,3 +84,13 @@ condition, or above-market status); those colors convey different information.
 The orientation key remains visible on mobile. Verification: 105 frontend tests
 passed (including 28 marker-regression cases); desktop/mobile browser tests passed
 47 cases, with the existing desktop skip for the mobile-only case unchanged.
+
+## TV extension after the redesign — 2026-08-30
+
+A subsequent update adds predictive total variation to the current experiment
+data and controls, including the all-configuration model-versus-market plot.
+The Same-sample diagnostic aggregation switch is removed; Cross-fit OOS retains
+Combined, A→B, and B→A. The sections above document the earlier presentation-only
+release and its then-existing controls. See
+[Total variation and cross-fit controls](total-variation-crossfit.md) for the new
+definition, regeneration scope, unchanged-result checks, and validation record.

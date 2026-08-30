@@ -47,7 +47,7 @@
   "files": [
     {
       "path": "site/public/data/manifest.json",
-      "sha256": "d6763ef61a05ea53d70b8cbcc9c7c7335a242a7c396aba38091002cd8cad6048"
+      "sha256": "bfb3e0d969b1a721f12bfb978c0fbe45ee426f7ff420b519a9751af0afcca3f1"
     },
     {
       "path": "site/public/data/models.json",
@@ -63,83 +63,83 @@
     },
     {
       "path": "site/public/data/event-types/finance_economics.json",
-      "sha256": "4b9aedb9c4605e34451ed855f3ce7e8cfda5168eba53892434fc227ca88c30e5"
+      "sha256": "c728e27c5cddfa72fc6774209594d2a8be832e8925a283af14366ebfee04da67"
     },
     {
       "path": "site/public/data/event-types/politics_conflict.json",
-      "sha256": "f3576808f2b648f34c5242f7232a95eda3ffc89cc241dc4c24fcdedc43605d97"
+      "sha256": "ccd94d52672a28793f24c4523d93ee8d5a5bf7547b8ad77db01676dab53dec1d"
     },
     {
       "path": "site/public/data/event-types/climate_weather.json",
-      "sha256": "5c7a4132b5638896f2e05b718deffe486de1f28f274c5623362d85fa84447427"
+      "sha256": "b15949f705a70dfe2abda789a2e759f90dbab7d1dcf40e22257364ac10ca8140"
     },
     {
       "path": "site/public/data/event-types/health_science.json",
-      "sha256": "edbcfcd6483b2fc16b753cc25341f2d80cf1806e22afa4ea5d224f2246cdb722"
+      "sha256": "5122a703e745ce7ec2b5555b4958abd10a0fee7279bae354d49a87991fb0cbe4"
     },
     {
       "path": "site/public/data/event-types/technology_ai.json",
-      "sha256": "e4056d8fa7e1e25461995ab8c82a43cf79e79fcb04dd1048d186f56b5f8c7317"
+      "sha256": "b2bdcc413fe1c249678a2ec2bb50a4364155ab25ca8bb7fa52ad425c46d2bd7c"
     },
     {
       "path": "site/public/data/event-types/sports.json",
-      "sha256": "0ae80a764f17b52560bfb6e3f4c1a422952657b229c32ade0e3378b1e2643b35"
+      "sha256": "82d597359e1097d4c66c58df3a6a00d991f2f34ab1ba04f08ef1ca8b70a51351"
     },
     {
       "path": "site/public/data/event-types/entertainment_culture.json",
-      "sha256": "4a4b97ae70bf955819c615eb2616294856ed1671956f3916fe4b0ad762e90e70"
+      "sha256": "28f76f543d30191cc51ce513b377cf4eaa54da3215fd286b18c989a7ca52d3f2"
     },
     {
       "path": "site/public/data/event-types/origin_type_dataset.json",
-      "sha256": "411fbc5408d823a4a7e9ff5f1fe6f07a028068c518c7e726845bc103287f7b6a"
+      "sha256": "b6360676a79fa8ed0f11d00591810d180b9bdd763919d3c14511561dedc93643"
     },
     {
       "path": "site/public/data/event-types/origin_type_market.json",
-      "sha256": "c955fa7ac8294b536dc7779581bf9248f36acb3a9f9296d9c802702b2ebeb3cb"
+      "sha256": "fc6a67938604c3840617dcf6151a5b51e12227fc325166f0a44bf095369f58b9"
     },
     {
       "path": "site/public/data/event-types/official_source_acled.json",
-      "sha256": "5e83d1c333a8b1a0ede4490f8f6cd440e877d07ca8340aedd87cfcdef8c31c70"
+      "sha256": "323568f0f1dae72a2575193d29929a9375f69dc353bb620f2d67299f98a783ac"
     },
     {
       "path": "site/public/data/event-types/official_source_dbnomics.json",
-      "sha256": "f71351ed2c816131278198963bf4a794c5127432091e200ebf203188ac05ad71"
+      "sha256": "ad126d49f6b9fcbfbe5b0c898a8b3316611453ffb8da21c359847f34d64ec5a0"
     },
     {
       "path": "site/public/data/event-types/official_source_fred.json",
-      "sha256": "fee1323acfb0b1cede4a6742c31f1cad7b42794b023d854815df7fff065d8f3c"
+      "sha256": "44a1590249fff5f63ffafdc23b945e90d2c35e477e0a8a2aaff85540275890fe"
     },
     {
       "path": "site/public/data/event-types/official_source_infer.json",
-      "sha256": "b848f8c2dccbd5dc074050b2f047b30c4afe784e97eebcbd21d75059dc326a19"
+      "sha256": "2b723bedee9f0c36b9f96be999d243e68413d1866da902d23e6a808d120cd147"
     },
     {
       "path": "site/public/data/event-types/official_source_manifold.json",
-      "sha256": "81468d6c8f5513b59fc06f91c927c674c0f5137a461b098f567555ef0acb3162"
+      "sha256": "ccb635c90f7c0a4d5396d70c6e59503e4b856bc18793de8907b2765ba46d5bdf"
     },
     {
       "path": "site/public/data/event-types/official_source_metaculus.json",
-      "sha256": "9748196361606cfae356e46793a9dd6c14f414dee1aa854f491070ceff838c50"
+      "sha256": "06e2321d77fc28de59a01bcfb040585e78933d170568122dfd73306e58a7643f"
     },
     {
       "path": "site/public/data/event-types/official_source_polymarket.json",
-      "sha256": "250e55c503d3241ca77fe83613645aa5277f16c2f4f16f9da284aa87632d2715"
+      "sha256": "404dd7081fd574debc021c8441a7975e3df78768ae950cef05cf0474a401a35e"
     },
     {
       "path": "site/public/data/event-types/official_source_wikipedia.json",
-      "sha256": "022825f8cac2e1106173c2a558a772107a953875609405caf6d66e0cfaa36d03"
+      "sha256": "2eba3213b2c3651b6c2d481a8ddff4153c807abc767deed50cdf0e4cb8eadf43"
     },
     {
       "path": "site/public/data/event-types/official_source_yahoo_finance.json",
-      "sha256": "a7d4f4a6c25501f8779c0303648a508a0aacd20f803d86036e1b47af00650e4a"
+      "sha256": "fada920da4da3aa396d9cc3752ef2cd5ff83a6a7f34c621ecab44903890d7211"
     },
     {
       "path": "data/derived/pair_metrics_all.csv.gz",
-      "sha256": "4085e3fceec72b091c2ecfac3997fa9c2fa11a6b1306958799578f2f66c9d545"
+      "sha256": "dd2541fa34e1e0cd697616c3a1218e8401bd2384fff6537f4ed135e30d77a53c"
     },
     {
       "path": "data/derived/pair_metrics_eligible.csv.gz",
-      "sha256": "9d37f699d9c9d92db4ff3a56bc3f6e4ba554e7f952d652871d44070b54d4b5b8"
+      "sha256": "c0d997718710a08a2bd7230fb8e2d721db96eb205a182e1150f1abbe178b072e"
     },
     {
       "path": "data/derived/model_version_mapping.csv",
@@ -151,11 +151,11 @@
     },
     {
       "path": "data/derived/analysis_audit.json",
-      "sha256": "4755f1ccf319ee4988593aa734bca3933034cb261434a785a1c1a65c59f52d0a"
+      "sha256": "e879579d4be874682fa93a4a949f104589d76a057eb8d2f446ae97666eb6afd8"
     }
   ],
   "fixture": false,
-  "generated_at": "2026-08-24T06:36:28Z",
+  "generated_at": "2026-08-30T00:00:00+00:00",
   "status": "pass",
   "thresholds": {
     "high_loss_threshold": 0.25,

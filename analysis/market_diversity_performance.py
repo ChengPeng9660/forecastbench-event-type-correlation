@@ -247,6 +247,13 @@ def build_payload(
             "Model version aliases are merged, while information and prompt conditions remain separate."
         ),
         "metrics": {
+            "total_variation": {
+                "label": "Total variation (TV)",
+                "axis": "Mean |p_model − p_market|",
+                "formula": "mean(abs(p_model - p_market)) on original paired Bernoulli probabilities",
+                "range": [0.0, 1.0],
+                "higher_is_more_diverse": True,
+            },
             "prediction_diversity": {
                 "label": "Prediction diversity",
                 "axis": "1 − prediction-level Pearson r",

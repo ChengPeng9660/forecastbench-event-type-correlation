@@ -8,6 +8,7 @@ describe("pair CSV dependence semantics", () => {
       { id: "adjusted_pog", label: "POG" },
       { id: "high_loss_lift", label: "Lift" },
       { id: "adjusted_loss_corr", label: "Correlation" },
+      { id: "total_variation", label: "Total variation (TV)" },
     ];
     const appData = {
       manifest: {
@@ -27,6 +28,7 @@ describe("pair CSV dependence semantics", () => {
         adjusted_pog: { value: 0.1 },
         high_loss_lift: { value: 1.2 },
         adjusted_loss_corr: { value: 0.3 },
+        total_variation: { value: 0.125 },
       },
       diagnostics: { mean_bi_gap: 1, near_bi: true },
     } as unknown as PairMetrics;
@@ -38,5 +40,7 @@ describe("pair CSV dependence semantics", () => {
     expect(row[header.indexOf("adjusted_pog_dependence_direction")]).toBe("lower=higher_model_dependence");
     expect(row[header.indexOf("high_loss_lift_dependence_direction")]).toBe("higher=higher_model_dependence");
     expect(row[header.indexOf("adjusted_loss_corr_dependence_direction")]).toBe("higher=higher_model_dependence");
+    expect(row[header.indexOf("total_variation_dependence_direction")]).toBe("lower=higher_model_dependence");
+    expect(row[header.indexOf("total_variation")]).toBe(0.125);
   });
 });

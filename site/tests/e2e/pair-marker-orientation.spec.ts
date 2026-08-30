@@ -39,7 +39,7 @@ test("keeps the selected family on the left for all six focal families", async (
   await expect(pairStops.last()).toHaveAttribute("stop-color", "#efab02");
 });
 
-test("retains focal-left colors across evaluation views, metrics, and methods", async ({ page }) => {
+test("retains focal-left colors across cross-fit views, metrics, and methods", async ({ page }) => {
   await page.goto(`/?gain_model=${CLAUDE}&near_bi=1#gain`);
   const section = page.locator("#gain");
   await expect(section.getByText("Left = selected model · right = partner · area = test support", { exact: true })).toBeVisible();
@@ -49,14 +49,15 @@ test("retains focal-left colors across evaluation views, metrics, and methods", 
   }
   await section.getByRole("button", { name: "All eligible", exact: true }).click();
   await expectLeftColor(page, "#4f207f");
-  await section.getByRole("button", { name: "Same-sample diagnostic", exact: true }).click();
-  await expectLeftColor(page, "#4f207f");
   for (const method of ["simple_mean", "log_odds_mean", "piecewise_odds", "best_single", "ec_w0_56"]) {
     await section.getByLabel("Aggregation method", { exact: true }).selectOption(method);
     await expectLeftColor(page, "#4f207f");
   }
-  for (const metric of ["High-loss lift", "Loss correlation", "Adjusted POG"]) {
+  for (const metric of ["High-loss lift", "Loss correlation", "Adjusted POG", "Total variation (TV)"]) {
     await section.getByRole("tab", { name: metric, exact: true }).click();
-    await expectLeftColor(page, "#4f207f");
+    for (const direction of ["A→B", "B→A", "Combined"]) {
+      await section.getByRole("button", { name: direction, exact: true }).click();
+      await expectLeftColor(page, "#4f207f");
+    }
   }
 });

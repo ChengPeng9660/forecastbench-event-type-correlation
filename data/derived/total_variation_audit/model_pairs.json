@@ -1,0 +1,49 @@
+{
+  "absolute_numeric_tolerance": 1e-12,
+  "all_six_point_counts_with_tv": {
+    "a_to_b.eligible": 337,
+    "a_to_b.near_bi": 216,
+    "b_to_a.eligible": 337,
+    "b_to_a.near_bi": 210,
+    "combined.eligible": 337,
+    "combined.near_bi": 227,
+    "same_sample_audit": 337
+  },
+  "all_six_tv_fold_reconstructions_checked": 1664,
+  "comparison": [
+    {
+      "after_sha256": "e31bc332f899201c6eabec5e67f6c5c4e3bd718ffb3c7efe46708c9b524a9e16",
+      "before_sha256": "7481e8a4984595fb714bcb274e3954b5f8181e1b06d659f5a74cac37262185dd",
+      "file": "pair-aggregation/all-six-family-pairs.json",
+      "maximum_absolute_numeric_difference": 0.0,
+      "old_numeric_values_checked": 79405,
+      "old_scalar_values_checked": 124940,
+      "permitted_metadata_changes": [
+        "pair-aggregation/all-six-family-pairs.json.provenance.pair_metrics_sha256"
+      ]
+    },
+    {
+      "after_sha256": "a9e2c900d93ec5d4e12164fd602e2a04c109f200dbd91702f6370bd5788c8809",
+      "before_sha256": "7952fb53761e98e10e307ec843bfb8ee00a79346f04ba29ff1d0d6e0a8a9ad99",
+      "file": "pair-aggregation/fixed-focal-without-freeze.json",
+      "maximum_absolute_numeric_difference": 0.0,
+      "old_numeric_values_checked": 86082,
+      "old_scalar_values_checked": 99468,
+      "permitted_metadata_changes": [
+        "pair-aggregation/fixed-focal-without-freeze.json.provenance.pair_payload_sha256"
+      ]
+    }
+  ],
+  "failures": [],
+  "fixed_focal_fold_method_rows_checked": 107840,
+  "fixed_focal_fold_results": "/Users/pcc/Documents/Codex/2026-08-19/zha/work/forecastbench-event-type-correlation/data/derived/fixed_focal_without_freeze/fold_method_results.csv.gz",
+  "fixed_focal_ordered_pair_count": 674,
+  "fixed_focal_tv_correlation_rows": 258,
+  "maximum_tv": 0.3930078636959371,
+  "maximum_tv_fold_reconstruction_difference": 1.1102230246251565e-16,
+  "minimum_tv": 0.039209999999999995,
+  "snapshot_directory": "/private/tmp/forecastbench-tv-validation.5kK85e/site-data-before",
+  "status": "pass",
+  "tv_definition": "mean(abs(p_a-p_b)) over identical aligned target rows; training folds only in cross-fit",
+  "tv_values_checked": 113864
+}

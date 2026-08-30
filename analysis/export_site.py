@@ -359,6 +359,7 @@ def build_site_artifacts(
                         "adjusted_pog": {"value": as_float(row["adjusted_pog"]), "se": None, "ci95": None, "reason": row["pog_reason"] or None},
                         "high_loss_lift": {"value": as_float(row["adjusted_high_loss_lift_025"]), "se": None, "ci95": None, "reason": row["lift_reason"] or None},
                         "adjusted_loss_corr": {"value": as_float(row["adjusted_loss_pearson_corr"]), "se": None, "ci95": None, "reason": row["corr_reason"] or None},
+                        "total_variation": {"value": as_float(row.get("total_variation", "")), "se": None, "ci95": None, "reason": row.get("tv_reason", "missing_prediction_probabilities") or None},
                     },
                     "diagnostics": {
                         "mean_bi_gap": as_float(row["bi_gap_common"]),
@@ -486,6 +487,11 @@ def build_site_artifacts(
             "direction": "lower", "format": ".3f", "domain": [-1.0, 1.0],
             "description": "Measures the Pearson correlation between the models’ question-level difficulty-adjusted Brier losses.",
         },
+        {
+            "id": "total_variation", "label": "Total variation (TV)", "short_label": "TV diversity",
+            "direction": "higher", "format": ".3f", "domain": [0.0, 1.0],
+            "description": "Mean absolute difference between the two models' probabilities on identical targets. Bernoulli TV is outcome-free; higher values mean more predictive diversity, not necessarily better forecasts.",
+        },
     ]
     analytic_target_keys = set()
     analytic_event_keys = set()
@@ -496,7 +502,7 @@ def build_site_artifacts(
         "schema_version": "1.0.0",
         "dataset_version": scoring_audit["fixed_effects_file"],
         "taxonomy_version": taxonomy_summary["taxonomy_version"],
-        "metric_version": "three-adjusted-pair-metrics-v1",
+        "metric_version": "three-adjusted-metrics-plus-predictive-tv-v2",
         "model_definition": "exact_model_version_one_zero_shot_representative_v1",
         "built_at": built_at,
         "commit_sha": analysis_commit,

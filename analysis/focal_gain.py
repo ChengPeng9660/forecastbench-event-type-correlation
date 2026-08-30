@@ -29,6 +29,7 @@ PAIR_METRICS = (
     "adjusted_pog",
     "adjusted_high_loss_lift_025",
     "adjusted_loss_pearson_corr",
+    "total_variation",
 )
 
 
@@ -163,6 +164,7 @@ def build_payload(panel_path: Path, pair_path: Path, focal: str, weight: float) 
         pog = float(metric_row["adjusted_pog"])
         lift = float(metric_row["adjusted_high_loss_lift_025"])
         corr = float(metric_row["adjusted_loss_pearson_corr"])
+        tv = float(metric_row["total_variation"])
         points.append(
             {
                 "partner": partner,
@@ -182,13 +184,14 @@ def build_payload(panel_path: Path, pair_path: Path, focal: str, weight: float) 
                     "adjusted_pog": {"raw": pog, "complementarity": pog},
                     "high_loss_lift": {"raw": lift, "complementarity": 1 - lift},
                     "adjusted_loss_corr": {"raw": corr, "complementarity": -corr},
+                    "total_variation": {"raw": tv, "complementarity": tv},
                 },
             }
         )
 
     return {
         "schema_version": "1.0.0",
-        "generated_at": "2026-08-25",
+        "generated_at": "2026-08-30",
         "scope": "official_full",
         "focal_model": focal,
         "partner_scope": "GPT and Claude model versions only",
@@ -210,9 +213,10 @@ def build_payload(panel_path: Path, pair_path: Path, focal: str, weight: float) 
             "definition": "absolute common-support Brier Index gap <= 2.0 points",
         },
         "metric_orientation": {
-            "adjusted_pog": "raw value; higher means more complementary",
+            "adjusted_pog": "raw value; higher means lower model dependence",
             "high_loss_lift": "1 - raw lift; higher means fewer joint high-loss errors than independence",
             "adjusted_loss_corr": "negative raw correlation; higher means less aligned adjusted losses",
+            "total_variation": "mean absolute prediction-probability difference; higher means more diversity",
         },
         "provenance": {
             "panel": str(panel_path),

@@ -1,6 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { createElement } from "react";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { colorForScore, dependenceScore, diversityScore, findPair, formatMetric, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence, sortPairs } from "../src/lib/metrics";
-import type { MetricDefinition, PairMetrics } from "../src/types/data";
+import { Heatmap } from "../src/components/Heatmap";
+import type { MetricDefinition, Model, PairMetrics } from "../src/types/data";
+
+afterEach(cleanup);
 
 const pair = (id: string, value: number): PairMetrics => ({
   a: `${id}-a`, b: `${id}-b`, n_overlap: 100, n_dates: 3,
@@ -8,6 +13,7 @@ const pair = (id: string, value: number): PairMetrics => ({
     adjusted_pog: { value, se: null, ci95: null },
     high_loss_lift: { value, se: null, ci95: null },
     adjusted_loss_corr: { value, se: null, ci95: null },
+    total_variation: { value, se: null, ci95: null },
   },
   diagnostics: { mean_bi_gap: 1, near_bi: true }, row_id: id,
 });
@@ -18,6 +24,17 @@ const higher: MetricDefinition = {
 const lower: MetricDefinition = { ...higher, id: "adjusted_loss_corr", direction: "lower" };
 
 describe("model-dependence metric helpers", () => {
+  it("renders zero TV as a valid heatmap cell rather than missing support", () => {
+    const zeroPair = pair("zero", 0);
+    const models: Model[] = [zeroPair.a, zeroPair.b].map((id, release_order) => ({ id, name: id, provider: "Test", family: "Test", release_order, n_targets: 100, n_dates: 3 }));
+    render(createElement(Heatmap, {
+      models, pairs: [zeroPair], metric: orientMetricToDependence({ ...higher, id: "total_variation" }),
+      selectedModel: "", selectedPair: null, onSelectPair: vi.fn(),
+    }));
+    expect(screen.getAllByRole("button", { name: /: 0\.000$/ })).toHaveLength(2);
+    expect(screen.queryByLabelText("Missing pair")).not.toBeInTheDocument();
+  });
+
   it("normalizes every metric toward higher model dependence", () => {
     expect(dependenceScore(3, higher, [1, 2, 3])).toBe(1);
     expect(dependenceScore(1, lower, [1, 2, 3])).toBe(1);
@@ -53,6 +70,7 @@ describe("model-dependence metric helpers", () => {
       adjusted_pog: "lower",
       high_loss_lift: "higher",
       adjusted_loss_corr: "higher",
+      total_variation: "lower",
     });
     const pog = orientMetricToDependence(higher);
     const lift = orientMetricToDependence({ ...higher, id: "high_loss_lift" });
@@ -60,5 +78,9 @@ describe("model-dependence metric helpers", () => {
     expect(dependenceScore(1, pog, [1, 3])).toBe(1);
     expect(dependenceScore(3, lift, [1, 3])).toBe(1);
     expect(dependenceScore(3, corr, [1, 3])).toBe(1);
+    const tv = orientMetricToDependence({ ...higher, id: "total_variation" });
+    expect(diversityScore(0.4, tv, [0, 0.4])).toBe(1);
+    expect(diversityScore(0, tv, [0, 0.4])).toBe(0);
+    expect(formatMetric(0.1234, "total_variation")).toBe("0.123");
   });
 });

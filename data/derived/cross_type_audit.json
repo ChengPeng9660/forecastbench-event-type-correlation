@@ -1,22 +1,22 @@
 {
-  "analysis_commit": "439e3a6142d3c00a39fa65fb1da1c234b97d3ffc",
-  "built_at": "2026-08-24T06:36:28Z",
+  "analysis_commit": "60154fb79dec51bb2d941aee27ad45dc2e9fbe9f",
+  "built_at": "2026-08-30T00:00:00+00:00",
   "expected_detail_rows": 50715,
   "files": [
     {
       "path": "cross_type_summary.csv",
-      "sha256": "248874f1997933e7b11fc3097be680d35d599d19e4442e8ce2c24322138f18f9",
-      "size_bytes": 57358
+      "sha256": "6d3a6b196668f2b198ca58c467606b9c29d2da2845659b120ca7ade6bc68409b",
+      "size_bytes": 76413
     },
     {
       "path": "cross_type_summary.json",
-      "sha256": "a10a4556397d7db1624a99172fd803bd1a1b4800dbd02c7911b21ab5443a1262",
-      "size_bytes": 154448
+      "sha256": "953e001977c126b0429998a5a13d998044b7fe3ee9accae02d0a5b5ae87d91e1",
+      "size_bytes": 205836
     },
     {
       "path": "cross_type_pair_details.csv.gz",
-      "sha256": "41c46790eeb05bc5fc08683e1de2241d3894f6b5fcea7b7384a59ec893aa24da",
-      "size_bytes": 1516456
+      "sha256": "1f12ebbe99fbab88e0e08ed9a36c285f3c91b4f9b5ed6fc5726bf0d375adf347",
+      "size_bytes": 1889284
     }
   ],
   "input": {
@@ -24,7 +24,7 @@
     "input_rows": 43470,
     "n_exact_models": 70,
     "n_pair_universe": 2415,
-    "sha256": "e99b780af24ae35278603a7f7872ee64bb07c37a0888aea61c1892a66d8fd92c",
+    "sha256": "6da285202e0492927f17a1216749afd0e9df2228df1313b4b2ee5c3e61c4ae82",
     "topic_row_counts": {
       "climate_weather": 2415,
       "entertainment_culture": 2415,
@@ -38,10 +38,11 @@
   "metric_orientation": {
     "adjusted_loss_corr": "direct",
     "adjusted_pog": "inverted",
-    "high_loss_lift": "direct"
+    "high_loss_lift": "direct",
+    "total_variation": "inverted"
   },
   "n_detail_rows": 50715,
-  "n_summary_rows": 126,
+  "n_summary_rows": 168,
   "n_unordered_topic_pairs": 21,
   "schema_version": "1.0.0",
   "thresholds": {

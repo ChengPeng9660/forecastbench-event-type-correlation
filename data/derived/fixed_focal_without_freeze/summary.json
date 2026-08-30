@@ -168,6 +168,11 @@
         "axis": "Complementarity orientation · 1 − high-loss lift",
         "label": "High-loss Lift",
         "orientation": "higher means greater base–partner diversity"
+      },
+      "total_variation": {
+        "axis": "Mean absolute forecast difference · TV",
+        "label": "Total variation (TV)",
+        "orientation": "higher means greater base–partner diversity"
       }
     },
     "focal_correlation_summary": [
@@ -207,6 +212,17 @@
       {
         "base_model": "Claude-2.1",
         "defined_pair_count": 10,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 2,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.7764262700472672,
+        "spearman": -0.04242424242424243
+      },
+      {
+        "base_model": "Claude-2.1",
+        "defined_pair_count": 10,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 2,
@@ -236,6 +252,17 @@
         "ordered_pair_count": 10,
         "pearson": 0.07860065699695831,
         "spearman": 0.3939393939393939
+      },
+      {
+        "base_model": "Claude-2.1",
+        "defined_pair_count": 10,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 2,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.7707475467111519,
+        "spearman": -0.04242424242424243
       },
       {
         "base_model": "Claude-2.1",
@@ -273,6 +300,17 @@
       {
         "base_model": "Claude-2.1",
         "defined_pair_count": 10,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 2,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.7675508507582852,
+        "spearman": -0.04242424242424243
+      },
+      {
+        "base_model": "Claude-2.1",
+        "defined_pair_count": 10,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 2,
@@ -302,6 +340,17 @@
         "ordered_pair_count": 10,
         "pearson": 0.08282857017036006,
         "spearman": 0.3939393939393939
+      },
+      {
+        "base_model": "Claude-2.1",
+        "defined_pair_count": 10,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 2,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.7660496099834524,
+        "spearman": -0.04242424242424243
       },
       {
         "base_model": "Claude-2.1",
@@ -339,6 +388,17 @@
       {
         "base_model": "Claude-2.1",
         "defined_pair_count": 10,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 2,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.5488780902584222,
+        "spearman": -0.07878787878787878
+      },
+      {
+        "base_model": "Claude-2.1",
+        "defined_pair_count": 10,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 2,
@@ -368,6 +428,17 @@
         "ordered_pair_count": 10,
         "pearson": 0.15168023972185313,
         "spearman": 0.40729671426564323
+      },
+      {
+        "base_model": "Claude-2.1",
+        "defined_pair_count": 10,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 2,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.34948408215414495,
+        "spearman": -0.08510677611520903
       },
       {
         "base_model": "claude-3-5-haiku-20241022",
@@ -405,6 +476,17 @@
       {
         "base_model": "claude-3-5-haiku-20241022",
         "defined_pair_count": 6,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.6899551535980505,
+        "spearman": 0.6571428571428571
+      },
+      {
+        "base_model": "claude-3-5-haiku-20241022",
+        "defined_pair_count": 6,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -434,6 +516,17 @@
         "ordered_pair_count": 6,
         "pearson": 0.8700758924577672,
         "spearman": 0.9428571428571428
+      },
+      {
+        "base_model": "claude-3-5-haiku-20241022",
+        "defined_pair_count": 6,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.6669209602498406,
+        "spearman": 0.6571428571428571
       },
       {
         "base_model": "claude-3-5-haiku-20241022",
@@ -471,6 +564,17 @@
       {
         "base_model": "claude-3-5-haiku-20241022",
         "defined_pair_count": 6,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.6947203066536379,
+        "spearman": 0.6571428571428571
+      },
+      {
+        "base_model": "claude-3-5-haiku-20241022",
+        "defined_pair_count": 6,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -500,6 +604,17 @@
         "ordered_pair_count": 6,
         "pearson": 0.8806998474489406,
         "spearman": 0.9428571428571428
+      },
+      {
+        "base_model": "claude-3-5-haiku-20241022",
+        "defined_pair_count": 6,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.690547099622705,
+        "spearman": 0.6571428571428571
       },
       {
         "base_model": "claude-3-5-haiku-20241022",
@@ -537,6 +652,17 @@
       {
         "base_model": "claude-3-5-haiku-20241022",
         "defined_pair_count": 6,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.8492323557656517,
+        "spearman": 0.6571428571428571
+      },
+      {
+        "base_model": "claude-3-5-haiku-20241022",
+        "defined_pair_count": 6,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -566,6 +692,17 @@
         "ordered_pair_count": 6,
         "pearson": 0.8981453899210039,
         "spearman": 0.819688599970537
+      },
+      {
+        "base_model": "claude-3-5-haiku-20241022",
+        "defined_pair_count": 6,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.7472613579396169,
+        "spearman": 0.5768179036829705
       },
       {
         "base_model": "Claude-3-5-Sonnet-20240620",
@@ -603,6 +740,17 @@
       {
         "base_model": "Claude-3-5-Sonnet-20240620",
         "defined_pair_count": 33,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 14,
+        "near_bi_pearson": 0.46568877936579484,
+        "ordered_pair_count": 33,
+        "pearson": -0.6304907687346112,
+        "spearman": -0.6437165775401069
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20240620",
+        "defined_pair_count": 33,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 14,
@@ -632,6 +780,17 @@
         "ordered_pair_count": 33,
         "pearson": -0.25669270386816917,
         "spearman": -0.12466577540106952
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20240620",
+        "defined_pair_count": 33,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 14,
+        "near_bi_pearson": 0.4455514279186804,
+        "ordered_pair_count": 33,
+        "pearson": -0.698825326381915,
+        "spearman": -0.6801470588235294
       },
       {
         "base_model": "Claude-3-5-Sonnet-20240620",
@@ -669,6 +828,17 @@
       {
         "base_model": "Claude-3-5-Sonnet-20240620",
         "defined_pair_count": 33,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 14,
+        "near_bi_pearson": 0.47681637635907054,
+        "ordered_pair_count": 33,
+        "pearson": -0.6269969020887988,
+        "spearman": -0.6570855614973262
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20240620",
+        "defined_pair_count": 33,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 14,
@@ -698,6 +868,17 @@
         "ordered_pair_count": 33,
         "pearson": -0.19961648455352624,
         "spearman": -0.1213235294117647
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20240620",
+        "defined_pair_count": 33,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 14,
+        "near_bi_pearson": 0.4398826156632068,
+        "ordered_pair_count": 33,
+        "pearson": -0.6479287023037682,
+        "spearman": -0.6219919786096256
       },
       {
         "base_model": "Claude-3-5-Sonnet-20240620",
@@ -735,6 +916,17 @@
       {
         "base_model": "Claude-3-5-Sonnet-20240620",
         "defined_pair_count": 33,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 14,
+        "near_bi_pearson": 0.488229580767242,
+        "ordered_pair_count": 33,
+        "pearson": -0.26724871910660314,
+        "spearman": -0.2897727272727273
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20240620",
+        "defined_pair_count": 33,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 14,
@@ -764,6 +956,17 @@
         "ordered_pair_count": 33,
         "pearson": 0.17705530764764404,
         "spearman": 0.05460714495423806
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20240620",
+        "defined_pair_count": 33,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 14,
+        "near_bi_pearson": 0.19932466674732122,
+        "ordered_pair_count": 33,
+        "pearson": -0.2520408711060031,
+        "spearman": -0.5479288354251778
       },
       {
         "base_model": "Claude-3-5-Sonnet-20241022",
@@ -801,6 +1004,17 @@
       {
         "base_model": "Claude-3-5-Sonnet-20241022",
         "defined_pair_count": 17,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.43604394380823025,
+        "ordered_pair_count": 17,
+        "pearson": -0.6037239115671597,
+        "spearman": -0.5588235294117648
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20241022",
+        "defined_pair_count": 17,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -830,6 +1044,17 @@
         "ordered_pair_count": 17,
         "pearson": -0.4405310915234919,
         "spearman": -0.21323529411764708
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20241022",
+        "defined_pair_count": 17,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.44054209710490544,
+        "ordered_pair_count": 17,
+        "pearson": -0.6389945404501032,
+        "spearman": -0.556372549019608
       },
       {
         "base_model": "Claude-3-5-Sonnet-20241022",
@@ -867,6 +1092,17 @@
       {
         "base_model": "Claude-3-5-Sonnet-20241022",
         "defined_pair_count": 17,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.44756100596978876,
+        "ordered_pair_count": 17,
+        "pearson": -0.6048204567886357,
+        "spearman": -0.5588235294117648
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20241022",
+        "defined_pair_count": 17,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -896,6 +1132,17 @@
         "ordered_pair_count": 17,
         "pearson": -0.41843834621645504,
         "spearman": -0.32352941176470595
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20241022",
+        "defined_pair_count": 17,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.42942682527058695,
+        "ordered_pair_count": 17,
+        "pearson": -0.6040344047085893,
+        "spearman": -0.5588235294117648
       },
       {
         "base_model": "Claude-3-5-Sonnet-20241022",
@@ -933,6 +1180,17 @@
       {
         "base_model": "Claude-3-5-Sonnet-20241022",
         "defined_pair_count": 17,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.3191912420804365,
+        "ordered_pair_count": 17,
+        "pearson": -0.3641085722571875,
+        "spearman": -0.38970588235294124
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20241022",
+        "defined_pair_count": 17,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -962,6 +1220,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.09099692603558046,
         "spearman": -0.17269789055894338
+      },
+      {
+        "base_model": "Claude-3-5-Sonnet-20241022",
+        "defined_pair_count": 17,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.27130662858141535,
+        "ordered_pair_count": 17,
+        "pearson": -0.23561452422756243,
+        "spearman": -0.5358713957049567
       },
       {
         "base_model": "Claude-3-7-Sonnet-20250219",
@@ -999,6 +1268,17 @@
       {
         "base_model": "Claude-3-7-Sonnet-20250219",
         "defined_pair_count": 34,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 18,
+        "near_bi_pearson": 0.40881010544491003,
+        "ordered_pair_count": 34,
+        "pearson": -0.4579128035315449,
+        "spearman": -0.34545454545454546
+      },
+      {
+        "base_model": "Claude-3-7-Sonnet-20250219",
+        "defined_pair_count": 34,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 18,
@@ -1028,6 +1308,17 @@
         "ordered_pair_count": 34,
         "pearson": -0.29667024409930093,
         "spearman": -0.22658517952635598
+      },
+      {
+        "base_model": "Claude-3-7-Sonnet-20250219",
+        "defined_pair_count": 34,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 18,
+        "near_bi_pearson": 0.42802845120878635,
+        "ordered_pair_count": 34,
+        "pearson": -0.5077104358204856,
+        "spearman": -0.3922077922077922
       },
       {
         "base_model": "Claude-3-7-Sonnet-20250219",
@@ -1065,6 +1356,17 @@
       {
         "base_model": "Claude-3-7-Sonnet-20250219",
         "defined_pair_count": 34,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 18,
+        "near_bi_pearson": 0.4380338238630071,
+        "ordered_pair_count": 34,
+        "pearson": -0.45810298344424555,
+        "spearman": -0.33384262796027503
+      },
+      {
+        "base_model": "Claude-3-7-Sonnet-20250219",
+        "defined_pair_count": 34,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 18,
@@ -1094,6 +1396,17 @@
         "ordered_pair_count": 34,
         "pearson": -0.23341424663917534,
         "spearman": -0.20122230710466005
+      },
+      {
+        "base_model": "Claude-3-7-Sonnet-20250219",
+        "defined_pair_count": 34,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 18,
+        "near_bi_pearson": 0.34018485454068625,
+        "ordered_pair_count": 34,
+        "pearson": -0.45113150256246853,
+        "spearman": -0.3567608861726509
       },
       {
         "base_model": "Claude-3-7-Sonnet-20250219",
@@ -1131,6 +1444,17 @@
       {
         "base_model": "Claude-3-7-Sonnet-20250219",
         "defined_pair_count": 34,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 18,
+        "near_bi_pearson": 0.7302237132940512,
+        "ordered_pair_count": 34,
+        "pearson": -0.15917056079841313,
+        "spearman": -0.13949579831932774
+      },
+      {
+        "base_model": "Claude-3-7-Sonnet-20250219",
+        "defined_pair_count": 34,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 18,
@@ -1160,6 +1484,17 @@
         "ordered_pair_count": 34,
         "pearson": -0.06634020093585732,
         "spearman": -0.2875990483790325
+      },
+      {
+        "base_model": "Claude-3-7-Sonnet-20250219",
+        "defined_pair_count": 34,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 18,
+        "near_bi_pearson": 0.0259481465871961,
+        "ordered_pair_count": 34,
+        "pearson": -0.34290818059017925,
+        "spearman": -0.5105846912509258
       },
       {
         "base_model": "Claude-3-Haiku-20240307",
@@ -1197,6 +1532,17 @@
       {
         "base_model": "Claude-3-Haiku-20240307",
         "defined_pair_count": 15,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 15,
+        "pearson": 0.24553692616838885,
+        "spearman": 0.26071428571428573
+      },
+      {
+        "base_model": "Claude-3-Haiku-20240307",
+        "defined_pair_count": 15,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -1226,6 +1572,17 @@
         "ordered_pair_count": 15,
         "pearson": 0.7325954122534458,
         "spearman": 0.6
+      },
+      {
+        "base_model": "Claude-3-Haiku-20240307",
+        "defined_pair_count": 15,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 15,
+        "pearson": 0.3112115905419132,
+        "spearman": 0.4
       },
       {
         "base_model": "Claude-3-Haiku-20240307",
@@ -1263,6 +1620,17 @@
       {
         "base_model": "Claude-3-Haiku-20240307",
         "defined_pair_count": 15,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 15,
+        "pearson": 0.2894491500125395,
+        "spearman": 0.35
+      },
+      {
+        "base_model": "Claude-3-Haiku-20240307",
+        "defined_pair_count": 15,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -1292,6 +1660,17 @@
         "ordered_pair_count": 15,
         "pearson": 0.6945968451372192,
         "spearman": 0.575
+      },
+      {
+        "base_model": "Claude-3-Haiku-20240307",
+        "defined_pair_count": 15,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 15,
+        "pearson": 0.24931122352560303,
+        "spearman": 0.3142857142857143
       },
       {
         "base_model": "Claude-3-Haiku-20240307",
@@ -1329,6 +1708,17 @@
       {
         "base_model": "Claude-3-Haiku-20240307",
         "defined_pair_count": 15,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 15,
+        "pearson": 0.5271231083754397,
+        "spearman": 0.5392857142857143
+      },
+      {
+        "base_model": "Claude-3-Haiku-20240307",
+        "defined_pair_count": 15,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -1358,6 +1748,17 @@
         "ordered_pair_count": 15,
         "pearson": 0.6942612191407462,
         "spearman": 0.4664881219300933
+      },
+      {
+        "base_model": "Claude-3-Haiku-20240307",
+        "defined_pair_count": 15,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 15,
+        "pearson": 0.3644376163614538,
+        "spearman": 0.14834679739539366
       },
       {
         "base_model": "Claude-3-Opus-20240229",
@@ -1395,6 +1796,17 @@
       {
         "base_model": "Claude-3-Opus-20240229",
         "defined_pair_count": 15,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.28029068162867754,
+        "ordered_pair_count": 15,
+        "pearson": -0.7627949213002868,
+        "spearman": -0.5214285714285715
+      },
+      {
+        "base_model": "Claude-3-Opus-20240229",
+        "defined_pair_count": 15,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -1424,6 +1836,17 @@
         "ordered_pair_count": 15,
         "pearson": -0.3964314046756345,
         "spearman": 0.02857142857142857
+      },
+      {
+        "base_model": "Claude-3-Opus-20240229",
+        "defined_pair_count": 15,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.2283646780171002,
+        "ordered_pair_count": 15,
+        "pearson": -0.8139779082560699,
+        "spearman": -0.5392857142857143
       },
       {
         "base_model": "Claude-3-Opus-20240229",
@@ -1461,6 +1884,17 @@
       {
         "base_model": "Claude-3-Opus-20240229",
         "defined_pair_count": 15,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.23012317862142045,
+        "ordered_pair_count": 15,
+        "pearson": -0.7500160935987034,
+        "spearman": -0.5392857142857143
+      },
+      {
+        "base_model": "Claude-3-Opus-20240229",
+        "defined_pair_count": 15,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -1490,6 +1924,17 @@
         "ordered_pair_count": 15,
         "pearson": -0.3644586247367473,
         "spearman": 0.007142857142857143
+      },
+      {
+        "base_model": "Claude-3-Opus-20240229",
+        "defined_pair_count": 15,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.24940903249169177,
+        "ordered_pair_count": 15,
+        "pearson": -0.7534398105077407,
+        "spearman": -0.49642857142857144
       },
       {
         "base_model": "Claude-3-Opus-20240229",
@@ -1527,6 +1972,17 @@
       {
         "base_model": "Claude-3-Opus-20240229",
         "defined_pair_count": 15,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": 0.08595413720533376,
+        "ordered_pair_count": 15,
+        "pearson": -0.42325524037399626,
+        "spearman": -0.42857142857142855
+      },
+      {
+        "base_model": "Claude-3-Opus-20240229",
+        "defined_pair_count": 15,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -1556,6 +2012,17 @@
         "ordered_pair_count": 15,
         "pearson": -0.022583372442761665,
         "spearman": 0.011293848786315641
+      },
+      {
+        "base_model": "Claude-3-Opus-20240229",
+        "defined_pair_count": 15,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.6053442251952776,
+        "ordered_pair_count": 15,
+        "pearson": -0.17814532864801358,
+        "spearman": -0.48563549781157256
       },
       {
         "base_model": "Claude-Haiku-4-5-20251001",
@@ -1593,6 +2060,17 @@
       {
         "base_model": "Claude-Haiku-4-5-20251001",
         "defined_pair_count": 19,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.5616356346945723,
+        "ordered_pair_count": 19,
+        "pearson": -0.574937180595317,
+        "spearman": -0.6929824561403507
+      },
+      {
+        "base_model": "Claude-Haiku-4-5-20251001",
+        "defined_pair_count": 19,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -1622,6 +2100,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.6747103173275701,
         "spearman": -0.5877192982456139
+      },
+      {
+        "base_model": "Claude-Haiku-4-5-20251001",
+        "defined_pair_count": 19,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.40202428534073753,
+        "ordered_pair_count": 19,
+        "pearson": -0.7620669841239935,
+        "spearman": -0.663157894736842
       },
       {
         "base_model": "Claude-Haiku-4-5-20251001",
@@ -1659,6 +2148,17 @@
       {
         "base_model": "Claude-Haiku-4-5-20251001",
         "defined_pair_count": 19,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.510749892809991,
+        "ordered_pair_count": 19,
+        "pearson": -0.6379027975417941,
+        "spearman": -0.7438596491228069
+      },
+      {
+        "base_model": "Claude-Haiku-4-5-20251001",
+        "defined_pair_count": 19,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -1688,6 +2188,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.45017087710823467,
         "spearman": -0.475438596491228
+      },
+      {
+        "base_model": "Claude-Haiku-4-5-20251001",
+        "defined_pair_count": 19,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.6427107818990406,
+        "ordered_pair_count": 19,
+        "pearson": -0.4884774794856361,
+        "spearman": -0.6824561403508771
       },
       {
         "base_model": "Claude-Haiku-4-5-20251001",
@@ -1725,6 +2236,17 @@
       {
         "base_model": "Claude-Haiku-4-5-20251001",
         "defined_pair_count": 19,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.5019399860382815,
+        "ordered_pair_count": 19,
+        "pearson": -0.6271672132780867,
+        "spearman": -0.7035087719298244
+      },
+      {
+        "base_model": "Claude-Haiku-4-5-20251001",
+        "defined_pair_count": 19,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -1754,6 +2276,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.41858741988633485,
         "spearman": -0.599545340068509
+      },
+      {
+        "base_model": "Claude-Haiku-4-5-20251001",
+        "defined_pair_count": 19,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.5986877082687168,
+        "ordered_pair_count": 19,
+        "pearson": -0.4533007338532163,
+        "spearman": -0.746014071355604
       },
       {
         "base_model": "Claude-Opus-4-1-20250805",
@@ -1791,6 +2324,17 @@
       {
         "base_model": "Claude-Opus-4-1-20250805",
         "defined_pair_count": 20,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.34912052936422394,
+        "ordered_pair_count": 20,
+        "pearson": -0.12390867622466108,
+        "spearman": -0.23308270676691728
+      },
+      {
+        "base_model": "Claude-Opus-4-1-20250805",
+        "defined_pair_count": 20,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -1820,6 +2364,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.335868981146226,
         "spearman": -0.37593984962406013
+      },
+      {
+        "base_model": "Claude-Opus-4-1-20250805",
+        "defined_pair_count": 20,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.3316901498010968,
+        "ordered_pair_count": 20,
+        "pearson": -0.4642204278525118,
+        "spearman": -0.43909774436090226
       },
       {
         "base_model": "Claude-Opus-4-1-20250805",
@@ -1857,6 +2412,17 @@
       {
         "base_model": "Claude-Opus-4-1-20250805",
         "defined_pair_count": 20,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.3500282708517037,
+        "ordered_pair_count": 20,
+        "pearson": -0.18310327133909948,
+        "spearman": -0.2646616541353383
+      },
+      {
+        "base_model": "Claude-Opus-4-1-20250805",
+        "defined_pair_count": 20,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -1886,6 +2452,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.07886925407643565,
         "spearman": -0.15639097744360902
+      },
+      {
+        "base_model": "Claude-Opus-4-1-20250805",
+        "defined_pair_count": 20,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.37617057785613817,
+        "ordered_pair_count": 20,
+        "pearson": -0.0486394059879197,
+        "spearman": -0.19398496240601504
       },
       {
         "base_model": "Claude-Opus-4-1-20250805",
@@ -1923,6 +2500,17 @@
       {
         "base_model": "Claude-Opus-4-1-20250805",
         "defined_pair_count": 20,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.3991620412362685,
+        "ordered_pair_count": 20,
+        "pearson": -0.10510461971049069,
+        "spearman": -0.281203007518797
+      },
+      {
+        "base_model": "Claude-Opus-4-1-20250805",
+        "defined_pair_count": 20,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -1952,6 +2540,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.2852818746194104,
         "spearman": -0.35187250059037317
+      },
+      {
+        "base_model": "Claude-Opus-4-1-20250805",
+        "defined_pair_count": 20,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.40008059736613333,
+        "ordered_pair_count": 20,
+        "pearson": -0.15101331397470805,
+        "spearman": -0.43140532606627946
       },
       {
         "base_model": "Claude-Opus-4-20250514",
@@ -1989,6 +2588,17 @@
       {
         "base_model": "Claude-Opus-4-20250514",
         "defined_pair_count": 6,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.9494905036716297,
+        "spearman": 0.7714285714285715
+      },
+      {
+        "base_model": "Claude-Opus-4-20250514",
+        "defined_pair_count": 6,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -2018,6 +2628,17 @@
         "ordered_pair_count": 6,
         "pearson": 0.9851597222072253,
         "spearman": 0.9428571428571428
+      },
+      {
+        "base_model": "Claude-Opus-4-20250514",
+        "defined_pair_count": 6,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.9435499877259215,
+        "spearman": 0.7714285714285715
       },
       {
         "base_model": "Claude-Opus-4-20250514",
@@ -2055,6 +2676,17 @@
       {
         "base_model": "Claude-Opus-4-20250514",
         "defined_pair_count": 6,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.946748674819344,
+        "spearman": 0.7714285714285715
+      },
+      {
+        "base_model": "Claude-Opus-4-20250514",
+        "defined_pair_count": 6,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -2084,6 +2716,17 @@
         "ordered_pair_count": 6,
         "pearson": 0.987462541044412,
         "spearman": 0.9428571428571428
+      },
+      {
+        "base_model": "Claude-Opus-4-20250514",
+        "defined_pair_count": 6,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.949531793282737,
+        "spearman": 0.7714285714285715
       },
       {
         "base_model": "Claude-Opus-4-20250514",
@@ -2121,6 +2764,17 @@
       {
         "base_model": "Claude-Opus-4-20250514",
         "defined_pair_count": 6,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.9411080835046097,
+        "spearman": 0.7714285714285715
+      },
+      {
+        "base_model": "Claude-Opus-4-20250514",
+        "defined_pair_count": 6,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -2150,6 +2804,17 @@
         "ordered_pair_count": 6,
         "pearson": 0.9902350105011165,
         "spearman": 0.9428571428571428
+      },
+      {
+        "base_model": "Claude-Opus-4-20250514",
+        "defined_pair_count": 6,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 6,
+        "pearson": 0.9327654039529826,
+        "spearman": 0.7714285714285715
       },
       {
         "base_model": "Claude-Opus-4-5-20251101",
@@ -2187,6 +2852,17 @@
       {
         "base_model": "Claude-Opus-4-5-20251101",
         "defined_pair_count": 16,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.5279162590660917,
+        "ordered_pair_count": 16,
+        "pearson": -0.5821464896421363,
+        "spearman": -0.6470588235294118
+      },
+      {
+        "base_model": "Claude-Opus-4-5-20251101",
+        "defined_pair_count": 16,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -2216,6 +2892,17 @@
         "ordered_pair_count": 16,
         "pearson": -0.40832516677793845,
         "spearman": -0.36764705882352944
+      },
+      {
+        "base_model": "Claude-Opus-4-5-20251101",
+        "defined_pair_count": 16,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.6251443571920875,
+        "ordered_pair_count": 16,
+        "pearson": -0.7261504564480521,
+        "spearman": -0.7176470588235294
       },
       {
         "base_model": "Claude-Opus-4-5-20251101",
@@ -2253,6 +2940,17 @@
       {
         "base_model": "Claude-Opus-4-5-20251101",
         "defined_pair_count": 16,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.5526160652991416,
+        "ordered_pair_count": 16,
+        "pearson": -0.610918338381603,
+        "spearman": -0.6529411764705882
+      },
+      {
+        "base_model": "Claude-Opus-4-5-20251101",
+        "defined_pair_count": 16,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -2282,6 +2980,17 @@
         "ordered_pair_count": 16,
         "pearson": -0.2562101148256062,
         "spearman": -0.24411764705882352
+      },
+      {
+        "base_model": "Claude-Opus-4-5-20251101",
+        "defined_pair_count": 16,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.45378435770956466,
+        "ordered_pair_count": 16,
+        "pearson": -0.5207028231248751,
+        "spearman": -0.6147058823529412
       },
       {
         "base_model": "Claude-Opus-4-5-20251101",
@@ -2319,6 +3028,17 @@
       {
         "base_model": "Claude-Opus-4-5-20251101",
         "defined_pair_count": 16,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.3585227374720873,
+        "ordered_pair_count": 16,
+        "pearson": -0.43099731784144946,
+        "spearman": -0.5117647058823529
+      },
+      {
+        "base_model": "Claude-Opus-4-5-20251101",
+        "defined_pair_count": 16,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -2348,6 +3068,17 @@
         "ordered_pair_count": 16,
         "pearson": -0.52775092708148,
         "spearman": -0.46902858933358427
+      },
+      {
+        "base_model": "Claude-Opus-4-5-20251101",
+        "defined_pair_count": 16,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.7378707704931311,
+        "ordered_pair_count": 16,
+        "pearson": -0.6621472611616952,
+        "spearman": -0.796463642264577
       },
       {
         "base_model": "Claude-Sonnet-4-20250514",
@@ -2385,6 +3116,17 @@
       {
         "base_model": "Claude-Sonnet-4-20250514",
         "defined_pair_count": 21,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.28714911690299666,
+        "ordered_pair_count": 21,
+        "pearson": 0.304287750568147,
+        "spearman": 0.24675324675324675
+      },
+      {
+        "base_model": "Claude-Sonnet-4-20250514",
+        "defined_pair_count": 21,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 13,
@@ -2414,6 +3156,17 @@
         "ordered_pair_count": 21,
         "pearson": 0.0703013095908112,
         "spearman": 0.11688311688311688
+      },
+      {
+        "base_model": "Claude-Sonnet-4-20250514",
+        "defined_pair_count": 21,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.1453423505068134,
+        "ordered_pair_count": 21,
+        "pearson": 0.1786982721050215,
+        "spearman": 0.19220779220779222
       },
       {
         "base_model": "Claude-Sonnet-4-20250514",
@@ -2451,6 +3204,17 @@
       {
         "base_model": "Claude-Sonnet-4-20250514",
         "defined_pair_count": 21,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.33846855326756586,
+        "ordered_pair_count": 21,
+        "pearson": 0.2487418062439122,
+        "spearman": 0.1974025974025974
+      },
+      {
+        "base_model": "Claude-Sonnet-4-20250514",
+        "defined_pair_count": 21,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 13,
@@ -2480,6 +3244,17 @@
         "ordered_pair_count": 21,
         "pearson": 0.12983014499900813,
         "spearman": 0.15324675324675324
+      },
+      {
+        "base_model": "Claude-Sonnet-4-20250514",
+        "defined_pair_count": 21,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.2993435905792205,
+        "ordered_pair_count": 21,
+        "pearson": 0.3279802441917108,
+        "spearman": 0.2584415584415584
       },
       {
         "base_model": "Claude-Sonnet-4-20250514",
@@ -2517,6 +3292,17 @@
       {
         "base_model": "Claude-Sonnet-4-20250514",
         "defined_pair_count": 21,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.5595431824656307,
+        "ordered_pair_count": 21,
+        "pearson": 0.23131875534722235,
+        "spearman": 0.11558441558441558
+      },
+      {
+        "base_model": "Claude-Sonnet-4-20250514",
+        "defined_pair_count": 21,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 13,
@@ -2546,6 +3332,17 @@
         "ordered_pair_count": 21,
         "pearson": -0.05972234394806236,
         "spearman": -0.05751756841776023
+      },
+      {
+        "base_model": "Claude-Sonnet-4-20250514",
+        "defined_pair_count": 21,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.44979480337383937,
+        "ordered_pair_count": 21,
+        "pearson": 0.09572830553975163,
+        "spearman": 0.0745113954502803
       },
       {
         "base_model": "Claude-Sonnet-4-5-20250929",
@@ -2583,6 +3380,17 @@
       {
         "base_model": "Claude-Sonnet-4-5-20250929",
         "defined_pair_count": 19,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.8291965071834339,
+        "ordered_pair_count": 19,
+        "pearson": -0.296838785934416,
+        "spearman": -0.5473684210526315
+      },
+      {
+        "base_model": "Claude-Sonnet-4-5-20250929",
+        "defined_pair_count": 19,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -2612,6 +3420,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.6376242380974321,
         "spearman": -0.719298245614035
+      },
+      {
+        "base_model": "Claude-Sonnet-4-5-20250929",
+        "defined_pair_count": 19,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.6392003772050442,
+        "ordered_pair_count": 19,
+        "pearson": -0.7251384777320736,
+        "spearman": -0.7719298245614034
       },
       {
         "base_model": "Claude-Sonnet-4-5-20250929",
@@ -2649,6 +3468,17 @@
       {
         "base_model": "Claude-Sonnet-4-5-20250929",
         "defined_pair_count": 19,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.7909612708042365,
+        "ordered_pair_count": 19,
+        "pearson": -0.4100613327207186,
+        "spearman": -0.63859649122807
+      },
+      {
+        "base_model": "Claude-Sonnet-4-5-20250929",
+        "defined_pair_count": 19,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -2678,6 +3508,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.18326223565491795,
         "spearman": -0.28947368421052627
+      },
+      {
+        "base_model": "Claude-Sonnet-4-5-20250929",
+        "defined_pair_count": 19,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.8258459671271937,
+        "ordered_pair_count": 19,
+        "pearson": -0.16839035906536595,
+        "spearman": -0.42982456140350866
       },
       {
         "base_model": "Claude-Sonnet-4-5-20250929",
@@ -2715,6 +3556,17 @@
       {
         "base_model": "Claude-Sonnet-4-5-20250929",
         "defined_pair_count": 19,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.39231090379937456,
+        "ordered_pair_count": 19,
+        "pearson": -0.5077836806836502,
+        "spearman": -0.6491228070175438
+      },
+      {
+        "base_model": "Claude-Sonnet-4-5-20250929",
+        "defined_pair_count": 19,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -2744,6 +3596,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.20419695273724708,
         "spearman": -0.3685726350501019
+      },
+      {
+        "base_model": "Claude-Sonnet-4-5-20250929",
+        "defined_pair_count": 19,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.7415558353500158,
+        "ordered_pair_count": 19,
+        "pearson": -0.17903230245220234,
+        "spearman": -0.332373536964824
       },
       {
         "base_model": "DeepSeek-R1",
@@ -2781,6 +3644,17 @@
       {
         "base_model": "DeepSeek-R1",
         "defined_pair_count": 12,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 12,
+        "pearson": 0.888005571964545,
+        "spearman": 0.8601398601398601
+      },
+      {
+        "base_model": "DeepSeek-R1",
+        "defined_pair_count": 12,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -2810,6 +3684,17 @@
         "ordered_pair_count": 12,
         "pearson": 0.8585310490660977,
         "spearman": 0.8601398601398601
+      },
+      {
+        "base_model": "DeepSeek-R1",
+        "defined_pair_count": 12,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 12,
+        "pearson": 0.9033313644629781,
+        "spearman": 0.8951048951048951
       },
       {
         "base_model": "DeepSeek-R1",
@@ -2847,6 +3732,17 @@
       {
         "base_model": "DeepSeek-R1",
         "defined_pair_count": 12,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 12,
+        "pearson": 0.899735415747882,
+        "spearman": 0.8741258741258742
+      },
+      {
+        "base_model": "DeepSeek-R1",
+        "defined_pair_count": 12,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -2876,6 +3772,17 @@
         "ordered_pair_count": 12,
         "pearson": 0.8570570958819237,
         "spearman": 0.8181818181818182
+      },
+      {
+        "base_model": "DeepSeek-R1",
+        "defined_pair_count": 12,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 12,
+        "pearson": 0.8782255943112749,
+        "spearman": 0.8601398601398601
       },
       {
         "base_model": "DeepSeek-R1",
@@ -2913,6 +3820,17 @@
       {
         "base_model": "DeepSeek-R1",
         "defined_pair_count": 12,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 12,
+        "pearson": 0.7783956565606654,
+        "spearman": 0.6013986013986014
+      },
+      {
+        "base_model": "DeepSeek-R1",
+        "defined_pair_count": 12,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -2942,6 +3860,17 @@
         "ordered_pair_count": 12,
         "pearson": 0.8163783792483602,
         "spearman": 0.9230769230769231
+      },
+      {
+        "base_model": "DeepSeek-R1",
+        "defined_pair_count": 12,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 12,
+        "pearson": 0.8162991025096047,
+        "spearman": 0.6993006993006993
       },
       {
         "base_model": "DeepSeek-V3",
@@ -2979,6 +3908,17 @@
       {
         "base_model": "DeepSeek-V3",
         "defined_pair_count": 12,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.6529499735475686,
+        "ordered_pair_count": 12,
+        "pearson": 0.22234107811474108,
+        "spearman": 0.45454545454545453
+      },
+      {
+        "base_model": "DeepSeek-V3",
+        "defined_pair_count": 12,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -3008,6 +3948,17 @@
         "ordered_pair_count": 12,
         "pearson": 0.7185239071386805,
         "spearman": 0.8531468531468531
+      },
+      {
+        "base_model": "DeepSeek-V3",
+        "defined_pair_count": 12,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.7424039464098635,
+        "ordered_pair_count": 12,
+        "pearson": 0.226896394660548,
+        "spearman": 0.46853146853146854
       },
       {
         "base_model": "DeepSeek-V3",
@@ -3045,6 +3996,17 @@
       {
         "base_model": "DeepSeek-V3",
         "defined_pair_count": 12,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.7216300415655269,
+        "ordered_pair_count": 12,
+        "pearson": 0.23187217980110458,
+        "spearman": 0.45454545454545453
+      },
+      {
+        "base_model": "DeepSeek-V3",
+        "defined_pair_count": 12,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -3074,6 +4036,17 @@
         "ordered_pair_count": 12,
         "pearson": 0.7034715759886285,
         "spearman": 0.7622377622377622
+      },
+      {
+        "base_model": "DeepSeek-V3",
+        "defined_pair_count": 12,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.4644765232666852,
+        "ordered_pair_count": 12,
+        "pearson": 0.15609060919136217,
+        "spearman": 0.2867132867132867
       },
       {
         "base_model": "DeepSeek-V3",
@@ -3111,6 +4084,17 @@
       {
         "base_model": "DeepSeek-V3",
         "defined_pair_count": 12,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.13672786514045845,
+        "ordered_pair_count": 12,
+        "pearson": 0.2829624823556789,
+        "spearman": 0.3776223776223776
+      },
+      {
+        "base_model": "DeepSeek-V3",
+        "defined_pair_count": 12,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -3140,6 +4124,17 @@
         "ordered_pair_count": 12,
         "pearson": 0.7592924146643677,
         "spearman": 0.6901579588999186
+      },
+      {
+        "base_model": "DeepSeek-V3",
+        "defined_pair_count": 12,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.09942040139803995,
+        "ordered_pair_count": 12,
+        "pearson": 0.24287602153355733,
+        "spearman": 0.11972127858467976
       },
       {
         "base_model": "DeepSeek-V3.1",
@@ -3177,6 +4172,17 @@
       {
         "base_model": "DeepSeek-V3.1",
         "defined_pair_count": 19,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": 0.6817066748586273,
+        "ordered_pair_count": 19,
+        "pearson": 0.26855258597134,
+        "spearman": 0.16842105263157892
+      },
+      {
+        "base_model": "DeepSeek-V3.1",
+        "defined_pair_count": 19,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 8,
@@ -3206,6 +4212,17 @@
         "ordered_pair_count": 19,
         "pearson": 0.725745064203365,
         "spearman": 0.5385964912280701
+      },
+      {
+        "base_model": "DeepSeek-V3.1",
+        "defined_pair_count": 19,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": 0.8093304761853418,
+        "ordered_pair_count": 19,
+        "pearson": 0.35923760658722487,
+        "spearman": 0.29298245614035084
       },
       {
         "base_model": "DeepSeek-V3.1",
@@ -3243,6 +4260,17 @@
       {
         "base_model": "DeepSeek-V3.1",
         "defined_pair_count": 19,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": 0.7635303860929537,
+        "ordered_pair_count": 19,
+        "pearson": 0.30451416883790444,
+        "spearman": 0.24561403508771926
+      },
+      {
+        "base_model": "DeepSeek-V3.1",
+        "defined_pair_count": 19,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 8,
@@ -3272,6 +4300,17 @@
         "ordered_pair_count": 19,
         "pearson": 0.5477324268149188,
         "spearman": 0.3807017543859648
+      },
+      {
+        "base_model": "DeepSeek-V3.1",
+        "defined_pair_count": 19,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": 0.4907689571104832,
+        "ordered_pair_count": 19,
+        "pearson": 0.18417073089627328,
+        "spearman": 0.09122807017543857
       },
       {
         "base_model": "DeepSeek-V3.1",
@@ -3309,6 +4348,17 @@
       {
         "base_model": "DeepSeek-V3.1",
         "defined_pair_count": 19,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": 0.48334997604706953,
+        "ordered_pair_count": 19,
+        "pearson": 0.0754668764629008,
+        "spearman": 0.07719298245614034
+      },
+      {
+        "base_model": "DeepSeek-V3.1",
+        "defined_pair_count": 19,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 8,
@@ -3338,6 +4388,17 @@
         "ordered_pair_count": 19,
         "pearson": 0.4864793218755854,
         "spearman": 0.3666666666666666
+      },
+      {
+        "base_model": "DeepSeek-V3.1",
+        "defined_pair_count": 19,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": 0.2892905118773908,
+        "ordered_pair_count": 19,
+        "pearson": 0.11954103347429797,
+        "spearman": 0.07543859649122805
       },
       {
         "base_model": "Gemini-1.5-Flash",
@@ -3375,6 +4436,17 @@
       {
         "base_model": "Gemini-1.5-Flash",
         "defined_pair_count": 10,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.8751744307644334,
+        "spearman": -0.3939393939393939
+      },
+      {
+        "base_model": "Gemini-1.5-Flash",
+        "defined_pair_count": 10,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -3404,6 +4476,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.7082449139927002,
         "spearman": -0.5272727272727272
+      },
+      {
+        "base_model": "Gemini-1.5-Flash",
+        "defined_pair_count": 10,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.8882977564561091,
+        "spearman": -0.3939393939393939
       },
       {
         "base_model": "Gemini-1.5-Flash",
@@ -3441,6 +4524,17 @@
       {
         "base_model": "Gemini-1.5-Flash",
         "defined_pair_count": 10,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.8774506000210832,
+        "spearman": -0.3939393939393939
+      },
+      {
+        "base_model": "Gemini-1.5-Flash",
+        "defined_pair_count": 10,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -3470,6 +4564,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.6721875107065245,
         "spearman": -0.5272727272727272
+      },
+      {
+        "base_model": "Gemini-1.5-Flash",
+        "defined_pair_count": 10,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.8772188644521912,
+        "spearman": -0.3939393939393939
       },
       {
         "base_model": "Gemini-1.5-Flash",
@@ -3507,6 +4612,17 @@
       {
         "base_model": "Gemini-1.5-Flash",
         "defined_pair_count": 10,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.6220778537425606,
+        "spearman": -0.40606060606060607
+      },
+      {
+        "base_model": "Gemini-1.5-Flash",
+        "defined_pair_count": 10,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -3536,6 +4652,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.6551449625185354,
         "spearman": -0.5471149893120582
+      },
+      {
+        "base_model": "Gemini-1.5-Flash",
+        "defined_pair_count": 10,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": -0.6238965698615916,
+        "spearman": -0.46200821319684904
       },
       {
         "base_model": "Gemini-1.5-Pro",
@@ -3573,6 +4700,17 @@
       {
         "base_model": "Gemini-1.5-Pro",
         "defined_pair_count": 10,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.20044111365811623,
+        "ordered_pair_count": 10,
+        "pearson": -0.876350306705511,
+        "spearman": -0.45454545454545453
+      },
+      {
+        "base_model": "Gemini-1.5-Pro",
+        "defined_pair_count": 10,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -3602,6 +4740,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.8312549200889323,
         "spearman": -0.44242424242424244
+      },
+      {
+        "base_model": "Gemini-1.5-Pro",
+        "defined_pair_count": 10,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.29695942252621693,
+        "ordered_pair_count": 10,
+        "pearson": -0.907900242586509,
+        "spearman": -0.4909090909090909
       },
       {
         "base_model": "Gemini-1.5-Pro",
@@ -3639,6 +4788,17 @@
       {
         "base_model": "Gemini-1.5-Pro",
         "defined_pair_count": 10,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.0618731201307378,
+        "ordered_pair_count": 10,
+        "pearson": -0.8824848482194899,
+        "spearman": -0.44242424242424244
+      },
+      {
+        "base_model": "Gemini-1.5-Pro",
+        "defined_pair_count": 10,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -3668,6 +4828,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.7582947089428677,
         "spearman": -0.28484848484848485
+      },
+      {
+        "base_model": "Gemini-1.5-Pro",
+        "defined_pair_count": 10,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.2461820517796901,
+        "ordered_pair_count": 10,
+        "pearson": -0.8603402751885479,
+        "spearman": -0.3696969696969697
       },
       {
         "base_model": "Gemini-1.5-Pro",
@@ -3705,6 +4876,17 @@
       {
         "base_model": "Gemini-1.5-Pro",
         "defined_pair_count": 10,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.45173368305074146,
+        "ordered_pair_count": 10,
+        "pearson": -0.7109440848265463,
+        "spearman": -0.3696969696969697
+      },
+      {
+        "base_model": "Gemini-1.5-Pro",
+        "defined_pair_count": 10,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -3734,6 +4916,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.4513902862199623,
         "spearman": -0.3619904402925108
+      },
+      {
+        "base_model": "Gemini-1.5-Pro",
+        "defined_pair_count": 10,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.18863411252417955,
+        "ordered_pair_count": 10,
+        "pearson": -0.47740652063594935,
+        "spearman": -0.4233447522064957
       },
       {
         "base_model": "Gemini-2.0-Flash-Lite-001",
@@ -3771,6 +4964,17 @@
       {
         "base_model": "Gemini-2.0-Flash-Lite-001",
         "defined_pair_count": 7,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.10058678403713203,
+        "spearman": 0.5357142857142857
+      },
+      {
+        "base_model": "Gemini-2.0-Flash-Lite-001",
+        "defined_pair_count": 7,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -3800,6 +5004,17 @@
         "ordered_pair_count": 7,
         "pearson": 0.7211819509874948,
         "spearman": 0.8214285714285713
+      },
+      {
+        "base_model": "Gemini-2.0-Flash-Lite-001",
+        "defined_pair_count": 7,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.035746600776554185,
+        "spearman": 0.5357142857142857
       },
       {
         "base_model": "Gemini-2.0-Flash-Lite-001",
@@ -3837,6 +5052,17 @@
       {
         "base_model": "Gemini-2.0-Flash-Lite-001",
         "defined_pair_count": 7,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.0792737604747514,
+        "spearman": 0.49999999999999994
+      },
+      {
+        "base_model": "Gemini-2.0-Flash-Lite-001",
+        "defined_pair_count": 7,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -3866,6 +5092,17 @@
         "ordered_pair_count": 7,
         "pearson": 0.7662596412041814,
         "spearman": 0.8214285714285713
+      },
+      {
+        "base_model": "Gemini-2.0-Flash-Lite-001",
+        "defined_pair_count": 7,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.12527272424345523,
+        "spearman": 0.5357142857142857
       },
       {
         "base_model": "Gemini-2.0-Flash-Lite-001",
@@ -3903,6 +5140,17 @@
       {
         "base_model": "Gemini-2.0-Flash-Lite-001",
         "defined_pair_count": 7,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.36373179593748384,
+        "spearman": 0.6071428571428571
+      },
+      {
+        "base_model": "Gemini-2.0-Flash-Lite-001",
+        "defined_pair_count": 7,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -3932,6 +5180,17 @@
         "ordered_pair_count": 7,
         "pearson": 0.7681642481903179,
         "spearman": 0.8468812149338254
+      },
+      {
+        "base_model": "Gemini-2.0-Flash-Lite-001",
+        "defined_pair_count": 7,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.12778930389930207,
+        "spearman": 0.504524979109513
       },
       {
         "base_model": "Gemini-2.5-Flash",
@@ -3969,6 +5228,17 @@
       {
         "base_model": "Gemini-2.5-Flash",
         "defined_pair_count": 20,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.0637114587560647,
+        "ordered_pair_count": 20,
+        "pearson": -0.31947965220504143,
+        "spearman": -0.5518796992481203
+      },
+      {
+        "base_model": "Gemini-2.5-Flash",
+        "defined_pair_count": 20,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 13,
@@ -3998,6 +5268,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.5157530503230583,
         "spearman": -0.5609022556390978
+      },
+      {
+        "base_model": "Gemini-2.5-Flash",
+        "defined_pair_count": 20,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.16224916119730864,
+        "ordered_pair_count": 20,
+        "pearson": -0.5205705904560736,
+        "spearman": -0.6511278195488722
       },
       {
         "base_model": "Gemini-2.5-Flash",
@@ -4035,6 +5316,17 @@
       {
         "base_model": "Gemini-2.5-Flash",
         "defined_pair_count": 20,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.09201791299300921,
+        "ordered_pair_count": 20,
+        "pearson": -0.34680309680453353,
+        "spearman": -0.5654135338345865
+      },
+      {
+        "base_model": "Gemini-2.5-Flash",
+        "defined_pair_count": 20,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 13,
@@ -4064,6 +5356,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.25178376422633403,
         "spearman": -0.32781954887218046
+      },
+      {
+        "base_model": "Gemini-2.5-Flash",
+        "defined_pair_count": 20,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.012024502224180066,
+        "ordered_pair_count": 20,
+        "pearson": -0.2698003297551324,
+        "spearman": -0.46466165413533833
       },
       {
         "base_model": "Gemini-2.5-Flash",
@@ -4101,6 +5404,17 @@
       {
         "base_model": "Gemini-2.5-Flash",
         "defined_pair_count": 20,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.3895195245195907,
+        "ordered_pair_count": 20,
+        "pearson": -0.3814619544911773,
+        "spearman": -0.6045112781954888
+      },
+      {
+        "base_model": "Gemini-2.5-Flash",
+        "defined_pair_count": 20,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 13,
@@ -4130,6 +5444,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.7075866826249806,
         "spearman": -0.7335901288197965
+      },
+      {
+        "base_model": "Gemini-2.5-Flash",
+        "defined_pair_count": 20,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 13,
+        "near_bi_pearson": -0.695056477677822,
+        "ordered_pair_count": 20,
+        "pearson": -0.6855371725584105,
+        "spearman": -0.8309493125829175
       },
       {
         "base_model": "Gemini-2.5-Flash-Preview-04-17",
@@ -4167,6 +5492,17 @@
       {
         "base_model": "Gemini-2.5-Flash-Preview-04-17",
         "defined_pair_count": 8,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.34178945302454844,
+        "ordered_pair_count": 8,
+        "pearson": -0.8035810535763191,
+        "spearman": -0.4523809523809524
+      },
+      {
+        "base_model": "Gemini-2.5-Flash-Preview-04-17",
+        "defined_pair_count": 8,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -4196,6 +5532,17 @@
         "ordered_pair_count": 8,
         "pearson": -0.481996874849719,
         "spearman": -0.7380952380952381
+      },
+      {
+        "base_model": "Gemini-2.5-Flash-Preview-04-17",
+        "defined_pair_count": 8,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.5046330379530971,
+        "ordered_pair_count": 8,
+        "pearson": -0.8538428930365393,
+        "spearman": -0.8571428571428571
       },
       {
         "base_model": "Gemini-2.5-Flash-Preview-04-17",
@@ -4233,6 +5580,17 @@
       {
         "base_model": "Gemini-2.5-Flash-Preview-04-17",
         "defined_pair_count": 8,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.42315476933221624,
+        "ordered_pair_count": 8,
+        "pearson": -0.8374975701589139,
+        "spearman": -0.5238095238095238
+      },
+      {
+        "base_model": "Gemini-2.5-Flash-Preview-04-17",
+        "defined_pair_count": 8,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -4262,6 +5620,17 @@
         "ordered_pair_count": 8,
         "pearson": -0.4644971385242084,
         "spearman": -0.38095238095238093
+      },
+      {
+        "base_model": "Gemini-2.5-Flash-Preview-04-17",
+        "defined_pair_count": 8,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.3396984979425935,
+        "ordered_pair_count": 8,
+        "pearson": -0.8128457592613658,
+        "spearman": -0.5238095238095238
       },
       {
         "base_model": "Gemini-2.5-Flash-Preview-04-17",
@@ -4299,6 +5668,17 @@
       {
         "base_model": "Gemini-2.5-Flash-Preview-04-17",
         "defined_pair_count": 8,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.12448973665461151,
+        "ordered_pair_count": 8,
+        "pearson": -0.6434263419069849,
+        "spearman": -0.3333333333333333
+      },
+      {
+        "base_model": "Gemini-2.5-Flash-Preview-04-17",
+        "defined_pair_count": 8,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -4328,6 +5708,17 @@
         "ordered_pair_count": 8,
         "pearson": -0.8895286398484313,
         "spearman": -0.7425282823862205
+      },
+      {
+        "base_model": "Gemini-2.5-Flash-Preview-04-17",
+        "defined_pair_count": 8,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.9136072140292076,
+        "ordered_pair_count": 8,
+        "pearson": -0.7729356357486721,
+        "spearman": -0.8263621207201486
       },
       {
         "base_model": "Gemini-2.5-Pro",
@@ -4365,6 +5756,17 @@
       {
         "base_model": "Gemini-2.5-Pro",
         "defined_pair_count": 20,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.014428890962987842,
+        "ordered_pair_count": 20,
+        "pearson": -0.33646470297699704,
+        "spearman": -0.4631578947368421
+      },
+      {
+        "base_model": "Gemini-2.5-Pro",
+        "defined_pair_count": 20,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -4394,6 +5796,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.5023426014581648,
         "spearman": -0.5684210526315789
+      },
+      {
+        "base_model": "Gemini-2.5-Pro",
+        "defined_pair_count": 20,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.16224275633878932,
+        "ordered_pair_count": 20,
+        "pearson": -0.565922981152398,
+        "spearman": -0.6571428571428571
       },
       {
         "base_model": "Gemini-2.5-Pro",
@@ -4431,6 +5844,17 @@
       {
         "base_model": "Gemini-2.5-Pro",
         "defined_pair_count": 20,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.01430088510033219,
+        "ordered_pair_count": 20,
+        "pearson": -0.3723137428638027,
+        "spearman": -0.512781954887218
+      },
+      {
+        "base_model": "Gemini-2.5-Pro",
+        "defined_pair_count": 20,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -4460,6 +5884,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.2829370437108845,
         "spearman": -0.3112781954887218
+      },
+      {
+        "base_model": "Gemini-2.5-Pro",
+        "defined_pair_count": 20,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": 0.04429521891175955,
+        "ordered_pair_count": 20,
+        "pearson": -0.23961033308429638,
+        "spearman": -0.3969924812030075
       },
       {
         "base_model": "Gemini-2.5-Pro",
@@ -4497,6 +5932,17 @@
       {
         "base_model": "Gemini-2.5-Pro",
         "defined_pair_count": 20,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.28417086820937276,
+        "ordered_pair_count": 20,
+        "pearson": -0.30520610156831673,
+        "spearman": -0.45413533834586467
+      },
+      {
+        "base_model": "Gemini-2.5-Pro",
+        "defined_pair_count": 20,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -4526,6 +5972,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.5953766452799079,
         "spearman": -0.6322457944397801
+      },
+      {
+        "base_model": "Gemini-2.5-Pro",
+        "defined_pair_count": 20,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.5543847315637318,
+        "ordered_pair_count": 20,
+        "pearson": -0.5688910017072475,
+        "spearman": -0.7326660286265305
       },
       {
         "base_model": "Gemini-2.5-Pro-Exp-03-25",
@@ -4563,6 +6020,17 @@
       {
         "base_model": "Gemini-2.5-Pro-Exp-03-25",
         "defined_pair_count": 7,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.8751758775533685,
+        "spearman": 0.7499999999999999
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Exp-03-25",
+        "defined_pair_count": 7,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -4592,6 +6060,17 @@
         "ordered_pair_count": 7,
         "pearson": 0.7699259993758503,
         "spearman": 0.8928571428571428
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Exp-03-25",
+        "defined_pair_count": 7,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.8803624563010308,
+        "spearman": 0.7499999999999999
       },
       {
         "base_model": "Gemini-2.5-Pro-Exp-03-25",
@@ -4629,6 +6108,17 @@
       {
         "base_model": "Gemini-2.5-Pro-Exp-03-25",
         "defined_pair_count": 7,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.8809468793896654,
+        "spearman": 0.7499999999999999
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Exp-03-25",
+        "defined_pair_count": 7,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -4658,6 +6148,17 @@
         "ordered_pair_count": 7,
         "pearson": 0.7809995203450512,
         "spearman": 0.8928571428571428
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Exp-03-25",
+        "defined_pair_count": 7,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.8747900708622652,
+        "spearman": 0.7499999999999999
       },
       {
         "base_model": "Gemini-2.5-Pro-Exp-03-25",
@@ -4695,6 +6196,17 @@
       {
         "base_model": "Gemini-2.5-Pro-Exp-03-25",
         "defined_pair_count": 7,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.8978437098752508,
+        "spearman": 0.7857142857142856
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Exp-03-25",
+        "defined_pair_count": 7,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 1,
@@ -4724,6 +6236,17 @@
         "ordered_pair_count": 7,
         "pearson": 0.7725389018206746,
         "spearman": 0.9642857142857142
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Exp-03-25",
+        "defined_pair_count": 7,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 1,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 7,
+        "pearson": 0.8312437034166416,
+        "spearman": 0.7857142857142856
       },
       {
         "base_model": "Gemini-2.5-Pro-Preview-03-25",
@@ -4761,6 +6284,17 @@
       {
         "base_model": "Gemini-2.5-Pro-Preview-03-25",
         "defined_pair_count": 8,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.5160018466701186,
+        "ordered_pair_count": 8,
+        "pearson": -0.7952156450278917,
+        "spearman": -0.5238095238095238
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Preview-03-25",
+        "defined_pair_count": 8,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -4790,6 +6324,17 @@
         "ordered_pair_count": 8,
         "pearson": -0.5428286416031853,
         "spearman": -0.8333333333333334
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Preview-03-25",
+        "defined_pair_count": 8,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.770194118399304,
+        "ordered_pair_count": 8,
+        "pearson": -0.8947849350212868,
+        "spearman": -0.8095238095238095
       },
       {
         "base_model": "Gemini-2.5-Pro-Preview-03-25",
@@ -4827,6 +6372,17 @@
       {
         "base_model": "Gemini-2.5-Pro-Preview-03-25",
         "defined_pair_count": 8,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.5769291024290546,
+        "ordered_pair_count": 8,
+        "pearson": -0.8446633431433008,
+        "spearman": -0.5714285714285714
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Preview-03-25",
+        "defined_pair_count": 8,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -4856,6 +6412,17 @@
         "ordered_pair_count": 8,
         "pearson": -0.38434891548578304,
         "spearman": -0.2857142857142857
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Preview-03-25",
+        "defined_pair_count": 8,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.5478370428468817,
+        "ordered_pair_count": 8,
+        "pearson": -0.7036557589802966,
+        "spearman": -0.6190476190476191
       },
       {
         "base_model": "Gemini-2.5-Pro-Preview-03-25",
@@ -4893,6 +6460,17 @@
       {
         "base_model": "Gemini-2.5-Pro-Preview-03-25",
         "defined_pair_count": 8,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.8653642565298436,
+        "ordered_pair_count": 8,
+        "pearson": -0.3779064428548562,
+        "spearman": -0.09523809523809523
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Preview-03-25",
+        "defined_pair_count": 8,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -4922,6 +6500,17 @@
         "ordered_pair_count": 8,
         "pearson": -0.8228046714102918,
         "spearman": -0.6468665190255973
+      },
+      {
+        "base_model": "Gemini-2.5-Pro-Preview-03-25",
+        "defined_pair_count": 8,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.9843471933133512,
+        "ordered_pair_count": 8,
+        "pearson": -0.42956810589967814,
+        "spearman": -0.8624886920341298
       },
       {
         "base_model": "Gemini-3-Pro-Preview",
@@ -4959,6 +6548,17 @@
       {
         "base_model": "Gemini-3-Pro-Preview",
         "defined_pair_count": 17,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.22125733666428413,
+        "ordered_pair_count": 17,
+        "pearson": -0.17734536203171283,
+        "spearman": -0.4093137254901961
+      },
+      {
+        "base_model": "Gemini-3-Pro-Preview",
+        "defined_pair_count": 17,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -4988,6 +6588,17 @@
         "ordered_pair_count": 17,
         "pearson": -0.5488450827717262,
         "spearman": -0.5122549019607844
+      },
+      {
+        "base_model": "Gemini-3-Pro-Preview",
+        "defined_pair_count": 17,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.36532565456010274,
+        "ordered_pair_count": 17,
+        "pearson": -0.6605134430494164,
+        "spearman": -0.5269607843137256
       },
       {
         "base_model": "Gemini-3-Pro-Preview",
@@ -5025,6 +6636,17 @@
       {
         "base_model": "Gemini-3-Pro-Preview",
         "defined_pair_count": 17,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.2617909327181977,
+        "ordered_pair_count": 17,
+        "pearson": -0.25161460843979805,
+        "spearman": -0.42647058823529416
+      },
+      {
+        "base_model": "Gemini-3-Pro-Preview",
+        "defined_pair_count": 17,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -5054,6 +6676,17 @@
         "ordered_pair_count": 17,
         "pearson": -0.1334351384129251,
         "spearman": -0.22058823529411767
+      },
+      {
+        "base_model": "Gemini-3-Pro-Preview",
+        "defined_pair_count": 17,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.23027415005633414,
+        "ordered_pair_count": 17,
+        "pearson": -0.05956231055765983,
+        "spearman": -0.2769607843137255
       },
       {
         "base_model": "Gemini-3-Pro-Preview",
@@ -5091,6 +6724,17 @@
       {
         "base_model": "Gemini-3-Pro-Preview",
         "defined_pair_count": 17,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.2533869755299454,
+        "ordered_pair_count": 17,
+        "pearson": -0.2172123217962279,
+        "spearman": -0.4338235294117648
+      },
+      {
+        "base_model": "Gemini-3-Pro-Preview",
+        "defined_pair_count": 17,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -5120,6 +6764,17 @@
         "ordered_pair_count": 17,
         "pearson": -0.5401683209727064,
         "spearman": -0.5839130885718776
+      },
+      {
+        "base_model": "Gemini-3-Pro-Preview",
+        "defined_pair_count": 17,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.3153882496340967,
+        "ordered_pair_count": 17,
+        "pearson": -0.3965708260736291,
+        "spearman": -0.6173664426046415
       },
       {
         "base_model": "GPT-3.5-Turbo-0125",
@@ -5157,6 +6812,17 @@
       {
         "base_model": "GPT-3.5-Turbo-0125",
         "defined_pair_count": 10,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": 0.9196196847598407,
+        "spearman": 0.8787878787878788
+      },
+      {
+        "base_model": "GPT-3.5-Turbo-0125",
+        "defined_pair_count": 10,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -5186,6 +6852,17 @@
         "ordered_pair_count": 10,
         "pearson": 0.9011289298630986,
         "spearman": 0.793939393939394
+      },
+      {
+        "base_model": "GPT-3.5-Turbo-0125",
+        "defined_pair_count": 10,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": 0.9351697569018481,
+        "spearman": 0.806060606060606
       },
       {
         "base_model": "GPT-3.5-Turbo-0125",
@@ -5223,6 +6900,17 @@
       {
         "base_model": "GPT-3.5-Turbo-0125",
         "defined_pair_count": 10,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": 0.9227021115306864,
+        "spearman": 0.8787878787878788
+      },
+      {
+        "base_model": "GPT-3.5-Turbo-0125",
+        "defined_pair_count": 10,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -5252,6 +6940,17 @@
         "ordered_pair_count": 10,
         "pearson": 0.8825671516538539,
         "spearman": 0.806060606060606
+      },
+      {
+        "base_model": "GPT-3.5-Turbo-0125",
+        "defined_pair_count": 10,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": 0.9298027870863911,
+        "spearman": 0.8424242424242424
       },
       {
         "base_model": "GPT-3.5-Turbo-0125",
@@ -5289,6 +6988,17 @@
       {
         "base_model": "GPT-3.5-Turbo-0125",
         "defined_pair_count": 10,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": 0.9330439767892965,
+        "spearman": 0.8787878787878788
+      },
+      {
+        "base_model": "GPT-3.5-Turbo-0125",
+        "defined_pair_count": 10,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -5318,6 +7028,17 @@
         "ordered_pair_count": 10,
         "pearson": 0.8755593731120903,
         "spearman": 0.806060606060606
+      },
+      {
+        "base_model": "GPT-3.5-Turbo-0125",
+        "defined_pair_count": 10,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 10,
+        "pearson": 0.900648932871607,
+        "spearman": 0.793939393939394
       },
       {
         "base_model": "GPT-4-0613",
@@ -5355,6 +7076,17 @@
       {
         "base_model": "GPT-4-0613",
         "defined_pair_count": 10,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.9936980318417242,
+        "ordered_pair_count": 10,
+        "pearson": -0.9019530123672296,
+        "spearman": -0.5878787878787879
+      },
+      {
+        "base_model": "GPT-4-0613",
+        "defined_pair_count": 10,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -5384,6 +7116,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.8822398682856678,
         "spearman": -0.806060606060606
+      },
+      {
+        "base_model": "GPT-4-0613",
+        "defined_pair_count": 10,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.944019394203121,
+        "ordered_pair_count": 10,
+        "pearson": -0.9074368865128313,
+        "spearman": -0.5878787878787879
       },
       {
         "base_model": "GPT-4-0613",
@@ -5421,6 +7164,17 @@
       {
         "base_model": "GPT-4-0613",
         "defined_pair_count": 10,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.9622430819787545,
+        "ordered_pair_count": 10,
+        "pearson": -0.9021324523023015,
+        "spearman": -0.5878787878787879
+      },
+      {
+        "base_model": "GPT-4-0613",
+        "defined_pair_count": 10,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -5450,6 +7204,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.8729210803961992,
         "spearman": -0.806060606060606
+      },
+      {
+        "base_model": "GPT-4-0613",
+        "defined_pair_count": 10,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.9883141663728963,
+        "ordered_pair_count": 10,
+        "pearson": -0.8998433395252678,
+        "spearman": -0.5878787878787879
       },
       {
         "base_model": "GPT-4-0613",
@@ -5487,6 +7252,17 @@
       {
         "base_model": "GPT-4-0613",
         "defined_pair_count": 10,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.9444025400121768,
+        "ordered_pair_count": 10,
+        "pearson": -0.37265153227228964,
+        "spearman": -0.38181818181818183
+      },
+      {
+        "base_model": "GPT-4-0613",
+        "defined_pair_count": 10,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -5516,6 +7292,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.5086288493975275,
         "spearman": -0.7691256413612886
+      },
+      {
+        "base_model": "GPT-4-0613",
+        "defined_pair_count": 10,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.83879915762661,
+        "ordered_pair_count": 10,
+        "pearson": -0.35469551480568756,
+        "spearman": -0.5502687515430357
       },
       {
         "base_model": "GPT-4-Turbo-2024-04-09",
@@ -5553,6 +7340,17 @@
       {
         "base_model": "GPT-4-Turbo-2024-04-09",
         "defined_pair_count": 15,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.6277902242192367,
+        "ordered_pair_count": 15,
+        "pearson": -0.757946632446017,
+        "spearman": -0.5607142857142857
+      },
+      {
+        "base_model": "GPT-4-Turbo-2024-04-09",
+        "defined_pair_count": 15,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -5582,6 +7380,17 @@
         "ordered_pair_count": 15,
         "pearson": -0.41457070669307855,
         "spearman": -0.06428571428571428
+      },
+      {
+        "base_model": "GPT-4-Turbo-2024-04-09",
+        "defined_pair_count": 15,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.587992249961184,
+        "ordered_pair_count": 15,
+        "pearson": -0.7907498267174432,
+        "spearman": -0.5678571428571428
       },
       {
         "base_model": "GPT-4-Turbo-2024-04-09",
@@ -5619,6 +7428,17 @@
       {
         "base_model": "GPT-4-Turbo-2024-04-09",
         "defined_pair_count": 15,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.6202166610295009,
+        "ordered_pair_count": 15,
+        "pearson": -0.7504318325464427,
+        "spearman": -0.5678571428571428
+      },
+      {
+        "base_model": "GPT-4-Turbo-2024-04-09",
+        "defined_pair_count": 15,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -5648,6 +7468,17 @@
         "ordered_pair_count": 15,
         "pearson": -0.40095787297678104,
         "spearman": -0.07142857142857142
+      },
+      {
+        "base_model": "GPT-4-Turbo-2024-04-09",
+        "defined_pair_count": 15,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.6330060788420636,
+        "ordered_pair_count": 15,
+        "pearson": -0.7596200216486093,
+        "spearman": -0.5214285714285715
       },
       {
         "base_model": "GPT-4-Turbo-2024-04-09",
@@ -5685,6 +7516,17 @@
       {
         "base_model": "GPT-4-Turbo-2024-04-09",
         "defined_pair_count": 15,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.6246332347912834,
+        "ordered_pair_count": 15,
+        "pearson": -0.20217337431709503,
+        "spearman": -0.2642857142857143
+      },
+      {
+        "base_model": "GPT-4-Turbo-2024-04-09",
+        "defined_pair_count": 15,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -5714,6 +7556,17 @@
         "ordered_pair_count": 15,
         "pearson": 0.2596592738397887,
         "spearman": 0.31626098147473286
+      },
+      {
+        "base_model": "GPT-4-Turbo-2024-04-09",
+        "defined_pair_count": 15,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": 0.7636259420217708,
+        "ordered_pair_count": 15,
+        "pearson": -0.017634043667683376,
+        "spearman": -0.16958922195021908
       },
       {
         "base_model": "GPT-4.1-2025-04-14",
@@ -5751,6 +7604,17 @@
       {
         "base_model": "GPT-4.1-2025-04-14",
         "defined_pair_count": 32,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 16,
+        "near_bi_pearson": -0.12528783173198066,
+        "ordered_pair_count": 32,
+        "pearson": -0.5676880289535252,
+        "spearman": -0.594941348973607
+      },
+      {
+        "base_model": "GPT-4.1-2025-04-14",
+        "defined_pair_count": 32,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 16,
@@ -5780,6 +7644,17 @@
         "ordered_pair_count": 32,
         "pearson": -0.5447734722299495,
         "spearman": -0.5113636363636362
+      },
+      {
+        "base_model": "GPT-4.1-2025-04-14",
+        "defined_pair_count": 32,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 16,
+        "near_bi_pearson": -0.25250503334684726,
+        "ordered_pair_count": 32,
+        "pearson": -0.7444559681447656,
+        "spearman": -0.7349706744868034
       },
       {
         "base_model": "GPT-4.1-2025-04-14",
@@ -5817,6 +7692,17 @@
       {
         "base_model": "GPT-4.1-2025-04-14",
         "defined_pair_count": 32,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 16,
+        "near_bi_pearson": -0.17480057667100418,
+        "ordered_pair_count": 32,
+        "pearson": -0.6159002839593132,
+        "spearman": -0.6425953079178884
+      },
+      {
+        "base_model": "GPT-4.1-2025-04-14",
+        "defined_pair_count": 32,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 16,
@@ -5846,6 +7732,17 @@
         "ordered_pair_count": 32,
         "pearson": -0.2511860778720269,
         "spearman": -0.21187683284457476
+      },
+      {
+        "base_model": "GPT-4.1-2025-04-14",
+        "defined_pair_count": 32,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 16,
+        "near_bi_pearson": -0.002625783992999069,
+        "ordered_pair_count": 32,
+        "pearson": -0.44632259679760883,
+        "spearman": -0.4805718475073313
       },
       {
         "base_model": "GPT-4.1-2025-04-14",
@@ -5883,6 +7780,17 @@
       {
         "base_model": "GPT-4.1-2025-04-14",
         "defined_pair_count": 32,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 16,
+        "near_bi_pearson": -0.22090059710884688,
+        "ordered_pair_count": 32,
+        "pearson": -0.5188007410434444,
+        "spearman": -0.5905425219941348
+      },
+      {
+        "base_model": "GPT-4.1-2025-04-14",
+        "defined_pair_count": 32,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 16,
@@ -5912,6 +7820,17 @@
         "ordered_pair_count": 32,
         "pearson": -0.32214838334567597,
         "spearman": -0.4496916253401427
+      },
+      {
+        "base_model": "GPT-4.1-2025-04-14",
+        "defined_pair_count": 32,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 16,
+        "near_bi_pearson": -0.5272367867995152,
+        "ordered_pair_count": 32,
+        "pearson": -0.5243636230902632,
+        "spearman": -0.7142517770571075
       },
       {
         "base_model": "GPT-4.5-Preview-2025-02-27",
@@ -5949,6 +7868,17 @@
       {
         "base_model": "GPT-4.5-Preview-2025-02-27",
         "defined_pair_count": 6,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.7152863109364921,
+        "ordered_pair_count": 6,
+        "pearson": -0.49923374030700696,
+        "spearman": -0.2571428571428571
+      },
+      {
+        "base_model": "GPT-4.5-Preview-2025-02-27",
+        "defined_pair_count": 6,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -5978,6 +7908,17 @@
         "ordered_pair_count": 6,
         "pearson": -0.830043406934883,
         "spearman": -0.3142857142857143
+      },
+      {
+        "base_model": "GPT-4.5-Preview-2025-02-27",
+        "defined_pair_count": 6,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.8219522555709463,
+        "ordered_pair_count": 6,
+        "pearson": -0.7771441406819255,
+        "spearman": -0.2
       },
       {
         "base_model": "GPT-4.5-Preview-2025-02-27",
@@ -6015,6 +7956,17 @@
       {
         "base_model": "GPT-4.5-Preview-2025-02-27",
         "defined_pair_count": 6,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.7543011750456035,
+        "ordered_pair_count": 6,
+        "pearson": -0.5797258817095289,
+        "spearman": -0.2571428571428571
+      },
+      {
+        "base_model": "GPT-4.5-Preview-2025-02-27",
+        "defined_pair_count": 6,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -6044,6 +7996,17 @@
         "ordered_pair_count": 6,
         "pearson": -0.5208894302099637,
         "spearman": -0.4857142857142857
+      },
+      {
+        "base_model": "GPT-4.5-Preview-2025-02-27",
+        "defined_pair_count": 6,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.5979294346828111,
+        "ordered_pair_count": 6,
+        "pearson": -0.30464367883612076,
+        "spearman": -0.2571428571428571
       },
       {
         "base_model": "GPT-4.5-Preview-2025-02-27",
@@ -6081,6 +8044,17 @@
       {
         "base_model": "GPT-4.5-Preview-2025-02-27",
         "defined_pair_count": 6,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.9924480701310497,
+        "ordered_pair_count": 6,
+        "pearson": 0.12909813504311224,
+        "spearman": -0.02857142857142857
+      },
+      {
+        "base_model": "GPT-4.5-Preview-2025-02-27",
+        "defined_pair_count": 6,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -6110,6 +8084,17 @@
         "ordered_pair_count": 6,
         "pearson": -0.09940075151496985,
         "spearman": -0.3718678720805473
+      },
+      {
+        "base_model": "GPT-4.5-Preview-2025-02-27",
+        "defined_pair_count": 6,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.1565858271546488,
+        "ordered_pair_count": 6,
+        "pearson": 0.23172284465610465,
+        "spearman": 0.10141851056742197
       },
       {
         "base_model": "GPT-4o-2024-05-13",
@@ -6147,6 +8132,17 @@
       {
         "base_model": "GPT-4o-2024-05-13",
         "defined_pair_count": 21,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.14993177235545113,
+        "ordered_pair_count": 21,
+        "pearson": -0.43763897517809497,
+        "spearman": 0.08181818181818182
+      },
+      {
+        "base_model": "GPT-4o-2024-05-13",
+        "defined_pair_count": 21,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -6176,6 +8172,17 @@
         "ordered_pair_count": 21,
         "pearson": 0.44194082924016387,
         "spearman": 0.5
+      },
+      {
+        "base_model": "GPT-4o-2024-05-13",
+        "defined_pair_count": 21,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.2251493086023821,
+        "ordered_pair_count": 21,
+        "pearson": -0.35145994064236097,
+        "spearman": 0.08701298701298701
       },
       {
         "base_model": "GPT-4o-2024-05-13",
@@ -6213,6 +8220,17 @@
       {
         "base_model": "GPT-4o-2024-05-13",
         "defined_pair_count": 21,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.17769589148673276,
+        "ordered_pair_count": 21,
+        "pearson": -0.4075581449446201,
+        "spearman": 0.09220779220779221
+      },
+      {
+        "base_model": "GPT-4o-2024-05-13",
+        "defined_pair_count": 21,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -6242,6 +8260,17 @@
         "ordered_pair_count": 21,
         "pearson": 0.36250531355315474,
         "spearman": 0.4805194805194805
+      },
+      {
+        "base_model": "GPT-4o-2024-05-13",
+        "defined_pair_count": 21,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.22081474755278363,
+        "ordered_pair_count": 21,
+        "pearson": -0.4583025212753211,
+        "spearman": 0.08181818181818182
       },
       {
         "base_model": "GPT-4o-2024-05-13",
@@ -6279,6 +8308,17 @@
       {
         "base_model": "GPT-4o-2024-05-13",
         "defined_pair_count": 21,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": 0.287434151320048,
+        "ordered_pair_count": 21,
+        "pearson": -0.07815877705378413,
+        "spearman": 0.2753246753246753
+      },
+      {
+        "base_model": "GPT-4o-2024-05-13",
+        "defined_pair_count": 21,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -6308,6 +8348,17 @@
         "ordered_pair_count": 21,
         "pearson": 0.54261230363651,
         "spearman": 0.4287399768467353
+      },
+      {
+        "base_model": "GPT-4o-2024-05-13",
+        "defined_pair_count": 21,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.4283685244376975,
+        "ordered_pair_count": 21,
+        "pearson": -0.044229466250669786,
+        "spearman": 0.01001728917866204
       },
       {
         "base_model": "GPT-4o-2024-11-20",
@@ -6345,6 +8396,17 @@
       {
         "base_model": "GPT-4o-2024-11-20",
         "defined_pair_count": 6,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": -0.22907954426983076,
+        "ordered_pair_count": 6,
+        "pearson": -0.9611145194787606,
+        "spearman": -0.8285714285714286
+      },
+      {
+        "base_model": "GPT-4o-2024-11-20",
+        "defined_pair_count": 6,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -6374,6 +8436,17 @@
         "ordered_pair_count": 6,
         "pearson": -0.7880752984763234,
         "spearman": -0.7714285714285715
+      },
+      {
+        "base_model": "GPT-4o-2024-11-20",
+        "defined_pair_count": 6,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": -0.6846627190490825,
+        "ordered_pair_count": 6,
+        "pearson": -0.9724156625137347,
+        "spearman": -0.8285714285714286
       },
       {
         "base_model": "GPT-4o-2024-11-20",
@@ -6411,6 +8484,17 @@
       {
         "base_model": "GPT-4o-2024-11-20",
         "defined_pair_count": 6,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": -0.4991431623181529,
+        "ordered_pair_count": 6,
+        "pearson": -0.9652646014867032,
+        "spearman": -0.7714285714285715
+      },
+      {
+        "base_model": "GPT-4o-2024-11-20",
+        "defined_pair_count": 6,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -6440,6 +8524,17 @@
         "ordered_pair_count": 6,
         "pearson": -0.8274526299307275,
         "spearman": -0.8285714285714286
+      },
+      {
+        "base_model": "GPT-4o-2024-11-20",
+        "defined_pair_count": 6,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": -0.3363708330933532,
+        "ordered_pair_count": 6,
+        "pearson": -0.955936450895403,
+        "spearman": -0.9428571428571428
       },
       {
         "base_model": "GPT-4o-2024-11-20",
@@ -6477,6 +8572,17 @@
       {
         "base_model": "GPT-4o-2024-11-20",
         "defined_pair_count": 6,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": -0.9515926112347631,
+        "ordered_pair_count": 6,
+        "pearson": -0.940934909706132,
+        "spearman": -0.9428571428571428
+      },
+      {
+        "base_model": "GPT-4o-2024-11-20",
+        "defined_pair_count": 6,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -6506,6 +8612,17 @@
         "ordered_pair_count": 6,
         "pearson": -0.8552746269560083,
         "spearman": -0.8285714285714286
+      },
+      {
+        "base_model": "GPT-4o-2024-11-20",
+        "defined_pair_count": 6,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": -0.8378571008928124,
+        "ordered_pair_count": 6,
+        "pearson": -0.7430982367631636,
+        "spearman": -0.9428571428571428
       },
       {
         "base_model": "GPT-5-2025-08-07",
@@ -6543,6 +8660,17 @@
       {
         "base_model": "GPT-5-2025-08-07",
         "defined_pair_count": 16,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": -0.8625965283420232,
+        "ordered_pair_count": 16,
+        "pearson": -0.4603374472961437,
+        "spearman": -0.6088235294117647
+      },
+      {
+        "base_model": "GPT-5-2025-08-07",
+        "defined_pair_count": 16,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 8,
@@ -6572,6 +8700,17 @@
         "ordered_pair_count": 16,
         "pearson": -0.6592538273044204,
         "spearman": -0.638235294117647
+      },
+      {
+        "base_model": "GPT-5-2025-08-07",
+        "defined_pair_count": 16,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": -0.7780469046154491,
+        "ordered_pair_count": 16,
+        "pearson": -0.6661462692155116,
+        "spearman": -0.7617647058823529
       },
       {
         "base_model": "GPT-5-2025-08-07",
@@ -6609,6 +8748,17 @@
       {
         "base_model": "GPT-5-2025-08-07",
         "defined_pair_count": 16,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": -0.8553074422648547,
+        "ordered_pair_count": 16,
+        "pearson": -0.527562067701481,
+        "spearman": -0.6852941176470588
+      },
+      {
+        "base_model": "GPT-5-2025-08-07",
+        "defined_pair_count": 16,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 8,
@@ -6638,6 +8788,17 @@
         "ordered_pair_count": 16,
         "pearson": -0.4371565331303595,
         "spearman": -0.47941176470588237
+      },
+      {
+        "base_model": "GPT-5-2025-08-07",
+        "defined_pair_count": 16,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": -0.798373612411041,
+        "ordered_pair_count": 16,
+        "pearson": -0.35847189914096633,
+        "spearman": -0.5264705882352941
       },
       {
         "base_model": "GPT-5-2025-08-07",
@@ -6675,6 +8836,17 @@
       {
         "base_model": "GPT-5-2025-08-07",
         "defined_pair_count": 16,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": -0.8018555302073438,
+        "ordered_pair_count": 16,
+        "pearson": -0.6465688485706599,
+        "spearman": -0.6441176470588236
+      },
+      {
+        "base_model": "GPT-5-2025-08-07",
+        "defined_pair_count": 16,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 8,
@@ -6704,6 +8876,17 @@
         "ordered_pair_count": 16,
         "pearson": -0.5458703223364527,
         "spearman": -0.6117169291188902
+      },
+      {
+        "base_model": "GPT-5-2025-08-07",
+        "defined_pair_count": 16,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 8,
+        "near_bi_pearson": -0.5647899506838299,
+        "ordered_pair_count": 16,
+        "pearson": -0.5026010231164639,
+        "spearman": -0.706347172297503
       },
       {
         "base_model": "GPT-5-Mini-2025-08-07",
@@ -6741,6 +8924,17 @@
       {
         "base_model": "GPT-5-Mini-2025-08-07",
         "defined_pair_count": 20,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.48518705424736047,
+        "ordered_pair_count": 20,
+        "pearson": -0.3673065747960557,
+        "spearman": -0.637593984962406
+      },
+      {
+        "base_model": "GPT-5-Mini-2025-08-07",
+        "defined_pair_count": 20,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -6770,6 +8964,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.58901929726706,
         "spearman": -0.5849624060150376
+      },
+      {
+        "base_model": "GPT-5-Mini-2025-08-07",
+        "defined_pair_count": 20,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.45219202994066726,
+        "ordered_pair_count": 20,
+        "pearson": -0.6453336300111929,
+        "spearman": -0.7654135338345864
       },
       {
         "base_model": "GPT-5-Mini-2025-08-07",
@@ -6807,6 +9012,17 @@
       {
         "base_model": "GPT-5-Mini-2025-08-07",
         "defined_pair_count": 20,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.46010566249896956,
+        "ordered_pair_count": 20,
+        "pearson": -0.4260590850180837,
+        "spearman": -0.6556390977443609
+      },
+      {
+        "base_model": "GPT-5-Mini-2025-08-07",
+        "defined_pair_count": 20,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -6836,6 +9052,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.27559323232226624,
         "spearman": -0.3804511278195489
+      },
+      {
+        "base_model": "GPT-5-Mini-2025-08-07",
+        "defined_pair_count": 20,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.5245988907879434,
+        "ordered_pair_count": 20,
+        "pearson": -0.28055394502954223,
+        "spearman": -0.6105263157894737
       },
       {
         "base_model": "GPT-5-Mini-2025-08-07",
@@ -6873,6 +9100,17 @@
       {
         "base_model": "GPT-5-Mini-2025-08-07",
         "defined_pair_count": 20,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.5518360574251129,
+        "ordered_pair_count": 20,
+        "pearson": -0.45806007135450244,
+        "spearman": -0.6451127819548872
+      },
+      {
+        "base_model": "GPT-5-Mini-2025-08-07",
+        "defined_pair_count": 20,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 11,
@@ -6902,6 +9140,17 @@
         "ordered_pair_count": 20,
         "pearson": -0.3520013075114868,
         "spearman": -0.48966576722586014
+      },
+      {
+        "base_model": "GPT-5-Mini-2025-08-07",
+        "defined_pair_count": 20,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 11,
+        "near_bi_pearson": -0.49852810154082206,
+        "ordered_pair_count": 20,
+        "pearson": -0.37716296528847315,
+        "spearman": -0.780749576859257
       },
       {
         "base_model": "GPT-5-Nano-2025-08-07",
@@ -6939,6 +9188,17 @@
       {
         "base_model": "GPT-5-Nano-2025-08-07",
         "defined_pair_count": 20,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": -0.1733097824849061,
+        "ordered_pair_count": 20,
+        "pearson": -0.4993036176690567,
+        "spearman": -0.47969924812030074
+      },
+      {
+        "base_model": "GPT-5-Nano-2025-08-07",
+        "defined_pair_count": 20,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 12,
@@ -6968,6 +9228,17 @@
         "ordered_pair_count": 20,
         "pearson": 0.3816086642195716,
         "spearman": 0.4105263157894737
+      },
+      {
+        "base_model": "GPT-5-Nano-2025-08-07",
+        "defined_pair_count": 20,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": 0.049145054966131835,
+        "ordered_pair_count": 20,
+        "pearson": -0.5456221608873124,
+        "spearman": -0.4195488721804511
       },
       {
         "base_model": "GPT-5-Nano-2025-08-07",
@@ -7005,6 +9276,17 @@
       {
         "base_model": "GPT-5-Nano-2025-08-07",
         "defined_pair_count": 20,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": -0.0755798951773529,
+        "ordered_pair_count": 20,
+        "pearson": -0.4889635444822118,
+        "spearman": -0.47969924812030074
+      },
+      {
+        "base_model": "GPT-5-Nano-2025-08-07",
+        "defined_pair_count": 20,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 12,
@@ -7034,6 +9316,17 @@
         "ordered_pair_count": 20,
         "pearson": 0.2595344123630386,
         "spearman": 0.2796992481203007
+      },
+      {
+        "base_model": "GPT-5-Nano-2025-08-07",
+        "defined_pair_count": 20,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": -0.28013586876091245,
+        "ordered_pair_count": 20,
+        "pearson": -0.5333892409365752,
+        "spearman": -0.5218045112781955
       },
       {
         "base_model": "GPT-5-Nano-2025-08-07",
@@ -7071,6 +9364,17 @@
       {
         "base_model": "GPT-5-Nano-2025-08-07",
         "defined_pair_count": 20,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": -0.07566367979837806,
+        "ordered_pair_count": 20,
+        "pearson": -0.43242303188523074,
+        "spearman": -0.47218045112781953
+      },
+      {
+        "base_model": "GPT-5-Nano-2025-08-07",
+        "defined_pair_count": 20,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 12,
@@ -7100,6 +9404,17 @@
         "ordered_pair_count": 20,
         "pearson": 0.20307846668797228,
         "spearman": 0.2756027221871807
+      },
+      {
+        "base_model": "GPT-5-Nano-2025-08-07",
+        "defined_pair_count": 20,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": -0.12083340878686374,
+        "ordered_pair_count": 20,
+        "pearson": -0.47820041312584455,
+        "spearman": -0.5677717282216783
       },
       {
         "base_model": "GPT-5.1-2025-11-13",
@@ -7137,6 +9452,17 @@
       {
         "base_model": "GPT-5.1-2025-11-13",
         "defined_pair_count": 17,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.8592563677623529,
+        "ordered_pair_count": 17,
+        "pearson": 0.16666398095157045,
+        "spearman": -0.06127450980392158
+      },
+      {
+        "base_model": "GPT-5.1-2025-11-13",
+        "defined_pair_count": 17,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -7166,6 +9492,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.6581360171980797,
         "spearman": 0.5171568627450981
+      },
+      {
+        "base_model": "GPT-5.1-2025-11-13",
+        "defined_pair_count": 17,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.9865696272786433,
+        "ordered_pair_count": 17,
+        "pearson": 0.2332493955076277,
+        "spearman": 0.04901960784313726
       },
       {
         "base_model": "GPT-5.1-2025-11-13",
@@ -7203,6 +9540,17 @@
       {
         "base_model": "GPT-5.1-2025-11-13",
         "defined_pair_count": 17,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.8619505070954983,
+        "ordered_pair_count": 17,
+        "pearson": 0.19593637741929357,
+        "spearman": -0.05392156862745099
+      },
+      {
+        "base_model": "GPT-5.1-2025-11-13",
+        "defined_pair_count": 17,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -7232,6 +9580,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.47104205775609553,
         "spearman": 0.34803921568627455
+      },
+      {
+        "base_model": "GPT-5.1-2025-11-13",
+        "defined_pair_count": 17,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.8071502994421195,
+        "ordered_pair_count": 17,
+        "pearson": 0.13085013105636592,
+        "spearman": -0.03921568627450981
       },
       {
         "base_model": "GPT-5.1-2025-11-13",
@@ -7269,6 +9628,17 @@
       {
         "base_model": "GPT-5.1-2025-11-13",
         "defined_pair_count": 17,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": -0.0661426150176194,
+        "ordered_pair_count": 17,
+        "pearson": -0.10846912046494951,
+        "spearman": -0.1519607843137255
+      },
+      {
+        "base_model": "GPT-5.1-2025-11-13",
+        "defined_pair_count": 17,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 5,
@@ -7298,6 +9668,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.43724197819995175,
         "spearman": 0.37500000000000006
+      },
+      {
+        "base_model": "GPT-5.1-2025-11-13",
+        "defined_pair_count": 17,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 5,
+        "near_bi_pearson": 0.9988389770547931,
+        "ordered_pair_count": 17,
+        "pearson": -0.038377603437948334,
+        "spearman": -0.1127450980392157
       },
       {
         "base_model": "Kimi-K2-Instruct",
@@ -7335,6 +9716,17 @@
       {
         "base_model": "Kimi-K2-Instruct",
         "defined_pair_count": 18,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": 0.23940832638712,
+        "ordered_pair_count": 18,
+        "pearson": -0.4277825124326827,
+        "spearman": -0.4736842105263157
+      },
+      {
+        "base_model": "Kimi-K2-Instruct",
+        "defined_pair_count": 18,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -7364,6 +9756,17 @@
         "ordered_pair_count": 18,
         "pearson": -0.010130492167590427,
         "spearman": 0.11248710010319916
+      },
+      {
+        "base_model": "Kimi-K2-Instruct",
+        "defined_pair_count": 18,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": 0.23630106268040368,
+        "ordered_pair_count": 18,
+        "pearson": -0.4761172449498852,
+        "spearman": -0.4860681114551083
       },
       {
         "base_model": "Kimi-K2-Instruct",
@@ -7401,6 +9804,17 @@
       {
         "base_model": "Kimi-K2-Instruct",
         "defined_pair_count": 18,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": 0.23628400308455577,
+        "ordered_pair_count": 18,
+        "pearson": -0.4515307787500801,
+        "spearman": -0.4530443756449948
+      },
+      {
+        "base_model": "Kimi-K2-Instruct",
+        "defined_pair_count": 18,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -7430,6 +9844,17 @@
         "ordered_pair_count": 18,
         "pearson": 0.07255206442427865,
         "spearman": 0.10216718266253869
+      },
+      {
+        "base_model": "Kimi-K2-Instruct",
+        "defined_pair_count": 18,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": 0.24370489213396657,
+        "ordered_pair_count": 18,
+        "pearson": -0.39245354291857854,
+        "spearman": -0.4489164086687306
       },
       {
         "base_model": "Kimi-K2-Instruct",
@@ -7467,6 +9892,17 @@
       {
         "base_model": "Kimi-K2-Instruct",
         "defined_pair_count": 18,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": 0.21905875631240254,
+        "ordered_pair_count": 18,
+        "pearson": -0.3376048804991045,
+        "spearman": -0.4014447884416924
+      },
+      {
+        "base_model": "Kimi-K2-Instruct",
+        "defined_pair_count": 18,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 9,
@@ -7496,6 +9932,17 @@
         "ordered_pair_count": 18,
         "pearson": 0.09290264346425924,
         "spearman": -0.053942634303240033
+      },
+      {
+        "base_model": "Kimi-K2-Instruct",
+        "defined_pair_count": 18,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 9,
+        "near_bi_pearson": -0.27320818231824884,
+        "ordered_pair_count": 18,
+        "pearson": -0.412352910387279,
+        "spearman": -0.6255270862471873
       },
       {
         "base_model": "Kimi-K2-Instruct-0905",
@@ -7533,6 +9980,17 @@
       {
         "base_model": "Kimi-K2-Instruct-0905",
         "defined_pair_count": 19,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": 0.43502560081964553,
+        "ordered_pair_count": 19,
+        "pearson": -0.057823017935179924,
+        "spearman": -0.22456140350877188
+      },
+      {
+        "base_model": "Kimi-K2-Instruct-0905",
+        "defined_pair_count": 19,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 12,
@@ -7562,6 +10020,17 @@
         "ordered_pair_count": 19,
         "pearson": 0.33399361600714567,
         "spearman": 0.375438596491228
+      },
+      {
+        "base_model": "Kimi-K2-Instruct-0905",
+        "defined_pair_count": 19,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": 0.5305651284134209,
+        "ordered_pair_count": 19,
+        "pearson": -0.22336963629073295,
+        "spearman": -0.18947368421052627
       },
       {
         "base_model": "Kimi-K2-Instruct-0905",
@@ -7599,6 +10068,17 @@
       {
         "base_model": "Kimi-K2-Instruct-0905",
         "defined_pair_count": 19,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": 0.4370098315033203,
+        "ordered_pair_count": 19,
+        "pearson": -0.10915687170072669,
+        "spearman": -0.21929824561403505
+      },
+      {
+        "base_model": "Kimi-K2-Instruct-0905",
+        "defined_pair_count": 19,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 12,
@@ -7628,6 +10108,17 @@
         "ordered_pair_count": 19,
         "pearson": 0.4868291183286995,
         "spearman": 0.43157894736842095
+      },
+      {
+        "base_model": "Kimi-K2-Instruct-0905",
+        "defined_pair_count": 19,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": 0.3913732467705382,
+        "ordered_pair_count": 19,
+        "pearson": 0.014481457535732486,
+        "spearman": -0.19473684210526312
       },
       {
         "base_model": "Kimi-K2-Instruct-0905",
@@ -7665,6 +10156,17 @@
       {
         "base_model": "Kimi-K2-Instruct-0905",
         "defined_pair_count": 19,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": 0.33644434214395696,
+        "ordered_pair_count": 19,
+        "pearson": 0.06576096754261462,
+        "spearman": -0.18070175438596486
+      },
+      {
+        "base_model": "Kimi-K2-Instruct-0905",
+        "defined_pair_count": 19,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 12,
@@ -7694,6 +10196,17 @@
         "ordered_pair_count": 19,
         "pearson": 0.1944698584449025,
         "spearman": 0.24680059613823357
+      },
+      {
+        "base_model": "Kimi-K2-Instruct-0905",
+        "defined_pair_count": 19,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 12,
+        "near_bi_pearson": -0.06665627041317175,
+        "ordered_pair_count": 19,
+        "pearson": -0.26987993155671774,
+        "spearman": -0.349262937495262
       },
       {
         "base_model": "Kimi-K2-Thinking",
@@ -7731,6 +10244,17 @@
       {
         "base_model": "Kimi-K2-Thinking",
         "defined_pair_count": 17,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 17,
+        "pearson": 0.568777617030295,
+        "spearman": 0.4852941176470589
+      },
+      {
+        "base_model": "Kimi-K2-Thinking",
+        "defined_pair_count": 17,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -7760,6 +10284,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.6942961892257711,
         "spearman": 0.5490196078431373
+      },
+      {
+        "base_model": "Kimi-K2-Thinking",
+        "defined_pair_count": 17,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 17,
+        "pearson": 0.6972665793659782,
+        "spearman": 0.5686274509803922
       },
       {
         "base_model": "Kimi-K2-Thinking",
@@ -7797,6 +10332,17 @@
       {
         "base_model": "Kimi-K2-Thinking",
         "defined_pair_count": 17,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 17,
+        "pearson": 0.6037004360979406,
+        "spearman": 0.5294117647058825
+      },
+      {
+        "base_model": "Kimi-K2-Thinking",
+        "defined_pair_count": 17,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -7826,6 +10372,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.5432936989026287,
         "spearman": 0.4779411764705883
+      },
+      {
+        "base_model": "Kimi-K2-Thinking",
+        "defined_pair_count": 17,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 17,
+        "pearson": 0.5072596601045174,
+        "spearman": 0.48039215686274517
       },
       {
         "base_model": "Kimi-K2-Thinking",
@@ -7863,6 +10420,17 @@
       {
         "base_model": "Kimi-K2-Thinking",
         "defined_pair_count": 17,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 17,
+        "pearson": 0.36030077505610164,
+        "spearman": 0.2671568627450981
+      },
+      {
+        "base_model": "Kimi-K2-Thinking",
+        "defined_pair_count": 17,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 0,
@@ -7892,6 +10460,17 @@
         "ordered_pair_count": 17,
         "pearson": 0.4443546268366078,
         "spearman": 0.3088235294117648
+      },
+      {
+        "base_model": "Kimi-K2-Thinking",
+        "defined_pair_count": 17,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 0,
+        "near_bi_pearson": null,
+        "ordered_pair_count": 17,
+        "pearson": 0.3783137084567121,
+        "spearman": 0.2916666666666667
       },
       {
         "base_model": "Qwen1.5-110B-Chat",
@@ -7929,6 +10508,17 @@
       {
         "base_model": "Qwen1.5-110B-Chat",
         "defined_pair_count": 10,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.7212873223029724,
+        "ordered_pair_count": 10,
+        "pearson": -0.828416074959377,
+        "spearman": -0.10303030303030303
+      },
+      {
+        "base_model": "Qwen1.5-110B-Chat",
+        "defined_pair_count": 10,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -7958,6 +10548,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.7192122353433992,
         "spearman": -0.16363636363636364
+      },
+      {
+        "base_model": "Qwen1.5-110B-Chat",
+        "defined_pair_count": 10,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.6127178241522897,
+        "ordered_pair_count": 10,
+        "pearson": -0.8287285607490644,
+        "spearman": -0.10303030303030303
       },
       {
         "base_model": "Qwen1.5-110B-Chat",
@@ -7995,6 +10596,17 @@
       {
         "base_model": "Qwen1.5-110B-Chat",
         "defined_pair_count": 10,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.6819843774347686,
+        "ordered_pair_count": 10,
+        "pearson": -0.82625883396763,
+        "spearman": -0.10303030303030303
+      },
+      {
+        "base_model": "Qwen1.5-110B-Chat",
+        "defined_pair_count": 10,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -8024,6 +10636,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.7241743081382033,
         "spearman": -0.16363636363636364
+      },
+      {
+        "base_model": "Qwen1.5-110B-Chat",
+        "defined_pair_count": 10,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.7211068165957386,
+        "ordered_pair_count": 10,
+        "pearson": -0.8118361597650502,
+        "spearman": -0.10303030303030303
       },
       {
         "base_model": "Qwen1.5-110B-Chat",
@@ -8061,6 +10684,17 @@
       {
         "base_model": "Qwen1.5-110B-Chat",
         "defined_pair_count": 10,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.5736309927508352,
+        "ordered_pair_count": 10,
+        "pearson": -0.39753137586982906,
+        "spearman": -0.11515151515151516
+      },
+      {
+        "base_model": "Qwen1.5-110B-Chat",
+        "defined_pair_count": 10,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 4,
@@ -8090,6 +10724,17 @@
         "ordered_pair_count": 10,
         "pearson": -0.08488592870655742,
         "spearman": 0.012506107989614448
+      },
+      {
+        "base_model": "Qwen1.5-110B-Chat",
+        "defined_pair_count": 10,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 4,
+        "near_bi_pearson": 0.5007195996282195,
+        "ordered_pair_count": 10,
+        "pearson": -0.24243664269792328,
+        "spearman": 0.06878359394287946
       },
       {
         "base_model": "Qwen2.5-72B-Instruct-Turbo",
@@ -8127,6 +10772,17 @@
       {
         "base_model": "Qwen2.5-72B-Instruct-Turbo",
         "defined_pair_count": 9,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.33396105817311755,
+        "ordered_pair_count": 9,
+        "pearson": 0.5422433648762074,
+        "spearman": 0.5833333333333333
+      },
+      {
+        "base_model": "Qwen2.5-72B-Instruct-Turbo",
+        "defined_pair_count": 9,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -8156,6 +10812,17 @@
         "ordered_pair_count": 9,
         "pearson": 0.6119579891262258,
         "spearman": 0.7166666666666666
+      },
+      {
+        "base_model": "Qwen2.5-72B-Instruct-Turbo",
+        "defined_pair_count": 9,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.26563316669285914,
+        "ordered_pair_count": 9,
+        "pearson": 0.48277831311218367,
+        "spearman": 0.5833333333333333
       },
       {
         "base_model": "Qwen2.5-72B-Instruct-Turbo",
@@ -8193,6 +10860,17 @@
       {
         "base_model": "Qwen2.5-72B-Instruct-Turbo",
         "defined_pair_count": 9,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.3519787803637344,
+        "ordered_pair_count": 9,
+        "pearson": 0.5316895525593174,
+        "spearman": 0.5833333333333333
+      },
+      {
+        "base_model": "Qwen2.5-72B-Instruct-Turbo",
+        "defined_pair_count": 9,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -8222,6 +10900,17 @@
         "ordered_pair_count": 9,
         "pearson": 0.6499731974998118,
         "spearman": 0.7166666666666666
+      },
+      {
+        "base_model": "Qwen2.5-72B-Instruct-Turbo",
+        "defined_pair_count": 9,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.24641696974965172,
+        "ordered_pair_count": 9,
+        "pearson": 0.5126254406538909,
+        "spearman": 0.5833333333333333
       },
       {
         "base_model": "Qwen2.5-72B-Instruct-Turbo",
@@ -8259,6 +10948,17 @@
       {
         "base_model": "Qwen2.5-72B-Instruct-Turbo",
         "defined_pair_count": 9,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": 0.23930706500447335,
+        "ordered_pair_count": 9,
+        "pearson": 0.6313241572355258,
+        "spearman": 0.44999999999999996
+      },
+      {
+        "base_model": "Qwen2.5-72B-Instruct-Turbo",
+        "defined_pair_count": 9,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 3,
@@ -8288,6 +10988,17 @@
         "ordered_pair_count": 9,
         "pearson": 0.7378607368614287,
         "spearman": 0.6443571047419068
+      },
+      {
+        "base_model": "Qwen2.5-72B-Instruct-Turbo",
+        "defined_pair_count": 9,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 3,
+        "near_bi_pearson": -0.13792829624765374,
+        "ordered_pair_count": 9,
+        "pearson": 0.6289138947777686,
+        "spearman": 0.54393781569122
       },
       {
         "base_model": "Qwen3-235B-A22B-Fp8-Tput",
@@ -8325,6 +11036,17 @@
       {
         "base_model": "Qwen3-235B-A22B-Fp8-Tput",
         "defined_pair_count": 28,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.18855154672425073,
+        "ordered_pair_count": 28,
+        "pearson": 0.3240339693586314,
+        "spearman": 0.24247400109469078
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Fp8-Tput",
+        "defined_pair_count": 28,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -8354,6 +11076,17 @@
         "ordered_pair_count": 28,
         "pearson": -0.10959805168337074,
         "spearman": -0.12205801860974276
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Fp8-Tput",
+        "defined_pair_count": 28,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.2509096560832982,
+        "ordered_pair_count": 28,
+        "pearson": 0.2383064648727293,
+        "spearman": 0.22769567597153806
       },
       {
         "base_model": "Qwen3-235B-A22B-Fp8-Tput",
@@ -8391,6 +11124,17 @@
       {
         "base_model": "Qwen3-235B-A22B-Fp8-Tput",
         "defined_pair_count": 28,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.2279930380256254,
+        "ordered_pair_count": 28,
+        "pearson": 0.3070274977489582,
+        "spearman": 0.22276956759715383
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Fp8-Tput",
+        "defined_pair_count": 28,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -8420,6 +11164,17 @@
         "ordered_pair_count": 28,
         "pearson": -0.10551616992074117,
         "spearman": -0.14121510673234813
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Fp8-Tput",
+        "defined_pair_count": 28,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.1667066122107966,
+        "ordered_pair_count": 28,
+        "pearson": 0.3355876325574298,
+        "spearman": 0.23645320197044337
       },
       {
         "base_model": "Qwen3-235B-A22B-Fp8-Tput",
@@ -8457,6 +11212,17 @@
       {
         "base_model": "Qwen3-235B-A22B-Fp8-Tput",
         "defined_pair_count": 28,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.028934168434581884,
+        "ordered_pair_count": 28,
+        "pearson": 0.35638698592736756,
+        "spearman": 0.2359058565955118
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Fp8-Tput",
+        "defined_pair_count": 28,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 10,
@@ -8486,6 +11252,17 @@
         "ordered_pair_count": 28,
         "pearson": -0.1935715304555265,
         "spearman": -0.2756922292164033
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Fp8-Tput",
+        "defined_pair_count": 28,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 10,
+        "near_bi_pearson": -0.5080444587078018,
+        "ordered_pair_count": 28,
+        "pearson": 0.29732820086298234,
+        "spearman": 0.1477118405046137
       },
       {
         "base_model": "Qwen3-235B-A22B-Thinking-2507",
@@ -8523,6 +11300,17 @@
       {
         "base_model": "Qwen3-235B-A22B-Thinking-2507",
         "defined_pair_count": 19,
+        "method": "ec_w0_56",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": -0.49125535662880465,
+        "ordered_pair_count": 19,
+        "pearson": -0.7665996812909947,
+        "spearman": -0.7245614035087717
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Thinking-2507",
+        "defined_pair_count": 19,
         "method": "simple_mean",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -8552,6 +11340,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.6328999426223143,
         "spearman": -0.507017543859649
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Thinking-2507",
+        "defined_pair_count": 19,
+        "method": "simple_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": -0.4734410088467562,
+        "ordered_pair_count": 19,
+        "pearson": -0.8074937436255206,
+        "spearman": -0.6859649122807017
       },
       {
         "base_model": "Qwen3-235B-A22B-Thinking-2507",
@@ -8589,6 +11388,17 @@
       {
         "base_model": "Qwen3-235B-A22B-Thinking-2507",
         "defined_pair_count": 19,
+        "method": "log_odds_mean",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": -0.5588846765919188,
+        "ordered_pair_count": 19,
+        "pearson": -0.7733439416147083,
+        "spearman": -0.7087719298245613
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Thinking-2507",
+        "defined_pair_count": 19,
         "method": "piecewise_odds",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -8618,6 +11428,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.5834576137811889,
         "spearman": -0.5175438596491228
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Thinking-2507",
+        "defined_pair_count": 19,
+        "method": "piecewise_odds",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": -0.28677200502320993,
+        "ordered_pair_count": 19,
+        "pearson": -0.734106270849793,
+        "spearman": -0.7105263157894736
       },
       {
         "base_model": "Qwen3-235B-A22B-Thinking-2507",
@@ -8655,6 +11476,17 @@
       {
         "base_model": "Qwen3-235B-A22B-Thinking-2507",
         "defined_pair_count": 19,
+        "method": "cf_directional",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": -0.442827568400046,
+        "ordered_pair_count": 19,
+        "pearson": -0.7196005386130049,
+        "spearman": -0.7771929824561402
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Thinking-2507",
+        "defined_pair_count": 19,
         "method": "best_single",
         "metric": "adjusted_pog",
         "near_bi_pair_count": 6,
@@ -8684,6 +11516,17 @@
         "ordered_pair_count": 19,
         "pearson": -0.6869036933367151,
         "spearman": -0.6473684210526315
+      },
+      {
+        "base_model": "Qwen3-235B-A22B-Thinking-2507",
+        "defined_pair_count": 19,
+        "method": "best_single",
+        "metric": "total_variation",
+        "near_bi_pair_count": 6,
+        "near_bi_pearson": -0.5548369232314941,
+        "ordered_pair_count": 19,
+        "pearson": -0.77674081359743,
+        "spearman": -0.7859649122807016
       }
     ],
     "fold_views": {
@@ -8816,7 +11659,7 @@
     },
     "pair_eligibility": "reuse the released six-family cross-fit eligible pair universe",
     "pair_payload": "site/public/data/pair-aggregation/all-six-family-pairs.json",
-    "pair_payload_sha256": "7481e8a4984595fb714bcb274e3954b5f8181e1b06d659f5a74cac37262185dd",
+    "pair_payload_sha256": "e31bc332f899201c6eabec5e67f6c5c4e3bd718ffb3c7efe46708c9b524a9e16",
     "panel": "data/build/scored_panel_model_versions.csv",
     "panel_sha256": "7b9ce08cd0e881ea111d15aa429a5c733d3f8b48c5dce88245afbbeb7df131c5"
   },

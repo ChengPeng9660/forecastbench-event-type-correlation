@@ -578,6 +578,15 @@ def build_payload(
             "threshold_bi_points": 2.0,
             "definition": "absolute train/common-support BI gap between Polymarket Freeze and model <= 2.0 points",
         },
+        "diversity_metrics": {
+            "total_variation": {
+                "label": "Total variation (TV)",
+                "formula": "mean(abs(p_freeze - p_model)) on original paired Bernoulli probabilities",
+                "range": [0.0, 1.0],
+                "higher_is_more_diverse": True,
+                "cross_fit_support": "training keys only",
+            },
+        },
         "provenance": {
             "panel": str(panel_path),
             "panel_sha256": sha256_file(panel_path),

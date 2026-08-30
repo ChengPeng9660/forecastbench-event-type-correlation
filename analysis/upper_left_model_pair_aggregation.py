@@ -56,6 +56,7 @@ METHOD_LABELS = {
     "piecewise_odds": "Piecewise Odds",
 }
 METRICS = (
+    "total_variation",
     "prediction_diversity",
     "adjusted_pog",
     "high_loss_diversity",
@@ -125,6 +126,7 @@ def _diversity(
     )
     dependence = dependence_support(first, second, keys, 2.0, 0.25)
     return {
+        "total_variation": dependence["metrics"]["total_variation"]["complementarity"],
         "prediction_diversity": None if prediction_reason else 1 - prediction_r,
         "adjusted_pog": dependence["metrics"]["adjusted_pog"]["complementarity"],
         "high_loss_diversity": dependence["metrics"]["high_loss_lift"]["complementarity"],
@@ -501,6 +503,13 @@ def build_payload(
         ),
         "methods": [{"id": method, "label": METHOD_LABELS[method]} for method in METHODS],
         "metrics": {
+            "total_variation": {
+                "label": "Total variation (TV)",
+                "axis": "Mean |p_a − p_b|",
+                "formula": "mean(abs(p_a - p_b)) on original paired Bernoulli probabilities",
+                "range": [0.0, 1.0],
+                "higher_is_more_diverse": True,
+            },
             "prediction_diversity": {
                 "label": "Prediction diversity",
                 "axis": "1 − prediction-level Pearson r",

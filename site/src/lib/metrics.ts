@@ -4,6 +4,7 @@ export const MODEL_DEPENDENCE_DIRECTION: Record<MetricId, "higher" | "lower"> = 
   adjusted_pog: "lower",
   high_loss_lift: "higher",
   adjusted_loss_corr: "higher",
+  total_variation: "lower",
 };
 
 export function orientMetricToDependence(metric: MetricDefinition): MetricDefinition {

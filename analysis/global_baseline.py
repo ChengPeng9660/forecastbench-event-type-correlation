@@ -83,6 +83,7 @@ PAIR_MATRIX_FIELDS = [
     "model_a_id", "model_b_id", "n_overlap", "n_dates", "eligible", "near_bi",
     "bi_reason", "insufficient_overlap_reason", "adjusted_pog", "pog_reason",
     "high_loss_lift", "lift_reason", "adjusted_loss_corr", "corr_reason",
+    "total_variation", "tv_reason",
 ]
 PAIR_STABILITY_FIELDS = [
     "global_scope", "comparison_mode", "topic_id", "metric_id", "sample_id", "n_pair_universe",
@@ -481,6 +482,7 @@ def stream_global_inputs(
             observation = Observation(
                 date=date, source=source, event_id=event_id, horizon=raw["horizon"].strip(),
                 origin_type=taxon.origin_type, adjusted_brier=loss,
+                prediction=float(raw["prediction"]) if raw.get("prediction", "").strip() else None,
             )
             slices = [("global_scope", "official_full")]
             if taxon.topic_analysis_eligible and taxon.topic_id in TOPICS:
@@ -561,6 +563,8 @@ def subtract_pair_accumulator(
     result.sum_a = total.sum_a - removed.sum_a
     result.sum_b = total.sum_b - removed.sum_b
     result.sum_min = total.sum_min - removed.sum_min
+    result.sum_tv = max(0.0, total.sum_tv - removed.sum_tv)
+    result.n_tv_observations = total.n_tv_observations - removed.n_tv_observations
     result.high_a = total.high_a - removed.high_a
     result.high_b = total.high_b - removed.high_b
     result.high_both = total.high_both - removed.high_both
@@ -703,6 +707,7 @@ def pair_matrix_values(row: Mapping[str, Any]) -> list[Any]:
         metric_value(row, "adjusted_pog"), _null_if_blank(row.get("pog_reason")),
         metric_value(row, "high_loss_lift"), _null_if_blank(row.get("lift_reason")),
         metric_value(row, "adjusted_loss_corr"), _null_if_blank(row.get("corr_reason")),
+        metric_value(row, "total_variation"), _null_if_blank(row.get("tv_reason")),
     ]
     if values[4] is None:
         raise ValueError("pair eligible must be explicitly true or false")

@@ -10,6 +10,7 @@ from analysis.polymarket_aggregation import (
     BASELINE_NAME,
     add_reference_gains,
     build_freeze_panel,
+    point_from_support,
     read_freeze_snapshots,
 )
 
@@ -217,3 +218,19 @@ def test_reference_gains_use_polymarket_and_model_denominators() -> None:
         assert result["gain_fraction_vs_model"][method] == pytest.approx(
             (0.25 - method_briers[method]) / 0.25
         )
+
+
+def test_market_pair_tv_is_original_probability_distance_on_exact_support() -> None:
+    keys = [("2026-01-01", "polymarket", f"event-{index}", "") for index in range(3)]
+    market = {
+        key: _model_row(date=key[0], event_id=key[2], horizon="", model_name=BASELINE_NAME, prediction=str(p))
+        for key, p in zip(keys, (0.0, 1.0, 0.9))
+    }
+    model = {
+        key: _model_row(date=key[0], event_id=key[2], horizon="", model_name="GPT-Test", prediction=str(p))
+        for key, p in zip(keys, (0.5, 0.0, 0.9))
+    }
+    point = point_from_support("GPT-Test", market, model, keys[:2], 0.56, 5.0, 2.0, 0.25)
+    assert point["n_overlap"] == 2
+    assert point["metrics"]["total_variation"]["raw"] == pytest.approx(0.75)
+    assert point["metrics"]["total_variation"]["complementarity"] == pytest.approx(0.75)

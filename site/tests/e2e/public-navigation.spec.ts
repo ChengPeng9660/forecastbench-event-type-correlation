@@ -183,18 +183,27 @@ test("restores an older focal query after an edited experiment is revisited", as
   await navigation.getByRole("link", { name: "Diversity", exact: true }).click();
   await navigation.getByRole("link", { name: "Aggregation", exact: true }).click();
   await section.getByLabel("Aggregation focal model").selectOption("Claude-3-7-Sonnet-20250219");
-  await section.getByRole("button", { name: "Same-sample diagnostic", exact: true }).click();
+  await section.getByRole("button", { name: "B→A", exact: true }).click();
   await expect(page).toHaveURL(/gain_model=Claude-3-7-Sonnet-20250219/);
-  await expect(page).toHaveURL(/gain_eval=same_sample/);
+  await expect(page).toHaveURL(/gain_fold=b_to_a/);
   await page.goBack();
   await expectPanel(page, "matrix");
   await expect(page).toHaveURL(/gain_model=GPT-5-2025-08-07/);
   await navigation.getByRole("link", { name: "Aggregation", exact: true }).click();
   await expect(section.getByLabel("Aggregation focal model")).toHaveValue("GPT-5-2025-08-07");
-  await expect(section.getByRole("button", { name: "Cross-fit OOS", exact: true })).toHaveClass(/active/);
+  await expect(section.getByText("Cross-fit OOS", { exact: true })).toBeVisible();
   await expect(section.getByRole("group", { name: "Cross-fit fold view", exact: true }).getByRole("button", { name: "A→B", exact: true })).toHaveClass(/active/);
   await page.reload();
   await expect(section.getByLabel("Aggregation focal model")).toHaveValue("GPT-5-2025-08-07");
+});
+
+test("redirects archived evaluation query state to cross-fit", async ({ page }) => {
+  await page.goto("/?gain_eval=same_sample&gain_model=GPT-5-2025-08-07&gain_fold=b_to_a&near_bi=0#gain");
+  const section = page.locator("#gain");
+  await expect(section.getByText("Cross-fit OOS", { exact: true })).toBeVisible();
+  await expect(page).not.toHaveURL(/gain_eval=/);
+  await expect(section.getByRole("button", { name: "B→A", exact: true })).toHaveClass(/active/);
+  await expect(page.getByRole("button", { name: "Same-sample diagnostic", exact: true })).toHaveCount(0);
 });
 
 test("restores global and atlas filters from earlier history entries", async ({ page }) => {

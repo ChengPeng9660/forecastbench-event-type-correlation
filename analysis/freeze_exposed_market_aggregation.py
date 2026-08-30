@@ -32,6 +32,7 @@ from analysis.closed_form_aggregation import (
     write_csv,
 )
 from analysis.model_versions import configuration_preference, split_model_version
+from analysis.metrics import total_variation
 from analysis.pair_aggregation import KEY, MODEL_ALIASES, event_fold, family, read_panel, sha256_file
 from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 from analysis.polymarket_aggregation import BASELINE_NAME, build_freeze_panel, read_freeze_snapshots
@@ -236,12 +237,14 @@ def similarity_diagnostics(
     first_scale = math.sqrt(sum((value - market_mean) ** 2 for value in market_values))
     second_scale = math.sqrt(sum((value - model_mean) ** 2 for value in model_values))
     differences = [second - first for first, second in zip(market_values, model_values)]
+    probability_tv = total_variation(market_values, model_values)
     return {
         "n": len(ordered),
         "prediction_pearson": numerator / (first_scale * second_scale)
         if first_scale and second_scale
         else None,
-        "mean_absolute_difference": sum(abs(value) for value in differences) / len(differences),
+        "mean_absolute_difference": probability_tv,
+        "total_variation": probability_tv,
         "root_mean_squared_difference": math.sqrt(
             sum(value * value for value in differences) / len(differences)
         ),
@@ -373,6 +376,7 @@ def summarize_similarity_rows(
     fields = (
         "prediction_pearson",
         "mean_absolute_difference",
+        "total_variation",
         "root_mean_squared_difference",
         "exact_copy_share",
     )
@@ -824,6 +828,12 @@ def run_experiment(
                 "exclude Polymarket rows backed only by original ForecastBench "
                 "forecasts marked imputed=true"
             ),
+            "total_variation": {
+                "formula": "mean(abs(p_base - p_partner)) on original paired Bernoulli probabilities",
+                "range": [0.0, 1.0],
+                "orientation": "higher means greater diversity",
+                "cross_fit_support": "training keys only; never reused from full-sample similarity",
+            },
         },
         "audit": {
             **raw_audit,

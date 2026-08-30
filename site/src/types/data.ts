@@ -1,4 +1,4 @@
-export type MetricId = "adjusted_pog" | "high_loss_lift" | "adjusted_loss_corr";
+export type MetricId = "adjusted_pog" | "high_loss_lift" | "adjusted_loss_corr" | "total_variation";
 export type ModelFamily = "GPT" | "Claude" | "Gemini" | "Qwen" | "DeepSeek" | "Kimi";
 
 export interface FocalGainMetricValue {
@@ -795,6 +795,8 @@ export interface GlobalPairMatrixRow {
   lift_reason: string | null;
   adjusted_loss_corr: number | null;
   corr_reason: string | null;
+  total_variation: number | null;
+  tv_reason: string | null;
 }
 
 export interface GlobalPairMatrixCompact {
@@ -832,10 +834,7 @@ export interface FreezeMarketCorrelationPoint {
 
 export type FreezeFoldView = "combined" | "a_to_b" | "b_to_a";
 
-export type FreezeDiversityMetricId =
-  | "adjusted_pog"
-  | "high_loss_lift"
-  | "adjusted_loss_corr";
+export type FreezeDiversityMetricId = MetricId;
 
 export type FreezeAggregationMethodId =
   | "ec_w0_56"
@@ -1090,9 +1089,7 @@ export interface FreezeMarketCorrelationData {
 
 export type MarketPerformanceDiversityMetricId =
   | "prediction_diversity"
-  | "adjusted_pog"
-  | "high_loss_lift"
-  | "adjusted_loss_corr";
+  | MetricId;
 
 export type MarketPerformanceOutcomeId = "raw_brier" | "brier_index";
 
@@ -1170,7 +1167,8 @@ export type UpperLeftPairDiversityMetricId =
   | "prediction_diversity"
   | "adjusted_pog"
   | "high_loss_diversity"
-  | "adjusted_loss_diversity";
+  | "adjusted_loss_diversity"
+  | "total_variation";
 
 export type UpperLeftPairMethodId =
   | "simple_mean"

@@ -6,12 +6,15 @@ from pathlib import Path
 import pytest
 
 from analysis.closed_form_aggregation import (
+    aggregate_pairs,
     correlation,
+    evaluate_pair,
     forecast_diagnostics,
     residualize,
     score_methods,
     write_csv,
 )
+from analysis.pair_aggregation import event_fold
 
 
 def row(prediction: float, outcome: int, event_id: str) -> dict[str, str]:
@@ -96,6 +99,43 @@ def test_score_methods_uses_train_weight_and_test_outcomes_only_for_scoring() ->
     assert scores["cf_directional"]["gain_vs_anchor"] == pytest.approx(0)
     assert scores["oracle_linear"]["gain_vs_best_single"] >= 0
     assert scores["oracle_directional"]["gain_vs_best_single"] >= 0
+
+
+def test_total_variation_uses_named_training_fold_and_survives_pair_aggregation() -> None:
+    seed = 20260825
+    anchor, partner = {}, {}
+    for index in range(48):
+        event_id = f"tv-{index}"
+        key = ("2026-01-01", "test", event_id, "30")
+        anchor[key] = row(0.4, index % 2, event_id)
+        partner[key] = row(0.5 if event_fold("test", event_id, seed) == "A" else 0.8,
+                           index % 2, event_id)
+    records = evaluate_pair(
+        "fixed_focal_without_freeze", "GPT-Test", "Claude-Test",
+        anchor, partner, [seed], 1, 0.56, 5.0,
+    )
+    for record in records:
+        assert record["train_total_variation_complementarity"] == pytest.approx(
+            0.1 if record["train_fold"] == "A" else 0.4
+        )
+
+    changed_partner = {
+        key: {**value, "prediction": "0.99"}
+        if event_fold(key[1], key[2], seed) == "B" else value
+        for key, value in partner.items()
+    }
+    changed = evaluate_pair(
+        "fixed_focal_without_freeze", "GPT-Test", "Claude-Test",
+        anchor, changed_partner, [seed], 1, 0.56, 5.0,
+    )
+    assert all(record["train_total_variation_complementarity"] == pytest.approx(0.1)
+               for record in changed if record["train_fold"] == "A")
+    assert all(record["train_total_variation_complementarity"] == pytest.approx(0.59)
+               for record in changed if record["train_fold"] == "B")
+    expected = sum(abs(float(anchor[key]["prediction"]) - float(partner[key]["prediction"]))
+                   for key in anchor) / len(anchor)
+    assert all(pair["train_total_variation_complementarity"] == pytest.approx(expected)
+               for pair in aggregate_pairs(records))
 
 
 def test_correlation_ignores_undefined_metric_values() -> None:

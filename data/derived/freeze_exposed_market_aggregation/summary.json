@@ -51,7 +51,16 @@
       20260832,
       20260833,
       20260834
-    ]
+    ],
+    "total_variation": {
+      "cross_fit_support": "training keys only; never reused from full-sample similarity",
+      "formula": "mean(abs(p_base - p_partner)) on original paired Bernoulli probabilities",
+      "orientation": "higher means greater diversity",
+      "range": [
+        0.0,
+        1.0
+      ]
+    }
   },
   "eligibility": {
     "common_support": {
@@ -8685,39 +8694,45 @@
         "macro_mean_absolute_difference": 0.030103272974459656,
         "macro_prediction_pearson": 0.9206857985115924,
         "macro_root_mean_squared_difference": 0.07631141164767505,
+        "macro_total_variation": 0.030103272974459656,
         "model_count": 27,
         "model_event_cells": 9323,
         "sample": "canonical_primary",
         "support_weighted_exact_copy_share": 0.24809610640351817,
         "support_weighted_mean_absolute_difference": 0.029180276198648502,
         "support_weighted_prediction_pearson": 0.9197368084489719,
-        "support_weighted_root_mean_squared_difference": 0.0782254557420627
+        "support_weighted_root_mean_squared_difference": 0.0782254557420627,
+        "support_weighted_total_variation": 0.029180276198648502
       },
       {
         "macro_exact_copy_share": 0.006877926045296714,
         "macro_mean_absolute_difference": 0.15105685339382782,
         "macro_prediction_pearson": 0.3962196977765563,
         "macro_root_mean_squared_difference": 0.23708020016902423,
+        "macro_total_variation": 0.15105685339382782,
         "model_count": 26,
         "model_event_cells": 8764,
         "sample": "matched_no_freeze",
         "support_weighted_exact_copy_share": 0.006846188954815153,
         "support_weighted_mean_absolute_difference": 0.1498311093150388,
         "support_weighted_prediction_pearson": 0.40721230427290095,
-        "support_weighted_root_mean_squared_difference": 0.23515413239588473
+        "support_weighted_root_mean_squared_difference": 0.23515413239588473,
+        "support_weighted_total_variation": 0.1498311093150388
       },
       {
         "macro_exact_copy_share": 0.21873415012345307,
         "macro_mean_absolute_difference": 0.03119152188914206,
         "macro_prediction_pearson": 0.9204147039780272,
         "macro_root_mean_squared_difference": 0.07664039782703642,
+        "macro_total_variation": 0.03119152188914206,
         "model_count": 26,
         "model_event_cells": 8764,
         "sample": "matched_with_freeze",
         "support_weighted_exact_copy_share": 0.20823824737562757,
         "support_weighted_mean_absolute_difference": 0.03042782005933364,
         "support_weighted_prediction_pearson": 0.9186567243372302,
-        "support_weighted_root_mean_squared_difference": 0.07876826617497189
+        "support_weighted_root_mean_squared_difference": 0.07876826617497189,
+        "support_weighted_total_variation": 0.03042782005933364
       }
     ],
     "all_configurations": [
@@ -8730,7 +8745,8 @@
         "model_mean_probability": 0.15455367605633802,
         "n": 710,
         "prediction_pearson": 0.9553099295039854,
-        "root_mean_squared_difference": 0.06740132934389309
+        "root_mean_squared_difference": 0.06740132934389309,
+        "total_variation": 0.03050012676056338
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20240620",
@@ -8741,7 +8757,8 @@
         "model_mean_probability": 0.13295734720416125,
         "n": 769,
         "prediction_pearson": 0.9621490261389978,
-        "root_mean_squared_difference": 0.05777893366576321
+        "root_mean_squared_difference": 0.05777893366576321,
+        "total_variation": 0.018360208062418726
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20241022",
@@ -8752,7 +8769,8 @@
         "model_mean_probability": 0.11430451306413301,
         "n": 421,
         "prediction_pearson": 0.9893502804283142,
-        "root_mean_squared_difference": 0.0260047465062651
+        "root_mean_squared_difference": 0.0260047465062651,
+        "total_variation": 0.012448456057007127
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20241022",
@@ -8763,7 +8781,8 @@
         "model_mean_probability": 0.11091567695961996,
         "n": 421,
         "prediction_pearson": 0.9169701713689504,
-        "root_mean_squared_difference": 0.07294713945312933
+        "root_mean_squared_difference": 0.07294713945312933,
+        "total_variation": 0.027160332541567696
       },
       {
         "canonical_model_version": "Claude-3-7-Sonnet-20250219",
@@ -8774,7 +8793,8 @@
         "model_mean_probability": 0.1162872340425532,
         "n": 423,
         "prediction_pearson": 0.9957859342482261,
-        "root_mean_squared_difference": 0.016689955360308126
+        "root_mean_squared_difference": 0.016689955360308126,
+        "total_variation": 0.010277068557919622
       },
       {
         "canonical_model_version": "Claude-3-7-Sonnet-20250219",
@@ -8785,7 +8805,8 @@
         "model_mean_probability": 0.11296258790436006,
         "n": 711,
         "prediction_pearson": 0.9556374592723527,
-        "root_mean_squared_difference": 0.06166410235288714
+        "root_mean_squared_difference": 0.06166410235288714,
+        "total_variation": 0.01371814345991561
       },
       {
         "canonical_model_version": "Claude-3-Haiku-20240307",
@@ -8796,7 +8817,8 @@
         "model_mean_probability": 0.4724664429530202,
         "n": 298,
         "prediction_pearson": 0.3191569978682468,
-        "root_mean_squared_difference": 0.3958360513270631
+        "root_mean_squared_difference": 0.3958360513270631,
+        "total_variation": 0.35625167785234896
       },
       {
         "canonical_model_version": "Claude-3-Haiku-20240307",
@@ -8807,7 +8829,8 @@
         "model_mean_probability": 0.326506711409396,
         "n": 298,
         "prediction_pearson": 0.6084380284413665,
-        "root_mean_squared_difference": 0.25235769463257596
+        "root_mean_squared_difference": 0.25235769463257596,
+        "total_variation": 0.21556040268456375
       },
       {
         "canonical_model_version": "Claude-3-Opus-20240229",
@@ -8818,7 +8841,8 @@
         "model_mean_probability": 0.2523677966101695,
         "n": 295,
         "prediction_pearson": 0.7009090045318234,
-        "root_mean_squared_difference": 0.19784098434031752
+        "root_mean_squared_difference": 0.19784098434031752,
+        "total_variation": 0.13201186440677967
       },
       {
         "canonical_model_version": "Claude-3-Opus-20240229",
@@ -8829,7 +8853,8 @@
         "model_mean_probability": 0.16828691275167784,
         "n": 298,
         "prediction_pearson": 0.9181510341739877,
-        "root_mean_squared_difference": 0.09275070777059498
+        "root_mean_squared_difference": 0.09275070777059498,
+        "total_variation": 0.04562248322147651
       },
       {
         "canonical_model_version": "Claude-Haiku-4-5-20251001",
@@ -8840,7 +8865,8 @@
         "model_mean_probability": 0.09482395833333333,
         "n": 288,
         "prediction_pearson": 0.9661228684807424,
-        "root_mean_squared_difference": 0.05740111787529346
+        "root_mean_squared_difference": 0.05740111787529346,
+        "total_variation": 0.013117361111111113
       },
       {
         "canonical_model_version": "Claude-Opus-4-1-20250805",
@@ -8851,7 +8877,8 @@
         "model_mean_probability": 0.10981082474226804,
         "n": 388,
         "prediction_pearson": 0.9842765318754905,
-        "root_mean_squared_difference": 0.041170379578517075
+        "root_mean_squared_difference": 0.041170379578517075,
+        "total_variation": 0.01319742268041237
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-20250514",
@@ -8862,7 +8889,8 @@
         "model_mean_probability": 0.11910610932475885,
         "n": 311,
         "prediction_pearson": 0.9454575454859823,
-        "root_mean_squared_difference": 0.07054868219524395
+        "root_mean_squared_difference": 0.07054868219524395,
+        "total_variation": 0.019696141479099677
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-5-20250929",
@@ -8873,7 +8901,8 @@
         "model_mean_probability": 0.09417152777777778,
         "n": 288,
         "prediction_pearson": 0.9949016209570243,
-        "root_mean_squared_difference": 0.02285204601221616
+        "root_mean_squared_difference": 0.02285204601221616,
+        "total_variation": 0.009792013888888888
       },
       {
         "canonical_model_version": "DeepSeek-R1",
@@ -8884,7 +8913,8 @@
         "model_mean_probability": 0.12315282392026579,
         "n": 301,
         "prediction_pearson": 0.9716524020530779,
-        "root_mean_squared_difference": 0.04404676991788769
+        "root_mean_squared_difference": 0.04404676991788769,
+        "total_variation": 0.02474750830564784
       },
       {
         "canonical_model_version": "DeepSeek-R1",
@@ -8895,7 +8925,8 @@
         "model_mean_probability": 0.12475460122699387,
         "n": 163,
         "prediction_pearson": 0.9647039141031185,
-        "root_mean_squared_difference": 0.04820684916843732
+        "root_mean_squared_difference": 0.04820684916843732,
+        "total_variation": 0.0063773006134969345
       },
       {
         "canonical_model_version": "DeepSeek-V3",
@@ -8906,7 +8937,8 @@
         "model_mean_probability": 0.14384521452145213,
         "n": 303,
         "prediction_pearson": 0.8898741769523186,
-        "root_mean_squared_difference": 0.08895188208651165
+        "root_mean_squared_difference": 0.08895188208651165,
+        "total_variation": 0.05019768976897689
       },
       {
         "canonical_model_version": "DeepSeek-V3",
@@ -8917,7 +8949,8 @@
         "model_mean_probability": 0.11698519736842104,
         "n": 304,
         "prediction_pearson": 0.9722568360342412,
-        "root_mean_squared_difference": 0.04170015540170463
+        "root_mean_squared_difference": 0.04170015540170463,
+        "total_variation": 0.017342105263157895
       },
       {
         "canonical_model_version": "DeepSeek-V3.1",
@@ -8928,7 +8961,8 @@
         "model_mean_probability": 0.10831219512195121,
         "n": 287,
         "prediction_pearson": 0.9355550101822748,
-        "root_mean_squared_difference": 0.0812439150227449
+        "root_mean_squared_difference": 0.0812439150227449,
+        "total_variation": 0.020245296167247386
       },
       {
         "canonical_model_version": "GPT-4-Turbo-2024-04-09",
@@ -8939,7 +8973,8 @@
         "model_mean_probability": 0.20938590604026844,
         "n": 298,
         "prediction_pearson": 0.7308326680637744,
-        "root_mean_squared_difference": 0.1690744842016491
+        "root_mean_squared_difference": 0.1690744842016491,
+        "total_variation": 0.09084563758389261
       },
       {
         "canonical_model_version": "GPT-4-Turbo-2024-04-09",
@@ -8950,7 +8985,8 @@
         "model_mean_probability": 0.14888590604026847,
         "n": 298,
         "prediction_pearson": 1.0,
-        "root_mean_squared_difference": 2.014388820308801e-17
+        "root_mean_squared_difference": 2.014388820308801e-17,
+        "total_variation": 5.058639934979347e-18
       },
       {
         "canonical_model_version": "GPT-4.1-2025-04-14",
@@ -8961,7 +8997,8 @@
         "model_mean_probability": 0.12032372881355932,
         "n": 295,
         "prediction_pearson": 0.9596493119563958,
-        "root_mean_squared_difference": 0.05647312995380778
+        "root_mean_squared_difference": 0.05647312995380778,
+        "total_variation": 0.015425423728813557
       },
       {
         "canonical_model_version": "GPT-4.1-2025-04-14",
@@ -8972,7 +9009,8 @@
         "model_mean_probability": 0.11759615384615384,
         "n": 624,
         "prediction_pearson": 0.9151132349768439,
-        "root_mean_squared_difference": 0.08858805421364087
+        "root_mean_squared_difference": 0.08858805421364087,
+        "total_variation": 0.018898237179487177
       },
       {
         "canonical_model_version": "GPT-4o-2024-05-13",
@@ -8983,7 +9021,8 @@
         "model_mean_probability": 0.18614822546972862,
         "n": 479,
         "prediction_pearson": 0.8478635132902338,
-        "root_mean_squared_difference": 0.12655713637826682
+        "root_mean_squared_difference": 0.12655713637826682,
+        "total_variation": 0.06823590814196243
       },
       {
         "canonical_model_version": "GPT-4o-2024-05-13",
@@ -8994,7 +9033,8 @@
         "model_mean_probability": 0.14335803757828808,
         "n": 479,
         "prediction_pearson": 0.9407974974741425,
-        "root_mean_squared_difference": 0.07525822977073982
+        "root_mean_squared_difference": 0.07525822977073982,
+        "total_variation": 0.012798538622129438
       },
       {
         "canonical_model_version": "GPT-5-2025-08-07",
@@ -9005,7 +9045,8 @@
         "model_mean_probability": 0.12890391061452514,
         "n": 179,
         "prediction_pearson": 0.9882105010208349,
-        "root_mean_squared_difference": 0.039194122236339154
+        "root_mean_squared_difference": 0.039194122236339154,
+        "total_variation": 0.014868156424581006
       },
       {
         "canonical_model_version": "GPT-5-Mini-2025-08-07",
@@ -9016,7 +9057,8 @@
         "model_mean_probability": 0.10858885630498535,
         "n": 341,
         "prediction_pearson": 0.9352009187206624,
-        "root_mean_squared_difference": 0.08112694136867098
+        "root_mean_squared_difference": 0.08112694136867098,
+        "total_variation": 0.022373313782991205
       },
       {
         "canonical_model_version": "GPT-5-Nano-2025-08-07",
@@ -9027,7 +9069,8 @@
         "model_mean_probability": 0.1935733137829912,
         "n": 341,
         "prediction_pearson": 0.49847987237017616,
-        "root_mean_squared_difference": 0.24224994666024488
+        "root_mean_squared_difference": 0.24224994666024488,
+        "total_variation": 0.1430850439882698
       },
       {
         "canonical_model_version": "GPT-5.1-2025-11-13",
@@ -9038,7 +9081,8 @@
         "model_mean_probability": 0.07437793103448276,
         "n": 145,
         "prediction_pearson": 0.9859530306214992,
-        "root_mean_squared_difference": 0.03402272972486239
+        "root_mean_squared_difference": 0.03402272972486239,
+        "total_variation": 0.01628758620689655
       },
       {
         "canonical_model_version": "Gemini-2.5-Flash",
@@ -9049,7 +9093,8 @@
         "model_mean_probability": 0.09374289552238807,
         "n": 335,
         "prediction_pearson": 0.9198395401998068,
-        "root_mean_squared_difference": 0.0918971091208865
+        "root_mean_squared_difference": 0.0918971091208865,
+        "total_variation": 0.028227850746268657
       },
       {
         "canonical_model_version": "Gemini-2.5-Pro",
@@ -9060,7 +9105,8 @@
         "model_mean_probability": 0.10873171091445429,
         "n": 339,
         "prediction_pearson": 0.9355475136315188,
-        "root_mean_squared_difference": 0.08446494503359381
+        "root_mean_squared_difference": 0.08446494503359381,
+        "total_variation": 0.020243510324483776
       },
       {
         "canonical_model_version": "Gemini-3-Pro-Preview",
@@ -9071,7 +9117,8 @@
         "model_mean_probability": 0.066935625,
         "n": 160,
         "prediction_pearson": 0.9958695221292508,
-        "root_mean_squared_difference": 0.020361550775910956
+        "root_mean_squared_difference": 0.020361550775910956,
+        "total_variation": 0.008979999999999998
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct",
@@ -9082,7 +9129,8 @@
         "model_mean_probability": 0.14223472222222222,
         "n": 288,
         "prediction_pearson": 0.9488228983750843,
-        "root_mean_squared_difference": 0.07534573713334197
+        "root_mean_squared_difference": 0.07534573713334197,
+        "total_variation": 0.025263541666666663
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct-0905",
@@ -9093,7 +9141,8 @@
         "model_mean_probability": 0.0993438596491228,
         "n": 285,
         "prediction_pearson": 0.9403833175934785,
-        "root_mean_squared_difference": 0.07689938995491835
+        "root_mean_squared_difference": 0.07689938995491835,
+        "total_variation": 0.02159473684210526
       },
       {
         "canonical_model_version": "Qwen2.5-72B-Instruct-Turbo",
@@ -9104,7 +9153,8 @@
         "model_mean_probability": 0.2212941176470588,
         "n": 119,
         "prediction_pearson": 0.8025930021827923,
-        "root_mean_squared_difference": 0.1499408286653116
+        "root_mean_squared_difference": 0.1499408286653116,
+        "total_variation": 0.09946218487394959
       },
       {
         "canonical_model_version": "Qwen2.5-72B-Instruct-Turbo",
@@ -9115,7 +9165,8 @@
         "model_mean_probability": 0.1376512605042017,
         "n": 119,
         "prediction_pearson": 0.9713876020102832,
-        "root_mean_squared_difference": 0.04637128657356183
+        "root_mean_squared_difference": 0.04637128657356183,
+        "total_variation": 0.012214285714285716
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Fp8-Tput",
@@ -9126,7 +9177,8 @@
         "model_mean_probability": 0.15396733524355302,
         "n": 349,
         "prediction_pearson": 0.9303514254777435,
-        "root_mean_squared_difference": 0.08035302677046326
+        "root_mean_squared_difference": 0.08035302677046326,
+        "total_variation": 0.038066189111747854
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Fp8-Tput",
@@ -9137,7 +9189,8 @@
         "model_mean_probability": 0.1251032986111111,
         "n": 576,
         "prediction_pearson": 0.9585376835977377,
-        "root_mean_squared_difference": 0.06415057346890118
+        "root_mean_squared_difference": 0.06415057346890118,
+        "total_variation": 0.01103854166666667
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Thinking-2507",
@@ -9148,7 +9201,8 @@
         "model_mean_probability": 0.09361491319444444,
         "n": 288,
         "prediction_pearson": 0.7997533805771445,
-        "root_mean_squared_difference": 0.13985577532250512
+        "root_mean_squared_difference": 0.13985577532250512,
+        "total_variation": 0.03672581597222222
       }
     ],
     "canonical_primary": [
@@ -9161,7 +9215,8 @@
         "model_mean_probability": 0.13295734720416125,
         "n": 769,
         "prediction_pearson": 0.9621490261389978,
-        "root_mean_squared_difference": 0.05777893366576321
+        "root_mean_squared_difference": 0.05777893366576321,
+        "total_variation": 0.018360208062418726
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20241022",
@@ -9172,7 +9227,8 @@
         "model_mean_probability": 0.11091567695961996,
         "n": 421,
         "prediction_pearson": 0.9169701713689504,
-        "root_mean_squared_difference": 0.07294713945312933
+        "root_mean_squared_difference": 0.07294713945312933,
+        "total_variation": 0.027160332541567696
       },
       {
         "canonical_model_version": "Claude-3-7-Sonnet-20250219",
@@ -9183,7 +9239,8 @@
         "model_mean_probability": 0.11296258790436006,
         "n": 711,
         "prediction_pearson": 0.9556374592723527,
-        "root_mean_squared_difference": 0.06166410235288714
+        "root_mean_squared_difference": 0.06166410235288714,
+        "total_variation": 0.01371814345991561
       },
       {
         "canonical_model_version": "Claude-3-Haiku-20240307",
@@ -9194,7 +9251,8 @@
         "model_mean_probability": 0.326506711409396,
         "n": 298,
         "prediction_pearson": 0.6084380284413665,
-        "root_mean_squared_difference": 0.25235769463257596
+        "root_mean_squared_difference": 0.25235769463257596,
+        "total_variation": 0.21556040268456375
       },
       {
         "canonical_model_version": "Claude-3-Opus-20240229",
@@ -9205,7 +9263,8 @@
         "model_mean_probability": 0.16828691275167784,
         "n": 298,
         "prediction_pearson": 0.9181510341739877,
-        "root_mean_squared_difference": 0.09275070777059498
+        "root_mean_squared_difference": 0.09275070777059498,
+        "total_variation": 0.04562248322147651
       },
       {
         "canonical_model_version": "Claude-Haiku-4-5-20251001",
@@ -9216,7 +9275,8 @@
         "model_mean_probability": 0.09482395833333333,
         "n": 288,
         "prediction_pearson": 0.9661228684807424,
-        "root_mean_squared_difference": 0.05740111787529346
+        "root_mean_squared_difference": 0.05740111787529346,
+        "total_variation": 0.013117361111111113
       },
       {
         "canonical_model_version": "Claude-Opus-4-1-20250805",
@@ -9227,7 +9287,8 @@
         "model_mean_probability": 0.10981082474226804,
         "n": 388,
         "prediction_pearson": 0.9842765318754905,
-        "root_mean_squared_difference": 0.041170379578517075
+        "root_mean_squared_difference": 0.041170379578517075,
+        "total_variation": 0.01319742268041237
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-20250514",
@@ -9238,7 +9299,8 @@
         "model_mean_probability": 0.11910610932475885,
         "n": 311,
         "prediction_pearson": 0.9454575454859823,
-        "root_mean_squared_difference": 0.07054868219524395
+        "root_mean_squared_difference": 0.07054868219524395,
+        "total_variation": 0.019696141479099677
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-5-20250929",
@@ -9249,7 +9311,8 @@
         "model_mean_probability": 0.09417152777777778,
         "n": 288,
         "prediction_pearson": 0.9949016209570243,
-        "root_mean_squared_difference": 0.02285204601221616
+        "root_mean_squared_difference": 0.02285204601221616,
+        "total_variation": 0.009792013888888888
       },
       {
         "canonical_model_version": "DeepSeek-R1",
@@ -9260,7 +9323,8 @@
         "model_mean_probability": 0.12475460122699387,
         "n": 163,
         "prediction_pearson": 0.9647039141031185,
-        "root_mean_squared_difference": 0.04820684916843732
+        "root_mean_squared_difference": 0.04820684916843732,
+        "total_variation": 0.0063773006134969345
       },
       {
         "canonical_model_version": "DeepSeek-V3",
@@ -9271,7 +9335,8 @@
         "model_mean_probability": 0.11698519736842104,
         "n": 304,
         "prediction_pearson": 0.9722568360342412,
-        "root_mean_squared_difference": 0.04170015540170463
+        "root_mean_squared_difference": 0.04170015540170463,
+        "total_variation": 0.017342105263157895
       },
       {
         "canonical_model_version": "DeepSeek-V3.1",
@@ -9282,7 +9347,8 @@
         "model_mean_probability": 0.10831219512195121,
         "n": 287,
         "prediction_pearson": 0.9355550101822748,
-        "root_mean_squared_difference": 0.0812439150227449
+        "root_mean_squared_difference": 0.0812439150227449,
+        "total_variation": 0.020245296167247386
       },
       {
         "canonical_model_version": "GPT-4-Turbo-2024-04-09",
@@ -9293,7 +9359,8 @@
         "model_mean_probability": 0.14888590604026847,
         "n": 298,
         "prediction_pearson": 1.0,
-        "root_mean_squared_difference": 2.014388820308801e-17
+        "root_mean_squared_difference": 2.014388820308801e-17,
+        "total_variation": 5.058639934979347e-18
       },
       {
         "canonical_model_version": "GPT-4.1-2025-04-14",
@@ -9304,7 +9371,8 @@
         "model_mean_probability": 0.11759615384615384,
         "n": 624,
         "prediction_pearson": 0.9151132349768439,
-        "root_mean_squared_difference": 0.08858805421364087
+        "root_mean_squared_difference": 0.08858805421364087,
+        "total_variation": 0.018898237179487177
       },
       {
         "canonical_model_version": "GPT-4o-2024-05-13",
@@ -9315,7 +9383,8 @@
         "model_mean_probability": 0.14335803757828808,
         "n": 479,
         "prediction_pearson": 0.9407974974741425,
-        "root_mean_squared_difference": 0.07525822977073982
+        "root_mean_squared_difference": 0.07525822977073982,
+        "total_variation": 0.012798538622129438
       },
       {
         "canonical_model_version": "GPT-5-2025-08-07",
@@ -9326,7 +9395,8 @@
         "model_mean_probability": 0.12890391061452514,
         "n": 179,
         "prediction_pearson": 0.9882105010208349,
-        "root_mean_squared_difference": 0.039194122236339154
+        "root_mean_squared_difference": 0.039194122236339154,
+        "total_variation": 0.014868156424581006
       },
       {
         "canonical_model_version": "GPT-5-Mini-2025-08-07",
@@ -9337,7 +9407,8 @@
         "model_mean_probability": 0.10858885630498535,
         "n": 341,
         "prediction_pearson": 0.9352009187206624,
-        "root_mean_squared_difference": 0.08112694136867098
+        "root_mean_squared_difference": 0.08112694136867098,
+        "total_variation": 0.022373313782991205
       },
       {
         "canonical_model_version": "GPT-5-Nano-2025-08-07",
@@ -9348,7 +9419,8 @@
         "model_mean_probability": 0.1935733137829912,
         "n": 341,
         "prediction_pearson": 0.49847987237017616,
-        "root_mean_squared_difference": 0.24224994666024488
+        "root_mean_squared_difference": 0.24224994666024488,
+        "total_variation": 0.1430850439882698
       },
       {
         "canonical_model_version": "GPT-5.1-2025-11-13",
@@ -9359,7 +9431,8 @@
         "model_mean_probability": 0.07437793103448276,
         "n": 145,
         "prediction_pearson": 0.9859530306214992,
-        "root_mean_squared_difference": 0.03402272972486239
+        "root_mean_squared_difference": 0.03402272972486239,
+        "total_variation": 0.01628758620689655
       },
       {
         "canonical_model_version": "Gemini-2.5-Flash",
@@ -9370,7 +9443,8 @@
         "model_mean_probability": 0.09374289552238807,
         "n": 335,
         "prediction_pearson": 0.9198395401998068,
-        "root_mean_squared_difference": 0.0918971091208865
+        "root_mean_squared_difference": 0.0918971091208865,
+        "total_variation": 0.028227850746268657
       },
       {
         "canonical_model_version": "Gemini-2.5-Pro",
@@ -9381,7 +9455,8 @@
         "model_mean_probability": 0.10873171091445429,
         "n": 339,
         "prediction_pearson": 0.9355475136315188,
-        "root_mean_squared_difference": 0.08446494503359381
+        "root_mean_squared_difference": 0.08446494503359381,
+        "total_variation": 0.020243510324483776
       },
       {
         "canonical_model_version": "Gemini-3-Pro-Preview",
@@ -9392,7 +9467,8 @@
         "model_mean_probability": 0.066935625,
         "n": 160,
         "prediction_pearson": 0.9958695221292508,
-        "root_mean_squared_difference": 0.020361550775910956
+        "root_mean_squared_difference": 0.020361550775910956,
+        "total_variation": 0.008979999999999998
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct",
@@ -9403,7 +9479,8 @@
         "model_mean_probability": 0.14223472222222222,
         "n": 288,
         "prediction_pearson": 0.9488228983750843,
-        "root_mean_squared_difference": 0.07534573713334197
+        "root_mean_squared_difference": 0.07534573713334197,
+        "total_variation": 0.025263541666666663
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct-0905",
@@ -9414,7 +9491,8 @@
         "model_mean_probability": 0.0993438596491228,
         "n": 285,
         "prediction_pearson": 0.9403833175934785,
-        "root_mean_squared_difference": 0.07689938995491835
+        "root_mean_squared_difference": 0.07689938995491835,
+        "total_variation": 0.02159473684210526
       },
       {
         "canonical_model_version": "Qwen2.5-72B-Instruct-Turbo",
@@ -9425,7 +9503,8 @@
         "model_mean_probability": 0.1376512605042017,
         "n": 119,
         "prediction_pearson": 0.9713876020102832,
-        "root_mean_squared_difference": 0.04637128657356183
+        "root_mean_squared_difference": 0.04637128657356183,
+        "total_variation": 0.012214285714285716
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Fp8-Tput",
@@ -9436,7 +9515,8 @@
         "model_mean_probability": 0.1251032986111111,
         "n": 576,
         "prediction_pearson": 0.9585376835977377,
-        "root_mean_squared_difference": 0.06415057346890118
+        "root_mean_squared_difference": 0.06415057346890118,
+        "total_variation": 0.01103854166666667
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Thinking-2507",
@@ -9447,7 +9527,8 @@
         "model_mean_probability": 0.09361491319444444,
         "n": 288,
         "prediction_pearson": 0.7997533805771445,
-        "root_mean_squared_difference": 0.13985577532250512
+        "root_mean_squared_difference": 0.13985577532250512,
+        "total_variation": 0.03672581597222222
       }
     ],
     "matched": [
@@ -9461,7 +9542,8 @@
         "n": 769,
         "prediction_pearson": 0.48923138386632636,
         "root_mean_squared_difference": 0.21597348185242335,
-        "source_model_configuration": "Claude-3-5-Sonnet-20240620"
+        "source_model_configuration": "Claude-3-5-Sonnet-20240620",
+        "total_variation": 0.14468660598179453
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20240620",
@@ -9473,7 +9555,8 @@
         "n": 769,
         "prediction_pearson": 0.9621490261389978,
         "root_mean_squared_difference": 0.05777893366576321,
-        "source_model_configuration": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-3-5-Sonnet-20240620 (zero shot with freeze values)",
+        "total_variation": 0.018360208062418726
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20241022",
@@ -9485,7 +9568,8 @@
         "n": 421,
         "prediction_pearson": 0.479509840707786,
         "root_mean_squared_difference": 0.19883874271806465,
-        "source_model_configuration": "Claude-3-5-Sonnet-20241022"
+        "source_model_configuration": "Claude-3-5-Sonnet-20241022",
+        "total_variation": 0.12230878859857482
       },
       {
         "canonical_model_version": "Claude-3-5-Sonnet-20241022",
@@ -9497,7 +9581,8 @@
         "n": 421,
         "prediction_pearson": 0.9169701713689504,
         "root_mean_squared_difference": 0.07294713945312933,
-        "source_model_configuration": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-3-5-Sonnet-20241022 (zero shot with freeze values)",
+        "total_variation": 0.027160332541567696
       },
       {
         "canonical_model_version": "Claude-3-7-Sonnet-20250219",
@@ -9509,7 +9594,8 @@
         "n": 711,
         "prediction_pearson": 0.4471185465651261,
         "root_mean_squared_difference": 0.2394615605044208,
-        "source_model_configuration": "Claude-3-7-Sonnet-20250219"
+        "source_model_configuration": "Claude-3-7-Sonnet-20250219",
+        "total_variation": 0.15238115330520394
       },
       {
         "canonical_model_version": "Claude-3-7-Sonnet-20250219",
@@ -9521,7 +9607,8 @@
         "n": 711,
         "prediction_pearson": 0.9556374592723527,
         "root_mean_squared_difference": 0.06166410235288714,
-        "source_model_configuration": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
+        "total_variation": 0.01371814345991561
       },
       {
         "canonical_model_version": "Claude-3-Haiku-20240307",
@@ -9533,7 +9620,8 @@
         "n": 298,
         "prediction_pearson": 0.3422151820149773,
         "root_mean_squared_difference": 0.304815140920244,
-        "source_model_configuration": "Claude-3-Haiku-20240307"
+        "source_model_configuration": "Claude-3-Haiku-20240307",
+        "total_variation": 0.2682751677852349
       },
       {
         "canonical_model_version": "Claude-3-Haiku-20240307",
@@ -9545,7 +9633,8 @@
         "n": 298,
         "prediction_pearson": 0.6084380284413665,
         "root_mean_squared_difference": 0.25235769463257596,
-        "source_model_configuration": "Claude-3-Haiku-20240307 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-3-Haiku-20240307 (zero shot with freeze values)",
+        "total_variation": 0.21556040268456375
       },
       {
         "canonical_model_version": "Claude-3-Opus-20240229",
@@ -9557,7 +9646,8 @@
         "n": 298,
         "prediction_pearson": 0.44553061351919493,
         "root_mean_squared_difference": 0.23913226451670194,
-        "source_model_configuration": "Claude-3-Opus-20240229"
+        "source_model_configuration": "Claude-3-Opus-20240229",
+        "total_variation": 0.16346644295302012
       },
       {
         "canonical_model_version": "Claude-3-Opus-20240229",
@@ -9569,7 +9659,8 @@
         "n": 298,
         "prediction_pearson": 0.9181510341739877,
         "root_mean_squared_difference": 0.09275070777059498,
-        "source_model_configuration": "Claude-3-Opus-20240229 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-3-Opus-20240229 (zero shot with freeze values)",
+        "total_variation": 0.04562248322147651
       },
       {
         "canonical_model_version": "Claude-Haiku-4-5-20251001",
@@ -9581,7 +9672,8 @@
         "n": 288,
         "prediction_pearson": 0.38858254824023675,
         "root_mean_squared_difference": 0.2306091288576842,
-        "source_model_configuration": "Claude-Haiku-4-5-20251001"
+        "source_model_configuration": "Claude-Haiku-4-5-20251001",
+        "total_variation": 0.14457465277777778
       },
       {
         "canonical_model_version": "Claude-Haiku-4-5-20251001",
@@ -9593,7 +9685,8 @@
         "n": 288,
         "prediction_pearson": 0.9661228684807424,
         "root_mean_squared_difference": 0.05740111787529346,
-        "source_model_configuration": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
+        "total_variation": 0.013117361111111113
       },
       {
         "canonical_model_version": "Claude-Opus-4-1-20250805",
@@ -9605,7 +9698,8 @@
         "n": 354,
         "prediction_pearson": 0.45780895234059715,
         "root_mean_squared_difference": 0.21890949972031049,
-        "source_model_configuration": "Claude-Opus-4-1-20250805"
+        "source_model_configuration": "Claude-Opus-4-1-20250805",
+        "total_variation": 0.12329293785310734
       },
       {
         "canonical_model_version": "Claude-Opus-4-1-20250805",
@@ -9617,7 +9711,8 @@
         "n": 354,
         "prediction_pearson": 0.983389780828302,
         "root_mean_squared_difference": 0.042435305030061356,
-        "source_model_configuration": "Claude-Opus-4-1-20250805 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
+        "total_variation": 0.01369237288135593
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-20250514",
@@ -9629,7 +9724,8 @@
         "n": 243,
         "prediction_pearson": 0.452155537212493,
         "root_mean_squared_difference": 0.2178950293769009,
-        "source_model_configuration": "Claude-Sonnet-4-20250514"
+        "source_model_configuration": "Claude-Sonnet-4-20250514",
+        "total_variation": 0.15057818930041153
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-20250514",
@@ -9641,7 +9737,8 @@
         "n": 243,
         "prediction_pearson": 0.9808019114966333,
         "root_mean_squared_difference": 0.044041249837428534,
-        "source_model_configuration": "Claude-Sonnet-4-20250514 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
+        "total_variation": 0.018160493827160496
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-5-20250929",
@@ -9653,7 +9750,8 @@
         "n": 288,
         "prediction_pearson": 0.49713100117956166,
         "root_mean_squared_difference": 0.1978811985763175,
-        "source_model_configuration": "Claude-Sonnet-4-5-20250929"
+        "source_model_configuration": "Claude-Sonnet-4-5-20250929",
+        "total_variation": 0.11548958333333334
       },
       {
         "canonical_model_version": "Claude-Sonnet-4-5-20250929",
@@ -9665,7 +9763,8 @@
         "n": 288,
         "prediction_pearson": 0.9949016209570243,
         "root_mean_squared_difference": 0.02285204601221616,
-        "source_model_configuration": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)"
+        "source_model_configuration": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
+        "total_variation": 0.009792013888888888
       },
       {
         "canonical_model_version": "DeepSeek-V3",
@@ -9677,7 +9776,8 @@
         "n": 304,
         "prediction_pearson": 0.48132987087602425,
         "root_mean_squared_difference": 0.20926752245378968,
-        "source_model_configuration": "DeepSeek-V3"
+        "source_model_configuration": "DeepSeek-V3",
+        "total_variation": 0.1575108552631579
       },
       {
         "canonical_model_version": "DeepSeek-V3",
@@ -9689,7 +9789,8 @@
         "n": 304,
         "prediction_pearson": 0.9722568360342412,
         "root_mean_squared_difference": 0.04170015540170463,
-        "source_model_configuration": "DeepSeek-V3 (zero shot with freeze values)"
+        "source_model_configuration": "DeepSeek-V3 (zero shot with freeze values)",
+        "total_variation": 0.017342105263157895
       },
       {
         "canonical_model_version": "DeepSeek-V3.1",
@@ -9701,7 +9802,8 @@
         "n": 287,
         "prediction_pearson": 0.36306210207021883,
         "root_mean_squared_difference": 0.26266993583514203,
-        "source_model_configuration": "DeepSeek-V3.1"
+        "source_model_configuration": "DeepSeek-V3.1",
+        "total_variation": 0.19119790940766548
       },
       {
         "canonical_model_version": "DeepSeek-V3.1",
@@ -9713,7 +9815,8 @@
         "n": 287,
         "prediction_pearson": 0.9355550101822748,
         "root_mean_squared_difference": 0.0812439150227449,
-        "source_model_configuration": "DeepSeek-V3.1 (zero shot with freeze values)"
+        "source_model_configuration": "DeepSeek-V3.1 (zero shot with freeze values)",
+        "total_variation": 0.020245296167247386
       },
       {
         "canonical_model_version": "GPT-4-Turbo-2024-04-09",
@@ -9725,7 +9828,8 @@
         "n": 298,
         "prediction_pearson": 0.43602366734963066,
         "root_mean_squared_difference": 0.23246185730280816,
-        "source_model_configuration": "GPT-4-Turbo-2024-04-09"
+        "source_model_configuration": "GPT-4-Turbo-2024-04-09",
+        "total_variation": 0.16851342281879195
       },
       {
         "canonical_model_version": "GPT-4-Turbo-2024-04-09",
@@ -9737,7 +9841,8 @@
         "n": 298,
         "prediction_pearson": 1.0,
         "root_mean_squared_difference": 2.014388820308801e-17,
-        "source_model_configuration": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-4-Turbo-2024-04-09 (zero shot with freeze values)",
+        "total_variation": 5.058639934979347e-18
       },
       {
         "canonical_model_version": "GPT-4.1-2025-04-14",
@@ -9749,7 +9854,8 @@
         "n": 620,
         "prediction_pearson": 0.41034789252074616,
         "root_mean_squared_difference": 0.2231547718733317,
-        "source_model_configuration": "GPT-4.1-2025-04-14"
+        "source_model_configuration": "GPT-4.1-2025-04-14",
+        "total_variation": 0.11906208064516129
       },
       {
         "canonical_model_version": "GPT-4.1-2025-04-14",
@@ -9761,7 +9867,8 @@
         "n": 620,
         "prediction_pearson": 0.9149614236139955,
         "root_mean_squared_difference": 0.08887302241345922,
-        "source_model_configuration": "GPT-4.1-2025-04-14 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
+        "total_variation": 0.019004032258064515
       },
       {
         "canonical_model_version": "GPT-4o-2024-05-13",
@@ -9773,7 +9880,8 @@
         "n": 479,
         "prediction_pearson": 0.4746339060607942,
         "root_mean_squared_difference": 0.217015058259749,
-        "source_model_configuration": "GPT-4o-2024-05-13"
+        "source_model_configuration": "GPT-4o-2024-05-13",
+        "total_variation": 0.15356555323590815
       },
       {
         "canonical_model_version": "GPT-4o-2024-05-13",
@@ -9785,7 +9893,8 @@
         "n": 479,
         "prediction_pearson": 0.9407974974741425,
         "root_mean_squared_difference": 0.07525822977073982,
-        "source_model_configuration": "GPT-4o-2024-05-13 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-4o-2024-05-13 (zero shot with freeze values)",
+        "total_variation": 0.012798538622129438
       },
       {
         "canonical_model_version": "GPT-5-2025-08-07",
@@ -9797,7 +9906,8 @@
         "n": 179,
         "prediction_pearson": 0.3939845204295009,
         "root_mean_squared_difference": 0.24492550255470738,
-        "source_model_configuration": "GPT-5-2025-08-07"
+        "source_model_configuration": "GPT-5-2025-08-07",
+        "total_variation": 0.13791480446927373
       },
       {
         "canonical_model_version": "GPT-5-2025-08-07",
@@ -9809,7 +9919,8 @@
         "n": 179,
         "prediction_pearson": 0.9882105010208349,
         "root_mean_squared_difference": 0.039194122236339154,
-        "source_model_configuration": "GPT-5-2025-08-07 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-5-2025-08-07 (zero shot with freeze values)",
+        "total_variation": 0.014868156424581006
       },
       {
         "canonical_model_version": "GPT-5-Mini-2025-08-07",
@@ -9821,7 +9932,8 @@
         "n": 341,
         "prediction_pearson": 0.4021212528508856,
         "root_mean_squared_difference": 0.22141493930515085,
-        "source_model_configuration": "GPT-5-Mini-2025-08-07"
+        "source_model_configuration": "GPT-5-Mini-2025-08-07",
+        "total_variation": 0.13065333441935484
       },
       {
         "canonical_model_version": "GPT-5-Mini-2025-08-07",
@@ -9833,7 +9945,8 @@
         "n": 341,
         "prediction_pearson": 0.9352009187206624,
         "root_mean_squared_difference": 0.08112694136867098,
-        "source_model_configuration": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
+        "total_variation": 0.022373313782991205
       },
       {
         "canonical_model_version": "GPT-5-Nano-2025-08-07",
@@ -9845,7 +9958,8 @@
         "n": 341,
         "prediction_pearson": 0.29220486624256337,
         "root_mean_squared_difference": 0.26744294015944603,
-        "source_model_configuration": "GPT-5-Nano-2025-08-07"
+        "source_model_configuration": "GPT-5-Nano-2025-08-07",
+        "total_variation": 0.1731432991202346
       },
       {
         "canonical_model_version": "GPT-5-Nano-2025-08-07",
@@ -9857,7 +9971,8 @@
         "n": 341,
         "prediction_pearson": 0.49847987237017616,
         "root_mean_squared_difference": 0.24224994666024488,
-        "source_model_configuration": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-5-Nano-2025-08-07 (zero shot with freeze values)",
+        "total_variation": 0.1430850439882698
       },
       {
         "canonical_model_version": "GPT-5.1-2025-11-13",
@@ -9869,7 +9984,8 @@
         "n": 139,
         "prediction_pearson": 0.3173690305549745,
         "root_mean_squared_difference": 0.2466285945892421,
-        "source_model_configuration": "GPT-5.1-2025-11-13"
+        "source_model_configuration": "GPT-5.1-2025-11-13",
+        "total_variation": 0.1376223021582734
       },
       {
         "canonical_model_version": "GPT-5.1-2025-11-13",
@@ -9881,7 +9997,8 @@
         "n": 139,
         "prediction_pearson": 0.983658941983628,
         "root_mean_squared_difference": 0.03468747311879184,
-        "source_model_configuration": "GPT-5.1-2025-11-13 (zero shot with freeze values)"
+        "source_model_configuration": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
+        "total_variation": 0.016659712230215826
       },
       {
         "canonical_model_version": "Gemini-2.5-Flash",
@@ -9893,7 +10010,8 @@
         "n": 331,
         "prediction_pearson": 0.3176749325173696,
         "root_mean_squared_difference": 0.2516189279482403,
-        "source_model_configuration": "Gemini-2.5-Flash"
+        "source_model_configuration": "Gemini-2.5-Flash",
+        "total_variation": 0.1322437069486405
       },
       {
         "canonical_model_version": "Gemini-2.5-Flash",
@@ -9905,7 +10023,8 @@
         "n": 331,
         "prediction_pearson": 0.9197087678850673,
         "root_mean_squared_difference": 0.09244496922191649,
-        "source_model_configuration": "Gemini-2.5-Flash (zero shot with freeze values)"
+        "source_model_configuration": "Gemini-2.5-Flash (zero shot with freeze values)",
+        "total_variation": 0.028478640483383687
       },
       {
         "canonical_model_version": "Gemini-2.5-Pro",
@@ -9917,7 +10036,8 @@
         "n": 338,
         "prediction_pearson": 0.3927318412413846,
         "root_mean_squared_difference": 0.24619760055839304,
-        "source_model_configuration": "Gemini-2.5-Pro"
+        "source_model_configuration": "Gemini-2.5-Pro",
+        "total_variation": 0.13589289940828403
       },
       {
         "canonical_model_version": "Gemini-2.5-Pro",
@@ -9929,7 +10049,8 @@
         "n": 338,
         "prediction_pearson": 0.935530446707247,
         "root_mean_squared_difference": 0.08458980089632837,
-        "source_model_configuration": "Gemini-2.5-Pro (zero shot with freeze values)"
+        "source_model_configuration": "Gemini-2.5-Pro (zero shot with freeze values)",
+        "total_variation": 0.020303402366863905
       },
       {
         "canonical_model_version": "Gemini-3-Pro-Preview",
@@ -9941,7 +10062,8 @@
         "n": 158,
         "prediction_pearson": 0.42567705193805394,
         "root_mean_squared_difference": 0.20225209078733425,
-        "source_model_configuration": "Gemini-3-Pro-Preview"
+        "source_model_configuration": "Gemini-3-Pro-Preview",
+        "total_variation": 0.10196835443037976
       },
       {
         "canonical_model_version": "Gemini-3-Pro-Preview",
@@ -9953,7 +10075,8 @@
         "n": 158,
         "prediction_pearson": 0.9958669614740615,
         "root_mean_squared_difference": 0.020474218119257613,
-        "source_model_configuration": "Gemini-3-Pro-Preview (zero shot with freeze values)"
+        "source_model_configuration": "Gemini-3-Pro-Preview (zero shot with freeze values)",
+        "total_variation": 0.009020886075949367
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct",
@@ -9965,7 +10088,8 @@
         "n": 284,
         "prediction_pearson": 0.32849604231302854,
         "root_mean_squared_difference": 0.27368358091925926,
-        "source_model_configuration": "Kimi-K2-Instruct"
+        "source_model_configuration": "Kimi-K2-Instruct",
+        "total_variation": 0.17309154929577467
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct",
@@ -9977,7 +10101,8 @@
         "n": 284,
         "prediction_pearson": 0.9485960007803491,
         "root_mean_squared_difference": 0.0758736581894023,
-        "source_model_configuration": "Kimi-K2-Instruct (zero shot with freeze values)"
+        "source_model_configuration": "Kimi-K2-Instruct (zero shot with freeze values)",
+        "total_variation": 0.025589788732394363
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct-0905",
@@ -9989,7 +10114,8 @@
         "n": 278,
         "prediction_pearson": 0.3845628949437369,
         "root_mean_squared_difference": 0.2284453912045282,
-        "source_model_configuration": "Kimi-K2-Instruct-0905"
+        "source_model_configuration": "Kimi-K2-Instruct-0905",
+        "total_variation": 0.12687410071942445
       },
       {
         "canonical_model_version": "Kimi-K2-Instruct-0905",
@@ -10001,7 +10127,8 @@
         "n": 278,
         "prediction_pearson": 0.936881352301609,
         "root_mean_squared_difference": 0.0778582774463093,
-        "source_model_configuration": "Kimi-K2-Instruct-0905 (zero shot with freeze values)"
+        "source_model_configuration": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
+        "total_variation": 0.022079136690647483
       },
       {
         "canonical_model_version": "Qwen2.5-72B-Instruct-Turbo",
@@ -10013,7 +10140,8 @@
         "n": 119,
         "prediction_pearson": 0.403786860717586,
         "root_mean_squared_difference": 0.22294465530200783,
-        "source_model_configuration": "Qwen2.5-72B-Instruct-Turbo"
+        "source_model_configuration": "Qwen2.5-72B-Instruct-Turbo",
+        "total_variation": 0.1682268907563025
       },
       {
         "canonical_model_version": "Qwen2.5-72B-Instruct-Turbo",
@@ -10025,7 +10153,8 @@
         "n": 119,
         "prediction_pearson": 0.9713876020102832,
         "root_mean_squared_difference": 0.04637128657356183,
-        "source_model_configuration": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)"
+        "source_model_configuration": "Qwen2.5-72B-Instruct-Turbo (zero shot with freeze values)",
+        "total_variation": 0.012214285714285716
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Fp8-Tput",
@@ -10037,7 +10166,8 @@
         "n": 338,
         "prediction_pearson": 0.251592681789788,
         "root_mean_squared_difference": 0.2583486332492881,
-        "source_model_configuration": "Qwen3-235B-A22B-Fp8-Tput"
+        "source_model_configuration": "Qwen3-235B-A22B-Fp8-Tput",
+        "total_variation": 0.16816597633136093
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Fp8-Tput",
@@ -10049,7 +10179,8 @@
         "n": 338,
         "prediction_pearson": 0.9510809537649796,
         "root_mean_squared_difference": 0.07162754048697342,
-        "source_model_configuration": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)"
+        "source_model_configuration": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
+        "total_variation": 0.01607751479289941
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Thinking-2507",
@@ -10061,7 +10192,8 @@
         "n": 260,
         "prediction_pearson": 0.2268291221278789,
         "root_mean_squared_difference": 0.2920971550491443,
-        "source_model_configuration": "Qwen3-235B-A22B-Thinking-2507"
+        "source_model_configuration": "Qwen3-235B-A22B-Thinking-2507",
+        "total_variation": 0.16677762692307693
       },
       {
         "canonical_model_version": "Qwen3-235B-A22B-Thinking-2507",
@@ -10073,7 +10205,8 @@
         "n": 260,
         "prediction_pearson": 0.8160473159467984,
         "root_mean_squared_difference": 0.13484848994655219,
-        "source_model_configuration": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)"
+        "source_model_configuration": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
+        "total_variation": 0.03565590384615385
       }
     ]
   }

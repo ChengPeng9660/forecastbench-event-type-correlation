@@ -6,11 +6,12 @@
     "weight": 0.56
   },
   "focal_model": "GPT-4.1-2025-04-14",
-  "generated_at": "2026-08-25",
+  "generated_at": "2026-08-30",
   "metric_orientation": {
     "adjusted_loss_corr": "negative raw correlation; higher means less aligned adjusted losses",
     "adjusted_pog": "raw value; higher means lower model dependence",
-    "high_loss_lift": "1 - raw lift; higher means fewer joint high-loss errors than independence"
+    "high_loss_lift": "1 - raw lift; higher means fewer joint high-loss errors than independence",
+    "total_variation": "mean absolute prediction-probability difference; higher means more diversity"
   },
   "near_bi": {
     "definition": "absolute common-support Brier Index gap <= 2.0 points",
@@ -44,6 +45,10 @@
         "high_loss_lift": {
           "complementarity": -1.2765112591681516,
           "raw": 2.2765112591681516
+        },
+        "total_variation": {
+          "complementarity": 0.10800541097560597,
+          "raw": 0.10800541097560597
         }
       },
       "n_dates": 6,
@@ -73,6 +78,10 @@
         "high_loss_lift": {
           "complementarity": -1.1464900008229777,
           "raw": 2.1464900008229777
+        },
+        "total_variation": {
+          "complementarity": 0.11059770719269868,
+          "raw": 0.11059770719269868
         }
       },
       "n_dates": 3,
@@ -102,6 +111,10 @@
         "high_loss_lift": {
           "complementarity": -1.1993151927172314,
           "raw": 2.1993151927172314
+        },
+        "total_variation": {
+          "complementarity": 0.11254781838017772,
+          "raw": 0.11254781838017772
         }
       },
       "n_dates": 8,
@@ -131,6 +144,10 @@
         "high_loss_lift": {
           "complementarity": 0.1776276478346296,
           "raw": 0.8223723521653704
+        },
+        "total_variation": {
+          "complementarity": 0.197291793019479,
+          "raw": 0.197291793019479
         }
       },
       "n_dates": 2,
@@ -160,6 +177,10 @@
         "high_loss_lift": {
           "complementarity": -0.5051775949554165,
           "raw": 1.5051775949554165
+        },
+        "total_variation": {
+          "complementarity": 0.1288200660173699,
+          "raw": 0.1288200660173699
         }
       },
       "n_dates": 2,
@@ -189,6 +210,10 @@
         "high_loss_lift": {
           "complementarity": -1.922591468285669,
           "raw": 2.922591468285669
+        },
+        "total_variation": {
+          "complementarity": 0.10553160442804321,
+          "raw": 0.10553160442804321
         }
       },
       "n_dates": 5,
@@ -218,6 +243,10 @@
         "high_loss_lift": {
           "complementarity": -1.3644996116104688,
           "raw": 2.364499611610469
+        },
+        "total_variation": {
+          "complementarity": 0.11145186707786855,
+          "raw": 0.11145186707786855
         }
       },
       "n_dates": 7,
@@ -247,6 +276,10 @@
         "high_loss_lift": {
           "complementarity": 0.22856919590529035,
           "raw": 0.7714308040947097
+        },
+        "total_variation": {
+          "complementarity": 0.1808743589951376,
+          "raw": 0.1808743589951376
         }
       },
       "n_dates": 1,
@@ -276,6 +309,10 @@
         "high_loss_lift": {
           "complementarity": -1.3582810236600675,
           "raw": 2.3582810236600675
+        },
+        "total_variation": {
+          "complementarity": 0.10706787469287471,
+          "raw": 0.10706787469287471
         }
       },
       "n_dates": 2,
@@ -305,6 +342,10 @@
         "high_loss_lift": {
           "complementarity": -0.7511104223666214,
           "raw": 1.7511104223666214
+        },
+        "total_variation": {
+          "complementarity": 0.14129758315547178,
+          "raw": 0.14129758315547178
         }
       },
       "n_dates": 6,
@@ -334,6 +375,10 @@
         "high_loss_lift": {
           "complementarity": -1.9433743409490334,
           "raw": 2.9433743409490334
+        },
+        "total_variation": {
+          "complementarity": 0.09654405289052792,
+          "raw": 0.09654405289052792
         }
       },
       "n_dates": 5,
@@ -363,6 +408,10 @@
         "high_loss_lift": {
           "complementarity": -0.5755136268343817,
           "raw": 1.5755136268343817
+        },
+        "total_variation": {
+          "complementarity": 0.12609784090908957,
+          "raw": 0.12609784090908957
         }
       },
       "n_dates": 2,
@@ -392,6 +441,10 @@
         "high_loss_lift": {
           "complementarity": -0.6624813216626788,
           "raw": 1.6624813216626788
+        },
+        "total_variation": {
+          "complementarity": 0.13400723188405603,
+          "raw": 0.13400723188405603
         }
       },
       "n_dates": 3,
@@ -421,6 +474,10 @@
         "high_loss_lift": {
           "complementarity": -2.7749010518029342,
           "raw": 3.7749010518029342
+        },
+        "total_variation": {
+          "complementarity": 0.08247436113074168,
+          "raw": 0.08247436113074168
         }
       },
       "n_dates": 3,
@@ -450,6 +507,10 @@
         "high_loss_lift": {
           "complementarity": -2.163292847503374,
           "raw": 3.163292847503374
+        },
+        "total_variation": {
+          "complementarity": 0.09421588169074571,
+          "raw": 0.09421588169074571
         }
       },
       "n_dates": 6,
@@ -479,6 +540,10 @@
         "high_loss_lift": {
           "complementarity": -0.5820561767112087,
           "raw": 1.5820561767112087
+        },
+        "total_variation": {
+          "complementarity": 0.14001149009159797,
+          "raw": 0.14001149009159797
         }
       },
       "n_dates": 6,
@@ -508,6 +573,10 @@
         "high_loss_lift": {
           "complementarity": -0.9649227287615758,
           "raw": 1.9649227287615758
+        },
+        "total_variation": {
+          "complementarity": 0.137929621931259,
+          "raw": 0.137929621931259
         }
       },
       "n_dates": 3,
@@ -537,6 +606,10 @@
         "high_loss_lift": {
           "complementarity": 0.5330670590708428,
           "raw": 0.4669329409291571
+        },
+        "total_variation": {
+          "complementarity": 0.19918878525121592,
+          "raw": 0.19918878525121592
         }
       },
       "n_dates": 1,
@@ -551,7 +624,7 @@
   "provenance": {
     "merged_model_rule": "one outcome-blind representative configuration per exact model version",
     "pair_metrics": "data/derived/global_baseline_pair_metrics.csv.gz",
-    "pair_metrics_sha256": "18101c489ecf2000842ea297561914f6f874832ba843f2190ae494979a75ea44",
+    "pair_metrics_sha256": "a6ab71bc2fbbedd5459870426a5957b2a36d3585f715c819444e7bc599616459",
     "panel": "data/build/scored_panel_model_versions.csv",
     "panel_sha256": "7b9ce08cd0e881ea111d15aa429a5c733d3f8b48c5dce88245afbbeb7df131c5"
   },

@@ -42,6 +42,8 @@ INPUT_FIELDS = [
     "lift_reason",
     "adjusted_loss_pearson_corr",
     "corr_reason",
+    "total_variation",
+    "tv_reason",
 ]
 
 
@@ -72,6 +74,8 @@ def pair_row(
         "lift_reason": "" if eligible == "1" else "n_overlap_10_below_min_50",
         "adjusted_loss_pearson_corr": str(value / 10) if eligible == "1" else "",
         "corr_reason": "" if eligible == "1" else "n_overlap_10_below_min_50",
+        "total_variation": str(abs(value) / (abs(value) + 1)) if eligible == "1" else "",
+        "tv_reason": "" if eligible == "1" else "n_overlap_10_below_min_50",
     }
 
 
@@ -142,6 +146,7 @@ def test_run_analysis_writes_deterministic_complete_universe(tmp_path: Path) -> 
         "adjusted_pog",
         "high_loss_lift",
         "adjusted_loss_corr",
+        "total_variation",
     ]
     assert result["summary"]["thresholds"] == {
         "reporting_min_defined_pairs": REPORTING_MIN_DEFINED_PAIRS,

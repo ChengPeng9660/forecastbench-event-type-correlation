@@ -62,6 +62,7 @@ def test_exporter_writes_real_schema_and_explicit_nulls(tmp_path: Path) -> None:
                 "adjusted_loss_pearson_corr": "0.2", "bi_gap_common": "1.5", "near_bi": "1",
                 "pog_reason": "", "lift_reason": "both_marginal_high_loss_rates_zero", "corr_reason": "",
                 "metric_status": "eligible_partial:lift",
+                "total_variation": "0.1", "tv_reason": "",
             }
         ],
     )

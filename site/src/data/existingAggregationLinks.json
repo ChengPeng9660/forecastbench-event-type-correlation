@@ -1,0 +1,1870 @@
+{
+  "schema_version": 1,
+  "entries": {
+    "Claude-2.1 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-2.1"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-3-5-Sonnet-20240620 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-3-5-Sonnet-20240620"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-3-5-Sonnet-20241022 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-3-5-Sonnet-20241022 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-3-5-Sonnet-20241022"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Claude-3-7-Sonnet-20250219 (scratchpad with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Claude-3-7-Sonnet-20250219 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-3-7-Sonnet-20250219 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-3-7-Sonnet-20250219"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-3-Haiku-20240307 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-3-Haiku-20240307"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-3-Opus-20240229 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-3-Opus-20240229"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-Haiku-4-5-20251001 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Claude-Haiku-4-5-20251001 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-Haiku-4-5-20251001 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-Haiku-4-5-20251001"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-Opus-4-1-20250805 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Claude-Opus-4-1-20250805 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-Opus-4-1-20250805 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-Opus-4-1-20250805"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-Opus-4-5-20251101 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-Opus-4-5-20251101 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-Opus-4-5-20251101 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-Opus-4-5-20251101"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-Sonnet-4-20250514 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-Sonnet-4-20250514 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-Sonnet-4-20250514 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-Sonnet-4-20250514 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-Sonnet-4-20250514 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-Sonnet-4-20250514"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Claude-Sonnet-4-5-20250929 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Claude-Sonnet-4-5-20250929 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Claude-Sonnet-4-5-20250929"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "DeepSeek-R1 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-R1 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-R1 (scratchpad with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "DeepSeek-R1 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-R1 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-R1 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "DeepSeek-V3 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-V3 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "DeepSeek-V3 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-V3 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-V3 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "DeepSeek-V3 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "DeepSeek-V3"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "DeepSeek-V3.1 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "DeepSeek-V3.1 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "DeepSeek-V3.1 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "DeepSeek-V3.1"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GLM-4.5-Air-FP8 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GLM-4.5-Air-FP8 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-3.5-Turbo-0125 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-3.5-Turbo-0125"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-4-0613 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-4-0613"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-4-Turbo-2024-04-09 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-4-Turbo-2024-04-09"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-4.1-2025-04-14 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-4.1-2025-04-14 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-4.1-2025-04-14 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-4.1-2025-04-14 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-4.1-2025-04-14 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-4.1-2025-04-14"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-4.5-Preview-2025-02-27 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-4.5-Preview-2025-02-27 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-4.5-Preview-2025-02-27 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-4.5-Preview-2025-02-27 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-4.5-Preview-2025-02-27 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-4.5-Preview-2025-02-27"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-4o-2024-05-13 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-4o-2024-05-13"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-4o-2024-11-20 (zero shot with web search)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-4o-2024-11-20"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-5-2025-08-07 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-5-2025-08-07 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "GPT-5-2025-08-07 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-5-2025-08-07 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-5-2025-08-07"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-5-Mini-2025-08-07 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-5-Mini-2025-08-07 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-5-Mini-2025-08-07 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-5-Mini-2025-08-07"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-5-Nano-2025-08-07 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-5-Nano-2025-08-07"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "GPT-5.1-2025-11-13 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "GPT-5.1-2025-11-13 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "GPT-5.1-2025-11-13 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "GPT-5.1-2025-11-13"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-1.5-Flash (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-1.5-Flash"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-1.5-Pro (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-1.5-Pro"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-2.0-Flash-Lite-001 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-2.0-Flash-Lite-001"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-2.5-Flash (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Gemini-2.5-Flash (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Gemini-2.5-Flash (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-2.5-Flash"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-2.5-Flash-Preview-04-17 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-2.5-Flash-Preview-04-17"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-2.5-Pro (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Gemini-2.5-Pro (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Gemini-2.5-Pro (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-2.5-Pro"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-2.5-Pro-Preview-03-25 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-2.5-Pro-Preview-03-25"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Gemini-3-Pro-Preview (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Gemini-3-Pro-Preview (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Gemini-3-Pro-Preview (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Gemini-3-Pro-Preview (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Gemini-3-Pro-Preview"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Grok-4-0709 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Grok-4-0709 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Grok-4-0709 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Grok-4-1-Fast-Non-Reasoning (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Grok-4-1-Fast-Non-Reasoning (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Grok-4-1-Fast-Reasoning (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Grok-4-1-Fast-Reasoning (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Grok-4-1-Fast-Reasoning (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Grok-4-Fast-Non-Reasoning (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Grok-4-Fast-Non-Reasoning (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Grok-4-Fast-Reasoning (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Grok-4-Fast-Reasoning (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Grok-4-Fast-Reasoning (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Grok-beta (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Grok-beta (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Kimi-K2-Instruct (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Kimi-K2-Instruct (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Kimi-K2-Instruct (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Kimi-K2-Instruct (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Kimi-K2-Instruct"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Kimi-K2-Instruct-0905 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Kimi-K2-Instruct-0905 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Kimi-K2-Instruct-0905 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Kimi-K2-Instruct-0905"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Kimi-K2-Thinking (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Kimi-K2-Thinking"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Llama-3.3-70B-Instruct-Turbo (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Llama-3.3-70B-Instruct-Turbo (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Magistral-Medium-2506 (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Magistral-Medium-2506 (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Mistral-Large-2411 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Mistral-Large-2411 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "O3-2025-04-16 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "O3-2025-04-16 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "O3-2025-04-16 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "O3-Mini-2025-01-31 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "O3-Mini-2025-01-31 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "O3-Mini-2025-01-31 (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "QwQ-32B-Preview (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "QwQ-32B-Preview (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "QwQ-32B-Preview (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "QwQ-32B-Preview (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Qwen1.5-110B-Chat (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Qwen1.5-110B-Chat"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Qwen2.5-72B-Instruct-Turbo (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Qwen2.5-72B-Instruct-Turbo"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Qwen3-235B-A22B-Fp8-Tput (scratchpad with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      },
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing fixed-pair results",
+        "params": {
+          "upper_left_base": "Qwen3-235B-A22B-Fp8-Tput (zero shot with freeze values)",
+          "upper_left_view": "fixed"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "full_sample",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Qwen3-235B-A22B-Fp8-Tput (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Qwen3-235B-A22B-Fp8-Tput"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)": [
+      {
+        "page": "upper-left-pairs",
+        "label": "Open existing cross-fit pair results",
+        "params": {
+          "upper_left_base": "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)",
+          "upper_left_view": "crossfit",
+          "upper_left_min_directions": "1"
+        },
+        "scope": "polymarket_only",
+        "evaluation": "cross_fit",
+        "methods": [
+          "simple_mean",
+          "log_odds_mean",
+          "ec_w0_56",
+          "piecewise_odds"
+        ]
+      }
+    ],
+    "Qwen3-235B-A22B-Thinking-2507 (zero shot)": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "Qwen3-235B-A22B-Thinking-2507"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ],
+    "claude-3-5-haiku-20241022": [
+      {
+        "page": "fixed-focal-no-freeze",
+        "label": "Open existing fixed-base cross-fit results",
+        "params": {
+          "nofreeze_base": "claude-3-5-haiku-20241022"
+        },
+        "scope": "all_events",
+        "evaluation": "cross_fit",
+        "methods": [
+          "best_single",
+          "cf_directional",
+          "ec_w0_56",
+          "log_odds_mean",
+          "piecewise_odds",
+          "simple_mean"
+        ]
+      }
+    ]
+  }
+}
