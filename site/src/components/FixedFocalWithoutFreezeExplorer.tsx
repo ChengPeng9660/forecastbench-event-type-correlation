@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
+import { useHistoryRestore } from "../lib/useHistoryRestore";
 import type {
   FixedFocalAggregationView,
   FixedFocalWithoutFreezeData,
@@ -104,6 +106,10 @@ export function FixedFocalWithoutFreezeExplorer({ data }: { data: FixedFocalWith
   const [outcome, setOutcome] = useState<FixedFocalOutcome>("gain_vs_base");
   const [nearBiOnly, setNearBiOnly] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState("");
+  useHistoryRestore((params) => {
+    const candidate = params.get("nofreeze_base") ?? "";
+    setBaseModel(baseModels.includes(candidate) ? candidate : defaultBase);
+  });
 
   const focalPoints = useMemo(
     () => data.points.filter((point) => point.base_model === baseModel),
@@ -176,8 +182,8 @@ export function FixedFocalWithoutFreezeExplorer({ data }: { data: FixedFocalWith
   return (
     <section className="fixed-focal-no-freeze-section" id="fixed-focal-no-freeze">
       <div className="section-heading freeze-correlation-heading">
-        <div><p className="eyebrow">WITHOUT-FREEZE MODEL × WITHOUT-FREEZE PARTNER</p><h2>Which partner improves a fixed focal model?</h2></div>
-        <p>Choose one canonical model as the fixed base, then compare every eligible without-freeze partner on identical pair-common support. The base remains the gain denominator across the entire chart.</p>
+        <div><p className="eyebrow">MODELS WITHOUT FREEZE VALUES</p><h2>Which partner improves a fixed focal model?</h2></div>
+        <p>Keep one model fixed and compare its eligible partners on shared events, without freeze-value information.</p>
       </div>
 
       <div className="fixed-focal-toolbar">
@@ -214,7 +220,7 @@ export function FixedFocalWithoutFreezeExplorer({ data }: { data: FixedFocalWith
       <div className="freeze-diversity-explorer">
         <div className="freeze-diversity-heading">
           <div><p className="eyebrow">FIXED FOCAL MODEL</p><h4>Diversity versus aggregation outcome</h4></div>
-          <p>Each point changes only the partner. A→B uses A-fold diversity and B-fold gain; B→A swaps the roles; Combined pools both. Directional CF is fitted around the selected base and never changes the denominator.</p>
+          <p>Training diversity versus opposite-fold performance; gain is relative to the selected base.</p>
         </div>
 
         <div className="freeze-diversity-controls">
@@ -271,10 +277,14 @@ export function FixedFocalWithoutFreezeExplorer({ data }: { data: FixedFocalWith
         </div>
 
         <div className="freeze-diversity-legend">{PARTNER_FAMILIES.filter((item) => item.id !== "all" && availableFamilies.has(item.id as ModelFamily)).map((item) => { const provider = focalPoints.find((point) => point.partner_family === item.id)?.partner_provider ?? ""; return <span key={item.id}><i style={{ backgroundColor: FREEZE_PROVIDER_COLORS[provider] ?? "#665f6d" }} /> {item.label}</span>; })}</div>
-        <p className="freeze-diversity-note"><strong>Interpretation.</strong> The selected base is constant within every displayed correlation. Positive gain means the aggregation improves on that base; `Gain vs Best` tests the stronger claim that it also beats the hindsight-better constituent. Near-BI is defined only from the named training fold.</p>
       </div>
 
-      <p className="freeze-aggregation-caveat"><strong>Audit.</strong> {data.audit.model_count} canonical models, {data.audit.unordered_pair_count} eligible unordered pairs, and {data.audit.ordered_pair_count} fixed-base observations. All source configurations exclude ForecastBench freeze values. Directional CF weights use training outcomes only; Best Single is not deployable.</p>
+      <p className="research-scope">Positive gain beats the fixed base. Gain vs Best compares against the hindsight-better constituent.</p>
+      <ResearchDetails>
+        <p><strong>Evaluation.</strong> Each point changes only the partner, while the base remains constant within every displayed correlation. A→B uses A-fold diversity and B-fold gain; B→A swaps the roles; Combined pools both. Near-BI is defined only from the named training fold.</p>
+        <p><strong>Weights and reference.</strong> Directional CF is fitted around the selected base using training outcomes only and never changes the denominator. Best Single is a hindsight benchmark, not a deployable method.</p>
+        <p><strong>Audit.</strong> {data.audit.model_count} canonical models, {data.audit.unordered_pair_count} eligible unordered pairs, and {data.audit.ordered_pair_count} fixed-base observations. All source configurations exclude ForecastBench freeze values.</p>
+      </ResearchDetails>
     </section>
   );
 }

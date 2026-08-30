@@ -248,7 +248,7 @@ function globalBaselineFixture() {
 }
 
 test("filters event type and metric through reproducible URL state", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#matrix");
   await expect(page.locator("#matrix").getByRole("heading", { name: "Adjusted Pairwise Oracle Gain" })).toBeVisible();
   await page.getByLabel("Metric", { exact: true }).selectOption("high_loss_lift");
   await expect(page.locator("#matrix").getByRole("heading", { name: "Adjusted High-loss Lift" })).toBeVisible();
@@ -260,7 +260,7 @@ test("filters event type and metric through reproducible URL state", async ({ pa
 });
 
 test("keeps heatmap selection visible without a detail sidebar", async ({ page }) => {
-  await page.goto("/?metric=adjusted_pog&min_n=50");
+  await page.goto("/?metric=adjusted_pog&min_n=50#matrix");
   const cell = page.getByTestId("heatmap").locator("button.heat-cell").first();
   await cell.scrollIntoViewIfNeeded();
   await cell.click();
@@ -270,14 +270,16 @@ test("keeps heatmap selection visible without a detail sidebar", async ({ page }
 
 test("keeps the research workspace usable on mobile", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "mobile-only assertion");
-  await page.goto("/");
+  await page.goto("/#matrix");
   await expect(page.getByLabel("Event type")).toBeVisible();
   await expect(page.getByTestId("heatmap")).toBeVisible();
+  await page.getByRole("navigation", { name: "Research sections" }).locator('a[href="#ranking"]').click();
   await expect(page.getByRole("heading", { name: "Model pair ranking" })).toBeVisible();
+  await expect(page.getByTestId("heatmap")).toBeHidden();
 });
 
 test("keeps the navigation and analysis filters at their original document positions", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#matrix");
   const dock = page.locator(".filter-dock");
   const header = page.locator(".site-header");
   await expect(dock).toHaveCSS("position", "relative");
@@ -290,12 +292,12 @@ test("keeps the navigation and analysis filters at their original document posit
 test("renders an English-only interface", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.getByRole("heading", { name: "Forecast Model Dependence Atlas" })).toBeVisible();
+  await expect(page.locator("#overview").getByRole("heading", { level: 1 })).toBeVisible();
   expect(await page.locator("body").innerText()).not.toMatch(/\p{Script=Han}/u);
 });
 
 test("explores the Polymarket freeze baseline across models, methods, and folds", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#polymarket-aggregation");
   const section = page.locator("#polymarket-aggregation");
   await section.scrollIntoViewIfNeeded();
   await expect(section.getByRole("heading", { name: "Can an LLM improve the market snapshot?" })).toBeVisible();
@@ -367,7 +369,7 @@ test("compares every without-freeze partner against one fixed focal model", asyn
 });
 
 test("keeps 30 heatmap models in release order within a compact matrix", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#matrix");
   const matrix = page.getByTestId("heatmap");
   await expect(matrix.locator(".heat-cell")).toHaveCount(900);
   const result = await matrix.evaluate(async (root) => {
@@ -387,7 +389,7 @@ test("keeps 30 heatmap models in release order within a compact matrix", async (
 });
 
 test("lets the reader choose a custom heatmap model subset", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#matrix");
   await page.getByRole("button", { name: "Heatmap models, default 30" }).click();
   const picker = page.getByRole("dialog", { name: "Choose heatmap models" });
   await expect(picker).toBeVisible();
@@ -398,7 +400,6 @@ test("lets the reader choose a custom heatmap model subset", async ({ page }) =>
   await picker.getByRole("button", { name: "Show 3 models" }).click();
 
   await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(9);
-  await expect(page.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(9);
   await expect(page.getByTestId("heatmap").locator(".heatmap-grid")).toHaveClass(/is-sparse/);
   const sparseCell = await page.getByTestId("heatmap").locator(".heat-cell").first().boundingBox();
   expect(sparseCell?.width).toBeGreaterThan(55);
@@ -406,9 +407,18 @@ test("lets the reader choose a custom heatmap model subset", async ({ page }) =>
   await expect(page.getByRole("button", { name: "Heatmap models, 3 selected" })).toBeVisible();
   await expect(page).toHaveURL(/heatmap_models=/);
 
+  await page.getByRole("navigation", { name: "Research sections" }).locator('a[href="#global"]').click();
+  await expect(page.getByTestId("global-pair-heatmap")).toBeVisible();
+  await expect(page.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(9);
+  await expect(page.getByRole("button", { name: "Heatmap models, 3 selected" })).toBeVisible();
+
+  await page.getByRole("navigation", { name: "Research sections" }).locator('a[href="#matrix"]').click();
+  await expect(page.getByTestId("heatmap")).toBeVisible();
   await page.getByRole("button", { name: "Heatmap models, 3 selected" }).click();
   await page.getByRole("dialog", { name: "Choose heatmap models" }).getByRole("button", { name: "Use default 30" }).click();
   await expect(page.getByTestId("heatmap").locator(".heat-cell")).toHaveCount(900);
+  await page.getByRole("navigation", { name: "Research sections" }).locator('a[href="#global"]').click();
+  await expect(page.getByTestId("global-pair-heatmap")).toBeVisible();
   await expect(page.getByTestId("global-pair-heatmap").locator(".heat-cell")).toHaveCount(900);
   await expect(page).not.toHaveURL(/heatmap_models=/);
 });
@@ -417,10 +427,10 @@ test("explores descriptive stability across seven event types without inventing 
   const fixture = crossTypeFixture();
   await page.route("**/data/cross-type/manifest.json", (route) => route.fulfill({ json: fixture.manifest }));
   await page.route("**/data/cross-type/summary.json", (route) => route.fulfill({ json: fixture.summary }));
-  await page.goto("/");
+  await page.goto("/#stability");
 
   const section = page.getByTestId("cross-type-stability");
-  await expect(section.getByRole("heading", { name: "Descriptive pair stability across event types" })).toBeVisible();
+  await expect(section.getByRole("heading", { name: "Dependence across event types" })).toBeVisible();
   await expect(section.getByRole("tab")).toHaveCount(3);
   await expect(section.getByRole("group", { name: "Cross-type sample" }).getByRole("button")).toHaveCount(2);
   await expect(section.locator(".cross-type-cell")).toHaveCount(49);
@@ -453,7 +463,7 @@ test("shows the no-topic global dependence baseline without topic-transfer panel
   await page.route("**/data/global-baseline/summary.json", (route) => route.fulfill({ json: fixture.summary }));
   await page.route("**/data/global-baseline/pair-matrices/official_full.json", (route) => { officialMatrixRequests += 1; return route.fulfill({ json: fixture.matrices.official_full }); });
   await page.route("**/data/global-baseline/pair-matrices/seven_topic_union.json", (route) => { unionMatrixRequests += 1; return route.fulfill({ json: fixture.matrices.seven_topic_union }); });
-  await page.goto("/");
+  await page.goto("/#global");
 
   const section = page.getByTestId("global-baseline");
   await expect(section.getByRole("heading", { name: "Global model dependence" })).toBeVisible();

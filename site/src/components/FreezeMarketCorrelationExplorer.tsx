@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
 import type {
   FreezeAggregationMethodId,
   FreezeDiversityMetricId,
@@ -357,10 +358,10 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
     <section className="freeze-correlation-section" id="freeze-correlation">
       <div className="section-heading freeze-correlation-heading">
         <div>
-          <p className="eyebrow">FREEZE-ONLY PROMPT ↔ MARKET</p>
+          <p className="eyebrow">MARKET-EXPOSED MODELS</p>
           <h2>How closely do models track the market snapshot?</h2>
         </div>
-        <p>Prediction-level Pearson correlation compares each zero-shot or scratchpad with-freeze configuration with the same ForecastBench freeze-time Polymarket probability. Only non-imputed Polymarket targets with a valid freeze-time probability are used; Dataset questions are excluded. The two prompt types remain separate, and news-augmented configurations are excluded. Higher values mean closer alignment—not higher forecasting quality or causal market influence.</p>
+        <p>Compare freeze-only prompts with the market probability they received. Zero shot and scratchpad stay separate; Dataset questions are excluded.</p>
       </div>
 
       <div className="freeze-correlation-kpis" aria-label="Correlation summary">
@@ -425,7 +426,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
             <div><dt>Model gain vs market</dt><dd className={selected.model_gain_vs_market >= 0 ? "positive" : "negative"}>{selected.model_gain_vs_market >= 0 ? "+" : ""}{percent(selected.model_gain_vs_market, 2)}</dd></div>
             <div><dt>Common events</dt><dd>{selected.n_common.toLocaleString()}</dd></div>
           </dl>
-          <p className="freeze-correlation-note"><strong>Read this as redundancy.</strong> {data.metric.causal_warning} A high correlation means the model stays close to the market input it saw; it does not by itself imply better BI or positive aggregation gain.</p>
+          <p className="freeze-correlation-note">High correlation means closer alignment, not better forecasting quality or causal market influence.</p>
         </aside>}
       </div>
 
@@ -435,7 +436,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
             <p className="eyebrow">WITH-FREEZE PROMPT × MARKET</p>
             <h3 id="freeze-aggregation-title">Aggregation benchmark</h3>
           </div>
-          <p>Every displayed prompt is paired with the same freeze-time Polymarket probability on non-imputed market targets only; Dataset questions are excluded. Results are ten-repeat, event-disjoint cross-fit OOS and follow the active provider and prompt filters above.</p>
+          <p>Ten-repeat cross-fit OOS, on shared Polymarket events, using the provider and prompt filters above.</p>
         </div>
 
         <div className="freeze-aggregation-overview">
@@ -476,7 +477,7 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
               <p className="eyebrow">FIXED POLYMARKET BASE</p>
               <h4>Does a more diverse model improve market aggregation?</h4>
             </div>
-            <p>Each point is one exact with-freeze prompt paired with the same freeze-time market probability. Use A→B or B→A to relate one named training-fold diversity estimate to its opposite-fold aggregation outcome; Combined pools both directions.</p>
+            <p>One point per prompt–market pair: training diversity versus opposite-fold performance.</p>
           </div>
 
           <div className="freeze-diversity-controls">
@@ -598,16 +599,18 @@ export function FreezeMarketCorrelationExplorer({ data }: { data: FreezeMarketCo
             <span><i className="zero-shot" /> Zero shot</span><span><i className="scratchpad" /> Scratchpad</span>
             {providers.map((item) => <span key={item}><i style={{ backgroundColor: FREEZE_PROVIDER_COLORS[item] ?? "#665f6d" }} /> {item}</span>)}
           </div>
-          <p className="freeze-diversity-note"><strong>Interpretation.</strong> The displayed r and ρ are unweighted pair-level associations, not causal effects. All three x axes are oriented so that larger values mean greater market–model diversity. Near-BI keeps pairs whose mean training-fold BI gap is at most {data.aggregation.near_bi.threshold_bi_points.toFixed(1)} points. {foldView === "combined" ? "Combined is a repeated cross-fit aggregate diagnostic." : `${foldView === "a_to_b" ? "A→B" : "B→A"} keeps train diversity and opposite-fold gain directionally aligned.`} The headline method gain remains support-weighted across all provider/prompt-filtered pairs.</p>
         </div>
 
-        <p className="freeze-aggregation-caveat"><strong>Leakage boundary.</strong> Fixed pools never use outcomes. Directional CF estimates its two direction-specific weights on the training fold only. Best Single uses test outcomes to select the better constituent and is shown only as a non-deployable upper-reference benchmark.</p>
+        <p className="research-scope">Directional CF fits training outcomes only. Best Single is a hindsight benchmark, not a deployable method.</p>
       </section>
 
-      <div className="freeze-correlation-audit">
+      <ResearchDetails>
         <p><strong>Freeze-only scope.</strong> Zero-shot and scratchpad configurations are retained as separate rows. Every displayed configuration explicitly includes <code>with freeze values</code>, and configurations containing <code>news</code> are excluded.</p>
+        <p>Prediction-level Pearson correlation compares each with-freeze configuration with the same ForecastBench freeze-time Polymarket probability; news-augmented configurations are excluded. {data.metric.causal_warning} A high correlation does not by itself imply better BI or positive aggregation gain.</p>
         <p><strong>Outcome-blind support.</strong> Imputed market rows are excluded, leaving {data.audit.model_event_cells.toLocaleString()} model–event cells; correlation is computed only on each model's exact common support.</p>
-      </div>
+        <p><strong>Cross-fit evaluation.</strong> Each point pairs an exact with-freeze prompt with the same freeze-time market probability. A→B and B→A align training-fold diversity with opposite-fold aggregation performance; Combined pools both directions over ten repeats. Fixed pools never use outcomes. Directional CF estimates its two direction-specific weights on the training fold only. Best Single uses test outcomes to choose the better constituent.</p>
+        <p><strong>Interpretation.</strong> The displayed r and ρ are unweighted pair-level associations, not causal effects. Larger x-axis values mean greater market–model diversity. Near-BI keeps pairs whose mean training-fold BI gap is at most {data.aggregation.near_bi.threshold_bi_points.toFixed(1)} points. {foldView === "combined" ? "Combined is a repeated cross-fit aggregate diagnostic." : `${foldView === "a_to_b" ? "A→B" : "B→A"} keeps train diversity and opposite-fold gain directionally aligned.`} The headline method gain remains support-weighted across all provider/prompt-filtered pairs.</p>
+      </ResearchDetails>
     </section>
   );
 }

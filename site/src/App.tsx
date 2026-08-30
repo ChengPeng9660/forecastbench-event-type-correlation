@@ -12,6 +12,10 @@ import { GlobalBaseline } from "./components/GlobalBaseline";
 import { ModelProfile } from "./components/ModelProfile";
 import { ModelMultiSelect } from "./components/ModelMultiSelect";
 import { PairRanking } from "./components/PairRanking";
+import { ResearchHeader, ResearchMasthead, ResearchPanel, ResearchPending } from "./components/ResearchShell";
+import { ResearchOverview } from "./components/ResearchOverview";
+import { researchPageFromHash, researchGroupFor, usesAtlasFilters, type ResearchPage } from "./lib/navigation";
+import { useHistoryRestore } from "./lib/useHistoryRestore";
 import { loadAppData, loadCrossTypeData, loadEventType, loadFixedFocalWithoutFreezeData, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadMarketDiversityPerformanceData, loadPairAggregationData, loadPolymarketAggregationData, loadUpperLeftModelPairAggregationData, loadWithoutFreezeBaseData } from "./lib/data";
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
 import type { AppData, CrossTypeData, EventTypeData, FixedBaseAggregationData, FixedFocalWithoutFreezeData, FreezeMarketCorrelationData, GlobalBaselineData, MarketDiversityPerformanceData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData, UpperLeftModelPairAggregationData } from "./types/data";
@@ -26,8 +30,8 @@ interface Filters {
   heatmapModels: string[];
 }
 
-const query = new URLSearchParams(window.location.search);
-const initialFilters: Filters = {
+function filtersFromQuery(query: URLSearchParams): Filters {
+  return {
   eventType: query.get("type") ?? "",
   metric: (query.get("metric") as MetricId) ?? "adjusted_pog",
   model: query.get("model") ?? "",
@@ -35,7 +39,8 @@ const initialFilters: Filters = {
   minOverlap: Number(query.get("min_n") ?? 50),
   nearBi: query.get("near_bi") !== "0",
   heatmapModels: [...new Set((query.get("heatmap_models") ?? "").split(",").filter(Boolean))].slice(0, 30),
-};
+  };
+}
 
 const METRIC_DESCRIPTIONS: Record<MetricId, string> = {
   adjusted_pog: "Measures whether two models excel on different questions. Lower gain means higher model dependence; larger gain indicates more ex post complementarity.",
@@ -103,9 +108,11 @@ function downloadPairs(pairs: PairMetrics[], appData: AppData, eventData: EventT
 }
 
 export default function App() {
+  const [activePage, setActivePage] = useState<ResearchPage>(() => researchPageFromHash(window.location.hash));
+  const [visitedPages, setVisitedPages] = useState<Set<ResearchPage>>(() => new Set([researchPageFromHash(window.location.hash)]));
   const [appData, setAppData] = useState<AppData | null>(null);
   const [eventData, setEventData] = useState<EventTypeData | null>(null);
-  const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [filters, setFilters] = useState<Filters>(() => filtersFromQuery(new URLSearchParams(window.location.search)));
   const [selectedPair, setSelectedPair] = useState<PairMetrics | null>(null);
   const [error, setError] = useState("");
   const [loadingSlice, setLoadingSlice] = useState(true);
@@ -129,69 +136,90 @@ export default function App() {
   const [withoutFreezeBaseError, setWithoutFreezeBaseError] = useState("");
   const [fixedFocalWithoutFreezeData, setFixedFocalWithoutFreezeData] = useState<FixedFocalWithoutFreezeData | null>(null);
   const [fixedFocalWithoutFreezeError, setFixedFocalWithoutFreezeError] = useState("");
+  useHistoryRestore((params) => setFilters(filtersFromQuery(params)));
+
+  useEffect(() => {
+    const followLocation = () => {
+      const page = researchPageFromHash(window.location.hash);
+      setVisitedPages((current) => new Set([...current, page]));
+      setActivePage(page);
+    };
+    window.addEventListener("hashchange", followLocation);
+    window.addEventListener("popstate", followLocation);
+    return () => {
+      window.removeEventListener("hashchange", followLocation);
+      window.removeEventListener("popstate", followLocation);
+    };
+  }, []);
+
+  useEffect(() => {
+    const group = researchGroupFor(activePage);
+    document.title = `${group ? `${group.label} · ` : ""}ForecastBench Research Atlas`;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [activePage]);
+
+  function navigate(page: ResearchPage) {
+    if (page !== activePage) window.history.pushState(null, "", `${window.location.pathname}${window.location.search}#${page}`);
+    setVisitedPages((current) => new Set([...current, page]));
+    setActivePage(page);
+    document.getElementById("top")?.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
 
   useEffect(() => {
     loadAppData().then(setAppData).catch((reason: Error) => setError(reason.message));
   }, []);
 
   useEffect(() => {
+    if (activePage !== "stability" || crossTypeData || crossTypeError) return;
     loadCrossTypeData()
       .then(setCrossTypeData)
       .catch((reason: Error) => setCrossTypeError(reason.message))
       .finally(() => setCrossTypeLoading(false));
-  }, []);
+  }, [activePage, crossTypeData, crossTypeError]);
 
   useEffect(() => {
+    if (activePage !== "global" || globalBaselineData || globalBaselineError) return;
     loadGlobalBaselineData()
       .then(setGlobalBaselineData)
       .catch((reason: Error) => setGlobalBaselineError(reason.message))
       .finally(() => setGlobalBaselineLoading(false));
-  }, []);
+  }, [activePage, globalBaselineData, globalBaselineError]);
 
   useEffect(() => {
+    if (activePage !== "gain" || pairAggregationData || pairAggregationError) return;
     loadPairAggregationData().then(setPairAggregationData).catch((reason: Error) => setPairAggregationError(reason.message));
-  }, []);
+  }, [activePage, pairAggregationData, pairAggregationError]);
 
   useEffect(() => {
+    if (activePage !== "polymarket-aggregation" || polymarketAggregationData || polymarketAggregationError) return;
     loadPolymarketAggregationData().then(setPolymarketAggregationData).catch((reason: Error) => setPolymarketAggregationError(reason.message));
-  }, []);
+  }, [activePage, polymarketAggregationData, polymarketAggregationError]);
 
   useEffect(() => {
+    if (activePage !== "freeze-correlation" || freezeMarketCorrelationData || freezeMarketCorrelationError) return;
     loadFreezeMarketCorrelationData().then(setFreezeMarketCorrelationData).catch((reason: Error) => setFreezeMarketCorrelationError(reason.message));
-  }, []);
+  }, [activePage, freezeMarketCorrelationData, freezeMarketCorrelationError]);
 
   useEffect(() => {
+    if (activePage !== "market-performance" || marketDiversityPerformanceData || marketDiversityPerformanceError) return;
     loadMarketDiversityPerformanceData().then(setMarketDiversityPerformanceData).catch((reason: Error) => setMarketDiversityPerformanceError(reason.message));
-  }, []);
+  }, [activePage, marketDiversityPerformanceData, marketDiversityPerformanceError]);
 
   useEffect(() => {
+    if (activePage !== "upper-left-pairs" || upperLeftPairData || upperLeftPairError) return;
     loadUpperLeftModelPairAggregationData().then(setUpperLeftPairData).catch((reason: Error) => setUpperLeftPairError(reason.message));
-  }, []);
+  }, [activePage, upperLeftPairData, upperLeftPairError]);
 
   useEffect(() => {
+    if (activePage !== "without-freeze-base" || withoutFreezeBaseData || withoutFreezeBaseError) return;
     loadWithoutFreezeBaseData().then(setWithoutFreezeBaseData).catch((reason: Error) => setWithoutFreezeBaseError(reason.message));
-  }, []);
+  }, [activePage, withoutFreezeBaseData, withoutFreezeBaseError]);
 
   useEffect(() => {
+    if (activePage !== "fixed-focal-no-freeze" || fixedFocalWithoutFreezeData || fixedFocalWithoutFreezeError) return;
     loadFixedFocalWithoutFreezeData().then(setFixedFocalWithoutFreezeData).catch((reason: Error) => setFixedFocalWithoutFreezeError(reason.message));
-  }, []);
-
-  useEffect(() => {
-    const targetId = window.location.hash.slice(1);
-    if (!appData || !eventData || !pairAggregationData || !polymarketAggregationData || !freezeMarketCorrelationData) return;
-    if (targetId === "without-freeze-base" && !withoutFreezeBaseData) return;
-    if (targetId === "fixed-focal-no-freeze" && !fixedFocalWithoutFreezeData) return;
-    if (targetId === "upper-left-pairs" && !upperLeftPairData) return;
-    if (!new Set(["freeze-correlation", "without-freeze-base", "fixed-focal-no-freeze", "upper-left-pairs"]).has(targetId)) return;
-    const scrollToModule = () => {
-      const module = document.getElementById(targetId);
-      if (module) window.scrollTo({ top: module.getBoundingClientRect().top + window.scrollY - 16 });
-    };
-    const frame = window.requestAnimationFrame(scrollToModule);
-    const timeout = window.setTimeout(scrollToModule, 250);
-    const stabilization = window.setTimeout(scrollToModule, 1_200);
-    return () => { window.cancelAnimationFrame(frame); window.clearTimeout(timeout); window.clearTimeout(stabilization); };
-  }, [appData, eventData, pairAggregationData, polymarketAggregationData, freezeMarketCorrelationData, withoutFreezeBaseData, fixedFocalWithoutFreezeData, upperLeftPairData]);
+  }, [activePage, fixedFocalWithoutFreezeData, fixedFocalWithoutFreezeError]);
 
   useEffect(() => {
     if (!appData) return;
@@ -223,7 +251,9 @@ export default function App() {
     params.set("type", filters.eventType);
     params.set("metric", filters.metric);
     if (filters.model) params.set("model", filters.model);
+    else params.delete("model");
     if (filters.provider !== "all") params.set("provider", filters.provider);
+    else params.delete("provider");
     params.set("min_n", String(filters.minOverlap));
     params.set("near_bi", filters.nearBi ? "1" : "0");
     if (filters.heatmapModels.length) params.set("heatmap_models", filters.heatmapModels.join(","));
@@ -294,52 +324,38 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="ForecastBench Event-type Dependence Atlas home">
-          <span className="brand-orbit" aria-hidden="true"><i /></span>
-          <span><strong>ForecastBench</strong><small>DEPENDENCE ATLAS</small></span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <a className="active" href="#matrix">Matrix</a><a href="#gain">Aggregation gain</a><a href="#polymarket-aggregation">Market baseline</a><a href="#market-performance">Market performance</a><a href="#upper-left-pairs">Upper-left pools</a><a href="#freeze-correlation">Freeze correlation</a><a href="#without-freeze-base">Exposure base</a><a href="#fixed-focal-no-freeze">Model focal</a><a href="#global">Global</a><a href="#stability">Stability</a><a href="#ranking">Model pairs</a><a href="#model-view">Model view</a><a href="#methods">Methodology</a><a href="#audit">Audit</a>
-        </nav>
-        <div className="build-state"><i /> {appData.manifest.fixture ? "Sample build" : "Verified build"}</div>
-      </header>
+    <div className="app-shell public-research">
+      <a className="skip-link" href="#top" onClick={(event) => { event.preventDefault(); document.getElementById("top")?.focus(); }}>Skip to content</a>
+      <ResearchHeader page={activePage} onNavigate={navigate} />
 
-      <main id="top">
-        <section className="page-intro">
-          <div className="intro-heading">
-            <p className="eyebrow">FORECASTBENCH · DEPENDENCE ATLAS</p>
-            <h1>Forecast Model<br />Dependence Atlas</h1>
-            <p className="intro-copy">Compare model pairs across event types through three dependence metrics. Purple consistently indicates higher model diversity; taxonomy, sample thresholds, and missing values remain fully auditable.</p>
-          </div>
-          <dl className="dataset-stamp">
-            <div><dt>OFFICIAL TARGETS</dt><dd>{appData.manifest.source_snapshot.official_targets.toLocaleString()}</dd></div>
-            <div><dt>UNIQUE EVENTS</dt><dd>{appData.manifest.source_snapshot.unique_events.toLocaleString()}</dd></div>
-            <div><dt>EXACT MODELS</dt><dd>{appData.models.length.toLocaleString()}</dd></div>
-            <div><dt>ANALYSIS SLICES</dt><dd>{appData.manifest.event_types.length.toLocaleString()}</dd></div>
-            <div className="dataset-version"><dt>DATASET VERSION</dt><dd>{appData.manifest.dataset_version}</dd></div>
-          </dl>
-        </section>
+      <main id="top" tabIndex={-1}>
+        {activePage === "overview" && <ResearchOverview appData={appData} models={eligibleModels} pairs={visiblePairs} metric={metric} eventLabel={eventRef.label_en} nearBi={filters.nearBi} onNavigate={navigate} />}
+        <ResearchMasthead page={activePage} onNavigate={navigate} />
 
         {appData.manifest.fixture && (
           <div className="fixture-notice" role="status"><strong>SAMPLE DATA</strong><span>The interface, schema, and audit trail are ready. Values currently come from a front-end fixture; this notice disappears automatically once derived JSON is connected.</span></div>
         )}
 
-        <section className="filter-dock" aria-label="Analysis filters">
-          <label><span>EVENT TYPE</span><select aria-label="Event type" value={filters.eventType} onChange={(event) => setFilters({ ...filters, eventType: event.target.value })}>{appData.manifest.event_types.map((item) => <option value={item.id} key={item.id}>[{item.dimension ?? "topic"}] {item.label_en}</option>)}</select></label>
+        {usesAtlasFilters(activePage) && <section className="filter-dock" aria-label="Analysis filters">
+          <label><span>EVENT TYPE</span><select aria-label="Event type" value={filters.eventType} onChange={(event) => setFilters({ ...filters, eventType: event.target.value })}>{["topic", "origin_type", "official_source"].map((dimension) => <optgroup key={dimension} label={dimension === "topic" ? "Event topics" : dimension === "origin_type" ? "Question origin" : "Official sources"}>{appData.manifest.event_types.filter((item) => (item.dimension ?? "topic") === dimension).map((item) => <option value={item.id} key={item.id}>{item.label_en}</option>)}</optgroup>)}</select></label>
           <label><span>METRIC</span><select aria-label="Metric" value={filters.metric} onChange={(event) => setFilters({ ...filters, metric: event.target.value as MetricId })}>{appData.manifest.metrics.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
-          <label><span>FOCAL MODEL</span><select aria-label="Focal model" value={filters.model} onChange={(event) => setFilters({ ...filters, model: event.target.value })}><option value="">All models</option>{appData.models.filter((model) => eventData.models.includes(model.id)).map((model) => <option value={model.id} key={model.id}>{model.name}</option>)}</select></label>
-          <label><span>PROVIDER</span><select aria-label="Provider" value={filters.provider} onChange={(event) => setFilters({ ...filters, provider: event.target.value, model: "" })}><option value="all">All providers</option>{providers.map((provider) => <option value={provider} key={provider}>{provider}</option>)}</select></label>
           <ModelMultiSelect models={appData.models} selectedIds={filters.heatmapModels} onChange={(heatmapModels) => { setFilters({ ...filters, heatmapModels }); setSelectedPair(null); }} />
-          <label className="range-label"><span>MIN OVERLAP <b>{filters.minOverlap}</b></span><input aria-label="Minimum overlap" type="range" min="50" max="250" step="25" value={filters.minOverlap} onChange={(event) => setFilters({ ...filters, minOverlap: Number(event.target.value) })} /></label>
           <label className="check-label"><input type="checkbox" checked={filters.nearBi} onChange={(event) => setFilters({ ...filters, nearBi: event.target.checked })} /><span>Near-BI only</span></label>
-        </section>
+          <details className="atlas-filter-details">
+            <summary>More filters <span>{filters.provider !== "all" ? `${filters.provider} · ` : ""}{filters.model ? "Focal model selected · " : ""}Min. overlap {filters.minOverlap}</span></summary>
+            <div className="atlas-advanced-filters">
+              <label><span>FOCAL MODEL</span><select aria-label="Focal model" value={filters.model} onChange={(event) => setFilters({ ...filters, model: event.target.value })}><option value="">All models</option>{appData.models.filter((model) => eventData.models.includes(model.id)).map((model) => <option value={model.id} key={model.id}>{model.name}</option>)}</select></label>
+              <label><span>PROVIDER</span><select aria-label="Provider" value={filters.provider} onChange={(event) => setFilters({ ...filters, provider: event.target.value, model: "" })}><option value="all">All providers</option>{providers.map((provider) => <option value={provider} key={provider}>{provider}</option>)}</select></label>
+              <label className="range-label"><span>MIN OVERLAP <b>{filters.minOverlap}</b></span><input aria-label="Minimum overlap" type="range" min="50" max="250" step="25" value={filters.minOverlap} onChange={(event) => setFilters({ ...filters, minOverlap: Number(event.target.value) })} /></label>
+            </div>
+          </details>
+        </section>}
 
+        <ResearchPanel page="matrix" active={activePage} visited={visitedPages}>
         <section className={`matrix-section ${loadingSlice ? "is-loading" : ""}`} id="matrix">
           <div className="section-heading">
             <div><p className="eyebrow">PAIRWISE MATRIX · {eventRef.label_en.toUpperCase()}</p><h2>{metric.label}</h2></div>
-            <p>{METRIC_DESCRIPTIONS[metric.id]} {filters.heatmapModels.length ? `The heatmap shows ${heatmapModels.length} selected models available under the active filters` : `The heatmap shows the ${heatmapModels.length} highest-coverage models out of ${eligibleModels.length}`}, ordered from earliest to latest release; {visiblePairs.length.toLocaleString()} model pairs meet the active filters.</p>
+            <p>{heatmapModels.length} models · {visiblePairs.length.toLocaleString()} eligible pairs<br />Ordered by release date. Select a cell to highlight a pair.</p>
           </div>
           <div className="matrix-layout">
             <div>
@@ -347,30 +363,53 @@ export default function App() {
               <Heatmap models={heatmapModels} pairs={heatmapPairs} metric={metric} selectedModel={filters.model} selectedPair={selectedPair} onSelectPair={selectPair} />
             </div>
           </div>
+          <details className="research-details"><summary>About this matrix</summary><div><p>{METRIC_DESCRIPTIONS[metric.id]} {filters.heatmapModels.length ? "Only your selected models are shown." : "The matrix displays up to 30 highest-coverage models under the current filters."} Purple is oriented toward greater diversity. Missing cells are not estimates of zero.</p><p>Near-BI limits comparisons to models with similar difficulty-adjusted Brier performance. This descriptive matrix does not measure out-of-sample aggregation gain.</p></div></details>
         </section>
+        </ResearchPanel>
 
+        <ResearchPanel page="gain" active={activePage} visited={visitedPages}>
         {pairAggregationData ? <PairAggregationExplorer
           data={pairAggregationData}
+          active={activePage === "gain"}
           nearBiOnly={filters.nearBi}
           onNearBiOnlyChange={(nearBi) => setFilters((current) => ({ ...current, nearBi }))}
-        /> : pairAggregationError ? <section className="pair-aggregation-section" id="gain"><div className="cross-type-unavailable"><strong>Aggregation benchmark unavailable</strong><span>{pairAggregationError}</span></div></section> : null}
+        /> : <ResearchPending id="gain" error={pairAggregationError} />}
+        </ResearchPanel>
 
-        {polymarketAggregationData ? <PolymarketAggregationExplorer data={polymarketAggregationData} /> : polymarketAggregationError ? <section className="polymarket-aggregation-section" id="polymarket-aggregation"><div className="cross-type-unavailable"><strong>Polymarket freeze benchmark unavailable</strong><span>{polymarketAggregationError}</span></div></section> : null}
+        <ResearchPanel page="polymarket-aggregation" active={activePage} visited={visitedPages}>
+        {polymarketAggregationData ? <PolymarketAggregationExplorer data={polymarketAggregationData} /> : <ResearchPending id="polymarket-aggregation" error={polymarketAggregationError} />}
+        </ResearchPanel>
 
-        {marketDiversityPerformanceData ? <MarketDiversityPerformanceExplorer data={marketDiversityPerformanceData} /> : marketDiversityPerformanceError ? <section className="market-performance-section" id="market-performance"><div className="cross-type-unavailable"><strong>Market performance explorer unavailable</strong><span>{marketDiversityPerformanceError}</span></div></section> : null}
+        <ResearchPanel page="market-performance" active={activePage} visited={visitedPages}>
+        {marketDiversityPerformanceData ? <MarketDiversityPerformanceExplorer data={marketDiversityPerformanceData} /> : <ResearchPending id="market-performance" error={marketDiversityPerformanceError} />}
+        </ResearchPanel>
 
-        {upperLeftPairData ? <UpperLeftModelPairAggregationExplorer data={upperLeftPairData} /> : upperLeftPairError ? <section className="upper-left-pairs-section" id="upper-left-pairs"><div className="cross-type-unavailable"><strong>Upper-left model-pair experiment unavailable</strong><span>{upperLeftPairError}</span></div></section> : null}
+        <ResearchPanel page="upper-left-pairs" active={activePage} visited={visitedPages}>
+        {upperLeftPairData ? <UpperLeftModelPairAggregationExplorer data={upperLeftPairData} /> : <ResearchPending id="upper-left-pairs" error={upperLeftPairError} />}
+        </ResearchPanel>
 
-        {freezeMarketCorrelationData ? <FreezeMarketCorrelationExplorer data={freezeMarketCorrelationData} /> : freezeMarketCorrelationError ? <section className="freeze-correlation-section" id="freeze-correlation"><div className="cross-type-unavailable"><strong>With-freeze correlation unavailable</strong><span>{freezeMarketCorrelationError}</span></div></section> : null}
+        <ResearchPanel page="freeze-correlation" active={activePage} visited={visitedPages}>
+        {freezeMarketCorrelationData ? <FreezeMarketCorrelationExplorer data={freezeMarketCorrelationData} /> : <ResearchPending id="freeze-correlation" error={freezeMarketCorrelationError} />}
+        </ResearchPanel>
 
-        {withoutFreezeBaseData ? <WithoutFreezeBaseExplorer data={withoutFreezeBaseData} /> : withoutFreezeBaseError ? <section className="without-freeze-base-section" id="without-freeze-base"><div className="cross-type-unavailable"><strong>Without-freeze base experiment unavailable</strong><span>{withoutFreezeBaseError}</span></div></section> : null}
+        <ResearchPanel page="without-freeze-base" active={activePage} visited={visitedPages}>
+        {withoutFreezeBaseData ? <WithoutFreezeBaseExplorer data={withoutFreezeBaseData} /> : <ResearchPending id="without-freeze-base" error={withoutFreezeBaseError} />}
+        </ResearchPanel>
 
-        {fixedFocalWithoutFreezeData ? <FixedFocalWithoutFreezeExplorer data={fixedFocalWithoutFreezeData} /> : fixedFocalWithoutFreezeError ? <section className="fixed-focal-no-freeze-section" id="fixed-focal-no-freeze"><div className="cross-type-unavailable"><strong>Fixed-focal without-freeze experiment unavailable</strong><span>{fixedFocalWithoutFreezeError}</span></div></section> : null}
+        <ResearchPanel page="fixed-focal-no-freeze" active={activePage} visited={visitedPages}>
+        {fixedFocalWithoutFreezeData ? <FixedFocalWithoutFreezeExplorer data={fixedFocalWithoutFreezeData} /> : <ResearchPending id="fixed-focal-no-freeze" error={fixedFocalWithoutFreezeError} />}
+        </ResearchPanel>
 
+        <ResearchPanel page="global" active={activePage} visited={visitedPages}>
+        <div className="global-model-picker"><ModelMultiSelect models={appData.models} selectedIds={filters.heatmapModels} onChange={(heatmapModels) => setFilters((current) => ({ ...current, heatmapModels }))} /><span>Shared with your event-atlas selection</span></div>
         <GlobalBaseline data={globalBaselineData} models={appData.models} heatmapModelIds={filters.heatmapModels} loading={globalBaselineLoading} error={globalBaselineError} />
+        </ResearchPanel>
 
+        <ResearchPanel page="stability" active={activePage} visited={visitedPages}>
         <CrossTypeStability data={crossTypeData} loading={crossTypeLoading} error={crossTypeError} />
+        </ResearchPanel>
 
+        <ResearchPanel page="ranking" active={activePage} visited={visitedPages}>
         <section className="ranking-section" id="ranking">
           <div className="section-heading">
             <div><p className="eyebrow">MODEL DEPENDENCE ORDER</p><h2>Model pair ranking</h2></div>
@@ -378,21 +417,33 @@ export default function App() {
           </div>
           <PairRanking pairs={visiblePairs} metric={metric} models={appData.models} selectedPair={selectedPair} onSelectPair={selectPair} />
         </section>
+        </ResearchPanel>
 
+        <ResearchPanel page="model-view" active={activePage} visited={visitedPages}>
         <ModelProfile modelId={profileModel} pairs={visiblePairs} models={appData.models} manifest={appData.manifest} onSelectPair={selectPair} />
+        </ResearchPanel>
 
+        <ResearchPanel page="methods" active={activePage} visited={visitedPages}>
         <section className="method-section" id="methods">
           <div className="section-heading">
-            <div><p className="eyebrow">THREE COMPLEMENTARY LENSES</p><h2>These metrics are not interchangeable</h2></div>
-            <p>Each metric answers a different question. We report them separately and do not present ex post complementarity as deployable aggregation gain.</p>
+            <div><p className="eyebrow">MEASURING DIVERSITY</p><h2>Three complementary lenses</h2></div>
+            <p>Shared errors, loss alignment, and oracle complementarity answer different questions.</p>
           </div>
           <div className="method-list">
             {appData.manifest.metrics.map((item, index) => (
               <article key={item.id}><span>0{index + 1}</span><h3>{item.label}</h3><p>{METRIC_DESCRIPTIONS[item.id]}</p><small>{dependenceDirectionLabel(item.id)}</small></article>
             ))}
           </div>
+          <div className="evaluation-principles">
+            <article><h3>Held-out evaluation</h3><p>Cross-fit experiments split events into disjoint A/B folds, swap train and test, and average across ten reproducible splits. Training data supplies dependence estimates and fitted parameters; the opposite fold supplies performance. Random cross-fit is internal out-of-sample evaluation, not a chronological deployment test.</p></article>
+            <article><h3>Matched market comparisons</h3><p>Market-comparison blocks use only market questions with valid freeze-time Polymarket probabilities. Each model or pair is compared with the market on identical test support. Dataset-only questions are excluded.</p></article>
+            <article><h3>Read scores in the right direction</h3><p>Lower Brier score is better; higher Brier Index is better. Fractional gain measures Brier reduction relative to the named base. Best Single is a hindsight benchmark, not a deployable selection rule. Correlations alone do not establish a causal effect of diversity.</p></article>
+          </div>
+          <a className="research-text-link" href="https://github.com/ChengPeng9660/forecastbench-event-type-correlation/tree/main/docs" target="_blank" rel="noreferrer">Full methodology & experiment records ↗</a>
         </section>
+        </ResearchPanel>
 
+        <ResearchPanel page="audit" active={activePage} visited={visitedPages}>
         <section className="audit-section" id="audit">
           <div className="section-heading">
             <div><p className="eyebrow">PROVENANCE & QUALITY</p><h2>Taxonomy & audit</h2></div>
@@ -411,13 +462,15 @@ export default function App() {
               <dl><div><dt>Default min overlap</dt><dd>{appData.audit.thresholds.min_overlap_default}</dd></div><div><dt>Near-BI max gap</dt><dd>{appData.audit.thresholds.near_bi_max_gap}</dd></div><div><dt>High-loss threshold</dt><dd>{appData.audit.thresholds.high_loss_threshold}</dd></div></dl>
             </aside>
           </div>
+          <dl className="audit-version-line"><div><dt>Dataset</dt><dd>{appData.manifest.dataset_version}</dd></div><div><dt>Metric version</dt><dd>{appData.manifest.metric_version}</dd></div><div><dt>Taxonomy</dt><dd>{appData.manifest.taxonomy_version}</dd></div></dl>
         </section>
+        </ResearchPanel>
       </main>
 
-      <footer>
-        <span>ForecastBench Event-type Dependence Atlas</span>
-        <span>Derived with changes from <a href="https://huggingface.co/datasets/forecastingresearch/forecastbench-datasets">ForecastBench data</a> by the Forecasting Research Institute · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span>
-        <span>Schema {appData.manifest.schema_version} · Metric {appData.manifest.metric_version} · Taxonomy {appData.manifest.taxonomy_version}</span>
+      <footer className="research-footer">
+        <div><strong>ForecastBench Research Atlas</strong><p>Independent research into forecast diversity and aggregation.</p></div>
+        <div className="research-footer-links"><a href="https://github.com/ChengPeng9660/forecastbench-event-type-correlation" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://huggingface.co/datasets/forecastingresearch/forecastbench-datasets" target="_blank" rel="noreferrer">Source data ↗</a><a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0 ↗</a></div>
+        <p className="research-attribution">Derived with changes from ForecastBench data by the Forecasting Research Institute.</p>
       </footer>
     </div>
   );

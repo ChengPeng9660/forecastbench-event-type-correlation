@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
 import {
   finiteExtent,
   linearPosition,
@@ -141,10 +142,10 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
     <section className="market-performance-section" id="market-performance">
       <div className="section-heading market-performance-heading">
         <div>
-          <p className="eyebrow">ALL MODEL CONFIGURATIONS × POLYMARKET</p>
-          <h2>Does market diversity relate to forecasting performance?</h2>
+          <p className="eyebrow">ALL CONFIGURATIONS</p>
+          <h2>Model performance against the market</h2>
         </div>
-        <p>Every point keeps one exact information condition and prompt. Model scores and market scores use identical non-imputed Polymarket support; only targets with a valid freeze-time probability are used, and Dataset questions are excluded. The dashed line is the support-weighted matched-market benchmark under the active filters.</p>
+        <p>Compare each prompt and information condition with Polymarket on shared freeze-time market events. Dataset questions are excluded.</p>
       </div>
 
       <div className="market-performance-controls">
@@ -213,7 +214,12 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <strong>Information color</strong>{availableInformation.map((id) => <span key={id}><i style={{ background: INFORMATION_COLORS[id] }} />{informationLabel(data, id)}</span>)}
         <strong>Prompt shape</strong><span><i className="shape-circle" />Zero shot</span><span><i className="shape-diamond" />Scratchpad</span>{data.audit.prompt_counts.unspecified ? <span><i className="shape-triangle" />Unspecified</span> : null}
       </div>
-      <p className="market-performance-note"><strong>How to read it.</strong> Color distinguishes the information shown to the model; shape distinguishes the prompt. Repeated model names are intentional exact configurations, not duplicate rows. The market line is recomputed after every filter change. Because model coverage differs, the selected-point panel reports its own matched-market score; use that pair-specific value for exact comparisons. Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
+      <p className="research-scope">The dashed line is a weighted reference. Use each selected model's matched-market score for a direct comparison.</p>
+      <ResearchDetails>
+        <p><strong>How to read it.</strong> Color distinguishes the information shown to the model; shape distinguishes the prompt. Repeated model names are intentional exact configurations, not duplicate rows. Model and market scores use identical non-imputed support with a valid freeze-time Polymarket probability.</p>
+        <p><strong>Market reference.</strong> The dashed line is the support-weighted matched-market benchmark under the active filters, recomputed after every filter change. Because model coverage differs, the selected-point panel reports its own matched-market score; use that value for exact comparisons.</p>
+        <p><strong>Interpretation.</strong> Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
+      </ResearchDetails>
     </section>
   );
 }

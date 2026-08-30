@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
+import { useHistoryRestore } from "../lib/useHistoryRestore";
 import type {
   AggregationMethodId,
   MetricId,
@@ -224,11 +226,12 @@ export function selectCrossFitPoints(
 
 interface PairAggregationExplorerProps {
   data: PairAggregationData;
+  active?: boolean;
   nearBiOnly: boolean;
   onNearBiOnlyChange: (value: boolean) => void;
 }
 
-export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }: PairAggregationExplorerProps) {
+export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange, active = true }: PairAggregationExplorerProps) {
   const modelOptions = [
     ...data.model_scope.gpt_models,
     ...data.model_scope.claude_models,
@@ -258,6 +261,20 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   const [method, setMethod] = useState<AggregationMethodId>("ec_w0_56");
   const [metric, setMetric] = useState<MetricId>("adjusted_pog");
   const [selectedKey, setSelectedKey] = useState("");
+  useHistoryRestore((params) => {
+    const candidate = params.get("gain_model") ?? "";
+    const direction = params.get("gain_fold");
+    const nextFocal = modelOptions.includes(candidate) ? candidate : defaultFocalModel;
+    const nextEvaluation = params.get("gain_eval") === "same_sample" ? "same_sample" : "cross_fit";
+    const nextFold = direction === "a_to_b" || direction === "b_to_a" ? direction : "combined";
+    setFocalModel(nextFocal);
+    setEvaluation(nextEvaluation);
+    setFoldView(nextFold);
+    if (nextFocal !== focalModel || nextEvaluation !== evaluation || nextFold !== foldView) {
+      setGroup("all");
+      setSelectedKey("");
+    }
+  });
 
   const evaluationPoints = useMemo(() => {
     if (evaluation === "cross_fit") {
@@ -298,9 +315,9 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   }, [availableGroups, group]);
 
   useEffect(() => {
-    if (!focalModel || !nearBiOnly || focalPoints.length) return;
+    if (!active || !focalModel || !nearBiOnly || focalPoints.length) return;
     onNearBiOnlyChange(false);
-  }, [evaluation, focalModel, focalPoints.length, nearBiOnly, onNearBiOnlyChange]);
+  }, [active, evaluation, focalModel, focalPoints.length, nearBiOnly, onNearBiOnlyChange]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -344,8 +361,8 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
   return (
     <section className="pair-aggregation-section" id="gain">
       <div className="section-heading pair-aggregation-heading">
-        <div><p className="eyebrow">REPEATED CROSS-FIT AGGREGATION BENCHMARK</p><h2>Does train-fold dependence predict test-fold aggregation BI?</h2></div>
-        <p>GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi are evaluated over 10 reproducible random event-level A/B splits. Both directions are averaged; higher Brier Index is better.</p>
+        <div><p className="eyebrow">MODEL × MODEL</p><h2>Diversity and aggregation performance</h2></div>
+        <p>Fix a model, compare its partners, and evaluate aggregation across 10 repeated event-disjoint splits.</p>
       </div>
 
       <div className="aggregation-evaluation-bar">
@@ -354,8 +371,8 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
           <button type="button" className={evaluation === "same_sample" ? "active" : ""} onClick={() => { setEvaluation("same_sample"); setGroup("all"); setSelectedKey(""); }}>Same-sample diagnostic</button>
         </div>
         <p>{evaluation === "cross_fit"
-          ? `${data.cross_fit.split.repetitions} random splits · seeds ${data.cross_fit.split.seeds[0]}–${data.cross_fit.split.seeds.at(-1)} · ${data.cross_fit.audit.unique_events.toLocaleString()} unique events · Near-BI is train-only`
-          : "Dependence, Near-BI, and gain use the same outcomes; retained only as a sensitivity view."}</p>
+          ? `${data.cross_fit.split.repetitions} repeated splits · ${data.cross_fit.audit.unique_events.toLocaleString()} events · train-only Near-BI`
+          : "Same-outcome diagnostic; not out-of-sample evidence."}</p>
       </div>
 
       {evaluation === "cross_fit" && <div className="aggregation-fold-bar">
@@ -363,7 +380,7 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
         <div className="aggregation-fold-toggle" role="group" aria-label="Cross-fit fold view">
           {FOLD_VIEWS.map((item) => <button type="button" className={foldView === item.id ? "active" : ""} onClick={() => { setFoldView(item.id); setSelectedKey(""); }} key={item.id}>{item.label}</button>)}
         </div>
-        <small>{foldViewMeta.detail}. Near-BI is evaluated on that view's training fold only.</small>
+        <small>{foldViewMeta.detail}</small>
       </div>}
 
       <div className="pair-aggregation-controls">
@@ -404,32 +421,16 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
         </div>
       </div>
 
-      <div className="aggregation-overview">
-        <div className="aggregation-method-table" role="table" aria-label="Aggregation method comparison">
-          <div className="aggregation-method-head" role="row"><span>METHOD</span><span>GAIN VS FOCAL</span><span>POSITIVE PAIRS</span><span>MACRO GAIN</span></div>
-          {summaries.map((row) => {
-            const isBaseline = row.method === "best_single";
-            const rank = rankedMethods.findIndex((item) => item.method === row.method) + 1;
-            return <button type="button" role="row" className={`aggregation-method-row ${method === row.method ? "active" : ""}`} onClick={() => setMethod(row.method)} key={row.method}>
-              <span><i>{isBaseline ? "B" : String(rank).padStart(2, "0")}</i><strong>{data.methods[row.method].label}</strong><small>{isBaseline ? "Hindsight benchmark" : data.methods[row.method].outcome_blind ? "Outcome-blind pool" : "Benchmark"}</small></span>
-              <strong className={(row.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.support_weighted_gain_fraction)}</strong>
-              <strong>{`${row.positive_pairs}/${row.pair_count}`}</strong>
-              <strong className={(row.macro_mean_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.macro_mean_gain_fraction)}</strong>
-            </button>;
-          })}
+      <div className="research-chart-controls">
+        <label className="research-method-select">
+          <span>AGGREGATION</span>
+          <select aria-label="Aggregation method" value={method} onChange={(event) => setMethod(event.target.value as AggregationMethodId)}>
+            {summaries.map((row) => <option value={row.method} key={row.method}>{data.methods[row.method].label}{row.method === "best_single" ? " (hindsight)" : ""}</option>)}
+          </select>
+        </label>
+        <div className="aggregation-metric-tabs" role="tablist" aria-label="Aggregation complementarity metric">
+          {METRICS.map((item) => <button type="button" role="tab" aria-selected={metric === item.id} className={metric === item.id ? "active" : ""} onClick={() => setMetric(item.id)} key={item.id}>{item.label}</button>)}
         </div>
-
-        <dl className="aggregation-selection-summary">
-          <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{evaluation === "cross_fit" ? `${foldViewMeta.label} · Cross-fit OOS · ` : "Same-sample · "}{nearBiOnly ? `train BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "all eligible pairs"}</small></div>
-          <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} {evaluation === "cross_fit" ? "test" : "same-sample"} pair-event cells</small></div>
-          <div><dt>SELECTED METHOD</dt><dd>{data.methods[method].label}</dd><small>{data.methods[method].formula}</small></div>
-          <div><dt>WEIGHTED GAIN VS FOCAL</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>fractional Brier reduction from the fixed focal model</small></div>
-          <div><dt>DIVERSITY–BI r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train complementarity versus opposite-fold Brier Index; positive is favorable" : "same-sample complementarity versus Brier Index; positive is favorable"}</small></div>
-        </dl>
-      </div>
-
-      <div className="aggregation-metric-tabs" role="tablist" aria-label="Aggregation complementarity metric">
-        {METRICS.map((item) => <button type="button" role="tab" aria-selected={metric === item.id} className={metric === item.id ? "active" : ""} onClick={() => setMetric(item.id)} key={item.id}>{item.label}</button>)}
       </div>
 
       <div className="pair-aggregation-chart-wrap">
@@ -463,6 +464,35 @@ export function PairAggregationExplorer({ data, nearBiOnly, onNearBiOnlyChange }
         </svg> : <div className="aggregation-empty-state"><strong>No eligible partners in this sample.</strong><span>Choose All eligible or another pair group.</span></div>}
       </div>
 
+      <div className="aggregation-overview">
+        <div className="aggregation-method-table" role="table" aria-label="Aggregation method comparison">
+          <div className="aggregation-method-head" role="row"><span>METHOD</span><span>GAIN VS FOCAL</span><span>POSITIVE PAIRS</span><span>MACRO GAIN</span></div>
+          {summaries.map((row) => {
+            const isBaseline = row.method === "best_single";
+            const rank = rankedMethods.findIndex((item) => item.method === row.method) + 1;
+            return <button type="button" role="row" className={`aggregation-method-row ${method === row.method ? "active" : ""}`} onClick={() => setMethod(row.method)} key={row.method}>
+              <span><i>{isBaseline ? "B" : String(rank).padStart(2, "0")}</i><strong>{data.methods[row.method].label}</strong><small>{isBaseline ? "Hindsight benchmark" : data.methods[row.method].outcome_blind ? "Outcome-blind pool" : "Benchmark"}</small></span>
+              <strong className={(row.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.support_weighted_gain_fraction)}</strong>
+              <strong>{`${row.positive_pairs}/${row.pair_count}`}</strong>
+              <strong className={(row.macro_mean_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.macro_mean_gain_fraction)}</strong>
+            </button>;
+          })}
+        </div>
+
+        <dl className="aggregation-selection-summary">
+          <div><dt>ACTIVE SAMPLE</dt><dd title={activeSampleLabel}>{activeSampleLabel}</dd><small>{evaluation === "cross_fit" ? `${foldViewMeta.label} · Cross-fit OOS · ` : "Same-sample · "}{nearBiOnly ? `train BI gap ≤ ${data.near_bi.threshold_bi_points.toFixed(1)}` : "all eligible pairs"}</small></div>
+          <div><dt>PAIR COUNT</dt><dd>{points.length}</dd><small>{points.reduce((total, point) => total + point.n_overlap, 0).toLocaleString()} {evaluation === "cross_fit" ? "test" : "same-sample"} pair-event cells</small></div>
+          <div><dt>SELECTED METHOD</dt><dd>{data.methods[method].label}</dd><small>{data.methods[method].formula}</small></div>
+          <div><dt>WEIGHTED GAIN VS FOCAL</dt><dd className={(activeSummary?.support_weighted_gain_fraction ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.support_weighted_gain_fraction ?? null)}</dd><small>fractional Brier reduction from the fixed focal model</small></div>
+          <div><dt>DIVERSITY–BI r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? "train complementarity versus opposite-fold Brier Index; positive is favorable" : "same-sample complementarity versus Brier Index; positive is favorable"}</small></div>
+        </dl>
+      </div>
+
+      <ResearchDetails>
+        <p><strong>Evaluation.</strong> GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi use {data.cross_fit.split.repetitions} reproducible random event-level splits, with seeds {data.cross_fit.split.seeds[0]}–{data.cross_fit.split.seeds.at(-1)}. A→B and B→A keep training diversity separate from opposite-fold performance; Combined averages both directions. Near-BI is evaluated on the selected view's training fold only.</p>
+        <p><strong>Scores.</strong> Higher Brier Index is better. Gain is the fractional adjusted-Brier reduction from the fixed focal model on identical support. Best Single is a hindsight benchmark, not a deployable rule.</p>
+        <p><strong>Interpretation.</strong> The same-sample view uses the same outcomes for dependence, Near-BI, and performance. Displayed correlations are descriptive associations, not evidence that diversity causes better aggregation.</p>
+      </ResearchDetails>
     </section>
   );
 }

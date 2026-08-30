@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
 import { finiteExtent, linearPosition, linearTicks } from "./FreezeMarketCorrelationExplorer";
 import type {
   UpperLeftCrossfitPairRow,
@@ -162,7 +163,7 @@ function PairBlock({
     <article className="upper-left-pair-block">
       <div className="upper-left-block-heading">
         <span>{index}</span>
-        <div><p className="eyebrow">{crossfit ? "TRAIN-SELECTED · OOS" : "FIXED CONFIGURATIONS · FULL SAMPLE"}</p><h3>{title}</h3><p>{description}</p></div>
+        <div><p className="eyebrow">{crossfit ? "TRAIN-SELECTED · OOS" : "FIXED CONFIGURATIONS · FULL SAMPLE"}</p><h3>{title}</h3><p>{crossfit ? "Select on the training fold; evaluate on the opposite fold." : "Preselected configurations, evaluated on the full sample."}</p></div>
       </div>
 
       <div className={`upper-left-controls ${crossfit ? "crossfit" : ""}`}>
@@ -211,6 +212,7 @@ function PairBlock({
 
       <div className="upper-left-table-heading"><div><strong>PAIR RESULTS</strong><span><i className="triangle-symbol" /> above pair-matched market <i className="circle-symbol" /> at or below pair-matched market</span></div><button type="button" className="download-button" onClick={() => downloadRows(filtered, metric, `${crossfit ? "crossfit" : "fixed"}_${method}_${metric}.csv`)}>Download filtered CSV ↓</button></div>
       <div className="upper-left-table-wrap"><table className="upper-left-table"><thead><tr><th>Partner</th><th>Diversity</th><th>Aggregation BI ↑</th><th>Pair-matched market BI ↑</th><th>ΔBI</th><th>{crossfit ? "OOS directions (A/B)" : "Pair cells"}</th><th>{crossfit ? "Pair-matched win share" : "Above market"}</th></tr></thead><tbody>{filtered.map((row) => <tr className={selected?.pairId === row.pairId ? "selected" : ""} onClick={() => setSelectedPair(row.pairId)} key={row.pairId}><td><span className={row.beatsMarket ? "row-shape triangle" : "row-shape circle"} /> <strong>{row.modelB.split(" (")[0]}</strong><small>{row.modelB.includes(" (") ? row.modelB.split(" (")[1].replace(/\)$/, "") : ""}</small></td><td>{formatMetric(metric, row.diversity[metric] as number)}</td><td>{row.aggregationBi.toFixed(2)}</td><td>{row.marketBi.toFixed(2)}</td><td className={row.beatsMarket ? "positive" : "negative"}>{row.deltaBi >= 0 ? "+" : ""}{row.deltaBi.toFixed(2)}</td><td>{crossfit ? `${row.evaluationCount}/${row.maximumEvaluations} (${row.aToB?.count ?? 0}/${row.bToA?.count ?? 0})` : Math.round(row.support).toLocaleString()}</td><td>{crossfit ? `${((row.beatMarketShare ?? 0) * 100).toFixed(1)}%` : row.beatsMarket ? "Yes" : "No"}</td></tr>)}</tbody></table></div>
+      <ResearchDetails label="Selection & evaluation details"><p>{description}</p></ResearchDetails>
     </article>
   );
 }
@@ -218,10 +220,14 @@ function PairBlock({
 export function UpperLeftModelPairAggregationExplorer({ data }: { data: UpperLeftModelPairAggregationData }) {
   return (
     <section className="upper-left-pairs-section" id="upper-left-pairs">
-      <div className="section-heading upper-left-section-heading"><div><p className="eyebrow">UPPER-LEFT CONFIGURATIONS · MODEL × MODEL</p><h2>Which model pairs beat the market?</h2></div><p>Fix one focal configuration, vary its model partner, and compare four closed-form pools. The x-axis measures model-to-model diversity; the y-axis is aggregation BI. Every triangle compares aggregation and Polymarket on exactly the same pair support, using only valid freeze-time Polymarket targets; Dataset questions are excluded.</p></div>
+      <div className="section-heading upper-left-section-heading"><div><p className="eyebrow">SELECTED MODEL PAIRS</p><h2>Which model pairs beat the market?</h2></div><p>Compare four pools using fixed or train-selected configurations. Market comparisons use each pair's shared Polymarket events.</p></div>
       <PairBlock index="01" title={data.fixed.title} description={data.fixed.description} models={data.fixed.models} rows={data.fixed.rows.map(fixedDisplay)} data={data} crossfit={false} />
       <PairBlock index="02" title={data.crossfit.title} description={data.crossfit.description} models={data.crossfit.models} rows={data.crossfit.rows.map(crossfitDisplay)} data={data} crossfit />
-      <p className="upper-left-method-note"><strong>Market reference.</strong> {data.market_reference.interpretation} A triangle is a support-matched score comparison, not a statistical-significance claim. In Block 02, selection and diversity use only the training fold; aggregation BI and market BI use the identical opposite-fold pair support.</p>
+      <p className="research-scope">Triangles mark a higher BI than the pair-matched market, not statistical significance. Dataset questions are excluded.</p>
+      <ResearchDetails>
+        <p><strong>Market reference.</strong> {data.market_reference.interpretation} Each pair includes only valid freeze-time Polymarket targets, and its aggregation and market scores use exactly the same support.</p>
+        <p><strong>Two designs.</strong> Block 01 uses the fixed configurations on the full sample. In Block 02, selection and diversity use only the training fold; aggregation BI and market BI use the identical opposite-fold pair support.</p>
+      </ResearchDetails>
     </section>
   );
 }

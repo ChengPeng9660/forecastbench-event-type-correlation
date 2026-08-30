@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
 import type {
   AggregationMethodId,
   MetricId,
@@ -263,15 +264,8 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
   return (
     <section className="polymarket-aggregation-section" id="polymarket-aggregation">
       <div className="section-heading polymarket-aggregation-heading">
-        <div><p className="eyebrow">POLYMARKET FREEZE BASELINE</p><h2>Can an LLM improve the market snapshot?</h2></div>
-        <p>Polymarket's probability at the ForecastBench question-set freeze is paired with every eligible GPT, Claude, Gemini, Qwen, DeepSeek, and Kimi model on exact common support. Only non-imputed <code>source=Polymarket</code> targets with a valid freeze-time probability are eligible; Dataset questions are excluded.</p>
-      </div>
-
-      <div className="polymarket-provenance-ribbon">
-        <div><span>FREEZE FIELD</span><strong>freeze_datetime_value</strong><small>audited as <code>market_prob</code></small></div>
-        <div><span>MATCHED ROUNDS</span><strong>{matchAudit.matched_freeze_values.toLocaleString()}</strong><small>{matchAudit.missing_freeze_values} missing · {matchAudit.unique_market_ids.toLocaleString()} unique markets</small></div>
-        <div><span>FREEZE LEAD</span><strong>{data.provenance.snapshot_audit.freeze_to_due_lag_days.median.toFixed(0)} days</strong><small>{data.provenance.snapshot_audit.freeze_to_due_lag_days.minimum}–{data.provenance.snapshot_audit.freeze_to_due_lag_days.maximum} days before due date</small></div>
-        <div><span>REPEATED OOS</span><strong>{data.cross_fit.split.repetitions} × 2 folds</strong><small>event-disjoint · both directions</small></div>
+        <div><p className="eyebrow">POLYMARKET × MODEL</p><h2>Can an LLM improve the market snapshot?</h2></div>
+        <p>Pair a model with the freeze-time market forecast on shared, non-imputed Polymarket events. Dataset questions are excluded.</p>
       </div>
 
       <div className="aggregation-evaluation-bar">
@@ -280,8 +274,8 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
           <button type="button" className={evaluation === "same_sample" ? "active" : ""} onClick={() => { setEvaluation("same_sample"); setSelectedModel(""); }}>Same-sample diagnostic</button>
         </div>
         <p>{evaluation === "cross_fit"
-          ? `${data.cross_fit.split.repetitions} deterministic random splits · dependence is train-only · BI is scored on the opposite fold`
-          : "Dependence and aggregation BI use the same common outcomes; retained as a sensitivity view."}</p>
+          ? `${data.cross_fit.split.repetitions} repeated splits · train diversity → test performance`
+          : "Same-outcome diagnostic; not out-of-sample evidence."}</p>
       </div>
 
       {evaluation === "cross_fit" && <div className="aggregation-fold-bar">
@@ -289,7 +283,7 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
         <div className="aggregation-fold-toggle" role="group" aria-label="Polymarket cross-fit fold view">
           {FOLD_VIEWS.map((item) => <button type="button" className={foldView === item.id ? "active" : ""} onClick={() => { setFoldView(item.id); setSelectedModel(""); }} key={item.id}>{item.label}</button>)}
         </div>
-        <small>{foldMeta.detail}. Every recurring date for a market remains in one fold.</small>
+        <small>{foldMeta.detail}</small>
       </div>}
 
       <div className="polymarket-controls">
@@ -313,28 +307,13 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
 
       {!nearBiCount && <p className="polymarket-near-bi-note"><strong>No Near-BI pairs.</strong> {evaluation === "cross_fit" ? "No training fold" : "No same-sample pair"} is within {data.near_bi.threshold_bi_points.toFixed(1)} BI points of Polymarket Freeze on common support.</p>}
 
-      <div className="polymarket-overview">
-        <div className="polymarket-method-table" role="table" aria-label="Polymarket aggregation method comparison">
-          <div className="polymarket-method-head" role="row"><span>METHOD</span><span>BI ↑</span><span>GAIN VS PM</span><span>GAIN VS MODEL</span><span>POSITIVE VS PM</span></div>
-          {summaries.map((row, index) => <button type="button" role="row" className={`polymarket-method-row ${method === row.method ? "active" : ""}`} onClick={() => setMethod(row.method)} key={row.method}>
-            <span><i>{row.method === "best_single" ? "B" : String(index + 1).padStart(2, "0")}</i><strong>{data.methods[row.method].label}</strong><small>{row.method === "best_single" ? "Hindsight benchmark" : "Outcome-blind pool"}</small></span>
-            <strong>{row.weightedBi?.toFixed(2) ?? "—"}</strong>
-            <strong className={(row.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.gainVsPolymarket)}</strong>
-            <strong className={(row.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.gainVsModel)}</strong>
-            <strong>{row.positiveVsPolymarket}/{row.pairCount}</strong>
-          </button>)}
-        </div>
-
-        <dl className="polymarket-selection-summary">
-          <div><dt>MODEL PAIRS</dt><dd>{points.length}</dd><small>{group === "all" ? "all six model families" : `${GROUPS.find((item) => item.id === group)?.label} models`} · {evaluation === "cross_fit" ? foldMeta.label : "same sample"}</small></div>
-          <div><dt>WEIGHTED BI ↑</dt><dd>{activeSummary?.weightedBi?.toFixed(2) ?? "—"}</dd><small>absolute aggregation Brier Index</small></div>
-          <div><dt>GAIN VS POLYMARKET</dt><dd className={(activeSummary?.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsPolymarket ?? null)}</dd><small>fractional adjusted-Brier reduction</small></div>
-          <div><dt>GAIN VS MODEL</dt><dd className={(activeSummary?.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsModel ?? null)}</dd><small>same pool, model as denominator</small></div>
-          <div><dt>DIVERSITY–{outcomeMeta.correlation} r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? `train complementarity vs opposite-fold ${outcomeMeta.label.toLowerCase()}` : `same-sample complementarity vs ${outcomeMeta.label.toLowerCase()}`}</small></div>
-        </dl>
-      </div>
-
       <div className="polymarket-chart-controls">
+        <label className="research-method-select">
+          <span>AGGREGATION</span>
+          <select aria-label="Polymarket aggregation method" value={method} onChange={(event) => setMethod(event.target.value as AggregationMethodId)}>
+            {summaries.map((row) => <option value={row.method} key={row.method}>{data.methods[row.method].label}{row.method === "best_single" ? " (hindsight)" : ""}</option>)}
+          </select>
+        </label>
         <div className="aggregation-metric-tabs" role="tablist" aria-label="Polymarket complementarity metric">
           {METRICS.map((item) => <button type="button" role="tab" aria-selected={metric === item.id} className={metric === item.id ? "active" : ""} onClick={() => setMetric(item.id)} key={item.id}>{item.label}</button>)}
         </div>
@@ -370,6 +349,38 @@ export function PolymarketAggregationExplorer({ data }: PolymarketAggregationExp
           <text transform={`translate(24 ${MARGIN.top + plotHeight / 2}) rotate(-90)`} textAnchor="middle" className="gain-axis-title">{outcomeMeta.axis}</text>
         </svg> : <div className="aggregation-empty-state"><strong>No eligible Polymarket–model pairs in this view.</strong><span>Return to All eligible or choose another model family.</span></div>}
       </div>
+
+      <div className="polymarket-overview">
+        <div className="polymarket-method-table" role="table" aria-label="Polymarket aggregation method comparison">
+          <div className="polymarket-method-head" role="row"><span>METHOD</span><span>BI ↑</span><span>GAIN VS PM</span><span>GAIN VS MODEL</span><span>POSITIVE VS PM</span></div>
+          {summaries.map((row, index) => <button type="button" role="row" className={`polymarket-method-row ${method === row.method ? "active" : ""}`} onClick={() => setMethod(row.method)} key={row.method}>
+            <span><i>{row.method === "best_single" ? "B" : String(index + 1).padStart(2, "0")}</i><strong>{data.methods[row.method].label}</strong><small>{row.method === "best_single" ? "Hindsight benchmark" : "Outcome-blind pool"}</small></span>
+            <strong>{row.weightedBi?.toFixed(2) ?? "—"}</strong>
+            <strong className={(row.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.gainVsPolymarket)}</strong>
+            <strong className={(row.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(row.gainVsModel)}</strong>
+            <strong>{row.positiveVsPolymarket}/{row.pairCount}</strong>
+          </button>)}
+        </div>
+
+        <dl className="polymarket-selection-summary">
+          <div><dt>MODEL PAIRS</dt><dd>{points.length}</dd><small>{group === "all" ? "all six model families" : `${GROUPS.find((item) => item.id === group)?.label} models`} · {evaluation === "cross_fit" ? foldMeta.label : "same sample"}</small></div>
+          <div><dt>WEIGHTED BI ↑</dt><dd>{activeSummary?.weightedBi?.toFixed(2) ?? "—"}</dd><small>absolute aggregation Brier Index</small></div>
+          <div><dt>GAIN VS POLYMARKET</dt><dd className={(activeSummary?.gainVsPolymarket ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsPolymarket ?? null)}</dd><small>fractional adjusted-Brier reduction</small></div>
+          <div><dt>GAIN VS MODEL</dt><dd className={(activeSummary?.gainVsModel ?? 0) >= 0 ? "positive" : "negative"}>{percent(activeSummary?.gainVsModel ?? null)}</dd><small>same pool, model as denominator</small></div>
+          <div><dt>DIVERSITY–{outcomeMeta.correlation} r</dt><dd>{correlation?.toFixed(2) ?? "—"}</dd><small>{evaluation === "cross_fit" ? `train complementarity vs opposite-fold ${outcomeMeta.label.toLowerCase()}` : `same-sample complementarity vs ${outcomeMeta.label.toLowerCase()}`}</small></div>
+        </dl>
+      </div>
+
+      <ResearchDetails>
+        <p><strong>Market snapshot.</strong> The baseline is ForecastBench's <code>freeze_datetime_value</code>, audited as <code>market_prob</code>. Only non-imputed <code>source=Polymarket</code> targets with a valid freeze-time probability are used. Every score comparison uses identical model–market support.</p>
+        <div className="polymarket-provenance-ribbon">
+          <div><span>MATCHED ROUNDS</span><strong>{matchAudit.matched_freeze_values.toLocaleString()}</strong><small>{matchAudit.missing_freeze_values} missing · {matchAudit.unique_market_ids.toLocaleString()} unique markets</small></div>
+          <div><span>FREEZE LEAD</span><strong>{data.provenance.snapshot_audit.freeze_to_due_lag_days.median.toFixed(0)} days</strong><small>{data.provenance.snapshot_audit.freeze_to_due_lag_days.minimum}–{data.provenance.snapshot_audit.freeze_to_due_lag_days.maximum} days before due date</small></div>
+          <div><span>REPEATED OOS</span><strong>{data.cross_fit.split.repetitions} × 2 folds</strong><small>event-disjoint · both directions</small></div>
+        </div>
+        <p><strong>Evaluation.</strong> Every recurring date for a market remains in one fold. Diversity and Near-BI use the training fold; performance uses the opposite fold. The same-sample view uses the same outcomes for both and is a diagnostic only.</p>
+        <p><strong>Interpretation.</strong> Higher BI is better; positive gain means lower adjusted Brier than the named denominator. Best Single is a hindsight benchmark. Correlations describe associations, not causal effects.</p>
+      </ResearchDetails>
     </section>
   );
 }

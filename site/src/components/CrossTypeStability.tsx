@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
 import { colorForScore, textColorForScore } from "../lib/metrics";
 import { crossTypeAssetUrl } from "../lib/data";
 import type { CrossTypeCell, CrossTypeData, CrossTypeMetricId } from "../types/data";
@@ -73,8 +74,8 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
     return (
       <section className="cross-type-section" id="stability">
         <div className="section-heading">
-          <div><p className="eyebrow">CROSS-EVENT-TYPE STABILITY</p><h2>Descriptive pair stability across event types</h2></div>
-          <p>Describes whether the same model pairs remain at the high- or low-dependence end across the seven semantic event types.</p>
+          <div><p className="eyebrow">CROSS-EVENT-TYPE STABILITY</p><h2>Dependence across event types</h2></div>
+          <p>See whether model pairs keep similar dependence rankings across topics.</p>
         </div>
         <div className="cross-type-unavailable" role="status">
           <strong>{error ? "Cross-type data could not be loaded" : "Cross-type dataset not published yet"}</strong>
@@ -111,8 +112,8 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
   return (
     <section className="cross-type-section" id="stability" data-testid="cross-type-stability">
       <div className="section-heading">
-        <div><p className="eyebrow">CROSS-EVENT-TYPE STABILITY</p><h2>Descriptive pair stability across event types</h2></div>
-        <p>Each cell compares the ranking of the same model-version pairs in two topic slices. Color encodes Spearman rank stability; insufficient cells are never colored or interpreted.</p>
+        <div><p className="eyebrow">CROSS-EVENT-TYPE STABILITY</p><h2>Dependence across event types</h2></div>
+        <p>Each cell compares the same pairs across two topics. Stronger color means more stable rankings.</p>
       </div>
 
       <div className="cross-type-toolbar">
@@ -205,7 +206,10 @@ export function CrossTypeStability({ data, loading, error }: CrossTypeStabilityP
           </>
         </aside>}
       </div>
-      <p className="cross-type-footnote">Top/top and directional statistics use the manifest quartile ({Math.round(data.manifest.thresholds.quartile * 100)}%). Headline cells require at least {data.manifest.thresholds.headline_min_defined_pairs} common defined model pairs; reporting begins at {data.manifest.thresholds.reporting_min_defined_pairs}.</p>
+      <ResearchDetails>
+        <p>Color encodes Spearman rank stability; insufficient cells are never colored or interpreted. These are descriptive comparisons across event types, not out-of-sample predictions.</p>
+        <p>Top/top and directional statistics use the manifest quartile ({Math.round(data.manifest.thresholds.quartile * 100)}%). Headline cells require at least {data.manifest.thresholds.headline_min_defined_pairs} common defined model pairs; reporting begins at {data.manifest.thresholds.reporting_min_defined_pairs}.</p>
+      </ResearchDetails>
     </section>
   );
 }

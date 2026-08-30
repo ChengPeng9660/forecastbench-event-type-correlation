@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
 import type {
   FixedBaseAggregationData,
   FixedBaseAggregationPoint,
@@ -148,10 +149,10 @@ export function WithoutFreezeBaseExplorer({ data }: { data: FixedBaseAggregation
     <section className="without-freeze-base-section" id="without-freeze-base">
       <div className="section-heading freeze-correlation-heading">
         <div>
-          <p className="eyebrow">WITHOUT-FREEZE BASE × WITH-FREEZE PARTNER</p>
+          <p className="eyebrow">SAME MODEL · DIFFERENT INFORMATION</p>
           <h2>Does market exposure create useful aggregation diversity?</h2>
         </div>
-        <p>The fixed base is each canonical model version without freeze values. Its partner is the same version under one exact zero-shot or scratchpad with-freeze prompt. Every comparison uses identical audited, non-imputed Polymarket-event support with a valid freeze-time probability; Dataset questions are excluded.</p>
+        <p>Pair a model without freeze values with its market-exposed version on shared Polymarket events. Dataset questions are excluded.</p>
       </div>
 
       <div className="freeze-correlation-toolbar">
@@ -192,7 +193,7 @@ export function WithoutFreezeBaseExplorer({ data }: { data: FixedBaseAggregation
       <div className="freeze-diversity-explorer exposure-diversity-explorer">
         <div className="freeze-diversity-heading">
           <div><p className="eyebrow">FIXED SAME-VERSION BASE</p><h4>Diversity versus aggregation outcome</h4></div>
-          <p>A→B uses A-fold diversity and B-fold gain; B→A swaps the roles. Combined pools both directions. The fixed denominator never changes from the without-freeze model.</p>
+          <p>Repeated cross-fit OOS, with gain always measured against the without-freeze base.</p>
         </div>
 
         <div className="freeze-diversity-controls">
@@ -248,10 +249,15 @@ export function WithoutFreezeBaseExplorer({ data }: { data: FixedBaseAggregation
         </div>
 
         <div className="freeze-diversity-legend"><span><i className="zero-shot" /> Zero shot</span><span><i className="scratchpad" /> Scratchpad</span>{providers.map((item) => <span key={item}><i style={{ backgroundColor: FREEZE_PROVIDER_COLORS[item] ?? "#665f6d" }} /> {item}</span>)}</div>
-        <p className="freeze-diversity-note"><strong>Interpretation.</strong> Positive gain means the aggregation improves on the fixed without-freeze base. Because the with-freeze partner is usually much stronger, this fixed-base gain includes both partner-quality uplift and aggregation mechanics; `Gain vs Partner` in the method table shows whether pooling also beats the exposed partner. Correlations are exploratory pair-level associations.</p>
       </div>
 
-      <p className="freeze-aggregation-caveat"><strong>Leakage boundary.</strong> Diversity and Directional CF weights use training outcomes only; aggregation BI and gain use the opposite test fold. Best Single is a hindsight benchmark. Three configurations fail the repeated minimum-fold-overlap requirement and remain listed in the data audit.</p>
+      <p className="research-scope">Gain includes differences in partner quality; it does not isolate the effect of aggregation. Best Single is a hindsight benchmark.</p>
+      <p className="freeze-aggregation-caveat">Three configurations fail the repeated minimum-fold-overlap requirement and remain listed in the data audit.</p>
+      <ResearchDetails>
+        <p><strong>Configuration scope.</strong> The base is each canonical model version without freeze values. Its partner is the same version under an exact zero-shot or scratchpad with-freeze prompt. All comparisons use identical audited, non-imputed Polymarket events with a valid freeze-time probability.</p>
+        <p><strong>Evaluation.</strong> A→B uses A-fold diversity and B-fold gain; B→A swaps the roles. Combined pools both directions. Diversity and Directional CF weights use training outcomes only; BI and gain use the opposite test fold. The denominator remains the without-freeze base.</p>
+        <p><strong>Interpretation.</strong> Positive gain means improvement over that fixed base. Because the with-freeze partner is usually much stronger, base-relative gain includes both partner-quality uplift and aggregation mechanics. Gain vs Partner tests whether pooling also beats the exposed partner. Correlations are exploratory pair-level associations.</p>
+      </ResearchDetails>
     </section>
   );
 }

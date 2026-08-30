@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { ResearchDetails } from "./ResearchDetails";
+import { useHistoryRestore } from "../lib/useHistoryRestore";
 import { globalBaselineAssetUrl } from "../lib/data";
 import type {
   GlobalBaselineData,
@@ -25,16 +27,6 @@ interface Selection {
   provider: string;
   minOverlap: number;
 }
-
-const params = new URLSearchParams(window.location.search);
-const querySelection = {
-  scope: params.get("global_scope"),
-  metric: params.get("global_metric"),
-  sample: params.get("global_sample"),
-  model: params.get("global_model"),
-  provider: params.get("global_provider"),
-  minOverlap: params.get("global_min_n"),
-};
 
 function finite(value: number | null | undefined): value is number {
   return value !== null && value !== undefined && Number.isFinite(value);
@@ -71,24 +63,28 @@ export function GlobalBaseline({ data, models, heatmapModelIds = [], loading, er
     minOverlap: 50,
   });
 
-  useEffect(() => {
+  function restoreSelection(params: URLSearchParams) {
     if (!data) return;
-    const scope = data.manifest.global_scopes.find((item) => item.id === querySelection.scope)?.id
+    const scope = data.manifest.global_scopes.find((item) => item.id === params.get("global_scope"))?.id
       ?? data.manifest.global_scopes[0]?.id;
-    const metric = data.manifest.metrics.find((item) => item.id === querySelection.metric)?.id
+    const metric = data.manifest.metrics.find((item) => item.id === params.get("global_metric"))?.id
       ?? data.manifest.metrics[0]?.id;
-    const sample = data.manifest.samples.find((item) => item.id === querySelection.sample)?.id
+    const sample = data.manifest.samples.find((item) => item.id === params.get("global_sample"))?.id
       ?? data.manifest.samples.find((item) => item.primary)?.id
       ?? data.manifest.samples[0]?.id;
     setSelection((current) => ({
       scope: scope ?? current.scope,
       metric: metric ?? current.metric,
       sample: sample ?? current.sample,
-      model: querySelection.model ?? "",
-      provider: querySelection.provider ?? "all",
-      minOverlap: Math.max(50, Number(querySelection.minOverlap ?? 50) || 50),
+      model: params.get("global_model") ?? "",
+      provider: params.get("global_provider") ?? "all",
+      minOverlap: Math.max(50, Number(params.get("global_min_n") ?? 50) || 50),
     }));
+  }
+  useEffect(() => {
+    restoreSelection(new URLSearchParams(window.location.search));
   }, [data]);
+  useHistoryRestore(restoreSelection);
 
   if (loading) {
     return <section className="global-baseline-section" id="global" aria-busy="true"><div className="section-heading"><div><p className="eyebrow">GLOBAL BASELINE</p><h2>Loading global analysis…</h2></div></div></section>;
@@ -120,8 +116,8 @@ export function GlobalBaseline({ data, models, heatmapModelIds = [], loading, er
   return (
     <section className="global-baseline-section" id="global" data-testid="global-baseline">
       <div className="section-heading">
-        <div><p className="eyebrow">GLOBAL BASELINE · NO EVENT-TYPE SPLIT</p><h2>Global model dependence</h2></div>
-        <p>Global metrics are recomputed directly from target-level losses, never averaged across event types.</p>
+        <div><p className="eyebrow">GLOBAL BASELINE</p><h2>Global model dependence</h2></div>
+        <p>Compare model dependence across the full target set, without an event-type split.</p>
       </div>
 
       <div className="global-scope-tabs" role="tablist" aria-label="Global baseline scope">
@@ -149,8 +145,8 @@ export function GlobalBaseline({ data, models, heatmapModelIds = [], loading, er
       </div>
 
       <div className="global-matrix-heading">
-        <div><p className="eyebrow">GLOBAL PAIRWISE MATRIX · {scope?.label}</p><h3>Model dependence without event-type splits</h3></div>
-        <p>Every cell is recomputed from the active global target set. The shared heatmap selector controls the visible models; without a custom selection, the 30 highest-coverage versions are shown.</p>
+        <div><p className="eyebrow">PAIRWISE MATRIX · {scope?.label}</p><h3>Global pair matrix</h3></div>
+        <p>Choose models or use the 30 highest-coverage versions.</p>
       </div>
       <GlobalPairMatrix
         data={data}
@@ -166,6 +162,10 @@ export function GlobalBaseline({ data, models, heatmapModelIds = [], loading, er
         onModelChange={(model) => update("model", model)}
         onMinOverlapChange={(value) => update("minOverlap", value)}
       />
+      <ResearchDetails>
+        <p>Global metrics are recomputed directly from target-level losses, never averaged across event types. Each cell uses the active global target set and filters.</p>
+        <p>The shared heatmap selector controls the visible models. Without a custom selection, the 30 highest-coverage versions are shown.</p>
+      </ResearchDetails>
     </section>
   );
 }
