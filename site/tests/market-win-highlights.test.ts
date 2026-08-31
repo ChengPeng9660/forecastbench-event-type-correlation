@@ -61,7 +61,7 @@ describe("overview matched-market win highlights", () => {
     expect(byExact(1).querySelector("rect.market-performance-point")).not.toBeNull();
     expect(byExact(0).querySelector("circle.market-performance-point")).toHaveAttribute("fill", "#efab02");
 
-    fireEvent.click(screen.getByRole("button", { name: "Brier Index ↑", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Brier Index ↑" }));
     expect(count()).toBe("2 / 4");
     expect(winBadges()).toHaveLength(2);
     expect(byExact(0).querySelector(".market-win-badge")).toBeNull();
@@ -78,18 +78,18 @@ describe("overview matched-market win highlights", () => {
 
   it("updates counts and badges only from displayed, valid configurations under the active filters", () => {
     const { container } = render(createElement(MarketDiversityPerformanceExplorer, { data: fixture }));
-    fireEvent.click(screen.getByRole("button", { name: "Brier Index ↑", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Brier Index ↑" }));
     const toggle = screen.getByRole("checkbox", { name: "Model performance: highlight market wins" });
     fireEvent.click(toggle);
     const count = () => screen.getByText("BEATS MATCHED MARKET", { exact: true }).parentElement?.querySelector("dd")?.textContent;
     const info = screen.getByRole("group", { name: "Market performance information filter" });
-    fireEvent.click(within(info).getByRole("button", { name: "Freeze values", exact: true }));
+    fireEvent.click(within(info).getByRole("button", { name: "Freeze values" }));
     expect(count()).toBe("0 / 2");
     expect(container.querySelectorAll(".market-performance-hit")).toHaveLength(2);
     expect(container.querySelectorAll(".market-performance-hit .market-win-badge")).toHaveLength(0);
-    fireEvent.click(within(info).getByRole("button", { name: "All information", exact: true }));
+    fireEvent.click(within(info).getByRole("button", { name: "All information" }));
     expect(count()).toBe("2 / 4");
-    fireEvent.click(within(screen.getByRole("group", { name: "Market performance diversity metric" })).getByRole("button", { name: "High-loss diversity", exact: true }));
+    fireEvent.click(within(screen.getByRole("group", { name: "Market performance diversity metric" })).getByRole("button", { name: "High-loss diversity" }));
     expect(count()).toBe("1 / 3");
     expect(container.querySelectorAll(".market-performance-hit")).toHaveLength(3);
     expect(container.querySelectorAll(".market-performance-hit .market-win-badge")).toHaveLength(1);
