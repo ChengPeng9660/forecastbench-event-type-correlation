@@ -118,7 +118,7 @@ describe("with-freeze model/market correlation explorer", () => {
     expect(within(scatterSummary).getByText("4")).toBeInTheDocument();
     expect(within(scatterSummary).getByText("25 undefined omitted")).toBeInTheDocument();
     expect(screen.getByRole("note", { name: "High-loss metric diagnostics" }))
-      .toHaveTextContent("25 / 29 candidates have an undefined high-loss coordinate and are not plotted.");
+      .not.toHaveTextContent("candidates have an undefined high-loss coordinate");
 
     fireEvent.click(screen.getByRole("button", { name: "Aggregation BI" }));
     expect(screen.getByRole("img", { name: /High-loss Lift versus aggregation Brier Index/i })).toBeInTheDocument();

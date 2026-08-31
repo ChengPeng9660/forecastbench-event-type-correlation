@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createElement } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FocalGainScatter, pearson, spearman } from "../src/components/FocalGainScatter";
 import { PairAggregationExplorer } from "../src/components/PairAggregationExplorer";
@@ -52,7 +52,8 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     render(createElement(FocalGainScatter, { data }));
     selectLift();
     assertFinitePlot(".gain-point circle", 3);
-    expect(screen.getByRole("note", { name: "High-loss metric diagnostics" })).toHaveTextContent("1 / 4");
+    expect(screen.getByRole("note", { name: "High-loss metric diagnostics" })).not.toHaveTextContent("1 / 4");
+    expect(screen.getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
     expect(document.querySelector(".gain-fit-line")).not.toBeInTheDocument();
     const circles = [...document.querySelectorAll(".gain-point circle")];
     const signedLog = (x: number) => Math.sign(x) * Math.log1p(Math.abs(x));
@@ -76,7 +77,8 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     selectLift();
     assertFinitePlot(".gain-point circle", 0);
     expect(screen.getByText("no defined pairs")).toBeInTheDocument();
-    expect(screen.getByRole("note")).toHaveTextContent("2 / 2");
+    expect(screen.getByRole("note")).not.toHaveTextContent("2 / 2");
+    expect(screen.getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
     expect(document.querySelector(".focal-gain-section")?.textContent).not.toMatch(/NaN|Infinity/);
   });
 
@@ -92,7 +94,9 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     render(createElement(PairAggregationExplorer, { data, nearBiOnly: false, onNearBiOnlyChange: vi.fn() }));
     selectLift();
     assertFinitePlot(".aggregation-point circle", 3);
-    expect(screen.getByRole("note")).toHaveTextContent("fewer than half");
+    const notice = screen.getByRole("note");
+    expect(within(notice).getByText(/1 plotted pairs retain fewer than half of the attempted directions/)).not.toBeVisible();
+    expect(within(notice).getByText(/Association not reported: at least one pair retains/)).toBeVisible();
     expect(screen.getByText("DIVERSITY–BI r").parentElement?.querySelector("dd")?.textContent).toBe("—");
   });
 
@@ -113,7 +117,8 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     })) } };
     rendered.rerender(createElement(PolymarketAggregationExplorer, { data: allMissing }));
     expect(screen.getByText("No defined chart coordinates for the selected Polymarket–model pairs.")).toBeInTheDocument();
-    expect(screen.getByRole("note")).toHaveTextContent("4 / 4");
+    expect(screen.getByRole("note")).not.toHaveTextContent("4 / 4");
+    expect(screen.getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
   });
 
   it("shows one defined with-freeze market point without fabricating a correlation", () => {
@@ -126,11 +131,16 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     selectLift("button");
     assertFinitePlot(".freeze-diversity-point", 1);
     expect(screen.getByRole("note")).toHaveTextContent("fewer than three displayed pairs");
-    expect(screen.getByRole("note")).toHaveTextContent("1 / 2");
-    expect(screen.getByRole("note")).toHaveTextContent("2 candidate pairs have fewer than 5 high-loss records");
+    const notice = screen.getByRole("note");
+    expect(notice).not.toHaveTextContent("1 / 2");
+    expect(notice).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
+    const sparseCount = within(notice).getByText(/2 candidate pairs have fewer than 5 high-loss records/);
+    expect(sparseCount).not.toBeVisible();
+    fireEvent.click(within(notice).getByText("How to interpret this metric", { exact: true }));
+    expect(sparseCount).toBeVisible();
   });
 
-  it("shows one defined fixed-focal partner and reports missingness", () => {
+  it("shows one defined fixed-focal partner without a missing-count banner", () => {
     const data = read<FixedFocalWithoutFreezeData>("pair-aggregation/fixed-focal-without-freeze.json");
     const base = data.points[0].base_model;
     data.points = data.points.filter((p) => p.base_model === base).slice(0, 2).map((p, i) => ({ ...p, combined: {
@@ -139,10 +149,11 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     render(createElement(FixedFocalWithoutFreezeExplorer, { data }));
     selectLift("button");
     assertFinitePlot(".freeze-diversity-point", 1);
-    expect(screen.getByRole("note")).toHaveTextContent("1 / 2");
+    expect(screen.getByRole("note")).not.toHaveTextContent("1 / 2");
+    expect(screen.getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
   });
 
-  it("shows one defined without-freeze base point and reports missingness", () => {
+  it("shows one defined without-freeze base point without a missing-count banner", () => {
     const data = read<FixedBaseAggregationData>("polymarket-aggregation/without-freeze-base.json");
     data.points = data.points.slice(0, 2).map((p, i) => ({ ...p, combined: {
       ...p.combined, train_diversity: { ...p.combined.train_diversity, high_loss_lift: i ? null : 1 },
@@ -150,6 +161,7 @@ describe("legacy high-loss scatter display preserves the raw statistic", () => {
     render(createElement(WithoutFreezeBaseExplorer, { data }));
     selectLift("button");
     assertFinitePlot(".freeze-diversity-point", 1);
-    expect(screen.getByRole("note")).toHaveTextContent("1 / 2");
+    expect(screen.getByRole("note")).not.toHaveTextContent("1 / 2");
+    expect(screen.getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
   });
 });

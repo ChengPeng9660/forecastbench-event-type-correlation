@@ -172,7 +172,7 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
         </> : <p>Select a defined pair after adjusting the controls.</p>}</aside>
       </div>
       <div className="configuration-pair-legend"><strong>Left = fixed base · right = partner</strong>{providers.map((name) => <span key={name}><i style={{ background: configurationProviderColor(name) }} />{name}</span>)}</div>
-      <p className="research-scope">{missingMetricCount} view(s) have an undefined selected diversity metric; {missingOutcomeCount} have an undefined selected outcome. Spearman ρ: {number(spearman)}. Repeated folds are not independent new events.</p>
+      <p className="research-scope">{!isHighLossMetric(metric) && <>{missingMetricCount} view(s) have an undefined selected diversity metric; {missingOutcomeCount} have an undefined selected outcome. </>}Spearman ρ: {number(spearman)}. Repeated folds are not independent new events.</p>
       <ResearchDetails label="Pair availability & evaluation details">
         <p><strong>Coverage.</strong> {ready.shard.partners.length} other exact configurations were considered. {unavailable.length} under the current partner filters have unavailable pair data{statusCounts.size ? ` (${[...statusCounts].map(([status, total]) => `${status.replaceAll("_", " ")}: ${total}`).join("; ")})` : ""}.</p>
         {unavailable.length > 0 && <ul>{unavailable.map((row) => <li key={row.partner.exact_configuration}><strong>{row.partner.exact_configuration}</strong>: {row.reason ?? row.status.replaceAll("_", " ")} · {row.n_common} shared targets.</li>)}</ul>}
