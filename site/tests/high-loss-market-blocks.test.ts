@@ -21,6 +21,10 @@ afterEach(() => {
 
 const kpi = (element: HTMLElement, label: string) => within(element).getByText(label, { exact: true }).parentElement?.querySelector("dd");
 const xCoordinate = (element: Element) => Number(element.getAttribute("transform")?.match(/translate\(([^ ]+)/)?.[1]);
+function expectNoHighLossExplanation(element: HTMLElement) {
+  expect(within(element).queryByRole("note", { name: "High-loss metric diagnostics" })).not.toBeInTheDocument();
+  expect(within(element).queryByText("How to interpret this metric", { exact: true })).not.toBeInTheDocument();
+}
 
 function marketFixture(values: Array<number | null>): MarketDiversityPerformanceData {
   const data = marketPayload as unknown as MarketDiversityPerformanceData;
@@ -62,37 +66,34 @@ function useConfigurationFixture(values: Array<number | null>) {
 }
 
 describe("high-loss presentation in market blocks", () => {
-  it("keeps extreme raw values and zero-joint points while suppressing two-distinct-X associations", () => {
-    const fixture = marketFixture([-35, 1, 1, null]);
+  it("keeps extreme raw values and zero while omitting one and null without an explanation block", () => {
+    const fixture = marketFixture([-35, 0, 1, null]);
     const before = JSON.stringify(fixture);
     const { container } = render(createElement(MarketDiversityPerformanceExplorer, { data: fixture }));
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
     const block = container.querySelector("#market-performance") as HTMLElement;
-    expect(block.querySelectorAll(".market-performance-hit")).toHaveLength(3);
+    expect(block.querySelectorAll(".market-performance-hit")).toHaveLength(2);
     expect(block.querySelector(".market-performance-hit title")).toHaveTextContent("High-loss diversity: -35.00");
-    expect(xCoordinate(block.querySelector(".market-performance-hit")!)).toBeCloseTo(highLossAxis([-35, 1, 1], [88, 1046]).position(-35), 8);
+    expect(xCoordinate(block.querySelector(".market-performance-hit")!)).toBeCloseTo(highLossAxis([-35, 0], [88, 1046]).position(-35), 8);
+    expect([...block.querySelectorAll(".market-performance-hit title")].map((title) => title.textContent).some((title) => title?.includes("High-loss diversity: 0.00"))).toBe(true);
     expect(kpi(block, "PEARSON r")).toHaveTextContent("—");
     expect(kpi(block, "SPEARMAN ρ")).toHaveTextContent("—");
-    const notice = within(block).getByRole("note", { name: "High-loss metric diagnostics" });
-    expect(notice).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
-    expect(notice).not.toHaveTextContent("1 / 4");
-    expect(notice).toHaveTextContent("only 2 distinct high-loss values");
-    expect(notice).toHaveTextContent("not perfect complementarity");
+    expectNoHighLossExplanation(block);
     expect(block.querySelector(".market-performance-axis-label")).toHaveTextContent("signed-log display; raw ticks");
     expect(JSON.stringify(fixture)).toBe(before);
   });
 
   it("calculates reported high-loss correlations on raw coordinates, not signed-log positions", () => {
-    const { container } = render(createElement(MarketDiversityPerformanceExplorer, { data: marketFixture([-35, 0, 1]) }));
+    const { container } = render(createElement(MarketDiversityPerformanceExplorer, { data: marketFixture([-35, 0, .5]) }));
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
     const block = container.querySelector("#market-performance") as HTMLElement;
-    expect(kpi(block, "PEARSON r")).toHaveTextContent(rawPearson([-35, 0, 1], [.1, .2, .4])!.toFixed(2));
+    expect(kpi(block, "PEARSON r")).toHaveTextContent(rawPearson([-35, 0, .5], [.1, .2, .4])!.toFixed(2));
     expect(kpi(block, "SPEARMAN ρ")).toHaveTextContent("1.00");
     expect(block).not.toHaveTextContent("Association not reported");
   });
 
   it("exposes training selection and test gap even outside the high-loss metric", async () => {
-    useConfigurationFixture([-35, 0, 1]);
+    useConfigurationFixture([-35, 0, .5]);
     const { container } = render(createElement(MarketConfigurationAggregationExplorer, { base: configurations[0] }));
     await screen.findByRole("img");
     fireEvent.change(screen.getByLabelText("Exact configuration train sample"), { target: { value: "near_bi" } });
@@ -107,11 +108,7 @@ describe("high-loss presentation in market blocks", () => {
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
     expect(block.querySelectorAll(".configuration-pair-point")).toHaveLength(3);
     expect(kpi(block, "PEARSON r")).toHaveTextContent("—");
-    const notice = within(block).getByRole("note");
-    expect(within(notice).getByText(/3 plotted pairs retain fewer than half of the attempted directions/)).not.toBeVisible();
-    expect(within(notice).getByText(/Association not reported: at least one pair retains/)).toBeVisible();
-    fireEvent.click(within(notice).getByText("How to interpret this metric", { exact: true }));
-    expect(within(notice).getByText(/3 plotted pairs retain fewer than half of the attempted directions/)).toBeVisible();
+    expectNoHighLossExplanation(block);
   });
 
   it("silently excludes undefined exact-pair metrics without substituting X=1 or altering their scores", async () => {
@@ -121,17 +118,18 @@ describe("high-loss presentation in market blocks", () => {
     await screen.findByRole("img");
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
     const block = container.querySelector("#configuration-pair-aggregation") as HTMLElement;
-    expect(block.querySelectorAll(".configuration-pair-point")).toHaveLength(2);
+    expect(block.querySelectorAll(".configuration-pair-point")).toHaveLength(1);
     expect(block.querySelector(".configuration-pair-point title")).toHaveTextContent("High-loss diversity: -35.000");
     expect(block.querySelector(".configuration-pair-point title")).toHaveTextContent("Aggregation BI: 80.00");
     const inspector = block.querySelector(".configuration-pair-inspector") as HTMLElement;
     expect(kpi(inspector, "Min marginal high-loss counts A / B")).toHaveTextContent("1 / 3");
     expect(kpi(inspector, "Min joint high-loss count")).toHaveTextContent("0");
     expect(kpi(inspector, "Defined high-loss directions")).toHaveTextContent("20 / 20");
-    expect(within(block).getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
+    expectNoHighLossExplanation(block);
     expect(block).not.toHaveTextContent("view(s) have an undefined selected diversity metric");
     expect(JSON.stringify(fixture)).toBe(before);
     fireEvent.click(screen.getByRole("button", { name: "Prediction diversity" }));
+    expect(block.querySelectorAll(".configuration-pair-point")).toHaveLength(3);
     expect(block).toHaveTextContent("0 view(s) have an undefined selected diversity metric; 0 have an undefined selected outcome");
   });
 
@@ -145,7 +143,7 @@ describe("high-loss presentation in market blocks", () => {
     const block = container.querySelector("#configuration-pair-aggregation") as HTMLElement;
     expect(block.querySelectorAll(".configuration-pair-point")).toHaveLength(1);
     expect(block.querySelector(".configuration-pair-point title")).toHaveTextContent("High-loss diversity: 0.000");
-    expect(within(block).getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
+    expectNoHighLossExplanation(block);
     expect(block).not.toHaveTextContent("view(s) have an undefined selected diversity metric");
     fireEvent.click(screen.getByRole("button", { name: "Prediction diversity" }));
     expect(block).toHaveTextContent("0 view(s) have an undefined selected diversity metric; 1 have an undefined selected outcome");
@@ -160,31 +158,50 @@ describe("high-loss presentation in market blocks", () => {
     expect(within(block).queryByRole("note")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
     expect(kpi(block, "PEARSON r")).toHaveTextContent("—");
-    expect(within(block).getByRole("note")).toHaveTextContent("fewer than three displayed pairs");
+    expectNoHighLossExplanation(block);
   });
 
-  it("hides the model-market missing-count footer only for High-loss while keeping finite zero and one", async () => {
+  it("hides the model-market explanation and one-valued points only for High-loss while keeping zero", async () => {
     const fixture = modelMarketFixture();
     [0, null, 1].forEach((value, index) => { fixture.points[index].views.all.combined!.train_diversity.high_loss_lift = value; });
     const before = JSON.stringify(fixture);
     vi.stubGlobal("fetch", vi.fn(() => Promise.resolve(new Response(JSON.stringify(fixture), { status: 200 }))));
     const { container } = render(createElement(ModelMarketAggregationExplorer, {
-      selectedConfiguration: configurations[0].exact_configuration,
+      selectedConfiguration: configurations[2].exact_configuration,
       onSelectConfiguration: vi.fn(), filters: { provider: "all", prompt: "all", information: "all" },
     }));
     await screen.findByRole("img");
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
     const block = container.querySelector("#model-market-aggregation") as HTMLElement;
-    expect(block.querySelectorAll(".model-market-point")).toHaveLength(2);
+    expect(block.querySelectorAll(".model-market-point")).toHaveLength(1);
     const titles = [...block.querySelectorAll(".model-market-point title")].map((title) => title.textContent);
     expect(titles.some((title) => title?.includes("High-loss diversity: 0.00"))).toBe(true);
-    expect(titles.some((title) => title?.includes("High-loss diversity: 1.00"))).toBe(true);
-    expect(within(block).getByRole("note")).not.toHaveTextContent("candidates have an undefined high-loss coordinate");
+    expect(titles.some((title) => title?.includes("High-loss diversity: 1.00"))).toBe(false);
+    expect(block.querySelector('.model-market-point[aria-pressed="true"]')).toBeNull();
+    expect(block.querySelector(".model-market-inspector")).toHaveAttribute("data-selected-configuration", configurations[2].exact_configuration);
+    expectNoHighLossExplanation(block);
     expect(block).not.toHaveTextContent("view(s) have an undefined selected diversity");
     expect(block).not.toHaveTextContent("candidate(s) have no eligible view");
     fireEvent.click(screen.getByRole("button", { name: "Prediction diversity" }));
+    expect(block.querySelectorAll(".model-market-point")).toHaveLength(3);
+    expect(block.querySelector('.model-market-point[aria-pressed="true"]')).toHaveAttribute("data-configuration", configurations[2].exact_configuration);
     expect(block).toHaveTextContent("1 candidate(s) have no eligible view. 0 view(s) have an undefined selected diversity");
     expect(JSON.stringify(fixture)).toBe(before);
+  });
+
+  it("preserves an overview selection hidden by the one-valued High-loss filter and restores it on other metrics", () => {
+    const fixture = marketFixture([1, -35, 0, null]);
+    const { container } = render(createElement(MarketDiversityPerformanceExplorer, { data: fixture }));
+    const block = container.querySelector("#market-performance") as HTMLElement;
+    const exact = fixture.points[0].exact_configuration;
+    fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
+    expect(block.querySelectorAll(".market-performance-hit")).toHaveLength(2);
+    expect(block.querySelector('.market-performance-hit[aria-pressed="true"]')).toBeNull();
+    expect(block.querySelector(".market-performance-inspector")).toHaveTextContent(exact);
+    expectNoHighLossExplanation(block);
+    fireEvent.click(screen.getByRole("button", { name: "Prediction diversity" }));
+    expect(block.querySelectorAll(".market-performance-hit")).toHaveLength(4);
+    expect(block.querySelector('.market-performance-hit[aria-pressed="true"]')).toHaveAttribute("data-configuration", exact);
   });
 
   it("applies raw-tick signed-log spacing and silently omits undefined points in both upper-left blocks", () => {

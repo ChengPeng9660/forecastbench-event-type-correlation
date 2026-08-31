@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
-import { HighLossNotice } from "./HighLossNotice";
 import { MarketWinBadge, MarketWinToggle, MarketWinVerdict } from "./MarketWinHighlight";
 import { configurationProviderColor } from "./MarketConfigurationAggregationExplorer";
 import { finiteExtent, linearPosition, linearTicks } from "./FreezeMarketCorrelationExplorer";
@@ -74,7 +73,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
     const x = item.view.train_diversity[metric];
     const y = item.score[outcome];
     const comparison = compareMatchedMarket(item.score, item.view.market, outcome);
-    return finite(x) && finite(y) && comparison !== "unavailable"
+    return finite(x) && (!isHighLossMetric(metric) || x !== 1) && finite(y) && comparison !== "unavailable"
       ? [{ ...item, x, y, comparison, beatsMarket: comparison === "above" }] : [];
   });
   const selectedRow = data?.points.find((row) => row.configuration.exact_configuration === selectedConfiguration) ?? null;
@@ -85,8 +84,9 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
     : !selectedRow ? "The selected exact configuration is not included in this aggregation release."
       : !candidates.includes(selectedRow) ? "The selected exact configuration is outside the provider, prompt, or information filters above."
         : !selectedView ? `The selected exact configuration has no eligible result for this ${sample === "near_bi" ? "Near-BI " : ""}direction. ${selectedRow.reason ?? "No other configuration or all-sample result has been substituted."}`
-          : !selected ? "The selected configuration has an undefined diversity, performance, or matched-market comparison in this view; it is not plotted."
-            : null;
+          : isHighLossMetric(metric) && selectedView.train_diversity[metric] === 1 ? "High-loss diversity = 1 is hidden in this chart. The selected exact configuration is preserved."
+            : !selected ? "The selected configuration has an undefined diversity, performance, or matched-market comparison in this view; it is not plotted."
+              : null;
   const orderedPoints = [...points.filter((point) => point !== selected), ...(selected ? [selected] : [])];
   const xs = points.map((point) => point.x);
   const ys = points.map((point) => point.y);
@@ -136,7 +136,6 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
         <div><dt>SPEARMAN ρ</dt><dd>{format(spearman)}</dd><small>unweighted configuration ranks</small></div>
         <div><dt>REPEATED TEST CELLS</dt><dd>{support.toLocaleString()}</dd><small>not independent new events</small></div>
       </dl>
-      <HighLossNotice metric={metric} values={xs} missingCount={missingMetricCount} totalCount={candidates.length} retainedDirections={foldCounts} maximumDirections={maximumDirections} associationReason={associationReason} />
       {method === "best_single" && <p className="model-market-method-notice research-scope"><strong>Best Single is a test-fold hindsight reference.</strong> It is not a deployable aggregation method.</p>}
       <div className="market-performance-layout model-market-layout">
         <div className="market-performance-chart-wrap">
@@ -164,7 +163,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
             })}
             <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 15} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity{highLossScale ? " · signed-log display; raw ticks" : ""}</text>
             <text className="market-performance-axis-label" transform={`translate(20 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">{outcomeMeta.axis}</text>
-          </svg> : <div className="configuration-pair-empty"><strong>No defined model + market results in this view.</strong><span>Change the filters, direction, or train sample. Missing results have not been replaced with another sample or method.</span></div>}
+          </svg> : <div className="configuration-pair-empty"><strong>No model + market results to plot in this view.</strong><span>Change the filters, direction, or train sample.</span></div>}
         </div>
         <aside className="configuration-pair-inspector model-market-inspector" aria-live="polite" data-selected-configuration={selectedConfiguration ?? undefined}>
           <p className="eyebrow">SELECTED MODEL + MARKET</p>

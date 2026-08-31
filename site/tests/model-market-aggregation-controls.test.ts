@@ -98,7 +98,7 @@ describe("model + market aggregation controls", () => {
     expect(container.querySelector(".model-market-point title")).toHaveTextContent("Total variation (TV): 0.750");
     fireEvent.change(screen.getByLabelText("Model + market cross-fit direction"), { target: { value: "a_to_b" } });
     expect(screen.queryByRole("img")).toBeNull();
-    expect(screen.getByText(/No defined model \+ market results/)).toBeInTheDocument();
+    expect(screen.getByText(/No model \+ market results to plot/)).toBeInTheDocument();
     expect(screen.getByText(/No other configuration or all-sample result has been substituted/)).toBeInTheDocument();
   });
 
@@ -113,7 +113,7 @@ describe("model + market aggregation controls", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("uses the shared high-loss display policy while retaining raw coordinates and null exclusions", async () => {
+  it("retains raw high-loss coordinates and null exclusions without the explanation block", async () => {
     const data = modelMarketFixture();
     data.points[0].views.all.combined!.train_diversity.high_loss_lift = -200;
     data.points[1].views.all.combined!.train_diversity.high_loss_lift = null;
@@ -121,10 +121,12 @@ describe("model + market aggregation controls", () => {
     const { container } = renderChart();
     await screen.findByRole("img");
     fireEvent.click(screen.getByRole("button", { name: "High-loss diversity" }));
-    expect(screen.getByRole("note", { name: "High-loss metric diagnostics" })).toHaveTextContent("signed-log spacing");
+    expect(screen.queryByRole("note", { name: "High-loss metric diagnostics" })).not.toBeInTheDocument();
+    expect(screen.queryByText("How to interpret this metric", { exact: true })).not.toBeInTheDocument();
     expect(container.querySelectorAll(".model-market-point")).toHaveLength(2);
     expect(container.querySelector('.model-market-point[aria-pressed="true"] title')).toHaveTextContent("High-loss diversity: -200.00");
-    expect(screen.getByText(/Association not reported: fewer than three displayed pairs/)).toBeInTheDocument();
+    expect(screen.getByText("PEARSON r", { exact: true }).parentElement?.querySelector("dd")).toHaveTextContent("—");
+    expect(screen.getByText("SPEARMAN ρ", { exact: true }).parentElement?.querySelector("dd")).toHaveTextContent("—");
     expect(screen.getByText(/signed-log display; raw ticks/)).toBeInTheDocument();
   });
 

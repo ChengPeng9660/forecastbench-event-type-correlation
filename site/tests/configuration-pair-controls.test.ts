@@ -151,7 +151,7 @@ describe("all-configuration aggregation controls", () => {
 
   it("reports unavailable pairs rather than inventing scores", async () => {
     renderBase(3);
-    await screen.findByText("No defined pair estimates in this view.");
+    await screen.findByText("No pair estimates to plot in this view.");
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     fireEvent.click(screen.getByText("Pair availability & evaluation details"));
     expect(screen.getByText(/3 other exact configurations were considered/)).toBeInTheDocument();

@@ -1,6 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
-import { HighLossNotice } from "./HighLossNotice";
 import { MarketWinBadge, MarketWinToggle } from "./MarketWinHighlight";
 import { finiteExtent, linearPosition, linearTicks, pearsonCorrelation, spearmanCorrelation, FREEZE_PROVIDER_COLORS } from "./FreezeMarketCorrelationExplorer";
 import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
@@ -80,7 +79,7 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
   const points = inView.flatMap((item) => {
     const x = item.view.train_diversity[metric];
     const y = item.score[outcome];
-    return finite(x) && finite(y) ? [{ ...item, x, y }] : [];
+    return finite(x) && (!isHighLossMetric(metric) || x !== 1) && finite(y) ? [{ ...item, x, y }] : [];
   });
   const selected = points.find((item) => item.row.partner.exact_configuration === selectedPartner) ?? points[0] ?? null;
   const selectedTestGap = selected && selected.view.base.brier_index !== null && selected.view.partner.brier_index !== null
@@ -138,7 +137,6 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
         <div><dt>SMALL-SUPPORT PAIRS</dt><dd>{points.filter((item) => item.view.small_support).length}</dd><small>at least one half has fewer than 50</small></div>
       </dl>
       {minorityDirectionCount > 0 && <p className="configuration-pair-small-support" role="status">Limited retained directions: {minorityDirectionCount} displayed pair(s) use fewer than half of the {maximumDirections} attempted directions. {sample === "near_bi" ? "Near-BI selects training directions; it does not guarantee similar test BI." : "Treat these partial-direction estimates as exploratory."}</p>}
-      <HighLossNotice metric={metric} values={xs} missingCount={missingMetricCount} totalCount={inView.length} retainedDirections={foldCounts} maximumDirections={maximumDirections} associationReason={associationReason} diagnostics={inView.flatMap((item) => item.view.high_loss_diagnostics ? [item.view.high_loss_diagnostics] : [])} />
       <div className="market-performance-layout configuration-pair-layout">
         <div className="market-performance-chart-wrap">
           {points.length ? <svg className="configuration-pair-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={`${metricMeta?.label} versus ${outcomeMeta.label} for ${base.exact_configuration}`}>
@@ -157,7 +155,7 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
             })}
             <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 17} textAnchor="middle">Lower diversity ← {metricMeta?.axis} → Higher diversity{highLossScale ? " · signed-log display; raw ticks" : ""}</text>
             <text className="market-performance-axis-label" transform={`translate(20 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">{outcomeMeta.label}</text>
-          </svg> : <div className="configuration-pair-empty" role="status"><strong>No defined pair estimates in this view.</strong><span>{candidates.length === 0 ? "No partner matches the current provider, prompt, and information filters." : inView.length > 0 ? "The selected diversity metric or outcome is undefined for these computed pairs. No scores have been filled in." : sample === "near_bi" ? "No eligible training-selected Near-BI estimates remain for these controls. No all-pair values have been substituted." : largeSupportOnly ? "No estimates meet the requirement that both halves have at least 50 targets." : "The published pair statuses and selected metric/outcome determine availability; missing scores have not been fabricated."}</span></div>}
+          </svg> : <div className="configuration-pair-empty" role="status"><strong>No pair estimates to plot in this view.</strong><span>{candidates.length === 0 ? "No partner matches the current provider, prompt, and information filters." : inView.length > 0 ? "No pairs remain under the selected diversity and outcome filters. No scores have been filled in." : sample === "near_bi" ? "No eligible training-selected Near-BI estimates remain for these controls. No all-pair values have been substituted." : largeSupportOnly ? "No estimates meet the requirement that both halves have at least 50 targets." : "The published pair statuses and selected metric/outcome determine availability; missing scores have not been fabricated."}</span></div>}
         </div>
         <aside className="configuration-pair-inspector" aria-live="polite"><p className="eyebrow">SELECTED EXACT PARTNER</p>{selected ? <>
           <h4>{selected.row.partner.canonical_model_version}</h4><p>{selected.row.partner.information_label} · {selected.row.partner.prompt_label}</p>

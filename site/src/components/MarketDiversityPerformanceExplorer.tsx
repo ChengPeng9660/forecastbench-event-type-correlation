@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
-import { HighLossNotice } from "./HighLossNotice";
 import { MarketWinBadge, MarketWinToggle, MarketWinVerdict } from "./MarketWinHighlight";
 import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
 import { ModelMarketAggregationExplorer } from "./ModelMarketAggregationExplorer";
@@ -124,17 +123,19 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
     && (prompt === "all" || point.prompt_type === prompt)
     && (information === "all" || point.information_type === information)
   )), [data.points, provider, prompt, information]);
-  const missingMetricCount = candidates.filter((point) => point.diversity[metric] === null || !Number.isFinite(point.diversity[metric])).length;
   const filtered = useMemo(() => candidates.filter((point) => point.diversity[metric] !== null
+    && (!isHighLossMetric(metric) || point.diversity[metric] !== 1)
     && Number.isFinite(point.diversity[metric]) && Number.isFinite(point.model[outcome])), [candidates, metric, outcome]);
   const selected = data.points.find((point) => point.exact_configuration === selectedConfiguration) ?? null;
   const selectedUnavailableNotice = selected && !candidates.includes(selected)
     ? "The selected exact configuration is outside the current provider, prompt, or information filters. Its selection is preserved; no other configuration is highlighted."
-    : selected && !filtered.includes(selected)
-      ? "The selected exact configuration has an undefined diversity or performance value in this overview and is not plotted. Its selection remains linked to model + market aggregation below."
-      : selected && filtered.length < 2
-        ? "The overview needs at least two configurations with defined chart values. The selected exact configuration is preserved."
-        : null;
+    : selected && isHighLossMetric(metric) && selected.diversity[metric] === 1
+      ? "High-loss diversity = 1 is hidden in this chart. The selected exact configuration remains linked to model + market aggregation below."
+      : selected && !filtered.includes(selected)
+        ? "The selected exact configuration has an undefined diversity or performance value in this overview and is not plotted. Its selection remains linked to model + market aggregation below."
+        : selected && filtered.length < 2
+          ? "The overview needs at least two configurations with defined chart values. The selected exact configuration is preserved."
+          : null;
   const xValues = filtered.map((point) => point.diversity[metric] as number);
   const yValues = filtered.map((point) => point.model[outcome]);
   const marketWins = matchedMarketWinSummary(filtered.map((point) => compareMatchedMarket(point.model, point.matched_market, outcome)));
@@ -185,7 +186,6 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <div><dt>SPEARMAN ρ</dt><dd>{spearman === null ? "—" : spearman.toFixed(2)}</dd><small>unweighted configuration ranks</small></div>
         <div><dt>COMMON CELLS</dt><dd>{filtered.reduce((sum, point) => sum + point.n_common, 0).toLocaleString()}</dd><small>configuration–market observations</small></div>
       </dl>
-      <HighLossNotice metric={metric} values={xValues} missingCount={missingMetricCount} totalCount={candidates.length} associationReason={associationReason} diagnostics={candidates.flatMap((point) => point.high_loss_diagnostics ? [point.high_loss_diagnostics] : [])} />
 
       <div className="market-performance-layout">
         <div className="market-performance-chart-wrap">
