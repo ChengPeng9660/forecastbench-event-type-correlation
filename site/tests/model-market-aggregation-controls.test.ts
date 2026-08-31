@@ -22,19 +22,42 @@ describe("model + market aggregation controls", () => {
     expect(screen.getByLabelText("Model + market train sample")).toHaveValue("all");
   });
 
-  it("uses the aggregate's own matched BI for triangles, with losses and ties as circles even on the raw-Brier axis", async () => {
+  it("optionally badges wins on the selected metric without moving, hiding, or recoloring points", async () => {
     const { container } = renderChart();
     await screen.findByRole("img");
     const markers = () => [...container.querySelectorAll(".model-market-point")];
     const byExact = (exact: string) => markers().find((point) => point.getAttribute("data-configuration") === exact)!;
-    expect(byExact(configurations[0].exact_configuration)).toHaveAttribute("data-marker-shape", "triangle");
-    expect(byExact(configurations[1].exact_configuration)).toHaveAttribute("data-marker-shape", "circle");
-    expect(byExact(configurations[2].exact_configuration)).toHaveAttribute("data-marker-shape", "circle");
+    const toggle = screen.getByRole("checkbox", { name: "Model + market aggregation: highlight market wins" });
+    const badges = () => container.querySelectorAll(".model-market-point .market-win-badge");
+    const signature = () => markers().map((point) => [point.getAttribute("data-configuration"), point.getAttribute("transform"), point.querySelector(".model-market-glyph")?.getAttribute("fill")]);
+    const count = () => screen.getByText("BEATS MATCHED MARKET", { exact: true }).parentElement?.querySelector("dd")?.textContent;
+    expect(toggle).not.toBeChecked();
+    expect(badges()).toHaveLength(0);
+    expect(markers().every((point) => point.getAttribute("data-marker-shape") === "circle")).toBe(true);
+    expect(count()).toBe("1 / 3");
+    expect(container.querySelector(".model-market-baseline")).toBeNull();
+    expect(byExact(configurations[2].exact_configuration)).toHaveAttribute("data-market-comparison", "tie");
     expect(byExact(configurations[2].exact_configuration).querySelector("rect")).toBeNull();
+    const before = signature();
+    fireEvent.click(toggle);
+    expect(badges()).toHaveLength(1);
+    expect(byExact(configurations[0].exact_configuration).querySelector(".market-win-badge")).not.toBeNull();
+    expect(byExact(configurations[1].exact_configuration).querySelector(".market-win-badge")).toBeNull();
+    expect(signature()).toEqual(before);
     fireEvent.click(screen.getByRole("button", { name: "Raw Brier Score ↓" }));
-    expect(byExact(configurations[1].exact_configuration)).toHaveAttribute("data-marker-shape", "circle");
-    expect(byExact(configurations[0].exact_configuration)).toHaveAttribute("data-marker-shape", "triangle");
+    expect(badges()).toHaveLength(2);
+    expect(byExact(configurations[1].exact_configuration)).toHaveAttribute("data-market-comparison", "above");
+    expect(count()).toBe("2 / 3");
     fireEvent.change(screen.getByLabelText("Model + market aggregation method"), { target: { value: "simple_mean" } });
+    expect(badges()).toHaveLength(2);
+    fireEvent.click(screen.getByRole("button", { name: "Brier Index ↑" }));
+    expect(count()).toBe("0 / 3");
+    expect(badges()).toHaveLength(0);
+    fireEvent.change(screen.getByLabelText("Model + market aggregation method"), { target: { value: "ec_w0_56" } });
+    expect(badges()).toHaveLength(1);
+    fireEvent.click(toggle);
+    expect(badges()).toHaveLength(0);
+    expect(signature()).toEqual(before);
     expect(markers().every((point) => point.getAttribute("data-marker-shape") === "circle")).toBe(true);
   });
 

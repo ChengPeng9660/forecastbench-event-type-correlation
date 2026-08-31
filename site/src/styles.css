@@ -497,8 +497,6 @@ button.cross-type-cell:hover { z-index: 1; transform: scale(.96); box-shadow: in
 .market-performance-tick, .market-performance-axis-label { fill: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .market-performance-tick { font-size: 10px; }
 .market-performance-axis-label { font-size: 10px; letter-spacing: .01em; }
-.market-performance-baseline line { stroke: var(--gold); stroke-width: 2; stroke-dasharray: 8 6; vector-effect: non-scaling-stroke; }
-.market-performance-baseline text { fill: #956500; font: 700 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .market-performance-hit { cursor: pointer; outline: none; }
 .market-performance-hit-target { fill: transparent; }
 .market-performance-point { opacity: .68; stroke: #fff; stroke-width: 1.2; transition: opacity .15s ease, stroke-width .15s ease, transform .15s ease; vector-effect: non-scaling-stroke; }

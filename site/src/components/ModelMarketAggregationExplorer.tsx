@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { HighLossNotice } from "./HighLossNotice";
+import { MarketWinBadge, MarketWinToggle, MarketWinVerdict } from "./MarketWinHighlight";
 import { configurationProviderColor } from "./MarketConfigurationAggregationExplorer";
 import { finiteExtent, linearPosition, linearTicks } from "./FreezeMarketCorrelationExplorer";
 import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
-import { beatsMatchedMarket, loadModelMarketAggregation } from "../lib/modelMarketAggregation";
+import { loadModelMarketAggregation } from "../lib/modelMarketAggregation";
+import { compareMatchedMarket, matchedMarketLabel, matchedMarketWinSummary } from "../lib/matchedMarketComparison";
 import type { ConfigurationPairSample } from "../types/configurationPairAggregation";
 import type { FreezeAggregationMethodId, FreezeFoldView, MarketPerformanceDiversityMetricId, MarketPerformanceOutcomeId } from "../types/data";
 import type { ModelMarketAggregationData, ModelMarketAggregationFilters } from "../types/modelMarketAggregation";
@@ -44,6 +46,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
   const [attempt, setAttempt] = useState(0);
   const [metric, setMetric] = useState<MarketPerformanceDiversityMetricId>("prediction_diversity");
   const [outcome, setOutcome] = useState<MarketPerformanceOutcomeId>("brier_index");
+  const [highlightMarketWins, setHighlightMarketWins] = useState(false);
   const [method, setMethod] = useState<FreezeAggregationMethodId>("ec_w0_56");
   const [fold, setFold] = useState<FreezeFoldView>("combined");
   const [sample, setSample] = useState<ConfigurationPairSample>("all");
@@ -70,9 +73,9 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
   const points = inView.flatMap((item) => {
     const x = item.view.train_diversity[metric];
     const y = item.score[outcome];
-    // Undefined BI cannot be assigned a truthful win/loss marker, even on the raw-Brier axis.
-    return finite(x) && finite(y) && finite(item.score.brier_index) && finite(item.view.market.brier_index)
-      ? [{ ...item, x, y, beatsMarket: beatsMatchedMarket(item.score, item.view.market) }] : [];
+    const comparison = compareMatchedMarket(item.score, item.view.market, outcome);
+    return finite(x) && finite(y) && comparison !== "unavailable"
+      ? [{ ...item, x, y, comparison, beatsMarket: comparison === "above" }] : [];
   });
   const selectedRow = data?.points.find((row) => row.configuration.exact_configuration === selectedConfiguration) ?? null;
   const selected = points.find((item) => item.row.configuration.exact_configuration === selectedConfiguration) ?? null;
@@ -88,11 +91,9 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
   const xs = points.map((point) => point.x);
   const ys = points.map((point) => point.y);
   const support = points.reduce((sum, point) => sum + point.view.test_target_cells, 0);
-  const baselinePoints = points.filter((point) => finite(point.view.market[outcome]));
-  const baselineSupport = baselinePoints.reduce((sum, point) => sum + point.view.test_target_cells, 0);
-  const baseline = baselineSupport ? baselinePoints.reduce((sum, point) => sum + (point.view.market[outcome] as number) * point.view.test_target_cells, 0) / baselineSupport : null;
+  const marketWins = matchedMarketWinSummary(points.map((point) => point.comparison));
   const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : finiteExtent(xs);
-  const rawYDomain = finiteExtent(baseline === null ? ys : [...ys, baseline]);
+  const rawYDomain = finiteExtent(ys);
   const yDomain: [number, number] = outcome === "raw_brier" ? [Math.max(0, rawYDomain[0]), rawYDomain[1]] : rawYDomain;
   const highLossScale = isHighLossMetric(metric) ? highLossAxis(xs, [MARGIN.left, WIDTH - MARGIN.right]) : null;
   const xPosition = (raw: number) => highLossScale?.position(raw) ?? linearPosition(raw, xDomain, [MARGIN.left, WIDTH - MARGIN.right]);
@@ -107,7 +108,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
   const providers = [...new Set(points.map((point) => point.row.configuration.provider))].sort();
   const missingMetricCount = inView.filter((point) => !finite(point.view.train_diversity[metric])).length;
   const missingOutcomeCount = inView.filter((point) => !finite(point.score[outcome])).length;
-  const missingComparisonCount = inView.filter((point) => !finite(point.score.brier_index) || !finite(point.view.market.brier_index)).length;
+  const missingComparisonCount = inView.filter((point) => compareMatchedMarket(point.score, point.view.market, outcome) === "unavailable").length;
 
   return <section className="model-market-section configuration-pair-section" id="model-market-aggregation" aria-labelledby="model-market-heading" aria-busy={loaded.status === "loading"}>
     <div className="section-heading market-performance-heading">
@@ -127,9 +128,10 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
         <div><span>DIVERSITY · X</span><div className="market-performance-tabs" role="group" aria-label="Model + market diversity metric">{METRICS.map((item) => <button type="button" key={item.id} className={metric === item.id ? "active" : ""} aria-pressed={metric === item.id} onClick={() => setMetric(item.id)}>{item.label}</button>)}</div></div>
         <div><span>PERFORMANCE · Y</span><div className="market-performance-tabs" role="group" aria-label="Model + market performance outcome">{OUTCOMES.map((item) => <button type="button" key={item.id} className={outcome === item.id ? "active" : ""} aria-pressed={outcome === item.id} onClick={() => setOutcome(item.id)}>{item.label}</button>)}</div></div>
       </div>
+      <MarketWinToggle scope="Model + market aggregation" checked={highlightMarketWins} onChange={setHighlightMarketWins} outcome={outcome} />
       <dl className="market-performance-kpis model-market-kpis">
         <div><dt>MODEL–MARKET PAIRS</dt><dd>{points.length}</dd><small>{candidates.length} exact candidates under filters</small></div>
-        <div><dt>ABOVE MATCHED MARKET</dt><dd>{points.filter((point) => point.beatsMarket).length}</dd><small>triangles · point estimates</small></div>
+        <div><dt>BEATS MATCHED MARKET</dt><dd>{marketWins.wins} / {marketWins.total}</dd><small>{marketWins.rate} · {outcome === "brier_index" ? "BI ↑" : "Raw Brier ↓"} · point estimates</small></div>
         <div><dt>PEARSON r</dt><dd>{format(pearson)}</dd><small>{outcome === "raw_brier" ? "positive means worse Brier" : "positive means better BI"}</small></div>
         <div><dt>SPEARMAN ρ</dt><dd>{format(spearman)}</dd><small>unweighted configuration ranks</small></div>
         <div><dt>REPEATED TEST CELLS</dt><dd>{support.toLocaleString()}</dd><small>not independent new events</small></div>
@@ -147,16 +149,16 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
               const x = xPosition(tick);
               return <g key={`x-${tick}`}><line className="market-performance-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="market-performance-tick" x={x} y={HEIGHT - MARGIN.bottom + 23} textAnchor="middle">{formatX(metric, tick)}</text></g>;
             })}
-            {baseline !== null && <g className="model-market-baseline"><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} y2={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} /><text x={WIDTH - MARGIN.right - 4} y={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]) - 8} textAnchor="end">Matched Polymarket · {formatY(outcome, baseline)}</text></g>}
             {orderedPoints.map((point) => {
               const exact = point.row.configuration.exact_configuration;
               const active = exact === selectedConfiguration;
               const x = xPosition(point.x);
               const y = linearPosition(point.y, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
-              const label = `${exact}\n${metricMeta.label}: ${formatX(metric, point.x)}\nAggregation ${outcomeMeta.label}: ${formatY(outcome, point.y)}\nMatched market ${outcomeMeta.label}: ${formatY(outcome, point.view.market[outcome])}\n${point.beatsMarket ? "Above matched market BI" : "At or below matched market BI"}\n${point.view.fold_count}/${maximumDirections} directions · ${point.row.n_common} common targets`;
-              return <g key={exact} className={`model-market-point${active ? " selected" : ""}`} data-configuration={exact} data-marker-shape={point.beatsMarket ? "triangle" : "circle"} data-above-market={point.beatsMarket} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={active} aria-controls="market-performance" onClick={() => onSelectConfiguration(exact)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelectConfiguration(exact); } }}>
+              const label = `${exact}\n${metricMeta.label}: ${formatX(metric, point.x)}\nAggregation ${outcomeMeta.label}: ${formatY(outcome, point.y)}\nMatched market ${outcomeMeta.label}: ${formatY(outcome, point.view.market[outcome])}\n${matchedMarketLabel[point.comparison]} · ${outcome === "brier_index" ? "BI" : "Raw Brier"}\n${point.view.fold_count}/${maximumDirections} directions · ${point.row.n_common} common targets`;
+              return <g key={exact} className={`model-market-point${active ? " selected" : ""}`} data-configuration={exact} data-marker-shape="circle" data-market-comparison={point.comparison} data-above-market={point.beatsMarket} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={active} aria-controls="market-performance" onClick={() => onSelectConfiguration(exact)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelectConfiguration(exact); } }}>
                 {active && <circle className="model-market-selection-halo" r={12} />}
-                {point.beatsMarket ? <path className="model-market-glyph" d="M 0 -8 L 7.5 6.5 L -7.5 6.5 Z" fill={configurationProviderColor(point.row.configuration.provider)} /> : <circle className="model-market-glyph" r={6.5} fill={configurationProviderColor(point.row.configuration.provider)} />}
+                <circle className="model-market-glyph" r={6.5} fill={configurationProviderColor(point.row.configuration.provider)} />
+                {highlightMarketWins && point.beatsMarket && <MarketWinBadge />}
                 <circle className="market-performance-hit-target" r={12} /><title>{label}</title>
               </g>;
             })}
@@ -168,6 +170,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
           <p className="eyebrow">SELECTED MODEL + MARKET</p>
           {selectedRow && <><h4>{selectedRow.configuration.canonical_model_version}</h4><p>{selectedRow.configuration.information_label} · {selectedRow.configuration.prompt_label}</p></>}
           {selectedUnavailableReason && <p className="model-market-unavailable">{selectedUnavailableReason}</p>}
+          {selectedView && selectedScore && <MarketWinVerdict comparison={compareMatchedMarket(selectedScore, selectedView.market, outcome)} outcome={outcome} />}
           {selectedRow && <>
             {selectedView && selectedScore && <dl>
               <div><dt>{metricMeta.label}</dt><dd>{format(selectedView.train_diversity[metric], 3)}</dd></div>
@@ -188,14 +191,14 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
           </>}
         </aside>
       </div>
-      <div className="configuration-pair-legend model-market-legend"><strong>Model provider</strong>{providers.map((provider) => <span key={provider}><i style={{ background: configurationProviderColor(provider) }} />{provider}</span>)}<span><svg viewBox="-9 -10 18 19" width="14" height="14" aria-hidden="true"><path d="M 0 -8 L 7.5 6.5 L -7.5 6.5 Z" fill="currentColor" /></svg>Above pair-matched market BI</span><span><svg viewBox="-9 -9 18 18" width="14" height="14" aria-hidden="true"><circle r="6.5" fill="currentColor" /></svg>At or below pair-matched market BI</span></div>
-      <p className="research-scope">Shapes use aggregation BI against the same configuration’s matched test-market BI, including when Raw Brier is selected. The dashed line is a weighted reference; it does not determine shapes. Repeated folds reuse events, and triangles do not imply statistical significance.</p>
-      <p className="research-scope">{candidates.length - inView.length} candidate(s) have no eligible view. {missingMetricCount} view(s) have an undefined selected diversity; {missingOutcomeCount} have an undefined selected outcome; {missingComparisonCount} have an undefined BI comparison. These counts may overlap.</p>
+      <div className="configuration-pair-legend model-market-legend"><strong>Model provider</strong>{providers.map((provider) => <span key={provider}><i style={{ background: configurationProviderColor(provider) }} />{provider}</span>)}</div>
+      <p className="research-scope">Optional badges compare aggregation with Polymarket on that configuration’s own test events, using the selected Y metric. Repeated folds reuse events; a win is a point estimate, not statistical significance.</p>
+      <p className="research-scope">{candidates.length - inView.length} candidate(s) have no eligible view. {missingMetricCount} view(s) have an undefined selected diversity; {missingOutcomeCount} have an undefined selected outcome; {missingComparisonCount} have an undefined matched-market comparison. These counts may overlap.</p>
       <ResearchDetails label="Model + market evaluation details">
         <p><strong>Exact configurations.</strong> Each model version, prompt, and information condition is kept separate. Color identifies the model provider; shape does not encode prompt or information. The selected exact configuration stays linked to the first chart.</p>
         <p><strong>Cross-fit evaluation.</strong> {data.split.repetitions} event-grouped splits are attempted in both directions. Diversity uses each training half; aggregation and market scores use the opposite half on identical non-imputed model–market target support. Combined pools available directions. Near-BI retains directions whose training BI gap is at most {data.split.near_bi_gap}, before pooling. It does not filter on test performance.</p>
         <p><strong>Unchanged methods.</strong> All six published methods retain their definitions. Directional CF uses Polymarket as the base and fits its weights on training data. Best Single chooses one forecaster using test-fold hindsight and is a reference, not a deployable method.</p>
-        <p><strong>Interpretation.</strong> Prediction diversity is 1 − prediction correlation; TV is the mean absolute model–market probability difference. Loss-based measures use training outcomes. Correlations use raw coordinates and are descriptive; choosing a model after viewing the overview is exploratory post-selection. A triangle means pooled aggregation BI exceeds pooled matched-market BI, with a 1e−12 numerical tolerance; ties are circles.</p>
+        <p><strong>Interpretation.</strong> Prediction diversity is 1 − prediction correlation; TV is the mean absolute model–market probability difference. Loss-based measures use training outcomes. Correlations use raw coordinates and are descriptive; choosing a model after viewing the overview is exploratory post-selection. The optional badge and win count compare pooled aggregation and matched-market scores under the selected Y metric: higher BI or lower Raw Brier, with a 1e−12 numerical tolerance. Ties receive no badge. The published experiment’s BI-based beats_market field remains unchanged.</p>
       </ResearchDetails>
     </>}
   </section>;

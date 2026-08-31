@@ -45,11 +45,18 @@ not overwritten.
   gap is at most two, before aggregation. All eligible imposes no such filter.
   Support below 50 is flagged, not excluded by default. Repeated test cells are
   not independent new events.
-- A triangle means aggregation BI exceeds the same pair's matched-test market
-  BI by more than `1e-12`; otherwise use a circle. This is a point-estimate
-  comparison, not a significance test. It does not compare against the first
-  block's weighted market reference line and shape does not encode information
-  condition. The triangle/circle meaning is the same when viewing raw Brier.
+- All points retain provider-colored circles. The optional **Highlight market
+  wins** checkbox adds a check badge to a point only when it beats its own
+  matched-test market on the selected Y metric: higher BI or lower Raw Brier,
+  with a `1e-12` tolerance. Ties have no badge. The checkbox defaults off and
+  does not filter points or change coordinates. The win-count KPI uses those
+  same comparisons and gives every displayed configuration equal weight.
+- Neither this block nor the model-performance overview has a shared market
+  reference line: different configurations cover different events. Each
+  inspector retains its own matched-market scores. Badge/count comparisons
+  are point estimates, not significance tests. The published experiment's
+  `beats_market` field remains BI-based and unchanged; the UI derives a
+  separate Raw-Brier comparison when that Y metric is selected.
 
 Selection from the full-sample first block remains exploratory even though
 aggregation parameters and diversity coordinates are cross-fitted.

@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { HighLossNotice } from "./HighLossNotice";
+import { MarketWinBadge, MarketWinToggle, MarketWinVerdict } from "./MarketWinHighlight";
 import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
 import { ModelMarketAggregationExplorer } from "./ModelMarketAggregationExplorer";
 import "../modelMarketAggregation.css";
 import { existingAggregationHref, existingLinksForConfiguration } from "../lib/existingAggregationLinks";
 import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
+import { compareMatchedMarket, matchedMarketLabel, matchedMarketWinSummary } from "../lib/matchedMarketComparison";
 import {
   finiteExtent,
   linearPosition,
@@ -69,18 +71,6 @@ function formatY(outcome: MarketPerformanceOutcomeId, value: number) {
   return outcome === "raw_brier" ? value.toFixed(3) : value.toFixed(1);
 }
 
-function weightedMarketBaseline(
-  points: MarketDiversityPerformancePoint[],
-  outcome: MarketPerformanceOutcomeId,
-) {
-  const support = points.reduce((sum, point) => sum + point.n_common, 0);
-  if (!support) return null;
-  return points.reduce(
-    (sum, point) => sum + point.matched_market[outcome] * point.n_common,
-    0,
-  ) / support;
-}
-
 function informationLabel(data: MarketDiversityPerformanceData, id: MarketInformationType) {
   return data.points.find((point) => point.information_type === id)?.information_label ?? id;
 }
@@ -106,6 +96,7 @@ function PointGlyph({
 export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiversityPerformanceData }) {
   const [metric, setMetric] = useState<MarketPerformanceDiversityMetricId>("prediction_diversity");
   const [outcome, setOutcome] = useState<MarketPerformanceOutcomeId>("raw_brier");
+  const [highlightMarketWins, setHighlightMarketWins] = useState(false);
   const [provider, setProvider] = useState("all");
   const [prompt, setPrompt] = useState<"all" | MarketPromptType>("all");
   const [information, setInformation] = useState<"all" | MarketInformationType>("all");
@@ -146,12 +137,12 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         : null;
   const xValues = filtered.map((point) => point.diversity[metric] as number);
   const yValues = filtered.map((point) => point.model[outcome]);
-  const baseline = weightedMarketBaseline(filtered, outcome);
+  const marketWins = matchedMarketWinSummary(filtered.map((point) => compareMatchedMarket(point.model, point.matched_market, outcome)));
   const rawXDomain = finiteExtent(xValues);
   const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : metric === "prediction_diversity" || metric === "adjusted_pog"
     ? [Math.max(0, rawXDomain[0]), rawXDomain[1]]
     : rawXDomain;
-  const rawYDomain = finiteExtent(baseline === null ? yValues : [...yValues, baseline]);
+  const rawYDomain = finiteExtent(yValues);
   const yDomain: [number, number] = outcome === "raw_brier"
     ? [Math.max(0, rawYDomain[0]), rawYDomain[1]]
     : rawYDomain;
@@ -186,9 +177,10 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <div><span>PERFORMANCE · Y</span><div className="market-performance-tabs"><button className={outcome === "raw_brier" ? "active" : ""} type="button" onClick={() => setOutcome("raw_brier")}>Raw Brier Score ↓</button><button className={outcome === "brier_index" ? "active" : ""} type="button" onClick={() => setOutcome("brier_index")}>Brier Index ↑</button></div></div>
       </div>
 
+      <MarketWinToggle scope="Model performance" checked={highlightMarketWins} onChange={setHighlightMarketWins} outcome={outcome} />
       <dl className="market-performance-kpis">
         <div><dt>CONFIGURATIONS</dt><dd>{filtered.length}</dd><small>{new Set(filtered.map((point) => point.canonical_model_version)).size} model versions</small></div>
-        <div><dt>MARKET BASELINE</dt><dd>{baseline === null ? "—" : formatY(outcome, baseline)}</dd><small>matched-support weighted line</small></div>
+        <div><dt>BEATS MATCHED MARKET</dt><dd>{marketWins.wins} / {marketWins.total}</dd><small>{marketWins.rate} · {outcome === "brier_index" ? "BI ↑" : "Raw Brier ↓"} · displayed configurations</small></div>
         <div><dt>PEARSON r</dt><dd>{pearson === null ? "—" : pearson.toFixed(2)}</dd><small>{outcome === "raw_brier" ? "positive means worse Brier" : "positive means better BI"}</small></div>
         <div><dt>SPEARMAN ρ</dt><dd>{spearman === null ? "—" : spearman.toFixed(2)}</dd><small>unweighted configuration ranks</small></div>
         <div><dt>COMMON CELLS</dt><dd>{filtered.reduce((sum, point) => sum + point.n_common, 0).toLocaleString()}</dd><small>configuration–market observations</small></div>
@@ -206,14 +198,14 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
               const x = xPosition(tick);
               return <g key={`x-${tick}`}><line className="market-performance-grid" x1={x} x2={x} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="market-performance-tick" x={x} y={HEIGHT - MARGIN.bottom + 23} textAnchor="middle">{formatX(metric, tick)}</text></g>;
             })}
-            {baseline !== null && <g className="market-performance-baseline"><line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} y2={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])} /><text x={WIDTH - MARGIN.right - 4} y={linearPosition(baseline, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]) - 8} textAnchor="end">Matched Polymarket · {formatY(outcome, baseline)}</text></g>}
             {filtered.map((point) => {
               const xValue = point.diversity[metric] as number;
               const yValue = point.model[outcome];
               const x = xPosition(xValue);
               const y = linearPosition(yValue, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
-              const label = `${point.canonical_model_version}\n${point.information_label} · ${point.prompt_label}\n${data.metrics[metric].label}: ${formatX(metric, xValue)}\nModel ${data.outcomes[outcome].label}: ${formatY(outcome, yValue)}\nMatched market: ${formatY(outcome, point.matched_market[outcome])}\nn = ${point.n_common}`;
-              return <g className="market-performance-hit" data-configuration={point.exact_configuration} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={selected?.exact_configuration === point.exact_configuration} aria-controls="configuration-pair-aggregation" onClick={() => activateConfiguration(point.exact_configuration)} onFocus={() => setSelectedConfiguration(point.exact_configuration)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activateConfiguration(point.exact_configuration); } }} key={point.exact_configuration}><PointGlyph point={point} selected={selected?.exact_configuration === point.exact_configuration} /><circle className="market-performance-hit-target" r={12} /><title>{label}</title></g>;
+              const comparison = compareMatchedMarket(point.model, point.matched_market, outcome);
+              const label = `${point.canonical_model_version}\n${point.information_label} · ${point.prompt_label}\n${data.metrics[metric].label}: ${formatX(metric, xValue)}\nModel ${data.outcomes[outcome].label}: ${formatY(outcome, yValue)}\nMatched market: ${formatY(outcome, point.matched_market[outcome])}\n${matchedMarketLabel[comparison]} · ${outcome === "brier_index" ? "BI" : "Raw Brier"}\nn = ${point.n_common}`;
+              return <g className="market-performance-hit" data-configuration={point.exact_configuration} data-market-comparison={comparison} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={selected?.exact_configuration === point.exact_configuration} aria-controls="configuration-pair-aggregation" onClick={() => activateConfiguration(point.exact_configuration)} onFocus={() => setSelectedConfiguration(point.exact_configuration)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activateConfiguration(point.exact_configuration); } }} key={point.exact_configuration}><PointGlyph point={point} selected={selected?.exact_configuration === point.exact_configuration} />{highlightMarketWins && comparison === "above" && <MarketWinBadge />}<circle className="market-performance-hit-target" r={12} /><title>{label}</title></g>;
             })}
             <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 15} textAnchor="middle">Lower diversity ← {data.metrics[metric].axis} → Higher diversity{highLossScale ? " · signed-log display; raw ticks" : ""}</text>
             <text className="market-performance-axis-label" transform={`translate(20 ${(MARGIN.top + HEIGHT - MARGIN.bottom) / 2}) rotate(-90)`} textAnchor="middle">{data.outcomes[outcome].axis}</text>
@@ -225,6 +217,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
           <h3>{selected.canonical_model_version}</h3>
           <p>{selected.information_label} · {selected.prompt_label}</p>
           {selectedUnavailableNotice && <p className="model-market-unavailable">{selectedUnavailableNotice}</p>}
+          <MarketWinVerdict comparison={compareMatchedMarket(selected.model, selected.matched_market, outcome)} outcome={outcome} />
           <dl>
             <div><dt>{data.metrics[metric].label}</dt><dd>{selectedX === null ? "—" : formatX(metric, selectedX)}</dd></div>
             <div><dt>Raw Brier ↓</dt><dd>{selected.model.raw_brier.toFixed(3)}</dd></div>
@@ -256,10 +249,10 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <strong>Information color</strong>{availableInformation.map((id) => <span key={id}><i style={{ background: INFORMATION_COLORS[id] }} />{informationLabel(data, id)}</span>)}
         <strong>Prompt shape</strong><span><i className="shape-circle" />Zero shot</span><span><i className="shape-diamond" />Scratchpad</span>{data.audit.prompt_counts.unspecified ? <span><i className="shape-triangle" />Unspecified</span> : null}
       </div>
-      <p className="research-scope">The dashed line is a weighted reference. Use each selected model's matched-market score for a direct comparison.</p>
+      <p className="research-scope">Each model is compared only with Polymarket on its own shared events. Optional badges follow the selected performance metric; they do not indicate statistical significance.</p>
       <ResearchDetails>
         <p><strong>How to read it.</strong> Color distinguishes the information shown to the model; shape distinguishes the prompt. Repeated model names are intentional exact configurations, not duplicate rows. Model and market scores use identical non-imputed support with a valid freeze-time Polymarket probability.</p>
-        <p><strong>Market reference.</strong> The dashed line is the support-weighted matched-market benchmark under the active filters, recomputed after every filter change. Because model coverage differs, the selected-point panel reports its own matched-market score; use that value for exact comparisons.</p>
+        <p><strong>Matched-market comparison.</strong> There is no shared market line because model coverage differs. The win count uses displayed configurations with a defined matched comparison, once per exact configuration. Badges indicate higher BI or lower Raw Brier than that same configuration’s market score, according to the selected Y axis. Ties within 1e−12 are not wins. The display switch does not change scores, filters, or correlations.</p>
         <p><strong>Total variation.</strong> TV is the mean absolute probability difference between the model and its matched market forecast. It ranges from 0 to 1 and uses no outcomes. Higher TV means greater prediction diversity; it is distinct from 1 − prediction correlation.</p>
         <p><strong>Interpretation.</strong> Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
       </ResearchDetails>

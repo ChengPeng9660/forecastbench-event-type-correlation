@@ -16,7 +16,8 @@ test("keeps the original market metrics and all configuration filters with TV", 
   await expect(section.getByLabel("Market performance provider")).toHaveValue("OpenAI");
   await expect(section.getByRole("group", { name: "Market performance prompt filter" }).getByRole("button", { name: "Zero shot", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(section.locator(".market-performance-hit").first()).toBeAttached();
-  await expect(section.locator(".market-performance-chart .market-performance-baseline")).toBeAttached();
+  await expect(section.locator(".market-performance-chart .market-performance-baseline")).toHaveCount(0);
+  await expect(section.getByRole("checkbox", { name: "Model performance: highlight market wins", exact: true })).toBeVisible();
   const dimensions = await page.evaluate(() => ({ page: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth }));
   expect(dimensions.page).toBeLessThanOrEqual(dimensions.viewport + 1);
 });
