@@ -48,9 +48,14 @@ constituents, and Polymarket use the identical pair-specific test target keys
   `(pooled reference adjusted loss - pooled method loss) / pooled reference loss`.
   Invalid/nonpositive gain denominators yield null. An undefined fold BI must
   not be silently omitted from a reported average.
-- Triangles mark point-estimate aggregation BI above the pair's own matched-test
-  market BI (difference greater than 1e-12). They are not significance tests and
-  do not use the overview line.
+- `Highlight market wins` is off by default. When enabled, the shared purple
+  check badge marks point-estimate aggregation BI above the pair's own
+  matched-test market BI (difference greater than 1e-12), using the existing
+  `beats_market` field for the selected method, sample, and fold view. This BI
+  comparison stays the same across all y-axis options. Ties and undefined
+  comparisons are not marked. Split provider colors remain base-left and
+  partner-right; the toggle never changes scores, positions, or selection.
+  Badges are not significance tests. No shared market reference line is added.
 - Configuration selection from a full-sample overview is exploratory. Parameter
   cross-fitting does not make that selection prospective or temporally OOS.
 

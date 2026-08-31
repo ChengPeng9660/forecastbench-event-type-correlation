@@ -2,13 +2,109 @@ import { createElement } from "react";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MarketConfigurationAggregationExplorer, configurationProviderColor } from "../src/components/MarketConfigurationAggregationExplorer";
-import { configurations, fixtureFetch, manifest, shard } from "./fixtures/configuration-pair";
+import { configurations, fixtureFetch, manifest, shard, view } from "./fixtures/configuration-pair";
 
 beforeEach(() => vi.stubGlobal("fetch", vi.fn(fixtureFetch)));
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const renderBase = (index = 0) => render(createElement(MarketConfigurationAggregationExplorer, { base: configurations[index] }));
 
 describe("all-configuration aggregation controls", () => {
+  it("optionally badges pair-matched wins without moving points, changing colors, or replacing the selection", async () => {
+    const data = shard();
+    const winner = data.partners[0].views.all.combined!;
+    const loser = data.partners[1].views.all.combined!;
+    winner.methods.simple_mean.brier_index = 70;
+    loser.market.brier_index = 82;
+    for (const score of Object.values(loser.methods)) score.beats_market = false;
+    // The 70-BI pair wins against its own 68-BI market; the 80-BI pair
+    // loses against its own 82-BI market. A shared market mean reverses this.
+    vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => String(input).endsWith("a.json")
+      ? Promise.resolve(new Response(JSON.stringify(data), { status: 200 })) : fixtureFetch(input)));
+    const { container } = renderBase();
+    await screen.findByRole("img");
+    const toggle = screen.getByRole("checkbox", { name: "Exact configuration aggregation: highlight market wins" });
+    const points = () => [...container.querySelectorAll(".configuration-pair-point")];
+    const badges = () => container.querySelectorAll(".configuration-pair-point .market-win-badge");
+    fireEvent.click(points()[1]);
+    const pointState = () => points().map((point) => [point.getAttribute("data-partner"), point.getAttribute("transform"), point.getAttribute("class"), point.getAttribute("aria-label"), point.querySelector(".configuration-pair-glyph")?.outerHTML]);
+    const before = pointState();
+    const colors = container.querySelector("defs")?.innerHTML;
+    const scores = container.querySelector(".configuration-pair-inspector")?.textContent;
+    const kpis = container.querySelector(".configuration-pair-kpis")?.textContent;
+    expect(toggle).not.toBeChecked();
+    expect(badges()).toHaveLength(0);
+    expect(container.querySelectorAll("path.configuration-pair-glyph")).toHaveLength(0);
+    fireEvent.click(toggle);
+    expect(toggle).toBeChecked();
+    expect(badges()).toHaveLength(1);
+    expect(points()[0].querySelector(".market-win-badge")).not.toBeNull();
+    expect(points()[1].querySelector(".market-win-badge")).toBeNull();
+    expect(pointState()).toEqual(before);
+    expect(container.querySelector("defs")?.innerHTML).toBe(colors);
+    expect(container.querySelector(".configuration-pair-inspector")?.textContent).toBe(scores);
+    expect(container.querySelector(".configuration-pair-kpis")?.textContent).toBe(kpis);
+    expect(container.querySelectorAll(".market-performance-baseline, .model-market-baseline")).toHaveLength(0);
+    fireEvent.click(toggle);
+    expect(badges()).toHaveLength(0);
+    expect(pointState()).toEqual(before);
+  });
+
+  it("keeps the existing BI win definition and follows the selected method, fold, and train sample", async () => {
+    const data = shard();
+    for (const row of data.partners.filter((item) => item.status === "eligible")) {
+      row.views.all.a_to_b = view({ market: { ...view().market, brier_index: 85 } });
+      for (const score of Object.values(row.views.all.a_to_b.methods)) score.beats_market = false;
+      const combined = row.views.all.combined!;
+      combined.methods.cf_directional = { ...combined.methods.cf_directional, brier_index: combined.market.brier_index, beats_market: false };
+    }
+    vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => String(input).endsWith("a.json")
+      ? Promise.resolve(new Response(JSON.stringify(data), { status: 200 })) : fixtureFetch(input)));
+    const { container } = renderBase();
+    await screen.findByRole("img");
+    const toggle = screen.getByRole("checkbox", { name: "Exact configuration aggregation: highlight market wins" });
+    const badges = () => container.querySelectorAll(".configuration-pair-point .market-win-badge");
+    fireEvent.click(toggle);
+    expect(badges()).toHaveLength(2);
+    for (const label of ["Raw Brier ↓", "Gain vs base", "Gain vs market", "Aggregation BI ↑"]) {
+      fireEvent.click(screen.getByRole("button", { name: label }));
+      expect(badges()).toHaveLength(2);
+    }
+    fireEvent.change(screen.getByLabelText("Exact configuration aggregation method"), { target: { value: "cf_directional" } });
+    expect(badges()).toHaveLength(0);
+    fireEvent.change(screen.getByLabelText("Exact configuration aggregation method"), { target: { value: "simple_mean" } });
+    fireEvent.click(screen.getByRole("button", { name: "A→B" }));
+    expect(badges()).toHaveLength(0);
+    fireEvent.click(screen.getByRole("button", { name: "B→A" }));
+    expect(badges()).toHaveLength(2);
+    fireEvent.click(screen.getByRole("button", { name: "Combined" }));
+    expect(badges()).toHaveLength(2);
+    fireEvent.change(screen.getByLabelText("Exact configuration train sample"), { target: { value: "near_bi" } });
+    expect(badges()).toHaveLength(1);
+    expect(toggle).toBeChecked();
+    fireEvent.click(screen.getByRole("button", { name: "A→B" }));
+    expect(badges()).toHaveLength(0);
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  it("does not badge tied or undefined market BI even when raw scores can be plotted", async () => {
+    const data = shard();
+    const tied = data.partners[0].views.all.combined!;
+    tied.methods.simple_mean.brier_index = tied.market.brier_index;
+    tied.methods.simple_mean.beats_market = false;
+    const missing = data.partners[1].views.all.combined!;
+    missing.market.brier_index = null;
+    for (const score of Object.values(missing.methods)) score.beats_market = false;
+    vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => String(input).endsWith("a.json")
+      ? Promise.resolve(new Response(JSON.stringify(data), { status: 200 })) : fixtureFetch(input)));
+    const { container } = renderBase();
+    await screen.findByRole("img");
+    fireEvent.click(screen.getByRole("button", { name: "Raw Brier ↓" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Exact configuration aggregation: highlight market wins" }));
+    expect(container.querySelectorAll(".configuration-pair-point")).toHaveLength(2);
+    expect(container.querySelectorAll(".configuration-pair-point .market-win-badge")).toHaveLength(0);
+    expect(screen.getByText(/Higher BI than each point’s own matched market/)).toBeInTheDocument();
+  });
+
   it("offers all controls and keeps raw zero TV and fixed-base-left colors", async () => {
     const { container } = renderBase();
     await screen.findByRole("img");

@@ -18,6 +18,40 @@ async function activate(page: Page, exact: string) {
   return block;
 }
 
+test("optionally shows the shared purple win badge without changing exact-pair points", async ({ page }) => {
+  await page.goto("/#market-performance");
+  const block = await activate(page, grok);
+  const toggle = block.getByRole("checkbox", { name: "Exact configuration aggregation: highlight market wins", exact: true });
+  const points = block.locator(".configuration-pair-point");
+  const badges = block.locator(".configuration-pair-point .market-win-badge");
+  await expect(toggle).not.toBeChecked();
+  await expect(badges).toHaveCount(0);
+  await expect(block.locator("path.configuration-pair-glyph")).toHaveCount(0);
+  await points.last().focus();
+  await expect(points.last()).toHaveClass(/selected/);
+  const pointState = () => points.evaluateAll((nodes) => nodes.map((point) => ({
+    partner: point.getAttribute("data-partner"), position: point.getAttribute("transform"),
+    state: point.getAttribute("class"), scores: point.getAttribute("aria-label"),
+    glyph: point.querySelector(".configuration-pair-glyph")?.outerHTML,
+  })));
+  const before = await pointState();
+  const colors = await block.locator("defs").innerHTML();
+  const inspector = await block.locator(".configuration-pair-inspector").innerText();
+  const wins = Number(await block.locator(".configuration-pair-kpis > div").filter({ hasText: "ABOVE MATCHED MARKET" }).locator("dd").innerText());
+  expect(wins).toBeGreaterThan(0);
+  await toggle.check();
+  await expect(toggle).toBeChecked();
+  await expect(badges).toHaveCount(wins);
+  expect(await pointState()).toEqual(before);
+  expect(await block.locator("defs").innerHTML()).toBe(colors);
+  expect(await block.locator(".configuration-pair-inspector").innerText()).toBe(inspector);
+  await expect(badges.first().locator("circle")).toHaveCSS("fill", "rgb(79, 32, 127)");
+  await expect(block.locator(".market-performance-baseline, .model-market-baseline")).toHaveCount(0);
+  await toggle.uncheck();
+  await expect(badges).toHaveCount(0);
+  expect(await pointState()).toEqual(before);
+});
+
 test("loads the selected exact configuration on activation, with every metric and method", async ({ page }) => {
   const requests: string[] = [];
   const errors: string[] = [];

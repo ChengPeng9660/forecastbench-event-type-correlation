@@ -1,6 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { HighLossNotice } from "./HighLossNotice";
+import { MarketWinBadge, MarketWinToggle } from "./MarketWinHighlight";
 import { finiteExtent, linearPosition, linearTicks, pearsonCorrelation, spearmanCorrelation, FREEZE_PROVIDER_COLORS } from "./FreezeMarketCorrelationExplorer";
 import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
 import { loadConfigurationPairManifest, loadConfigurationPairShard } from "../lib/configurationPairAggregation";
@@ -39,6 +40,7 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
   const [prompt, setPrompt] = useState<"all" | MarketPromptType>("all");
   const [information, setInformation] = useState<"all" | MarketInformationType>("all");
   const [selectedPartner, setSelectedPartner] = useState("");
+  const [highlightMarketWins, setHighlightMarketWins] = useState(false);
   const chartId = useId().replaceAll(":", "");
 
   useEffect(() => {
@@ -127,6 +129,7 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
         <label><span>TRAIN SAMPLE</span><select aria-label="Exact configuration train sample" value={sample} onChange={(event) => setSample(event.target.value as ConfigurationPairSample)}><option value="all">All train pairs</option><option value="near_bi">Near-BI (train gap ≤ {ready.manifest.split.near_bi_gap})</option></select></label>
         <label><span>SUPPORT</span><select aria-label="Exact configuration support" value={largeSupportOnly ? "at_least_50" : "all"} onChange={(event) => setLargeSupportOnly(event.target.value === "at_least_50")}><option value="all">All computed</option><option value="at_least_50">Both halves ≥50</option></select></label>
       </div>
+      <MarketWinToggle checked={highlightMarketWins} onChange={setHighlightMarketWins} scope="Exact configuration aggregation" outcome="brier_index" />
       <dl className="market-performance-kpis configuration-pair-kpis">
         <div><dt>VISIBLE PARTNERS</dt><dd>{points.length}</dd><small>{candidates.length} exact candidates under filters</small></div>
         <div><dt>ABOVE MATCHED MARKET</dt><dd>{points.filter((item) => item.score.beats_market).length}</dd><small>point estimates, not significance</small></div>
@@ -147,7 +150,9 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
               const testGap = item.view.base.brier_index === null || item.view.partner.brier_index === null ? null : Math.abs(item.view.base.brier_index - item.view.partner.brier_index);
               const title = `${exact}\n${metricMeta?.label}: ${number(item.x, 3)}\n${outcomeMeta.label}: ${outcomeLabel(item.y, outcome)}\nAggregation BI: ${number(item.score.brier_index)}\nPair-matched market BI: ${number(item.view.market.brier_index)}\nTrain BI gap: ${number(item.view.train_bi_gap)}\nTest BI gap: ${number(testGap)}\n${sample === "near_bi" ? "Retained training-selected" : "Available"} directions: ${item.view.fold_count}/${maximumDirections}\n${item.view.small_support ? "Small support: a training or test half has fewer than 50 targets" : "Every included half has at least 50 targets"}`;
               return <g className={`configuration-pair-point ${selected?.row.partner.exact_configuration === exact ? "selected" : ""}`} data-partner={exact} transform={`translate(${xPosition(item.x)} ${linearPosition(item.y, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top])})`} role="button" tabIndex={0} aria-label={title} onClick={() => setSelectedPartner(exact)} onFocus={() => setSelectedPartner(exact)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedPartner(exact); } }} key={exact}>
-                {item.score.beats_market ? <path className="configuration-pair-glyph" d="M 0 -8 L 8 7 L -8 7 Z" fill={`url(#${chartId}-${index})`} /> : <circle className="configuration-pair-glyph" r={6.7} fill={`url(#${chartId}-${index})`} />}<circle r={13} fill="transparent" /><title>{title}</title>
+                <circle className="configuration-pair-glyph" r={6.7} fill={`url(#${chartId}-${index})`} />
+                {highlightMarketWins && item.score.beats_market && <MarketWinBadge />}
+                <circle r={13} fill="transparent" /><title>{title}</title>
               </g>;
             })}
             <text className="market-performance-axis-label" x={(MARGIN.left + WIDTH - MARGIN.right) / 2} y={HEIGHT - 17} textAnchor="middle">Lower diversity ← {metricMeta?.axis} → Higher diversity{highLossScale ? " · signed-log display; raw ticks" : ""}</text>
@@ -166,14 +171,14 @@ export function MarketConfigurationAggregationExplorer({ base }: { base: Configu
           {selected.view.small_support && <p className="configuration-pair-small-support">Small-support estimate: at least one included half has fewer than 50 targets.</p>}<small>{selected.row.partner.exact_configuration}</small>
         </> : <p>Select a defined pair after adjusting the controls.</p>}</aside>
       </div>
-      <div className="configuration-pair-legend"><strong>Left = fixed base · right = partner</strong>{providers.map((name) => <span key={name}><i style={{ background: configurationProviderColor(name) }} />{name}</span>)}<span>△ above pair-matched market BI · ○ otherwise</span></div>
+      <div className="configuration-pair-legend"><strong>Left = fixed base · right = partner</strong>{providers.map((name) => <span key={name}><i style={{ background: configurationProviderColor(name) }} />{name}</span>)}</div>
       <p className="research-scope">{missingMetricCount} view(s) have an undefined selected diversity metric; {missingOutcomeCount} have an undefined selected outcome. Spearman ρ: {number(spearman)}. Repeated folds are not independent new events.</p>
       <ResearchDetails label="Pair availability & evaluation details">
         <p><strong>Coverage.</strong> {ready.shard.partners.length} other exact configurations were considered. {unavailable.length} under the current partner filters have unavailable pair data{statusCounts.size ? ` (${[...statusCounts].map(([status, total]) => `${status.replaceAll("_", " ")}: ${total}`).join("; ")})` : ""}.</p>
         {unavailable.length > 0 && <ul>{unavailable.map((row) => <li key={row.partner.exact_configuration}><strong>{row.partner.exact_configuration}</strong>: {row.reason ?? row.status.replaceAll("_", " ")} · {row.n_common} shared targets.</li>)}</ul>}
         <p><strong>Evaluation.</strong> Ten event-grouped train/test splits are attempted in both directions. Metrics use training data; all method, base, partner, and market scores share the same pair-specific test support. Near-BI retains individual training directions before pooling, never an averaged-pair gap. The optional support filter requires every included half to have at least 50 targets.</p>
         <p><strong>Methods.</strong> Directional CF fits weights on training data with the selected exact base as its anchor. Best Single is a test-fold hindsight reference, not a deployable method or a per-question oracle. Gains use pooled adjusted losses; undefined denominators stay undefined.</p>
-        <p><strong>Interpretation.</strong> All configurations are explored on Polymarket market questions only. Picking a base after viewing the full-sample overview is exploratory post-selection, not untouched prospective validation. Triangles are point-estimate comparisons, not significance claims.</p>
+        <p><strong>Interpretation.</strong> All configurations are explored on Polymarket market questions only. Picking a base after viewing the full-sample overview is exploratory post-selection, not untouched prospective validation. Optional purple check marks show aggregation BI above the pair's own matched-test market BI, regardless of the selected y-axis. They are point-estimate comparisons, not significance claims.</p>
       </ResearchDetails>
     </>}
   </section>;
