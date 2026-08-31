@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Heatmap } from "./components/Heatmap";
 import { CrossTypeStability } from "./components/CrossTypeStability";
 import { PairAggregationExplorer } from "./components/PairAggregationExplorer";
@@ -19,6 +19,8 @@ import { useHistoryRestore } from "./lib/useHistoryRestore";
 import { loadAppData, loadCrossTypeData, loadEventType, loadFixedFocalWithoutFreezeData, loadFreezeMarketCorrelationData, loadGlobalBaselineData, loadMarketDiversityPerformanceData, loadPairAggregationData, loadPolymarketAggregationData, loadUpperLeftModelPairAggregationData, loadWithoutFreezeBaseData } from "./lib/data";
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
 import type { AppData, CrossTypeData, EventTypeData, FixedBaseAggregationData, FixedFocalWithoutFreezeData, FreezeMarketCorrelationData, GlobalBaselineData, MarketDiversityPerformanceData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData, UpperLeftModelPairAggregationData } from "./types/data";
+
+const ComplementarityExplorer = lazy(() => import("./components/ComplementarityExplorer"));
 
 interface Filters {
   eventType: string;
@@ -155,7 +157,7 @@ export default function App() {
 
   useEffect(() => {
     const group = researchGroupFor(activePage);
-    document.title = `${group ? `${group.label} · ` : ""}ForecastBench Research Atlas`;
+    document.title = `${activePage === "complementarity" ? "Complementarity · " : group ? `${group.label} · ` : ""}ForecastBench Research Atlas`;
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [activePage]);
 
@@ -366,6 +368,10 @@ export default function App() {
           </div>
           <details className="research-details"><summary>About this matrix</summary><div><p>{METRIC_DESCRIPTIONS[metric.id]} {filters.heatmapModels.length ? "Only your selected models are shown." : "The matrix displays up to 30 highest-coverage models under the current filters."} Purple is oriented toward greater diversity. Missing cells are not estimates of zero.</p><p>Near-BI limits comparisons to models with similar difficulty-adjusted Brier performance. This descriptive matrix does not measure out-of-sample aggregation gain.</p></div></details>
         </section>
+        </ResearchPanel>
+
+        <ResearchPanel page="complementarity" active={activePage} visited={visitedPages}>
+          <Suspense fallback={<ResearchPending id="complementarity" />}><ComplementarityExplorer /></Suspense>
         </ResearchPanel>
 
         <ResearchPanel page="gain" active={activePage} visited={visitedPages}>

@@ -36,11 +36,11 @@ export function ResearchMasthead({ page, onNavigate }: { page: ResearchPage; onN
   const group = researchGroupFor(page);
   if (!group) return null;
   return <>
-    <section className="research-masthead" aria-label={`${group.label} introduction`}>
+    {page !== "complementarity" && <section className="research-masthead" aria-label={`${group.label} introduction`}>
       <p className="eyebrow">FORECASTBENCH / {group.label}</p>
       <h1>{group.title}</h1>
       <p>{group.description}</p>
-    </section>
+    </section>}
     <nav className="research-section-nav" aria-label="Research sections">
       {group.sections.map((section) => <ResearchLink key={section.id} page={section.id} onNavigate={onNavigate} current={section.id === page}>{section.label}</ResearchLink>)}
     </nav>

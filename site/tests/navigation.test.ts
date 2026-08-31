@@ -4,7 +4,7 @@ import { RESEARCH_GROUPS, researchGroupFor, researchPageFromHash, usesAtlasFilte
 describe("public research navigation", () => {
   it("retains every original experiment as a unique deep link", () => {
     const sections = RESEARCH_GROUPS.flatMap((group) => group.sections.map((section) => section.id));
-    expect(sections).toHaveLength(14);
+    expect(sections).toHaveLength(15);
     expect(new Set(sections).size).toBe(sections.length);
     for (const section of sections) {
       expect(researchPageFromHash(`#${section}`)).toBe(section);

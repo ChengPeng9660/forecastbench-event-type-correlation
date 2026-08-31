@@ -1,0 +1,48 @@
+{
+  "study": "specialization_argument_2026-08-31",
+  "primary_pair_views": 1436,
+  "cohort_views": 224,
+  "source_manifest_sha256": "54c398ad8ceca731f937b972a91d402820edbe53dd27b770df00b827c7d2d69c",
+  "files": {
+    "ARGUMENT.md": {
+      "sha256": "e73faaaf10be819910ee29c068026cc34c8491b07321e32952da494b86772a18",
+      "bytes": 8605
+    },
+    "CODE_AUDIT.md": {
+      "sha256": "fb49185f1f4b8d3f5bcb09cacc836a5200e920eef6f11e01ac32fe4e0cfdbd02",
+      "bytes": 10952
+    },
+    "LABEL_CONTROLS.md": {
+      "sha256": "da81207704a3b883acdfaffd2a73b232a14825b9d6b1a9cc5259c3f73f15982c",
+      "bytes": 10251
+    },
+    "LICENSE-DATA.md": {
+      "sha256": "f648f8edfb15cd827d5456c96b699250983d47e05d5f9c59e6f941da7caebe57",
+      "bytes": 920
+    },
+    "MATCHED_CONTROLS.md": {
+      "sha256": "4cac744e6fe6391b1799b488511fe8962b23c2166cd7bb546ed9f5ea2a0a8193",
+      "bytes": 22364
+    },
+    "PROTOCOL.md": {
+      "sha256": "abd08e3934aa50589ede3a7e818afca025a282934749eed19164859dd96cb72b",
+      "bytes": 9834
+    },
+    "REPORT.md": {
+      "sha256": "8faa0a92f37c233512b71c8afdac3eb490a2250c38a26a4adeb8444e9352ea4d",
+      "bytes": 15425
+    },
+    "THEORY_DESIGN_REVIEW.md": {
+      "sha256": "2ed7bdf21261108572bac1fed4527252ae581d712af7376fe72df31231708579",
+      "bytes": 14623
+    },
+    "primary-pairs.csv": {
+      "sha256": "ff49cf1fdcc1f9358a1c3a990350c169782abb7452c47c8d7f81667bae290b48",
+      "bytes": 652563
+    },
+    "study.json": {
+      "sha256": "41e4a1e672d37fdcb4f9746ee77001b604fa86e85fe096b0e7a3cd297ba8820f",
+      "bytes": 6194149
+    }
+  }
+}

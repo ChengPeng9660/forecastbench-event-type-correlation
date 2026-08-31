@@ -15,6 +15,7 @@ export const RESEARCH_GROUPS = [
     description: "Fix a model, vary its partner, and compare aggregation methods on held-out events.",
     sections: [
       { id: "gain", label: "Model pairs" },
+      { id: "complementarity", label: "Category complementarity" },
       { id: "fixed-focal-no-freeze", label: "Without market information" },
       { id: "without-freeze-base", label: "Information exposure" },
     ],

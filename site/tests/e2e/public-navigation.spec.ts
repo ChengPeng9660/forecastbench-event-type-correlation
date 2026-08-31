@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 const GROUPS = [
   { name: "Diversity", sections: ["matrix", "global", "ranking", "model-view", "stability"] },
-  { name: "Aggregation", sections: ["gain", "fixed-focal-no-freeze", "without-freeze-base"] },
+  { name: "Aggregation", sections: ["gain", "complementarity", "fixed-focal-no-freeze", "without-freeze-base"] },
   { name: "Markets", sections: ["market-performance", "polymarket-aggregation", "freeze-correlation", "upper-left-pairs"] },
   { name: "Methods", sections: ["methods", "audit"] },
 ] as const;
