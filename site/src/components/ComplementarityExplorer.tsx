@@ -21,7 +21,7 @@ const pct = (n: Score | undefined, digits = 0) => isScore(n) ? `${(n * 100).toFi
 function initialView(): View {
   const q = new URLSearchParams(window.location.search);
   const coverage = Number(q.get("cc_coverage") ?? .5);
-  return { language: q.get("cc_lang") === "en" ? "en" : "zh", dimension: q.get("cc_dim") === "source" ? "source" : "topic",
+  return { language: q.get("cc_lang") === "zh" ? "zh" : "en", dimension: q.get("cc_dim") === "source" ? "source" : "topic",
     coverage: COVERAGES.some(v => v === coverage) ? coverage : .5, cohort: q.get("cc_cohort") === "eligible" ? "eligible" : "crossing",
     method: q.get("cc_method") ?? "type_shrunk", pair: q.get("cc_pair") ?? "44_58" };
 }

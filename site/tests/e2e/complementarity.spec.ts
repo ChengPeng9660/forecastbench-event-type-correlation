@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("links real pair strengths, gains, controls and shareable filters", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", e => errors.push(e.message));
-  await page.goto("/?cc_lang=en#complementarity");
+  await page.goto("/#complementarity");
   const section = page.locator("#complementarity");
   await expect(section.getByRole("heading", { level: 1 })).toHaveText("Similar overall skill. Different strengths.");
   await expect(page.getByTestId("cc-scope")).toContainText("Post-protocol sensitivity · 50%");
