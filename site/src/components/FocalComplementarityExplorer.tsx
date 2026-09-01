@@ -29,13 +29,13 @@ const HEIGHT = 440;
 const MARGIN = { top: 28, right: 34, bottom: 74, left: 82 };
 
 const GROUP_LABELS: Record<string, string> = {
-  politics_conflict: "Politics & conflict",
-  finance_economics: "Finance & economics",
-  climate_weather: "Climate & weather",
-  health_science: "Health & science",
-  technology_ai: "Technology & AI",
+  politics: "Politics",
+  finance: "Finance",
+  climate_weather: "Climate / Weather",
+  health: "Health",
+  technology: "Technology",
   sports: "Sports",
-  entertainment_culture: "Entertainment & culture",
+  entertainment_culture: "Entertainment / Culture",
   polymarket: "Polymarket",
   metaculus: "Metaculus",
   manifold: "Manifold",
@@ -349,7 +349,7 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
         <label><span>PARTNER SCOPE</span><select aria-label="Selected-model partner scope" value={pairScope} onChange={event => setPairScope(event.target.value as PairScope)}>{data.pair_scopes.map(scope => <option value={scope.id} key={scope.id}>{scope.label}</option>)}</select></label>
         <label><span>AGGREGATION METHOD</span><select aria-label="Selected-model aggregation method" value={method} onChange={event => setMethod(event.target.value)}>{data.methods.map(item => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
       </div>
-      <p className="research-scope focal-complementarity-scope"><strong>Training-only screen.</strong> Each displayed partner has at least two supported categories, at least 50% supported training-row mass, and crossed strengths: the focal model and partner each lead by at least 1 training BI in a different category. The default partner is ranked by training D<sub>type</sub>; test outcomes never choose it.</p>
+      <p className="research-scope focal-complementarity-scope"><strong>Training-only screen.</strong> Event type uses seven domains: Health, Politics, Sports, Finance, Technology, Climate / Weather, and Entertainment / Culture. Each displayed partner has at least two supported categories, at least 50% supported training-row mass, and crossed strengths: the focal model and partner each lead by at least 1 training BI in a different category. The default partner is ranked by training D<sub>type</sub>; test outcomes never choose it.</p>
 
       {!selectedConfiguration || !focalKnown ? <div className="configuration-pair-empty"><strong>{selectedConfiguration ? "This exact configuration is outside the complementarity release." : "Select a model in the first chart."}</strong><span>No replacement focal model is substituted.</span></div> : <>
         <dl className="market-performance-kpis focal-complementarity-kpis">
@@ -398,6 +398,7 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
         <div className="focal-complementarity-evidence"><p className="eyebrow">WHAT THE COMPLETE EXPERIMENT FOUND</p><p>Across all 313 exact configurations, the same gap-3 / 50%-coverage crossed-strength screen produced <strong>+1.359 BI</strong> mean Directional-CF gain for event type and <strong>+0.657 BI</strong> for source/platform. Requiring the same prompt and information condition retained positive gains of <strong>+0.901</strong> and <strong>+0.488 BI</strong>.</p><span>Category labels select and explain pairs; they never enter Simple mean, Log-odds mean, EC, Piecewise odds, or Directional CF. This is internal event-holdout evidence from a repeatedly studied archive.</span></div>
         <ResearchDetails label="Selected-model complementarity details">
           <p><strong>Exact focal identity.</strong> The model version, prompt, and information condition selected in the first Markets chart are preserved. Partners retain the same three identity fields. The source/platform grouping means the platform or dataset that supplied the question, not the information shown to a model.</p>
+          <p><strong>Seven event domains.</strong> Health includes science, Politics includes conflict, Finance includes economics, and Technology includes AI. Climate / Weather and Entertainment / Culture remain combined domains. These labels are assigned without using outcomes or model forecasts.</p>
           <p><strong>Scoring.</strong> BI retains the frozen per-question difficulty correction and its normalization. Every common target row receives equal weight; the experiment does not rebalance Dataset and Market rows. Pair comparisons use identical target support, so the question effect cancels within a target even though it still affects absolute BI and eligibility thresholds.</p>
           <p><strong>Selection.</strong> Overall ability proximity, category coverage, crossed strengths, and D<sub>type</sub> use the primary training event half only. The default partner maximizes training D<sub>type</sub> among eligible partners. Undefined coordinates or outcomes are omitted rather than replaced with zero or another model.</p>
           <p><strong>Evaluation.</strong> The Y axis and inspector use the opposite event half. Gain is aggregation BI minus the higher BI of the two single configurations on identical test targets. The better test single is a hindsight evaluation reference and never selects the partner.</p>

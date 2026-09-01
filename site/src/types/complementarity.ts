@@ -104,12 +104,15 @@ export interface DirectionSummary extends Omit<AggregationSummary, "view"> {
 }
 
 export interface ComplementarityData {
-  schema_version: 4;
+  schema_version: 5;
   study: string;
   date: string;
   primary_split: string;
   primary_fold: number;
   weighting: "uniform_rows";
+  event_type_taxonomy: "forecastbench-seven-domain-v1.0.0";
+  event_type_domains: Array<{ id: string; label: string }>;
+  event_type_fold_ins: Record<"science" | "conflict" | "economics" | "ai", string>;
   ability_thresholds: AbilityGap[];
   coverage_thresholds: number[];
   primary_method: string;

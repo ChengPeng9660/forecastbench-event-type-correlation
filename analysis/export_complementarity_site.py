@@ -24,6 +24,22 @@ PRIMARY_METHOD = "cf_directional"
 PRIMARY_SPLIT = "20260910"
 PRIMARY_FOLD = 0
 PROFILE_SHARDS = 32
+EVENT_TYPE_TAXONOMY = "forecastbench-seven-domain-v1.0.0"
+EVENT_TYPE_DOMAINS = [
+    {"id": "health", "label": "Health"},
+    {"id": "politics", "label": "Politics"},
+    {"id": "sports", "label": "Sports"},
+    {"id": "finance", "label": "Finance"},
+    {"id": "technology", "label": "Technology"},
+    {"id": "climate_weather", "label": "Climate / Weather"},
+    {"id": "entertainment_culture", "label": "Entertainment / Culture"},
+]
+EVENT_TYPE_FOLD_INS = {
+    "science": "health",
+    "conflict": "politics",
+    "economics": "finance",
+    "ai": "technology",
+}
 DATA_ATTRIBUTION = """# Data attribution
 
 Derived with changes from ForecastBench data produced by the Forecasting Research Institute / forecastingresearch.
@@ -32,7 +48,7 @@ Original data: [ForecastBench datasets](https://github.com/forecastingresearch/f
 
 Data and derived-data license: [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-Changes include retaining every clean exact model-version, prompt, and information configuration; removing imputed, unresolved, and unscored records; joining an archived official fixed-effect snapshot and existing topic labels; constructing event-disjoint common-support panels; evaluating training-only category complementarity and five unchanged aggregation formulas; and generating retrospective summaries.
+Changes include retaining every clean exact model-version, prompt, and information configuration; removing imputed, unresolved, and unscored records; joining an archived official fixed-effect snapshot; mapping the prior audited semantic topics into seven displayed event domains; constructing event-disjoint common-support panels; evaluating training-only category complementarity and five unchanged aggregation formulas; and generating retrospective summaries.
 
 This is not an official ForecastBench leaderboard release. No forecasts, submissions, or outcomes were fabricated.
 """
@@ -82,6 +98,7 @@ def verify_frozen_inputs(study: Path):
     required = [
         "PROTOCOL.md", "REPORT.md", "README.md", "REPRODUCE.md",
         "data/audit.json", "data/configurations.json", "data/models.json",
+        "data/fine_event_taxonomy.csv.gz", "data/fine_event_taxonomy_audit.json",
         "results/pair_results.csv.gz", "results/primary_category_profiles.csv.gz",
         "results/primary_summary.csv", "results/direction_summary.csv",
         "results/requested_primary_results.csv", "results/diagnostics.json",
@@ -92,6 +109,8 @@ def verify_frozen_inputs(study: Path):
         if digest(study / name) != expected:
             raise ValueError(f"frozen artifact hash mismatch: {name}")
     audit = json.loads((study / "results/audit.json").read_text())
+    data_audit = json.loads((study / "data/audit.json").read_text())
+    taxonomy_audit = json.loads((study / "data/fine_event_taxonomy_audit.json").read_text())
     independent = json.loads((study / "results/independent_audit.json").read_text())
     if not audit["weighting"].startswith("uniform common-target rows"):
         raise ValueError("unexpected target weighting")
@@ -101,7 +120,17 @@ def verify_frozen_inputs(study: Path):
         raise ValueError("event-disjointness audit failed")
     if independent["status"] != "PASS" or independent["maximum_absolute_error"] >= independent["tolerance"]:
         raise ValueError("independent numerical audit failed")
-    return manifest, audit, independent
+    expected_domains = {domain["id"] for domain in EVENT_TYPE_DOMAINS}
+    for candidate in (data_audit, audit):
+        if candidate.get("event_type_taxonomy") != EVENT_TYPE_TAXONOMY:
+            raise ValueError("unexpected event-type taxonomy")
+        if set(candidate.get("event_type_domains", [])) != expected_domains:
+            raise ValueError("unexpected event-type domains")
+    if taxonomy_audit.get("status") != "PASS" or taxonomy_audit.get("taxonomy_version") != EVENT_TYPE_TAXONOMY:
+        raise ValueError("seven-domain taxonomy audit failed")
+    if taxonomy_audit.get("uses_outcomes") or taxonomy_audit.get("uses_model_forecasts"):
+        raise ValueError("event-type taxonomy is outcome-dependent")
+    return manifest, audit, independent, taxonomy_audit
 
 
 def in_scope(pair, scope):
@@ -115,7 +144,7 @@ def in_scope(pair, scope):
 
 
 def export(study: Path, destination: Path):
-    _experiment_manifest, audit, independent = verify_frozen_inputs(study)
+    _experiment_manifest, audit, independent, taxonomy_audit = verify_frozen_inputs(study)
     data_audit = json.loads((study / "data/audit.json").read_text())
     configurations = json.loads((study / "data/configurations.json").read_text())
     models = json.loads((study / "data/models.json").read_text())
@@ -230,12 +259,15 @@ def export(study: Path, destination: Path):
     featured = max(candidates, key=lambda pair: (pair["train_between_norm"], pair["id"]))
     diagnostics = json.loads((study / "results/diagnostics.json").read_text())
     payload = {
-        "schema_version": 4,
+        "schema_version": 5,
         "study": "all_exact_configuration_category_complementarity_2026-09-01",
         "date": "2026-09-01",
         "primary_split": PRIMARY_SPLIT,
         "primary_fold": PRIMARY_FOLD,
         "weighting": "uniform_rows",
+        "event_type_taxonomy": EVENT_TYPE_TAXONOMY,
+        "event_type_domains": EVENT_TYPE_DOMAINS,
+        "event_type_fold_ins": EVENT_TYPE_FOLD_INS,
         "ability_thresholds": [3, 5],
         "coverage_thresholds": [0.5, 0.6, 0.7, 0.8],
         "pair_scopes": [
@@ -272,6 +304,8 @@ def export(study: Path, destination: Path):
             "output_rows": audit["output_rows"],
             "category_profile_rows": audit["primary_category_profile_rows"],
             "profile_shards": PROFILE_SHARDS,
+            "taxonomy_uses_outcomes": taxonomy_audit["uses_outcomes"],
+            "taxonomy_uses_model_forecasts": taxonomy_audit["uses_model_forecasts"],
         },
         "provenance": {
             "experiment_manifest_sha256": digest(study / "artifact_manifest.json"),
@@ -345,6 +379,8 @@ def export(study: Path, destination: Path):
         "weighting": payload["weighting"],
         "primary_method": payload["primary_method"],
         "methods": [method for method, _, _ in METHODS],
+        "event_type_taxonomy": payload["event_type_taxonomy"],
+        "event_type_domains": [domain["id"] for domain in payload["event_type_domains"]],
         "ability_thresholds": payload["ability_thresholds"],
         "pair_scopes": [scope["id"] for scope in payload["pair_scopes"]],
         "files": exported,

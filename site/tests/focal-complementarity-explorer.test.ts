@@ -46,6 +46,8 @@ describe("selected-model complementarity explorer", () => {
 
     await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("25"), { timeout: 10_000 });
     expect(section).toHaveTextContent(claude);
+    expect(section).toHaveTextContent("Health, Politics, Sports, Finance, Technology, Climate / Weather, and Entertainment / Culture");
+    expect(section).not.toHaveTextContent("Health & science");
     expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("54 near-skill candidates");
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", claude);
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
@@ -55,6 +57,9 @@ describe("selected-model complementarity explorer", () => {
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Same prompt");
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Same information");
     await waitFor(() => expect(section.querySelector(".focal-category-profile")).toBeInTheDocument());
+    expect(section.querySelector(".focal-category-profile")).toHaveTextContent("Finance");
+    expect(section.querySelector(".focal-category-profile")).toHaveTextContent("Politics");
+    expect(section.querySelector(".focal-category-profile")).not.toHaveTextContent("Finance & economics");
   }, 20_000);
 
   it("keeps empty source results explicit, exposes the condition-matched control, and follows prop changes", async () => {

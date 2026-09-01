@@ -17,6 +17,10 @@ export const ABILITY_GAPS = [3, 5] as const;
 export const COMPLEMENTARITY_METHODS = [
   "simple_mean", "log_odds_mean", "ec_w0_56", "piecewise_odds", "cf_directional",
 ] as const;
+export const EVENT_TYPE_DOMAINS = [
+  "health", "politics", "sports", "finance", "technology",
+  "climate_weather", "entertainment_culture",
+] as const;
 
 export const isScore = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 
@@ -117,8 +121,11 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
   const response = await fetch(`${COMPLEMENTARITY_PATH}study.json`, { signal });
   if (!response.ok) throw new Error(`Results could not be loaded (${response.status}).`);
   const data = await response.json() as ComplementarityData;
-  if (data.schema_version !== 4
+  if (data.schema_version !== 5
     || data.weighting !== "uniform_rows"
+    || data.event_type_taxonomy !== "forecastbench-seven-domain-v1.0.0"
+    || !Array.isArray(data.event_type_domains)
+    || data.event_type_domains.map(domain => domain.id).join("|") !== EVENT_TYPE_DOMAINS.join("|")
     || !Array.isArray(data.pairs)
     || !Array.isArray(data.summaries)
     || !Array.isArray(data.directions)

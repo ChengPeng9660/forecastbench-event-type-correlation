@@ -23,6 +23,7 @@ test("links the first-chart exact configuration to its training-screened complem
     return block.locator(".focal-complementarity-kpis").count();
   }, { timeout: 20_000 }).toBe(1);
   await expect(block.getByRole("heading", { name: "Who complements the selected model?", exact: true })).toBeVisible();
+  await expect(block).toContainText("Climate / Weather, and Entertainment / Culture");
   await expect(block.locator(".focal-configuration-line")).toContainText(claude);
   await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("25", { timeout: 20_000 });
   await expect(kpi(block, "SCREENED PARTNERS")).toContainText("54 near-skill candidates");

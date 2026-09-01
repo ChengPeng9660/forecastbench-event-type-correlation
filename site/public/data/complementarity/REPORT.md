@@ -23,6 +23,12 @@ maximum absolute error was `3.98e-13`. All 25,580 rows from the earlier
 restricted experiment were also joined by exact configuration names and
 reproduced within the same bound.
 
+The event-type view now presents the same audited event partition as seven
+plain domains: Health, Politics, Sports, Finance, Technology, Climate / Weather,
+and Entertainment / Culture. This is a membership-preserving relabeling of the
+prior compound topics, so all pair eligibility, complementarity coordinates,
+aggregation scores, and reported results below are numerically unchanged.
+
 ## Primary results
 
 The table uses the primary A-to-B direction, at least 50% supported category

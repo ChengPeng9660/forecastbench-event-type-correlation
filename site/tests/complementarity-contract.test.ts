@@ -21,8 +21,21 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("audited all-configuration complementarity publication", () => {
   it("publishes the complete exact-configuration universe with frozen provenance", () => {
-    expect(data.schema_version).toBe(4);
+    expect(data.schema_version).toBe(5);
     expect(data.weighting).toBe("uniform_rows");
+    expect(data.event_type_taxonomy).toBe("forecastbench-seven-domain-v1.0.0");
+    expect(data.event_type_domains).toEqual([
+      { id: "health", label: "Health" },
+      { id: "politics", label: "Politics" },
+      { id: "sports", label: "Sports" },
+      { id: "finance", label: "Finance" },
+      { id: "technology", label: "Technology" },
+      { id: "climate_weather", label: "Climate / Weather" },
+      { id: "entertainment_culture", label: "Entertainment / Culture" },
+    ]);
+    expect(data.event_type_fold_ins).toEqual({
+      science: "health", conflict: "politics", economics: "finance", ai: "technology",
+    });
     expect(data.ability_thresholds).toEqual([3, 5]);
     expect(data.pair_scopes.map(scope => scope.id)).toEqual([
       "all", "different_model_version", "matched_conditions",

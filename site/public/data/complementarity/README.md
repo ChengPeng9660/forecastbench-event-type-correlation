@@ -13,4 +13,7 @@ and information condition distinct.
   and independent checks.
 
 The five aggregation formulas are unchanged and category labels do not enter
-their computation.
+their computation. The event-type results use seven displayed domains: Health,
+Politics, Sports, Finance, Technology, Climate / Weather, and Entertainment /
+Culture. Science, conflict, economics, and AI are folded into Health, Politics,
+Finance, and Technology, respectively.

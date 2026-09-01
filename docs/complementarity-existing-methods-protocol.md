@@ -45,6 +45,13 @@ Overall ability proximity is the absolute difference between the two training
 BI values. Results are reported separately for limits of 3 and 5 BI points.
 Test BI never enters eligibility.
 
+The event-type view uses seven mutually exclusive displayed domains: Health,
+Politics, Sports, Finance, Technology, Climate / Weather, and Entertainment /
+Culture. Science is included in Health, conflict in Politics, economics in
+Finance, and AI in Technology. Climate / Weather and Entertainment / Culture
+remain combined domains. This is a deterministic coarsening of the prior
+audited semantic taxonomy; it reads neither outcomes nor model forecasts.
+
 For event type and question source/platform separately, only categories with at
 least 30 training events enter the profile. At least two supported categories
 and the selected row-mass coverage threshold are required. The crossed-strength
