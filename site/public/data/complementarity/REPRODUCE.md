@@ -1,7 +1,15 @@
-# Reproduce
+# Reproduction
 
-The browser data are projected from the frozen audited package `complementarity_unweighted_gap_sensitivity_2026-09-01`; no method is refit by the exporter. From the repository root, run:
+Use the bundled scientific Python environment or another environment with
+NumPy and pandas.
 
 ```bash
-python analysis/export_complementarity_site.py --study /path/to/complementarity_unweighted_gap_sensitivity_2026-09-01
+python code/prepare_all_configurations.py
+python code/run_all_configurations.py
+python code/diagnostics.py
+python code/independent_audit.py
 ```
+
+The preparation script records every source-file path and SHA-256 digest in
+`data/raw_file_manifest.csv`. The experiment is deterministic. Its five split
+seeds are written in `results/audit.json`.

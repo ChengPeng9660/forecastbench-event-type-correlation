@@ -1,6 +1,7 @@
 export type Dimension = "topic" | "source";
 export type CohortKind = "crossing" | "eligible";
 export type AbilityGap = 3 | 5;
+export type PairScope = "all" | "different_model_version" | "matched_conditions";
 export type Score = number | null;
 
 export interface StudyMethod {
@@ -33,6 +34,7 @@ export interface StudyPair {
   train_rows: number;
   test_rows: number;
   train_gap: number;
+  mean_train_bi: number;
   test_gap: Score;
   train_bi_a: Score;
   train_bi_b: Score;
@@ -52,13 +54,29 @@ export interface StudyPair {
   train_profile_bi_defined: boolean | null;
   group_a: string | null;
   group_b: string | null;
-  cross_provider: boolean;
+  same_provider: boolean;
+  same_model_version: boolean;
+  same_prompt: boolean;
+  same_information: boolean;
   methods: Record<string, Score>;
-  profiles: CategoryProfile[];
+  profile_key: string;
+  profile_shard: string;
+}
+
+export interface ComplementarityConfiguration {
+  exact_configuration: string;
+  canonical_model_version: string;
+  model_configuration: string;
+  provider: string;
+  prompt_type: "zero_shot" | "scratchpad" | "unspecified";
+  prompt_label: string;
+  information_type: string;
+  information_label: string;
 }
 
 export interface AggregationSummary {
   view: "primary";
+  pair_scope: PairScope;
   ability_gap: number;
   coverage: number;
   dimension: Dimension;
@@ -86,7 +104,7 @@ export interface DirectionSummary extends Omit<AggregationSummary, "view"> {
 }
 
 export interface ComplementarityData {
-  schema_version: 3;
+  schema_version: 4;
   study: string;
   date: string;
   primary_split: string;
@@ -95,13 +113,20 @@ export interface ComplementarityData {
   ability_thresholds: AbilityGap[];
   coverage_thresholds: number[];
   primary_method: string;
+  featured_pair_id: string;
+  pair_scopes: Array<{ id: PairScope; label: string }>;
   models: string[];
+  configurations: ComplementarityConfiguration[];
   methods: StudyMethod[];
   pairs: StudyPair[];
   summaries: AggregationSummary[];
   directions: DirectionSummary[];
+  diagnostics: Record<string, unknown>;
   sample: {
-    scored_models: number;
+    scored_configurations: number;
+    canonical_model_versions: number;
+    prompt_counts: Record<string, number>;
+    information_counts: Record<string, number>;
     genuine_scored_predictions: number;
     targets: number;
     events: number;
@@ -111,11 +136,12 @@ export interface ComplementarityData {
     status: string;
     implementation_independent: boolean;
     sampled_rows: number;
+    restricted_run_invariance_rows: number;
     max_absolute_error: number;
     event_disjointness: string;
     output_rows: number;
     category_profile_rows: number;
-    source_manifest_sha256: string;
+    profile_shards: number;
   };
   provenance: Record<string, string>;
 }

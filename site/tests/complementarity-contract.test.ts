@@ -2,33 +2,67 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { csvForPairs, defaultPair, directionSummaries, eligiblePairs, loadComplementarity, pairGain, score, studySummary } from "../src/lib/complementarity";
-import type { ComplementarityData } from "../src/types/complementarity";
+import {
+  csvForPairs,
+  defaultPair,
+  directionSummaries,
+  eligiblePairs,
+  loadComplementarity,
+  loadPairProfiles,
+  pairGain,
+  score,
+  studySummary,
+} from "../src/lib/complementarity";
+import type { ComplementarityData, PairScope } from "../src/types/complementarity";
 
 const directory = resolve(process.cwd(), "public/data/complementarity");
 const data: ComplementarityData = JSON.parse(readFileSync(resolve(directory, "study.json"), "utf8"));
 afterEach(() => vi.unstubAllGlobals());
 
-describe("audited uniform-target complementarity publication", () => {
-  it("publishes every primary pair view with the frozen provenance intact", () => {
-    expect(data.schema_version).toBe(3);
+describe("audited all-configuration complementarity publication", () => {
+  it("publishes the complete exact-configuration universe with frozen provenance", () => {
+    expect(data.schema_version).toBe(4);
     expect(data.weighting).toBe("uniform_rows");
     expect(data.ability_thresholds).toEqual([3, 5]);
-    expect(data.pairs).toHaveLength(2618);
-    expect(new Set(data.pairs.map(pair => `${pair.dimension}:${pair.id}`)).size).toBe(2618);
-    expect(data.summaries).toHaveLength(160);
-    expect(data.directions).toHaveLength(1600);
-    expect(data.sample.scored_models).toBe(94);
-    expect(data.sample.genuine_scored_predictions).toBe(421932);
-    expect(data.sample.events).toBe(3670);
+    expect(data.pair_scopes.map(scope => scope.id)).toEqual([
+      "all", "different_model_version", "matched_conditions",
+    ]);
+    expect(data.pairs).toHaveLength(16_589);
+    expect(new Set(data.pairs.map(pair => `${pair.dimension}:${pair.id}`)).size).toBe(16_589);
+    expect(data.summaries).toHaveLength(480);
+    expect(data.directions).toHaveLength(4_800);
+    expect(data.configurations).toHaveLength(313);
+    expect(new Set(data.configurations.map(config => config.exact_configuration)).size).toBe(313);
+    expect(data.sample).toMatchObject({
+      scored_configurations: 313,
+      canonical_model_versions: 96,
+      prompt_counts: { scratchpad: 122, zero_shot: 190, unspecified: 1 },
+      information_counts: {
+        freeze_values: 141, news_freeze: 12, news: 14, none: 142,
+        web_search_freeze: 2, web_search: 2,
+      },
+      genuine_scored_predictions: 1_273_203,
+      targets: 26_531,
+      events: 3_670,
+    });
     expect(data.primary_method).toBe("cf_directional");
     expect(data.methods.map(method => method.id)).toEqual([
       "simple_mean", "log_odds_mean", "ec_w0_56", "piecewise_odds", "cf_directional",
     ]);
     expect(data.methods.every(method => method.kind === "deployable")).toBe(true);
     expect(data.pairs.every(pair => Object.keys(pair.methods).length === 5)).toBe(true);
-    expect(data.audit.event_disjointness).toBe("PASS");
-    expect(data.audit.max_absolute_error).toBeLessThan(8e-14);
+    expect(data.audit).toMatchObject({
+      status: "PASS",
+      implementation_independent: true,
+      sampled_rows: 80,
+      restricted_run_invariance_rows: 25_580,
+      event_disjointness: "PASS",
+      output_rows: 221_184,
+      category_profile_rows: 62_131,
+      profile_shards: 32,
+    });
+    expect(data.audit.max_absolute_error).toBeLessThan(2e-11);
+
     const manifest = JSON.parse(readFileSync(resolve(directory, "manifest.json"), "utf8"));
     expect(manifest.weighting).toBe("uniform_rows");
     for (const [name, info] of Object.entries(manifest.files) as [string, { sha256: string; bytes: number }][]) {
@@ -39,58 +73,101 @@ describe("audited uniform-target complementarity publication", () => {
   });
 
   it.each([
-    [3, .5, 226, 432], [3, .6, 198, 430], [3, .7, 143, 416], [3, .8, 122, 180],
-    [5, .5, 241, 505], [5, .6, 210, 503], [5, .7, 148, 470], [5, .8, 126, 212],
-  ] as const)("reproduces gap %s / coverage %s crossing counts", (gap, coverage, topic, source) => {
-    expect(eligiblePairs(data, "topic", coverage, "crossing", gap)).toHaveLength(topic);
-    expect(eligiblePairs(data, "source", coverage, "crossing", gap)).toHaveLength(source);
+    ["all", 3, .5, 2449, 3126], ["all", 5, .5, 2834, 3786],
+    ["different_model_version", 3, .5, 2333, 3053],
+    ["matched_conditions", 3, .5, 582, 989], ["matched_conditions", 5, .5, 636, 1177],
+  ] as const)("reproduces %s gap %s / coverage %s crossing counts", (scope, gap, coverage, topic, source) => {
+    expect(eligiblePairs(data, "topic", coverage, "crossing", gap, scope)).toHaveLength(topic);
+    expect(eligiblePairs(data, "source", coverage, "crossing", gap, scope)).toHaveLength(source);
   });
 
-  it("reconstructs every published primary mean from pair-level records", () => {
+  it("reconstructs every published primary mean for every pair scope", () => {
     for (const row of data.summaries) {
-      const pairs = eligiblePairs(data, row.dimension, row.coverage, row.cohort, row.ability_gap as 3 | 5);
+      const pairs = eligiblePairs(
+        data,
+        row.dimension,
+        row.coverage,
+        row.cohort,
+        row.ability_gap as 3 | 5,
+        row.pair_scope,
+      );
       expect(pairs.length).toBe(row.n);
-      const whole = pairs.map(pair => pairGain(pair, row.method)).filter((value): value is number => value !== null);
-      expect(whole).toHaveLength(row.n_defined);
-      if (whole.length) expect(whole.reduce((a, b) => a + b, 0) / whole.length).toBeCloseTo(row.mean_gain_vs_test_best_bi!, 10);
+      const gains = pairs.map(pair => pairGain(pair, row.method)).filter((value): value is number => value !== null);
+      expect(gains).toHaveLength(row.n_defined);
+      if (gains.length) {
+        expect(gains.reduce((total, value) => total + value, 0) / gains.length)
+          .toBeCloseTo(row.mean_gain_vs_test_best_bi!, 10);
+      }
     }
   });
 
-  it("uses unchanged Directional CF as the primary endpoint", () => {
-    const topic3 = studySummary(data, "topic", .5, "crossing", 3, "cf_directional")!;
-    expect(topic3.n).toBe(226);
-    expect(topic3.mean_gain_vs_test_best_bi).toBeCloseTo(.747765562136116, 12);
-    expect(topic3.beats_both_rate).toBeCloseTo(.9203539823008849, 12);
-    expect(topic3.mean_gain_vs_train_selected_bi).toBeCloseTo(.9571940696803457, 12);
-    expect(topic3.mean_gain_vs_test_best_raw_loss).toBeCloseTo(.006340946466149504, 12);
+  it.each([
+    ["all", "topic", 2449, 1.3585742185517307, .9661086157615353],
+    ["all", "source", 3126, .6572334789868046, .9065898912348048],
+    ["matched_conditions", "topic", 582, .9008249254738067, .9398625429553265],
+    ["matched_conditions", "source", 989, .48811149505403795, .8746208291203236],
+  ] as const)("uses unchanged Directional CF for %s / %s", (scope, dimension, n, gain, winRate) => {
+    const summary = studySummary(
+      data, dimension, .5, "crossing", 3, "cf_directional", scope as PairScope,
+    )!;
+    expect(summary.n).toBe(n);
+    expect(summary.mean_gain_vs_test_best_bi).toBeCloseTo(gain, 12);
+    expect(summary.beats_both_rate).toBeCloseTo(winRate, 12);
   });
 
-  it("publishes the featured pair under all five existing formulas", () => {
-    const pair = defaultPair(eligiblePairs(data, "topic", .5, "crossing", 3))!;
-    expect(pair.id).toBe("44_58");
-    expect(pair.train_gap).toBeCloseTo(.5240092207484608, 12);
-    expect(pair.train_coverage).toBeCloseTo(.8556280587275693, 12);
-    expect(pairGain(pair, "cf_directional")).toBeCloseTo(.4532293270958476, 12);
-    expect(pairGain(pair, "simple_mean")).toBeCloseTo(.4509763123240802, 12);
-    expect(pairGain(pair, "piecewise_odds")).toBeCloseTo(-.031418445419973295, 12);
+  it("keeps model version, prompt and information identity inspectable", () => {
+    const matched = eligiblePairs(data, "topic", .5, "crossing", 3, "matched_conditions");
+    expect(matched.every(pair => pair.same_prompt && pair.same_information)).toBe(true);
+    expect(matched.every(pair => !pair.same_model_version)).toBe(true);
+    const crossCondition = eligiblePairs(data, "topic", .5, "crossing", 3, "all")
+      .find(pair => !pair.same_prompt || !pair.same_information);
+    expect(crossCondition).toBeDefined();
+    expect(data.configurations.find(config => config.exact_configuration === crossCondition!.model_a))
+      .toMatchObject({ exact_configuration: crossCondition!.model_a });
+  });
+
+  it("publishes a stable featured exact pair and loads its category profile lazily", async () => {
+    const pair = defaultPair(
+      eligiblePairs(data, "topic", .5, "crossing", 3),
+      undefined,
+      data.featured_pair_id,
+    )!;
+    expect(pair.id).toBe("p-baa8649cff5a");
+    expect(pair).toMatchObject({ same_model_version: false, same_prompt: true, same_information: true });
+    expect(pair.train_gap).toBeCloseTo(1.695995146570617, 12);
+    expect(pairGain(pair, "cf_directional")).toBeCloseTo(3.0385659015484023, 12);
+    expect(pairGain(pair, "simple_mean")).toBeCloseTo(.712428679063386, 12);
+    expect(pairGain(pair, "piecewise_odds")).toBeCloseTo(1.1077415821981873, 12);
     expect(pair.crossing_persists).toBe(true);
+
+    const shard = readFileSync(resolve(directory, `profiles/${pair.profile_shard}.json`), "utf8");
+    const fetcher = vi.fn().mockResolvedValue(new Response(shard));
+    vi.stubGlobal("fetch", fetcher);
+    const profiles = await loadPairProfiles(pair);
+    expect(profiles.length).toBeGreaterThanOrEqual(2);
+    expect(profiles.map(profile => profile.group)).toContain(pair.group_a);
+    expect(profiles.map(profile => profile.group)).toContain(pair.group_b);
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
-  it("shows robust directions and the weaker newly admitted gap ring", () => {
-    for (const gap of [3, 5] as const) for (const dimension of ["topic", "source"] as const) {
-      const rows = directionSummaries(data, dimension, .5, "crossing", gap, "cf_directional");
-      expect(rows).toHaveLength(10);
-      expect(rows.every(row => row.mean_gain_vs_test_best_bi! > 0)).toBe(true);
-      const narrow = new Set(eligiblePairs(data, dimension, .5, "crossing", 3).map(pair => pair.id));
-      const wide = eligiblePairs(data, dimension, .5, "crossing", 5);
-      expect([...narrow].every(id => wide.some(pair => pair.id === id))).toBe(true);
+  it("shows positive ten-direction stability and exact gap nesting", () => {
+    for (const scope of ["all", "matched_conditions"] as const) {
+      for (const dimension of ["topic", "source"] as const) {
+        const rows = directionSummaries(data, dimension, .5, "crossing", 3, "cf_directional", scope);
+        expect(rows).toHaveLength(10);
+        expect(rows.every(row => row.mean_gain_vs_test_best_bi! > 0)).toBe(true);
+        const narrow = new Set(eligiblePairs(data, dimension, .5, "crossing", 3, scope).map(pair => pair.id));
+        const wide = new Set(eligiblePairs(data, dimension, .5, "crossing", 5, scope).map(pair => pair.id));
+        expect([...narrow].every(id => wide.has(id))).toBe(true);
+      }
     }
   });
 
   it("never filters with test skill and never converts missing results to zero", () => {
-    const original = eligiblePairs(data, "topic", .5, "crossing", 3);
+    const original = eligiblePairs(data, "topic", .5, "crossing", 3, "matched_conditions");
     const perturbed = { ...data, pairs: data.pairs.map(pair => ({ ...pair, test_gap: 999, test_bi_a: -100, test_bi_b: 100 })) };
-    expect(eligiblePairs(perturbed, "topic", .5, "crossing", 3).map(pair => pair.id)).toEqual(original.map(pair => pair.id));
+    expect(eligiblePairs(perturbed, "topic", .5, "crossing", 3, "matched_conditions").map(pair => pair.id))
+      .toEqual(original.map(pair => pair.id));
     const missing = { ...data.pairs[0], methods: { ...data.pairs[0].methods, cf_directional: null } };
     expect(pairGain(missing, "cf_directional")).toBeNull();
     expect(score(null)).toBe("—");
@@ -105,6 +182,6 @@ describe("audited uniform-target complementarity publication", () => {
     vi.stubGlobal("fetch", fetcher);
     await expect(loadComplementarity()).rejects.toThrow(/503/);
     await expect(loadComplementarity()).rejects.toThrow(/expected audited study/);
-    await expect(loadComplementarity()).resolves.toHaveProperty("pairs.length", 2618);
+    await expect(loadComplementarity()).resolves.toHaveProperty("pairs.length", 16_589);
   });
 });

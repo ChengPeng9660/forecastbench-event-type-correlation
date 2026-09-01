@@ -476,7 +476,7 @@ export default function App() {
 
       <footer className="research-footer">
         <div><strong>ForecastBench Research Atlas</strong><p>Independent research into forecast diversity and aggregation.</p></div>
-        <div className="research-footer-links"><a href="https://github.com/ChengPeng9660/forecastbench-event-type-correlation" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://huggingface.co/datasets/forecastingresearch/forecastbench-datasets" target="_blank" rel="noreferrer">Source data ↗</a><a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0 ↗</a></div>
+        <div className="research-footer-links"><a href="https://huggingface.co/datasets/forecastingresearch/forecastbench-datasets" target="_blank" rel="noreferrer">Source data ↗</a><a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0 ↗</a></div>
         <p className="research-attribution">Derived with changes from ForecastBench data by the Forecasting Research Institute.</p>
       </footer>
     </div>

@@ -1,18 +1,34 @@
 {
-  "status": "pass",
+  "status": "PASS",
   "implementation_independent": true,
-  "imports_experiment_code": false,
   "sampled_primary_dimension_rows": 80,
-  "maximum_absolute_differences": {
-    "train_gap": 2.836619827917275e-14,
-    "test_single_bi": 3.552713678800501e-14,
-    "global_convex_bi": 7.815970093361102e-14,
-    "type_shrunk_bi": 4.973799150320701e-14,
-    "type_shrunk_gain_best_bi": 6.400435736964027e-14,
-    "type_increment_bi": 7.111325417419323e-14,
-    "train_coverage": 3.3306690738754696e-16
+  "independent_formula_maximum_absolute_differences": {
+    "train_gap": 3.552713678800501e-14,
+    "test_bi_a": 3.552713678800501e-14,
+    "test_bi_b": 4.973799150320701e-14,
+    "train_coverage": 3.3306690738754696e-16,
+    "train_between_norm": 1.8735013540549517e-16,
+    "simple_mean_bi": 1.7053025658242404e-13,
+    "log_odds_mean_bi": 1.5631940186722204e-13,
+    "ec_w0_56_bi": 3.552713678800501e-13,
+    "piecewise_odds_bi": 1.5631940186722204e-13,
+    "cf_directional_bi": 2.913225216616411e-13
   },
-  "tolerance": 2e-09,
-  "rows_confirming_origin_mass_not_forced_to_half": 80,
-  "event_disjointness": "pass"
+  "independent_crossing_boolean_failures": 0,
+  "event_disjointness": "PASS",
+  "restricted_run_invariance_rows": 25580,
+  "restricted_run_maximum_absolute_differences": {
+    "train_gap": 0.0,
+    "test_bi_a": 0.0,
+    "test_bi_b": 0.0,
+    "train_coverage": 0.0,
+    "train_between_norm": 0.0,
+    "simple_mean_bi": 2.7711166694643907e-13,
+    "log_odds_mean_bi": 2.8421709430404007e-13,
+    "ec_w0_56_bi": 3.979039320256561e-13,
+    "piecewise_odds_bi": 3.055333763768431e-13,
+    "cf_directional_bi": 2.913225216616411e-13
+  },
+  "maximum_absolute_error": 3.979039320256561e-13,
+  "tolerance": 2e-11
 }

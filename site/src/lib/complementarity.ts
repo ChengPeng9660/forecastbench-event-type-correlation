@@ -1,10 +1,12 @@
 import type {
   AbilityGap,
   AggregationSummary,
+  CategoryProfile,
   CohortKind,
   ComplementarityData,
   Dimension,
   DirectionSummary,
+  PairScope,
   Score,
   StudyPair,
 } from "../types/complementarity";
@@ -34,12 +36,16 @@ export function eligiblePairs(
   coverage: number,
   cohort: CohortKind,
   abilityGap: AbilityGap,
+  pairScope: PairScope = "all",
 ): StudyPair[] {
   return data.pairs.filter(pair => pair.dimension === dimension
     && pair.train_gap <= abilityGap + 1e-12
     && (pair.train_groups ?? 0) >= 2
     && (pair.train_coverage ?? 0) >= coverage
-    && (cohort !== "crossing" || pair.crossing === true));
+    && (cohort !== "crossing" || pair.crossing === true)
+    && (pairScope === "all"
+      || (pairScope === "different_model_version" && !pair.same_model_version)
+      || (pairScope === "matched_conditions" && pair.same_prompt && pair.same_information)));
 }
 
 export function pairGain(pair: StudyPair, method: string): Score {
@@ -50,9 +56,9 @@ export function pairGain(pair: StudyPair, method: string): Score {
   return isScore(prediction) && isScore(base) ? prediction - base : null;
 }
 
-export function defaultPair(pairs: StudyPair[], requested?: string): StudyPair | undefined {
+export function defaultPair(pairs: StudyPair[], requested?: string, featured?: string): StudyPair | undefined {
   return pairs.find(pair => pair.id === requested)
-    ?? pairs.find(pair => pair.id === "44_58")
+    ?? pairs.find(pair => pair.id === featured)
     ?? pairs[0];
 }
 
@@ -63,11 +69,13 @@ export function studySummary(
   cohort: CohortKind,
   abilityGap: AbilityGap,
   method: string,
+  pairScope: PairScope = "all",
 ): AggregationSummary | undefined {
   return data.summaries.find(row => row.dimension === dimension
     && row.coverage === coverage
     && row.cohort === cohort
     && row.ability_gap === abilityGap
+    && row.pair_scope === pairScope
     && row.method === method);
 }
 
@@ -78,11 +86,13 @@ export function directionSummaries(
   cohort: CohortKind,
   abilityGap: AbilityGap,
   method: string,
+  pairScope: PairScope = "all",
 ): DirectionSummary[] {
   return data.directions.filter(row => row.dimension === dimension
     && row.coverage === coverage
     && row.cohort === cohort
     && row.ability_gap === abilityGap
+    && row.pair_scope === pairScope
     && row.method === method);
 }
 
@@ -92,11 +102,13 @@ export function csvForPairs(pairs: StudyPair[], method: string): string {
     "uniform_row_category_coverage", "train_category_complementarity", "train_crossing",
     "train_dataset_row_fraction", "test_model_a_bi", "test_model_b_bi", "method",
     "test_method_bi", "gain_vs_better_test_single_bi", "train_events", "test_events",
+    "same_model_version", "same_prompt", "same_information",
   ], ...pairs.map(pair => [
     pair.dimension, pair.id, pair.model_a, pair.model_b, pair.train_gap,
     pair.train_coverage, pair.train_between_norm, pair.crossing,
     pair.train_origin_dataset_fraction, pair.test_bi_a, pair.test_bi_b, method,
     pair.methods[method], pairGain(pair, method), pair.train_events, pair.test_events,
+    pair.same_model_version, pair.same_prompt, pair.same_information,
   ])];
   return rows.map(row => row.map(value => `"${String(value ?? "").replaceAll('"', '""')}"`).join(",")).join("\n");
 }
@@ -105,12 +117,14 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
   const response = await fetch(`${COMPLEMENTARITY_PATH}study.json`, { signal });
   if (!response.ok) throw new Error(`Results could not be loaded (${response.status}).`);
   const data = await response.json() as ComplementarityData;
-  if (data.schema_version !== 3
+  if (data.schema_version !== 4
     || data.weighting !== "uniform_rows"
     || !Array.isArray(data.pairs)
     || !Array.isArray(data.summaries)
     || !Array.isArray(data.directions)
     || !Array.isArray(data.methods)
+    || !Array.isArray(data.configurations)
+    || !Array.isArray(data.pair_scopes)
     || data.primary_method !== "cf_directional"
     || data.methods.length !== COMPLEMENTARITY_METHODS.length
     || data.methods.some((method, index) => method.id !== COMPLEMENTARITY_METHODS[index])
@@ -118,4 +132,23 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
     throw new Error("The published results do not match the expected audited study.");
   }
   return data;
+}
+
+const profileShardCache = new Map<string, Record<string, CategoryProfile[]>>();
+
+export async function loadPairProfiles(pair: StudyPair, signal?: AbortSignal): Promise<CategoryProfile[]> {
+  let profiles = profileShardCache.get(pair.profile_shard);
+  if (!profiles) {
+    const response = await fetch(`${COMPLEMENTARITY_PATH}profiles/${pair.profile_shard}.json`, { signal });
+    if (!response.ok) throw new Error(`Category profiles could not be loaded (${response.status}).`);
+    const payload = await response.json() as { schema_version?: number; profiles?: Record<string, CategoryProfile[]> };
+    if (payload.schema_version !== 1 || !payload.profiles || typeof payload.profiles !== "object") {
+      throw new Error("The category-profile shard is incompatible with this study.");
+    }
+    profiles = payload.profiles;
+    profileShardCache.set(pair.profile_shard, profiles);
+  }
+  const selected = profiles[pair.profile_key];
+  if (!Array.isArray(selected)) throw new Error("The selected pair is missing from its category-profile shard.");
+  return selected;
 }

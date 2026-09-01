@@ -1,81 +1,103 @@
-# Near-skill category complementarity with existing aggregation methods
+# Full exact-configuration category-complementarity experiment
 
-## Research question
+## Question
 
-Can training-only category specialization identify pairs of similarly skilled
-models that aggregate well on different, held-out events when the aggregation
-rule itself does not use category labels?
+Can training-only category specialization identify pairs with similar overall
+ability that aggregate well on event-disjoint test questions when model version,
+prompt, and information condition are all retained as distinct configurations?
 
-The category analysis and the aggregation rule are deliberately separated.
-Event type or question source/platform is used only to measure complementary
-strengths and define the model-pair cohort. It never routes predictions, selects
-a category-specific model, or fits a category-specific aggregation weight.
+Category labels are used only to measure and screen complementarity. They never
+route forecasts or alter an aggregation formula.
 
-## Sample and scores
+## Configuration universe
 
-- 94 exact plain-zero-shot configurations with no extra information.
-- Imputed or repaired predictions are excluded.
-- Each pair is evaluated on its common forecast targets.
-- Every common target receives weight `1/n`; Dataset and Market are not forced
-  to receive equal total weight.
-- Official per-target difficulty offsets remain in adjusted Brier and Brier
-  Index (BI).
-- Five fixed event-cluster splits are evaluated in both directions. Train and
-  test events are disjoint. The page's pair explorer uses split `20260910`,
-  train A to test B; the stability view reports all ten directions.
+- The unit is an exact `model version × prompt × information condition` string.
+- All clean LLM configurations in the archived ForecastBench files are eligible.
+- The moving 2024 `GPT-4o` alias is pinned to `GPT-4o-2024-05-13` for every
+  prompt and information condition.
+- Imputed rows, unresolved questions, nonbinary outcomes, baselines, external
+  submissions, ensembles, crowd aggregates, and superforecaster variants are
+  excluded by fixed rules.
+- No configuration is chosen or discarded using its score.
 
-## Training-only pair selection
+The resulting panel contains 313 exact configurations from 96 canonical model
+versions: 190 zero-shot, 122 scratchpad, and one configuration without a prompt
+label. Information conditions comprise 142 no-extra-information, 141 freeze,
+14 news, 12 news-plus-freeze, two web-search, and two web-search-plus-freeze
+configurations.
 
-Overall ability is controlled using the absolute training BI gap. The main
-limit is 3 BI points; 5 BI points is a wider sensitivity analysis. Test BI never
-enters pair eligibility.
+## Scores and support
 
-For each grouping dimension, only categories with at least 30 training events
-enter the category profile. At least two supported categories and the selected
-coverage threshold are required. The crossed-strength cohort additionally
-requires model A to lead by at least 1 BI point in one training category and
-model B to lead by at least 1 BI point in another.
+- Each pair is evaluated on its common target rows.
+- Every common row receives weight `1/n`; Dataset and Market are not forced to
+  receive equal total weight.
+- The archived official question fixed effect and its date/origin normalization
+  remain in adjusted Brier and Brier Index.
+- Five deterministic event-cluster splits (`20260910` through `20260914`) are
+  evaluated in both directions. The primary view trains on fold A of split
+  `20260910` and tests on fold B.
+- A direction requires at least 100 distinct events in both train and test.
+  Train and test event identities must be disjoint.
 
-The plotted training complementarity coordinate is
+## Training-only selection
+
+Overall ability proximity is the absolute difference between the two training
+BI values. Results are reported separately for limits of 3 and 5 BI points.
+Test BI never enters eligibility.
+
+For event type and question source/platform separately, only categories with at
+least 30 training events enter the profile. At least two supported categories
+and the selected row-mass coverage threshold are required. The crossed-strength
+cohort additionally requires configuration A to lead by at least 1 training BI
+point in one category and configuration B to lead by at least 1 training BI
+point in another.
+
+The training complementarity coordinate is
 
 `D_type = min(R_A, R_B) - sum_g pi_g min(R_A,g, R_B,g)`,
 
-divided by the two models' mean raw Brier risk on the supported training rows.
-Here `R` is raw Brier risk and `pi_g` is category row mass. The metric is large
-when the better model changes across categories, even though overall training
-ability is similar.
+divided by the two configurations' mean raw Brier risk on supported training
+rows. `R` is raw Brier risk and `pi_g` is category row mass. This quantity is
+the part of reciprocal error advantage attributable to the identity of the
+better configuration changing across categories. It is computed on training
+questions only.
 
-## Existing aggregation methods
+## Pair-scope controls
 
-All five rules are the pre-existing implementations and use identical pair/test
-support:
+Every exact configuration is included in the main scope. Two prespecified
+diagnostic scopes retain the same observations while testing identity
+confounding:
 
-1. **Simple mean:** `(p_A + p_B) / 2`.
-2. **Log-odds mean:** `sigmoid((logit(p_A) + logit(p_B)) / 2)`.
-3. **EC, w = 0.56:** `sigmoid(0.56 * (logit(p_A) + logit(p_B)))`.
-4. **Piecewise odds:** the existing threshold-5 piecewise transform of the
-   summed logits.
-5. **Directional CF:** choose the higher-BI training model as the anchor. Let
-   `d = p_partner - p_anchor` and `r = y - p_anchor`. Separately for `d >= 0`
-   and `d < 0`, fit `alpha_s = clip(E[r d 1_s] / E[d^2 1_s], 0, 1)` on the
-   entire training support. Apply the two fixed weights on the test fold as
-   `q = p_anchor + alpha_s d`.
+1. `different_model_version` excludes pairs whose canonical model version is
+   the same.
+2. `matched_conditions` requires the same prompt class and information
+   condition on both sides. Because exact configurations are unique, such a
+   pair necessarily contains different canonical model versions.
 
-Only Directional CF uses training outcomes to fit aggregation weights. Its two
-weights are fit over the whole training support and are reused unchanged for
-every category. The other four rules are fixed and outcome-blind.
+## Unchanged aggregation methods
 
-The stronger single model on the test fold is a hindsight reference, not a
-selectable aggregation method.
+All methods use the same pair and test targets.
+
+1. Simple mean: `(p_A + p_B) / 2`.
+2. Log-odds mean: `sigmoid((logit(p_A) + logit(p_B)) / 2)`.
+3. EC, `w = 0.56`: `sigmoid(0.56 × (logit(p_A) + logit(p_B)))`.
+4. Piecewise odds: the existing threshold-5 piecewise transform of summed
+   logits.
+5. Directional CF: choose the better training configuration as anchor. For
+   `d = p_partner - p_anchor`, fit a clipped closed-form coefficient separately
+   on `d >= 0` and `d < 0`, then apply those two fixed coefficients to test.
+
+Only Directional CF uses training outcomes. It fits on the whole training fold;
+categories do not enter either coefficient.
 
 ## Endpoints
 
-The primary endpoint is the selected method's test BI minus the higher BI of the
-two single models on the identical test targets. Secondary summaries report the
-share of pairs that beat both singles, gain over the model selected by training
-BI, raw Brier reduction, sensitivity to BI-gap limits 3 and 5, and stability
-across the ten event directions.
+The primary endpoint is aggregation test BI minus the higher BI of the two
+single configurations on identical test targets. The better test single is a
+hindsight reference, not a selectable method. Secondary diagnostics include
+the fraction beating both singles, gain over the training-selected single,
+raw-Brier reduction, crossed-strength persistence, ability tiers, condition
+matching, and stability over ten event directions.
 
-This is internal event-holdout evidence from a repeatedly studied archive. It
-does not establish a causal or externally validated effect of semantic category
-complementarity.
+This is internal holdout evidence from a repeatedly studied historical archive.
+It is descriptive and is not a fresh external confirmation.
