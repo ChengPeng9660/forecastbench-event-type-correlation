@@ -23,7 +23,9 @@ test("links the first-chart exact configuration to its training-screened complem
     return block.locator(".focal-complementarity-kpis").count();
   }, { timeout: 20_000 }).toBe(1);
   await expect(block.getByRole("heading", { name: "Who complements the selected model?", exact: true })).toBeVisible();
-  await expect(block).toContainText("Climate / Weather, and Entertainment / Culture");
+  await expect(block).not.toContainText("Training-only screen.");
+  await expect(block).not.toContainText("WHAT THE COMPLETE EXPERIMENT FOUND");
+  await expect(block).not.toContainText("Selected-model complementarity details");
   await expect(block.locator(".focal-configuration-line")).toContainText(claude);
   await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("25", { timeout: 20_000 });
   await expect(kpi(block, "SCREENED PARTNERS")).toContainText("54 near-skill candidates");
@@ -33,6 +35,8 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.getByLabel("Selected complementary partner")).toHaveValue("p-baa8649cff5a");
   await expect(block.locator(".focal-complementarity-inspector")).toContainText("+3.039 BI");
   await expect(block.locator(".focal-category-profile")).toBeVisible();
+  await expect(block.locator('.focal-category-profile g[opacity="0.35"], .focal-category-profile g[opacity=".35"]')).toHaveCount(0);
+  await expect(block.locator(".focal-category-profile figcaption")).not.toContainText("are faded");
 
   await block.getByRole("button", { name: "Source / platform", exact: true }).click();
   await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("0");
