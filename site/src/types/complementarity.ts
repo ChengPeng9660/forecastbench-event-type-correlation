@@ -1,6 +1,5 @@
 export type Dimension = "topic" | "source";
 export type CohortKind = "crossing" | "eligible";
-export type Language = "zh" | "en";
 export type AbilityGap = 3 | 5;
 export type Score = number | null;
 

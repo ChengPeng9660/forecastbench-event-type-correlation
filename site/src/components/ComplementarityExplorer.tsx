@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { ABILITY_GAPS, COMPLEMENTARITY_PATH, COVERAGES, csvForPairs, defaultPair, directionSummaries, eligiblePairs, isScore, loadComplementarity, pairGain, score, shortModel, studySummary } from "../lib/complementarity";
-import type { AbilityGap, CohortKind, ComplementarityData, Dimension, Language, Score, StudyPair } from "../types/complementarity";
+import type { AbilityGap, CohortKind, ComplementarityData, Dimension, Score, StudyPair } from "../types/complementarity";
 import "../complementarity.css";
 
 type Copy = (zh: string, en: string) => string;
-type View = { language: Language; dimension: Dimension; coverage: number; cohort: CohortKind; abilityGap: AbilityGap; method: string; pair: string };
+type View = { dimension: Dimension; coverage: number; cohort: CohortKind; abilityGap: AbilityGap; method: string; pair: string };
 const GROUP_NAMES: Record<string, [string, string]> = {
   politics_conflict: ["政治与冲突", "Politics"], finance_economics: ["财经与经济", "Finance"],
   climate_weather: ["气候与天气", "Climate"], health_science: ["健康与科学", "Health & science"],
@@ -22,7 +22,7 @@ function initialView(): View {
   const q = new URLSearchParams(window.location.search);
   const coverage = Number(q.get("cc_coverage") ?? .5);
   const abilityGap = Number(q.get("cc_gap") ?? 3);
-  return { language: q.get("cc_lang") === "zh" ? "zh" : "en", dimension: q.get("cc_dim") === "source" ? "source" : "topic",
+  return { dimension: q.get("cc_dim") === "source" ? "source" : "topic",
     coverage: COVERAGES.some(v => v === coverage) ? coverage : .5, cohort: q.get("cc_cohort") === "eligible" ? "eligible" : "crossing",
     abilityGap: ABILITY_GAPS.some(v => v === abilityGap) ? abilityGap as AbilityGap : 3,
     method: q.get("cc_method") ?? "type_shrunk", pair: q.get("cc_pair") ?? "44_58" };
@@ -197,7 +197,7 @@ function DirectionStability({ data, pairs, view, t }: { data: ComplementarityDat
 
 function Study({ data }: { data: ComplementarityData }) {
   const [view, setView] = useState<View>(initialView), [search, setSearch] = useState("");
-  const t: Copy = (zh, en) => view.language === "zh" ? zh : en;
+  const t: Copy = (_zh, en) => en;
   const pairs = useMemo(() => eligiblePairs(data, view.dimension, view.coverage, view.cohort, view.abilityGap), [data, view.dimension, view.coverage, view.cohort, view.abilityGap]);
   const searchable = useMemo(() => { const needle = search.trim().toLowerCase(); return needle ? pairs.filter(pair => `${pair.model_a} ${pair.model_b}`.toLowerCase().includes(needle)) : pairs; }, [pairs, search]);
   const selected = defaultPair(pairs, view.pair), selectedIndex = searchable.findIndex(pair => pair.id === selected?.id);
@@ -208,7 +208,7 @@ function Study({ data }: { data: ComplementarityData }) {
   function change(patch: Partial<View>) {
     const next = { ...view, ...patch }; setView(next);
     const q = new URLSearchParams(window.location.search);
-    q.set("cc_lang", next.language); q.set("cc_dim", next.dimension); q.set("cc_coverage", String(next.coverage)); q.set("cc_cohort", next.cohort); q.set("cc_gap", String(next.abilityGap)); q.set("cc_method", next.method);
+    q.delete("cc_lang"); q.set("cc_dim", next.dimension); q.set("cc_coverage", String(next.coverage)); q.set("cc_cohort", next.cohort); q.set("cc_gap", String(next.abilityGap)); q.set("cc_method", next.method);
     if (next.pair) q.set("cc_pair", next.pair);
     history.replaceState(null, "", `${window.location.pathname}?${q.toString()}#complementarity`);
   }
@@ -217,8 +217,8 @@ function Study({ data }: { data: ComplementarityData }) {
     const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = `complementarity_gap${view.abilityGap}_${view.dimension}_${view.coverage}_${view.cohort}_${view.method}.csv`; link.click(); URL.revokeObjectURL(url);
   }
 
-  return <section id="complementarity" className="cc-study" lang={view.language === "zh" ? "zh-CN" : "en"}>
-    <header className="cc-intro"><div><p className="cc-eyebrow">FORECASTBENCH / COMPLEMENTARITY <span className="cc-study-status">{t("内部事件留出研究", "INTERNAL EVENT-HOLDOUT STUDY")}</span></p><h1>{t("类别聚合能超过两个模型吗？", "Can category-aware aggregation beat both models?")}</h1><p>{t("先筛选整体能力相近、类别强项交叉的模型对，再在不同事件上检验聚合。", "Select model pairs with similar overall skill and crossed category strengths, then test aggregation on different events.")}</p></div><div className="cc-language" aria-label="Language"><button type="button" aria-pressed={view.language === "zh"} onClick={() => change({ language: "zh" })}>中文</button><button type="button" aria-pressed={view.language === "en"} onClick={() => change({ language: "en" })}>EN</button></div></header>
+  return <section id="complementarity" className="cc-study" lang="en">
+    <header className="cc-intro"><div><p className="cc-eyebrow">FORECASTBENCH / COMPLEMENTARITY <span className="cc-study-status">{t("内部事件留出研究", "INTERNAL EVENT-HOLDOUT STUDY")}</span></p><h1>{t("类别聚合能超过两个模型吗？", "Can category-aware aggregation beat both models?")}</h1><p>{t("先筛选整体能力相近、类别强项交叉的模型对，再在不同事件上检验聚合。", "Select model pairs with similar overall skill and crossed category strengths, then test aggregation on different events.")}</p></div></header>
     <div className="cc-study-meta"><span><b>{data.sample.scored_models}</b> {t("个固定模型配置", "exact configurations")}</span><span><b>{data.sample.genuine_scored_predictions.toLocaleString()}</b> {t("条真实预测", "genuine forecasts")}</span><span><b>{data.sample.events.toLocaleString()}</b> {t("个事件簇", "event clusters")}</span><span>{t("Zero-shot · 无额外信息 · 2026-09-01", "Zero-shot · no extra information · 2026-09-01")}</span></div>
 
     <div className="cc-filter-dock cc-filter-five"><div><span className="cc-field-label">{t("按什么分组", "GROUP QUESTIONS BY")}</span><div className="cc-segments" role="group" aria-label={t("分组维度", "Grouping dimension")}><button aria-pressed={view.dimension === "topic"} onClick={() => { setSearch(""); change({ dimension: "topic" }); }}>{t("事件类型", "Event type")}</button><button aria-pressed={view.dimension === "source"} onClick={() => { setSearch(""); change({ dimension: "source" }); }}>{t("题目来源 / 平台", "Question source / platform")}</button></div></div>
@@ -256,7 +256,14 @@ function Study({ data }: { data: ComplementarityData }) {
 
 export default function ComplementarityExplorer() {
   const [data, setData] = useState<ComplementarityData | null>(null), [error, setError] = useState(""), [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    if (query.has("cc_lang")) {
+      query.delete("cc_lang");
+      history.replaceState(null, "", `${window.location.pathname}${query.size ? `?${query.toString()}` : ""}${window.location.hash}`);
+    }
+  }, []);
   useEffect(() => { const controller = new AbortController(); setError(""); loadComplementarity(controller.signal).then(setData).catch(error => { if (!controller.signal.aborted) setError(String(error.message ?? error)); }); return () => controller.abort(); }, [attempt]);
-  if (!data) return <section id="complementarity" className="cc-study cc-loading" aria-live="polite" aria-busy={!error}><p className="cc-eyebrow">FORECASTBENCH / COMPLEMENTARITY</p><h1>{error ? "实验数据暂时无法加载 / Results unavailable" : "正在准备交互实验 / Preparing the study"}</h1><p>{error || "加载已核对的模型对、类别能力与聚合结果…"}</p>{error && <button className="research-button" onClick={() => setAttempt(attempt => attempt + 1)}>重新加载 / Try again</button>}</section>;
+  if (!data) return <section id="complementarity" className="cc-study cc-loading" lang="en" aria-live="polite" aria-busy={!error}><p className="cc-eyebrow">FORECASTBENCH / COMPLEMENTARITY</p><h1>{error ? "Results unavailable" : "Preparing the study"}</h1><p>{error || "Loading audited model pairs, category strengths and aggregation results…"}</p>{error && <button className="research-button" onClick={() => setAttempt(attempt => attempt + 1)}>Try again</button>}</section>;
   return <Study data={data} />;
 }

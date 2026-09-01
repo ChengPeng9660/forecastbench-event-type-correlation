@@ -6,6 +6,9 @@ test("presents the unweighted gap sensitivity and shareable pair explorer", asyn
   await page.goto("/#complementarity");
   const section = page.locator("#complementarity");
   await expect(section.getByRole("heading", { level: 1 })).toHaveText("Can category-aware aggregation beat both models?");
+  await expect(section).toHaveAttribute("lang", "en");
+  await expect(section.getByRole("button", { name: "中文", exact: true })).toHaveCount(0);
+  expect(await section.textContent()).not.toMatch(/[\u3400-\u9fff]/u);
   await expect(page.getByTestId("cc-scope")).toContainText("Main sensitivity · Training BI gap ≤ 3");
   await expect(page.getByTestId("cc-scope")).toContainText("Uniform target weights (1/n); no Dataset/Market 50:50 balancing");
   await expect(page.getByLabel("Select exact model pair")).toHaveValue("44_58");
@@ -52,9 +55,10 @@ test("recovers from a failed study fetch without keeping a stale error", async (
     if (fail) { fail = false; await route.fulfill({ status: 503, body: "Unavailable" }); }
     else await route.continue();
   });
-  await page.goto("/?cc_lang=en#complementarity");
+  await page.goto("/?cc_lang=zh#complementarity");
+  await expect(page).not.toHaveURL(/cc_lang=/);
   await expect(page.locator("#complementarity")).toContainText("Results unavailable");
-  await page.getByRole("button", { name: "重新加载 / Try again" }).click();
+  await page.getByRole("button", { name: "Try again" }).click();
   await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+0.535");
-  await expect(page.getByText("实验数据暂时无法加载 / Results unavailable")).toHaveCount(0);
+  await expect(page.getByText("Results unavailable")).toHaveCount(0);
 });
