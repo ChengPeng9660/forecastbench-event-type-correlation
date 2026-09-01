@@ -6,7 +6,6 @@ import {
   loadPairProfiles,
   pairGain,
   score,
-  studySummary,
 } from "../lib/complementarity";
 import type {
   AbilityGap,
@@ -51,11 +50,6 @@ type Loaded =
   | { status: "loading" }
   | { status: "error"; error: string }
   | { status: "ready"; data: ComplementarityData };
-
-function mean(values: Score[]): Score {
-  const defined = values.filter(isScore);
-  return defined.length ? defined.reduce((total, value) => total + value, 0) / defined.length : null;
-}
 
 function percentage(value: Score | undefined, digits = 1) {
   return isScore(value) ? `${(value * 100).toFixed(digits)}%` : "—";
@@ -308,12 +302,6 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
     return () => controller.abort();
   }, [selectedPair?.profile_key, profileAttempt]);
 
-  const gains = pairs.map(pair => pairGain(pair, method)).filter(isScore);
-  const baselineGains = allEligible.map(pair => pairGain(pair, method)).filter(isScore);
-  const meanGain = mean(gains);
-  const beatRate = gains.length ? gains.filter(gain => gain > 1e-10).length / gains.length : null;
-  const baselineGain = mean(baselineGains);
-  const fullSummary = data ? studySummary(data, dimension, .5, "crossing", abilityGap, method, pairScope) : undefined;
   const selectedDirection = selectedPair && selectedConfiguration ? oriented(selectedPair, selectedConfiguration) : null;
   const selectedPartner = selectedPair && selectedConfiguration ? partnerName(selectedPair, selectedConfiguration) : null;
   const selectedIdentity = selectedPartner ? identities.get(selectedPartner) : undefined;
@@ -343,14 +331,6 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
         <label><span>AGGREGATION METHOD</span><select aria-label="Selected-model aggregation method" value={method} onChange={event => setMethod(event.target.value)}>{data.methods.map(item => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
       </div>
       {!selectedConfiguration || !focalKnown ? <div className="configuration-pair-empty"><strong>{selectedConfiguration ? "This exact configuration is outside the complementarity release." : "Select a model in the first chart."}</strong><span>No replacement focal model is substituted.</span></div> : <>
-        <dl className="market-performance-kpis focal-complementarity-kpis">
-          <div><dt>SCREENED PARTNERS</dt><dd>{pairs.length}</dd><small>{allEligible.length} near-skill candidates before crossed strengths</small></div>
-          <div><dt>MEAN OOS GAIN</dt><dd>{score(meanGain, 3, true)}</dd><small>BI vs better single · primary event holdout</small></div>
-          <div><dt>BEATS BOTH</dt><dd>{percentage(beatRate)}</dd><small>{gains.length} defined partner results</small></div>
-          <div><dt>NEAR-SKILL BASELINE</dt><dd>{score(baselineGain, 3, true)}</dd><small>all focal pairs before crossed-strength screen</small></div>
-          <div><dt>FULL STUDY</dt><dd>{score(fullSummary?.mean_gain_vs_test_best_bi, 3, true)}</dd><small>{fullSummary?.n ?? 0} pairs · {percentage(fullSummary?.beats_both_rate)} beat both</small></div>
-        </dl>
-
         {pairs.length ? <>
           <div className="focal-pair-picker">
             <div><span>FIXED FOCAL</span><strong>{identityLabel(focalIdentity, selectedConfiguration)}</strong><small>{focalIdentity ? `${focalIdentity.prompt_label} · ${focalIdentity.information_label}` : selectedConfiguration}</small></div>

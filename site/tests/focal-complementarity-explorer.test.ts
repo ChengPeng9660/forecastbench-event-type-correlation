@@ -11,12 +11,6 @@ const claude = "Claude-2.1 (zero shot with freeze values)";
 const kimi = "Kimi-K2-Instruct-0905 (zero shot with freeze values)";
 const mistral = "Mistral-Large-Latest (zero shot with freeze values)";
 
-function valueFor(section: HTMLElement, label: string) {
-  const term = [...section.querySelectorAll("dt")].find(node => node.textContent === label);
-  if (!term?.parentElement) throw new Error(`Missing KPI: ${label}`);
-  return term.parentElement;
-}
-
 describe("selected-model complementarity explorer", () => {
   beforeEach(() => {
     vi.stubGlobal("IntersectionObserver", class {
@@ -44,15 +38,15 @@ describe("selected-model complementarity explorer", () => {
     const rendered = render(createElement(FocalComplementarityExplorer, { selectedConfiguration: claude }));
     const section = rendered.container.querySelector("#focal-model-complementarity") as HTMLElement;
 
-    await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("25"), { timeout: 10_000 });
+    await waitFor(() => expect(within(section).getByLabelText("Selected complementary partner")).toHaveDisplayValue(/1\. Mistral-Large-Latest · Dtype 0\.181/), { timeout: 10_000 });
     expect(section).toHaveTextContent(claude);
     expect(section).not.toHaveTextContent("Training-only screen.");
     expect(section).not.toHaveTextContent("WHAT THE COMPLETE EXPERIMENT FOUND");
     expect(section).not.toHaveTextContent("Selected-model complementarity details");
-    expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("54 near-skill candidates");
+    expect(section.querySelector(".focal-complementarity-kpis")).not.toBeInTheDocument();
+    expect(section).not.toHaveTextContent(/SCREENED PARTNERS|MEAN OOS GAIN|BEATS BOTH|NEAR-SKILL BASELINE|FULL STUDY/);
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", claude);
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
-    expect(within(section).getByLabelText("Selected complementary partner")).toHaveDisplayValue(/1\. Mistral-Large-Latest · Dtype 0\.181/);
     expect(section.querySelector('.focal-complementarity-point[data-training-rank="1"]')).toHaveAttribute("aria-pressed", "true");
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("+3.039 BI");
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Same prompt");
@@ -73,16 +67,14 @@ describe("selected-model complementarity explorer", () => {
   it("keeps empty source results explicit, exposes the condition-matched control, and follows prop changes", async () => {
     const rendered = render(createElement(FocalComplementarityExplorer, { selectedConfiguration: claude }));
     const section = rendered.container.querySelector("#focal-model-complementarity") as HTMLElement;
-    await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("25"), { timeout: 10_000 });
+    await waitFor(() => expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(25), { timeout: 10_000 });
 
     fireEvent.click(within(section).getByRole("button", { name: "Source / platform" }));
-    expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("0");
-    expect(section).toHaveTextContent("No crossed-strength partner under these controls.");
+    await waitFor(() => expect(section).toHaveTextContent("No crossed-strength partner under these controls."));
 
     fireEvent.click(within(section).getByRole("button", { name: "Event type" }));
     fireEvent.change(within(section).getByLabelText("Selected-model partner scope"), { target: { value: "matched_conditions" } });
-    expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("6");
-    expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("10 near-skill candidates");
+    await waitFor(() => expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(6));
 
     fireEvent.change(within(section).getByLabelText("Selected-model aggregation method"), { target: { value: "simple_mean" } });
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("+0.712 BI");
@@ -90,14 +82,14 @@ describe("selected-model complementarity explorer", () => {
     fireEvent.change(within(section).getByLabelText("Selected-model partner scope"), { target: { value: "all" } });
     fireEvent.change(within(section).getByLabelText("Selected-model aggregation method"), { target: { value: "cf_directional" } });
     rendered.rerender(createElement(FocalComplementarityExplorer, { selectedConfiguration: mistral }));
-    await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("58"));
+    await waitFor(() => expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(58));
     await waitFor(() => expect(section.querySelector('.focal-complementarity-point[data-training-rank="1"]')).toHaveAttribute("aria-pressed", "true"));
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Claude-2.1 (scratchpad with news with freeze values)");
     expect(section).not.toHaveTextContent("Train / test events");
     expect(section).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
 
     rendered.rerender(createElement(FocalComplementarityExplorer, { selectedConfiguration: kimi }));
-    await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("29"));
+    await waitFor(() => expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(29));
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", kimi);
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Kimi-K2-Thinking (zero shot with freeze values)");
     expect(section).not.toHaveTextContent("Train / test events");

@@ -20,14 +20,6 @@
   border-left-color: #4f207f;
 }
 
-.within-topic-kpis {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.within-topic-kpis dd {
-  color: #4f207f;
-}
-
 .within-topic-layout {
   align-items: stretch;
 }
@@ -196,12 +188,6 @@
   text-align: right;
 }
 
-@media (max-width: 1120px) {
-  .within-topic-kpis {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 820px) {
   .within-topic-section {
     margin-top: 3.5rem;
@@ -210,10 +196,6 @@
 
   .within-topic-controls {
     grid-template-columns: 1fr;
-  }
-
-  .within-topic-kpis {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .within-topic-pog-identity {
@@ -226,10 +208,6 @@
 }
 
 @media (max-width: 520px) {
-  .within-topic-kpis {
-    grid-template-columns: 1fr;
-  }
-
   .within-topic-mechanism {
     padding: 1rem;
   }

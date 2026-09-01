@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import {
-  findWithinTopicSummary,
   isFiniteScore,
   loadWithinTopicFocal,
   loadWithinTopicStudy,
@@ -69,11 +68,6 @@ function oriented(pair: WithinTopicPair, focal: string, outcome: WithinTopicOutc
   };
 }
 
-function mean(values: Score[]): Score {
-  const defined = values.filter(isFiniteScore);
-  return defined.length ? defined.reduce((total, value) => total + value, 0) / defined.length : null;
-}
-
 function percentage(value: Score | undefined, digits = 1) {
   return isFiniteScore(value) ? `${(value * 100).toFixed(digits)}%` : "—";
 }
@@ -92,24 +86,6 @@ function position(value: number, input: [number, number], output: [number, numbe
 
 function ticks(input: [number, number], count = 5) {
   return Array.from({ length: count + 1 }, (_, index) => input[0] + index * (input[1] - input[0]) / count);
-}
-
-function correlation(pairs: WithinTopicPair[], metric: WithinTopicMetric, method: string, outcome: WithinTopicOutcome): Score {
-  const points = pairs.flatMap(pair => {
-    const x = withinTopicMetric(pair, metric), y = withinTopicGain(pair, method, outcome);
-    return isFiniteScore(x) && isFiniteScore(y) ? [[x, y] as const] : [];
-  });
-  if (points.length < 2) return null;
-  const xMean = points.reduce((total, point) => total + point[0], 0) / points.length;
-  const yMean = points.reduce((total, point) => total + point[1], 0) / points.length;
-  let numerator = 0, xDenominator = 0, yDenominator = 0;
-  points.forEach(([x, y]) => {
-    numerator += (x - xMean) * (y - yMean);
-    xDenominator += (x - xMean) ** 2;
-    yDenominator += (y - yMean) ** 2;
-  });
-  const denominator = Math.sqrt(xDenominator * yDenominator);
-  return denominator > 0 ? numerator / denominator : null;
 }
 
 function WithinTopicScatter({
@@ -269,16 +245,7 @@ export function FocalWithinTopicComplementarity({ selectedConfiguration }: { sel
   const eligible = useMemo(() => trainingEligibleWithinTopicPairs(focalPairs, topic, overallGap, topicGap, support, scope, metric)
     .sort((first, second) => (withinTopicMetric(second, metric) ?? -Infinity) - (withinTopicMetric(first, metric) ?? -Infinity)
       || partnerName(first, selectedConfiguration ?? "").localeCompare(partnerName(second, selectedConfiguration ?? ""))), [focalPairs, topic, overallGap, topicGap, support, scope, metric, selectedConfiguration]);
-  const plotted = useMemo(() => eligible.filter(pair => isFiniteScore(withinTopicGain(pair, method, outcome))), [eligible, method, outcome]);
   const selectedPair = eligible.find(pair => pair.id === selectedPairId) ?? eligible[0];
-  const topCount = eligible.length ? Math.max(1, Math.ceil(eligible.length / 4)) : 0;
-  const top = eligible.slice(0, topCount);
-  const topGains = top.map(pair => withinTopicGain(pair, method, outcome)).filter(isFiniteScore);
-  const allGains = eligible.map(pair => withinTopicGain(pair, method, outcome)).filter(isFiniteScore);
-  const topMean = mean(topGains), allMean = mean(allGains);
-  const topBeatRate = topGains.length ? topGains.filter(value => value > EPS).length / topGains.length : null;
-  const localCorrelation = correlation(plotted, metric, method, outcome);
-  const fullSummary = study ? findWithinTopicSummary(study, scope, overallGap, topicGap, support, method, outcome, metric) : undefined;
   const topicLabel = study?.topics.find(item => item.id === topic)?.label ?? topic;
   const methodLabel = study?.methods.find(item => item.id === method)?.label ?? method;
   const selectedPartner = selectedPair && selectedConfiguration ? partnerName(selectedPair, selectedConfiguration) : null;
@@ -319,14 +286,6 @@ export function FocalWithinTopicComplementarity({ selectedConfiguration }: { sel
         : focalState.status === "loading" ? <div className="configuration-pair-loading" role="status">Loading partners for the selected exact configuration…</div>
         : focalState.status === "error" ? <div className="configuration-pair-empty"><strong>{focalState.error}</strong><span>No replacement focal model is substituted.</span></div>
         : focalState.status === "ready" && <>
-          <dl className="market-performance-kpis within-topic-kpis">
-            <div><dt>ELIGIBLE PARTNERS</dt><dd>{eligible.length}</dd><small>{plotted.length} with defined {outcome === "topic" ? "topic" : "whole-test"} Y</small></div>
-            <div><dt>TOP-POG OOS GAIN</dt><dd>{score(topMean, 3, true)}</dd><small>top quartile · BI vs better single</small></div>
-            <div><dt>TOP-POG BEATS BOTH</dt><dd>{percentage(topBeatRate)}</dd><small>{topGains.length} defined top-quartile results</small></div>
-            <div><dt>ALL NEAR-SKILL</dt><dd>{score(allMean, 3, true)}</dd><small>all training-eligible focal partners</small></div>
-            <div><dt>POG–GAIN r</dt><dd>{score(localCorrelation, 2)}</dd><small>primary holdout · {plotted.length} plotted partners</small></div>
-            <div><dt>FULL STUDY · TOP POG</dt><dd>{score(fullSummary?.top_quartile_mean_gain_bi, 3, true)}</dd><small>{fullSummary?.top_quartile_n_defined ?? 0} / {fullSummary?.top_quartile_n ?? 0} defined · 10 directions</small></div>
-          </dl>
           {!eligible.length ? <div className="configuration-pair-empty"><strong>No partner passes this training screen.</strong><span>Try a wider topic BI gap or lower training-support threshold. The focal model is unchanged.</span></div> : <>
             <div className="focal-pair-picker within-topic-picker">
               <div><span>FIXED FOCAL</span><strong>{identityLabel(focalIdentity, selectedConfiguration)}</strong><small>{focalIdentity ? `${focalIdentity.prompt_label} · ${focalIdentity.information_label}` : selectedConfiguration}</small></div>

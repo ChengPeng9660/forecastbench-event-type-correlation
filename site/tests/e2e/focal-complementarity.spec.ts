@@ -1,14 +1,10 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 const claude = "Claude-2.1 (zero shot with freeze values)";
 const kimi = "Kimi-K2-Instruct-0905 (zero shot with freeze values)";
 
 function overviewPoint(page: Page, exact: string) {
   return page.locator(`.market-performance-hit[data-configuration=${JSON.stringify(exact)}]`);
-}
-
-function kpi(block: Locator, label: string) {
-  return block.locator(".focal-complementarity-kpis > div").filter({ hasText: label });
 }
 
 test("links the first-chart exact configuration to its training-screened complementary partners", async ({ page }) => {
@@ -20,15 +16,15 @@ test("links the first-chart exact configuration to its training-screened complem
   const block = page.locator("#focal-model-complementarity");
   await expect.poll(async () => {
     await block.evaluate(element => element.scrollIntoView({ block: "center" }));
-    return block.locator(".focal-complementarity-kpis").count();
+    return block.locator(".focal-pair-picker").count();
   }, { timeout: 20_000 }).toBe(1);
   await expect(block.getByRole("heading", { name: "Who complements the selected model?", exact: true })).toBeVisible();
   await expect(block).not.toContainText("Training-only screen.");
   await expect(block).not.toContainText("WHAT THE COMPLETE EXPERIMENT FOUND");
   await expect(block).not.toContainText("Selected-model complementarity details");
   await expect(block.locator(".focal-configuration-line")).toContainText(claude);
-  await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("25", { timeout: 20_000 });
-  await expect(kpi(block, "SCREENED PARTNERS")).toContainText("54 near-skill candidates");
+  await expect(block.locator(".focal-complementarity-kpis")).toHaveCount(0);
+  await expect(block).not.toContainText(/SCREENED PARTNERS|MEAN OOS GAIN|BEATS BOTH|NEAR-SKILL BASELINE|FULL STUDY/);
   await expect(block.locator(".focal-complementarity-point")).toHaveCount(25);
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", claude);
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
@@ -42,13 +38,11 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.locator(".focal-category-profile figcaption")).not.toContainText("are faded");
 
   await block.getByRole("button", { name: "Source / platform", exact: true }).click();
-  await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("0");
   await expect(block).toContainText("No crossed-strength partner under these controls.");
 
   await block.getByRole("button", { name: "Event type", exact: true }).click();
   await block.getByLabel("Selected-model partner scope").selectOption("matched_conditions");
-  await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("6");
-  await expect(kpi(block, "SCREENED PARTNERS")).toContainText("10 near-skill candidates");
+  await expect(block.locator(".focal-complementarity-point")).toHaveCount(6);
   await block.getByLabel("Selected-model aggregation method").selectOption("simple_mean");
   await expect(block.locator(".focal-complementarity-inspector")).toContainText("+0.712 BI");
 
@@ -57,7 +51,7 @@ test("links the first-chart exact configuration to its training-screened complem
   await overviewPoint(page, kimi).focus();
   await overviewPoint(page, kimi).press("Enter");
   await expect(block.locator(".focal-configuration-line")).toContainText(kimi);
-  await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("29");
+  await expect(block.locator(".focal-complementarity-point")).toHaveCount(29);
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", kimi);
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Kimi-K2-Thinking (zero shot with freeze values)");
   await expect(block).not.toContainText("Train / test events");
@@ -79,9 +73,10 @@ test("keeps the selected-model block inside the mobile viewport", async ({ page 
   const block = page.locator("#focal-model-complementarity");
   await expect.poll(async () => {
     await block.evaluate(element => element.scrollIntoView({ block: "center" }));
-    return block.locator(".focal-complementarity-kpis").count();
+    return block.locator(".focal-pair-picker").count();
   }, { timeout: 20_000 }).toBe(1);
-  await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("25", { timeout: 20_000 });
+  await expect(block.locator(".focal-complementarity-point")).toHaveCount(25, { timeout: 20_000 });
+  await expect(block.locator(".focal-complementarity-kpis")).toHaveCount(0);
   const widths = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
   expect(widths[0]).toBeLessThanOrEqual(widths[1] + 1);
   const columns = await block.locator(".focal-complementarity-controls").evaluate(element => getComputedStyle(element).gridTemplateColumns.split(" ").length);

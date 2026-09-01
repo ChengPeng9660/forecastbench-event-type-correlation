@@ -9,12 +9,6 @@ const directory = resolve(process.cwd(), "public/data/within-topic-complementari
 const study = JSON.parse(readFileSync(resolve(directory, "study.json"), "utf8")) as { focal_files: Record<string, string> };
 const focal = "Grok-4-Fast-Reasoning (zero shot with freeze values)";
 
-function valueFor(section: HTMLElement, label: string) {
-  const term = [...section.querySelectorAll("dt")].find(node => node.textContent === label);
-  if (!term?.parentElement) throw new Error(`Missing KPI: ${label}`);
-  return term.parentElement;
-}
-
 describe("within-topic focal explorer", () => {
   beforeEach(() => {
     vi.stubGlobal("IntersectionObserver", class {
@@ -40,10 +34,11 @@ describe("within-topic focal explorer", () => {
   it("follows the first-chart exact focal and ranks finance partners only with training POG", async () => {
     const rendered = render(createElement(FocalWithinTopicComplementarity, { selectedConfiguration: focal }));
     const section = rendered.container.querySelector("#within-topic-complementarity") as HTMLElement;
-    await waitFor(() => expect(valueFor(section, "ELIGIBLE PARTNERS")).toHaveTextContent("42"), { timeout: 15_000 });
+    await waitFor(() => expect(within(section).getByLabelText("Within-topic complementary partner")).toHaveDisplayValue(/1\. GLM-4\.6 · POG 0\.158/), { timeout: 15_000 });
     expect(section).toHaveTextContent(focal);
     expect(section).toHaveTextContent("Training-only screen");
-    expect(within(section).getByLabelText("Within-topic complementary partner")).toHaveDisplayValue(/1\. GLM-4\.6 · POG 0\.158/);
+    expect(section.querySelector(".within-topic-kpis")).not.toBeInTheDocument();
+    expect(section).not.toHaveTextContent(/ELIGIBLE PARTNERS|TOP-POG OOS GAIN|TOP-POG BEATS BOTH|ALL NEAR-SKILL|POG–GAIN r|FULL STUDY · TOP POG/);
     expect(section.querySelector(".within-topic-inspector")).toHaveAttribute("data-focal-configuration", focal);
     expect(section.querySelector(".within-topic-inspector")).toHaveAttribute("data-partner-configuration", "GLM-4.6 (zero shot)");
     expect(section.querySelector('.within-topic-point[data-training-rank="1"]')).toHaveAttribute("aria-pressed", "true");
@@ -59,7 +54,7 @@ describe("within-topic focal explorer", () => {
   it("preserves the focal while changing metric, outcome, method, scope, topic gap, and support", async () => {
     const rendered = render(createElement(FocalWithinTopicComplementarity, { selectedConfiguration: focal }));
     const section = rendered.container.querySelector("#within-topic-complementarity") as HTMLElement;
-    await waitFor(() => expect(valueFor(section, "ELIGIBLE PARTNERS")).toHaveTextContent("42"), { timeout: 15_000 });
+    await waitFor(() => expect(within(section).getByLabelText("Within-topic complementary partner")).toBeInTheDocument(), { timeout: 15_000 });
     fireEvent.click(within(section).getByRole("button", { name: "Adjusted POG" }));
     fireEvent.click(within(section).getByRole("button", { name: "Whole-test gain" }));
     fireEvent.change(within(section).getByLabelText("Within-topic aggregation method"), { target: { value: "ec_w0_56" } });
@@ -67,7 +62,7 @@ describe("within-topic focal explorer", () => {
     fireEvent.change(within(section).getByLabelText("Within-topic train BI gap"), { target: { value: "2" } });
     fireEvent.change(within(section).getByLabelText("Within-topic train event support"), { target: { value: "20" } });
     expect(section.querySelector(".within-topic-inspector")).toHaveAttribute("data-focal-configuration", focal);
-    expect(valueFor(section, "ELIGIBLE PARTNERS").querySelector("dd")?.textContent).not.toBe("0");
+    expect((within(section).getByLabelText("Within-topic complementary partner") as HTMLSelectElement).options.length).toBeGreaterThan(0);
     expect(within(section).getByRole("img")).toHaveAccessibleName(/Adjusted POG versus held-out aggregation gain in Finance/);
     expect(section).toHaveTextContent("EC · w = 0.56");
   }, 25_000);
