@@ -215,8 +215,7 @@ function CategoryProfileChart({
         return <g key={row.group}>
           {index === 0 && <rect x="0" y={y - 22} width="875" height="49" rx="4" className="focal-category-overall" />}
           <text x="4" y={y - 3} className={`focal-category-label${index === 0 ? " overall" : ""}`}>{label}</text>
-          <text x="4" y={y + 14} className="market-performance-tick">{row.train_events} / {row.test_events} events</text>
-          {(focalEdge || partnerEdge) && <text x="4" y={y + 29} className={focalEdge ? "focal-edge-label" : "partner-edge-label"}>{focalEdge ? "FOCAL TRAIN EDGE" : "PARTNER TRAIN EDGE"}</text>}
+          {(focalEdge || partnerEdge) && <text x="4" y={y + 17} className={focalEdge ? "focal-edge-label" : "partner-edge-label"}>{focalEdge ? "FOCAL TRAIN EDGE" : "PARTNER TRAIN EDGE"}</text>}
           {([[row.focal_train, row.partner_train, null], [row.focal_test, row.partner_test, row.aggregation_test]] as const).map((valuesForPanel, panel) => {
             const range = panel === 0 ? trainRange : testRange;
             const [focalBi, partnerBi, aggregationBi] = valuesForPanel;

@@ -62,6 +62,7 @@ describe("selected-model complementarity explorer", () => {
     expect(profile).toHaveTextContent("Finance");
     expect(profile).toHaveTextContent("Politics");
     expect(profile).not.toHaveTextContent("Finance & economics");
+    expect(profile).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
     expect(profile.querySelectorAll('g[opacity="0.35"], g[opacity=".35"]')).toHaveLength(0);
     expect(profile).not.toHaveTextContent("are faded");
     expect(section.querySelector(".focal-transfer-verdict")).not.toBeInTheDocument();

@@ -35,6 +35,7 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.getByLabel("Selected complementary partner")).toHaveValue("p-baa8649cff5a");
   await expect(block.locator(".focal-complementarity-inspector")).toContainText("+3.039 BI");
   await expect(block.locator(".focal-category-profile")).toBeVisible();
+  await expect(block.locator(".focal-category-profile")).not.toContainText(/\d+\s*\/\s*\d+\s+events/);
   await expect(block.locator('.focal-category-profile g[opacity="0.35"], .focal-category-profile g[opacity=".35"]')).toHaveCount(0);
   await expect(block.locator(".focal-category-profile figcaption")).not.toContainText("are faded");
 
