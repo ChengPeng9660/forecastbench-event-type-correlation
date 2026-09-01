@@ -20,9 +20,6 @@
 .public-header nav a { font-size: 14px; font-weight: 500; padding-inline: 2px; }
 .public-header nav a[aria-current="page"] { color: var(--purple-deep); }
 .public-header nav a[aria-current="page"]::after { transform: scaleX(1); }
-.source-link { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; min-height: 42px; color: var(--ink); text-decoration: none; font-size: 13px; }
-.source-link:hover { color: var(--purple-deep); }
-.source-link > span:last-child { margin-left: 3px; color: var(--quiet); }
 
 .public-research .eyebrow { color: var(--quiet); font: 600 11px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: .12em; }
 .overview-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 60px; align-items: center; padding-top: 78px; padding-bottom: 76px; }
@@ -188,7 +185,6 @@
   .public-header { gap: 22px; }
   .public-header .brand { min-width: 190px; }
   .public-header nav { gap: 20px; }
-  .source-link span { display: none; }
   .overview-hero { gap: 30px; padding-top: 56px; padding-bottom: 55px; }
   .overview-visual { padding: 22px; }
   .overview-stat-strip > div { flex-direction: column; gap: 5px; }
@@ -206,7 +202,6 @@
 @media (max-width: 800px) {
   .public-header { height: auto; min-height: 116px; flex-wrap: wrap; gap: 0 20px; padding-top: 17px; }
   .public-header .brand { margin-bottom: 13px; }
-  .public-header .source-link { margin: 0 0 13px auto; }
   .public-header nav { order: 3; width: 100%; flex: 1 0 100%; justify-content: flex-start; gap: 28px; overflow-x: auto; margin: 0; }
   .public-header nav a, .public-header nav a:nth-last-child(-n+2) { display: flex; flex: 0 0 auto; min-height: 44px; font-size: 13px; }
   .public-header nav a::after { bottom: 0; }

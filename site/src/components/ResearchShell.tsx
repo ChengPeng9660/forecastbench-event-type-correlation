@@ -25,10 +25,6 @@ export function ResearchHeader({ page, onNavigate }: { page: ResearchPage; onNav
       <ResearchLink page="overview" onNavigate={onNavigate} current={page === "overview"}>Overview</ResearchLink>
       {RESEARCH_GROUPS.map((item) => <ResearchLink key={item.id} page={item.sections[0].id} onNavigate={onNavigate} current={item.id === group?.id}>{item.label}</ResearchLink>)}
     </nav>
-    <a className="source-link" href="https://github.com/ChengPeng9660/forecastbench-event-type-correlation" target="_blank" rel="noreferrer" aria-label="View source on GitHub">
-      <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M12 .8a11.4 11.4 0 0 0-3.6 22.2c.57.1.78-.25.78-.55v-2.13c-3.18.69-3.85-1.35-3.85-1.35-.52-1.32-1.28-1.67-1.28-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.25 3.32.95.1-.74.4-1.25.73-1.54-2.54-.29-5.21-1.27-5.21-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.13 1.17a10.9 10.9 0 0 1 5.7 0c2.17-1.48 3.13-1.17 3.13-1.17.62 1.58.23 2.75.12 3.04.73.8 1.17 1.82 1.17 3.07 0 4.4-2.67 5.37-5.22 5.66.41.36.78 1.05.78 2.12v3.14c0 .31.21.66.79.55A11.4 11.4 0 0 0 12 .8Z" /></svg>
-      <span>Source</span><span aria-hidden="true">↗</span>
-    </a>
   </header>;
 }
 

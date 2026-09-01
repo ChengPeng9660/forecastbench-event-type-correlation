@@ -30,6 +30,7 @@ test("opens a public overview instead of every research block", async ({ page })
   for (const label of ["Overview", "Diversity", "Aggregation", "Markets", "Methods"]) {
     await expect(navigation.getByRole("link", { name: label, exact: true })).toBeVisible();
   }
+  await expect(page.getByRole("link", { name: "View source on GitHub" })).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Analysis filters" })).toBeHidden();
   await expect(page.getByTestId("heatmap")).toBeHidden();
   await expect(page.locator("#polymarket-aggregation")).toBeHidden();
