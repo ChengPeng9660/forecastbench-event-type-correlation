@@ -1,19 +1,7 @@
 # Reproduce
 
-From this package directory, using Python with NumPy and pandas:
+The browser data are projected from the frozen audited package `complementarity_unweighted_gap_sensitivity_2026-09-01`; no method is refit by the exporter. From the repository root, run:
 
 ```bash
-python code/run_experiment.py
-python code/independent_audit.py
-pytest -q code/test_results.py
+python analysis/export_complementarity_site.py --study /path/to/complementarity_unweighted_gap_sensitivity_2026-09-01
 ```
-
-To regenerate summaries without repeating pair evaluation:
-
-```bash
-python code/run_experiment.py --reuse
-```
-
-The runner reads the sibling frozen package
-`../specialization_argument_2026-08-31`. Its panel and artifact-manifest hashes
-are recorded in `results/audit.json`.

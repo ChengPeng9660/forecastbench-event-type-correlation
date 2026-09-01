@@ -1,18 +1,22 @@
 import { expect, test } from "@playwright/test";
 
-test("presents the unweighted gap sensitivity and shareable pair explorer", async ({ page }) => {
+test("presents five existing aggregation methods and the shareable pair explorer", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto("/#complementarity");
   const section = page.locator("#complementarity");
-  await expect(section.getByRole("heading", { level: 1 })).toHaveText("Can category-aware aggregation beat both models?");
+  await expect(section.getByRole("heading", { level: 1 })).toHaveText("Can category complementarity identify pairs that aggregate well?");
   await expect(section).toHaveAttribute("lang", "en");
   await expect(section.getByRole("button", { name: "中文", exact: true })).toHaveCount(0);
   expect(await section.textContent()).not.toMatch(/[\u3400-\u9fff]/u);
   await expect(page.getByTestId("cc-scope")).toContainText("Main sensitivity · Training BI gap ≤ 3");
   await expect(page.getByTestId("cc-scope")).toContainText("Uniform target weights (1/n); no Dataset/Market 50:50 balancing");
   await expect(page.getByLabel("Select exact model pair")).toHaveValue("44_58");
-  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+0.535");
+  await expect(page.getByLabel("Complementarity aggregation method")).toHaveValue("cf_directional");
+  await expect(page.getByLabel("Complementarity aggregation method").locator("option")).toHaveText([
+    "Simple mean", "Log-odds mean", "EC · w = 0.56", "Piecewise odds", "Directional CF",
+  ]);
+  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+0.453");
   await expect(section.locator(".cc-heading-note").first()).toContainText("226 eligible pairs");
   await expect(section).toContainText("92.0%");
   await expect(section).toContainText("10 / 10");
@@ -24,9 +28,9 @@ test("presents the unweighted gap sensitivity and shareable pair explorer", asyn
     await page.getByRole("button", { name: "Test transfer", exact: true }).click();
   }
 
+  await page.getByLabel("Complementarity aggregation method").selectOption("piecewise_odds");
+  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("-0.031");
   await page.getByLabel("Complementarity aggregation method").selectOption("cf_directional");
-  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+0.453");
-  await page.getByLabel("Complementarity aggregation method").selectOption("type_shrunk");
   await page.getByLabel("Next pair", { exact: true }).click();
   const newPair = await page.getByLabel("Select exact model pair").inputValue();
   expect(newPair).not.toBe("44_58");
@@ -43,7 +47,7 @@ test("presents the unweighted gap sensitivity and shareable pair explorer", asyn
   await page.getByRole("button", { name: "Question source / platform", exact: true }).click();
   await page.getByLabel("Category coverage", { exact: true }).selectOption("0.5");
   await expect(section.locator(".cc-heading-note").first()).toContainText("432 eligible pairs");
-  await expect(section).toContainText("91.1%");
+  await expect(section).toContainText("86.3%");
   const size = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth }));
   expect(size.width).toBeLessThanOrEqual(size.viewport + 1);
   expect(errors).toEqual([]);
@@ -59,6 +63,12 @@ test("recovers from a failed study fetch without keeping a stale error", async (
   await expect(page).not.toHaveURL(/cc_lang=/);
   await expect(page.locator("#complementarity")).toContainText("Results unavailable");
   await page.getByRole("button", { name: "Try again" }).click();
-  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+0.535");
+  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+0.453");
   await expect(page.getByText("Results unavailable")).toHaveCount(0);
+});
+
+test("normalizes obsolete category-aggregation links to Directional CF", async ({ page }) => {
+  await page.goto("/?cc_method=type_shrunk#complementarity");
+  await expect(page).toHaveURL(/cc_method=cf_directional/);
+  await expect(page.getByLabel("Complementarity aggregation method")).toHaveValue("cf_directional");
 });

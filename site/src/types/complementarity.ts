@@ -6,7 +6,7 @@ export type Score = number | null;
 export interface StudyMethod {
   id: string;
   label: string;
-  kind: "original" | "research" | "hindsight";
+  kind: "deployable";
 }
 
 export interface CategoryProfile {
@@ -85,21 +85,8 @@ export interface DirectionSummary extends Omit<AggregationSummary, "view"> {
   fold: number;
 }
 
-export interface StudyInterval {
-  ability_gap: number;
-  coverage: number;
-  dimension: Dimension;
-  cohort: CohortKind;
-  target: string;
-  n: number;
-  mean: Score;
-  ci_low: Score;
-  ci_high: Score;
-  interval: string;
-}
-
 export interface ComplementarityData {
-  schema_version: 2;
+  schema_version: 3;
   study: string;
   date: string;
   primary_split: string;
@@ -107,12 +94,12 @@ export interface ComplementarityData {
   weighting: "uniform_rows";
   ability_thresholds: AbilityGap[];
   coverage_thresholds: number[];
+  primary_method: string;
   models: string[];
   methods: StudyMethod[];
   pairs: StudyPair[];
   summaries: AggregationSummary[];
   directions: DirectionSummary[];
-  intervals: StudyInterval[];
   sample: {
     scored_models: number;
     genuine_scored_predictions: number;

@@ -12,6 +12,9 @@ import type {
 export const COMPLEMENTARITY_PATH = `${import.meta.env.BASE_URL}data/complementarity/`;
 export const COVERAGES = [.5, .6, .7, .8] as const;
 export const ABILITY_GAPS = [3, 5] as const;
+export const COMPLEMENTARITY_METHODS = [
+  "simple_mean", "log_odds_mean", "ec_w0_56", "piecewise_odds", "cf_directional",
+] as const;
 
 export const isScore = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 
@@ -39,13 +42,11 @@ export function eligiblePairs(
     && (cohort !== "crossing" || pair.crossing === true));
 }
 
-export function pairGain(pair: StudyPair, method: string, baseline: "global" | "single" = "single"): Score {
+export function pairGain(pair: StudyPair, method: string): Score {
   const prediction = pair.methods[method];
-  const base = baseline === "global"
-    ? pair.methods.global_convex
-    : isScore(pair.test_bi_a) && isScore(pair.test_bi_b)
-      ? Math.max(pair.test_bi_a, pair.test_bi_b)
-      : null;
+  const base = isScore(pair.test_bi_a) && isScore(pair.test_bi_b)
+    ? Math.max(pair.test_bi_a, pair.test_bi_b)
+    : null;
   return isScore(prediction) && isScore(base) ? prediction - base : null;
 }
 
@@ -90,14 +91,12 @@ export function csvForPairs(pairs: StudyPair[], method: string): string {
     "dimension", "pair_id", "model_a", "model_b", "train_bi_gap",
     "uniform_row_category_coverage", "train_category_complementarity", "train_crossing",
     "train_dataset_row_fraction", "test_model_a_bi", "test_model_b_bi", "method",
-    "test_method_bi", "test_global_bi", "gain_vs_better_test_single_bi",
-    "increment_vs_global_bi", "train_events", "test_events",
+    "test_method_bi", "gain_vs_better_test_single_bi", "train_events", "test_events",
   ], ...pairs.map(pair => [
     pair.dimension, pair.id, pair.model_a, pair.model_b, pair.train_gap,
     pair.train_coverage, pair.train_between_norm, pair.crossing,
     pair.train_origin_dataset_fraction, pair.test_bi_a, pair.test_bi_b, method,
-    pair.methods[method], pair.methods.global_convex, pairGain(pair, method, "single"),
-    pairGain(pair, method, "global"), pair.train_events, pair.test_events,
+    pair.methods[method], pairGain(pair, method), pair.train_events, pair.test_events,
   ])];
   return rows.map(row => row.map(value => `"${String(value ?? "").replaceAll('"', '""')}"`).join(",")).join("\n");
 }
@@ -106,12 +105,15 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
   const response = await fetch(`${COMPLEMENTARITY_PATH}study.json`, { signal });
   if (!response.ok) throw new Error(`Results could not be loaded (${response.status}).`);
   const data = await response.json() as ComplementarityData;
-  if (data.schema_version !== 2
+  if (data.schema_version !== 3
     || data.weighting !== "uniform_rows"
     || !Array.isArray(data.pairs)
     || !Array.isArray(data.summaries)
     || !Array.isArray(data.directions)
     || !Array.isArray(data.methods)
+    || data.primary_method !== "cf_directional"
+    || data.methods.length !== COMPLEMENTARITY_METHODS.length
+    || data.methods.some((method, index) => method.id !== COMPLEMENTARITY_METHODS[index])
     || data.audit?.status !== "PASS") {
     throw new Error("The published results do not match the expected audited study.");
   }

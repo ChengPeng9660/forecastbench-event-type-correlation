@@ -21,19 +21,14 @@ import shutil
 
 
 METHODS = [
-    ("type_shrunk", "Category-shrunk", "research"),
-    ("global_convex", "Global convex", "research"),
-    ("type_router", "Category router", "research"),
-    ("cv_gated_type", "CV-gated category", "research"),
-    ("source_shrunk", "Source-shrunk", "research"),
-    ("source_topic_hierarchy", "Source + topic", "research"),
-    ("simple_mean", "Simple mean", "original"),
-    ("log_odds_mean", "Log-odds mean", "original"),
-    ("ec_w0_56", "EC · w = 0.56", "original"),
-    ("piecewise_odds", "Piecewise odds", "original"),
-    ("cf_directional", "Directional CF", "original"),
-    ("best_single", "Best single · hindsight", "hindsight"),
+    ("simple_mean", "Simple mean", "deployable"),
+    ("log_odds_mean", "Log-odds mean", "deployable"),
+    ("ec_w0_56", "EC · w = 0.56", "deployable"),
+    ("piecewise_odds", "Piecewise odds", "deployable"),
+    ("cf_directional", "Directional CF", "deployable"),
 ]
+METHOD_IDS = {method for method, _, _ in METHODS}
+PRIMARY_METHOD = "cf_directional"
 PRIMARY_SPLIT = "20260910"
 PRIMARY_FOLD = 0
 DATA_ATTRIBUTION = """# Data attribution
@@ -154,15 +149,17 @@ def export(study: Path, destination: Path):
         "mean_gain_vs_test_best_raw_loss", "mean_train_gap", "mean_test_gap", "mean_train_coverage",
         "mean_test_events",
     ]
-    summaries = [project(row, summary_keys) for row in records(study / "results/primary_summary.csv")]
-    direction_rows = records(study / "results/direction_summary.csv")
+    summary_rows = [row for row in records(study / "results/primary_summary.csv")
+                    if row["method"] in METHOD_IDS]
+    summaries = [project(row, summary_keys) for row in summary_rows]
+    direction_rows = [row for row in records(study / "results/direction_summary.csv")
+                      if row["method"] in METHOD_IDS]
     directions = [project(row, ["split", "fold", *summary_keys]) for row in direction_rows]
     for exported, source_row in zip(directions, direction_rows):
         # Split identifiers are labels even though they contain only digits.
         exported["split"] = source_row["split"]
         exported["fold"] = int(source_row["fold"])
-    intervals = [project(row, row.keys()) for row in records(study / "results/primary_intervals.csv")]
-    assert len(summaries) == 352 and len(directions) == 3520 and len(intervals) == 96
+    assert len(summaries) == 160 and len(directions) == 1600
 
     # Contract-check all primary summary rows against the exported pair records.
     for row in summaries:
@@ -184,20 +181,20 @@ def export(study: Path, destination: Path):
 
     maximum_error = max(independent["maximum_absolute_differences"].values())
     payload = {
-        "schema_version": 2,
-        "study": manifest["study"],
+        "schema_version": 3,
+        "study": "existing_aggregation_methods_under_category_complementarity_2026-09-01",
         "date": "2026-09-01",
         "primary_split": PRIMARY_SPLIT,
         "primary_fold": PRIMARY_FOLD,
         "weighting": "uniform_rows",
         "ability_thresholds": [3, 5],
         "coverage_thresholds": [.5, .6, .7, .8],
+        "primary_method": PRIMARY_METHOD,
         "models": models,
         "methods": [{"id": method, "label": label, "kind": kind} for method, label, kind in METHODS],
         "pairs": pairs,
         "summaries": summaries,
         "directions": directions,
-        "intervals": intervals,
         "sample": {key: sample[key] for key in ["scored_models", "genuine_scored_predictions", "targets", "events", "dates"]},
         "audit": {
             "status": "PASS",
@@ -225,39 +222,58 @@ def export(study: Path, destination: Path):
 
     public_rows = []
     for pair in pairs:
-        public_rows.append({
+        public_row = {
             "dimension": pair["dimension"], "pair_id": pair["id"],
             "model_a": pair["model_a"], "model_b": pair["model_b"],
             "train_bi_gap": pair["train_gap"], "uniform_row_category_coverage": pair["train_coverage"],
             "train_crossing": pair["crossing"], "train_category_complementarity": pair["train_between_norm"],
             "train_dataset_row_fraction": pair["train_origin_dataset_fraction"],
             "test_bi_a": pair["test_bi_a"], "test_bi_b": pair["test_bi_b"],
-            "global_convex_bi": pair["methods"]["global_convex"],
-            "category_shrunk_bi": pair["methods"]["type_shrunk"],
-            "category_shrunk_gain_vs_better_test_single_bi": (
-                pair["methods"]["type_shrunk"] - max(pair["test_bi_a"], pair["test_bi_b"])
-                if None not in (pair["methods"]["type_shrunk"], pair["test_bi_a"], pair["test_bi_b"]) else None),
-            "category_shrunk_increment_vs_global_bi": (
-                pair["methods"]["type_shrunk"] - pair["methods"]["global_convex"]
-                if None not in (pair["methods"]["type_shrunk"], pair["methods"]["global_convex"]) else None),
             "train_events": pair["train_events"], "test_events": pair["test_events"],
-        })
+        }
+        for method, _, _ in METHODS:
+            value = pair["methods"][method]
+            public_row[f"{method}_bi"] = value
+            public_row[f"{method}_gain_vs_better_test_single_bi"] = (
+                value - max(pair["test_bi_a"], pair["test_bi_b"])
+                if None not in (value, pair["test_bi_a"], pair["test_bi_b"]) else None
+            )
+        public_rows.append(public_row)
     with (destination / "primary-pairs.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(public_rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(public_rows)
 
-    copies = {
-        "REPORT.md": "REPORT.md",
-        "PROTOCOL.md": "PROTOCOL.md",
-        "README.md": "README.md",
-        "REPRODUCE.md": "REPRODUCE.md",
-        "results/requested_primary_results.csv": "requested_primary_results.csv",
-        "results/independent_audit.json": "independent_audit.json",
-        "artifact_manifest.json": "experiment_manifest.json",
-    }
-    for source_name, public_name in copies.items():
-        shutil.copyfile(study / source_name, destination / public_name)
+    primary_results = [row for row in summaries
+                       if row["coverage"] == .5 and row["cohort"] == "crossing"]
+    with (destination / "requested_primary_results.csv").open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=summary_keys, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(primary_results)
+
+    repository = Path(__file__).resolve().parents[1]
+    shutil.copyfile(repository / "docs/complementarity-existing-methods-report.md",
+                    destination / "REPORT.md")
+    shutil.copyfile(repository / "docs/complementarity-existing-methods-protocol.md",
+                    destination / "PROTOCOL.md")
+    shutil.copyfile(study / "results/independent_audit.json",
+                    destination / "independent_audit.json")
+    shutil.copyfile(study / "artifact_manifest.json",
+                    destination / "experiment_manifest.json")
+    (destination / "README.md").write_text(
+        "# Near-skill category complementarity with existing aggregation methods\n\n"
+        "Category labels are used only to define the complementarity screen and "
+        "inspect category profiles. Aggregation uses five existing methods unchanged: "
+        "Simple mean, Log-odds mean, EC (w = 0.56), Piecewise odds, and Directional CF. "
+        "See `REPORT.md` and `PROTOCOL.md`.\n"
+    )
+    (destination / "REPRODUCE.md").write_text(
+        "# Reproduce\n\nThe browser data are projected from the frozen audited package "
+        "`complementarity_unweighted_gap_sensitivity_2026-09-01`; no method is refit "
+        "by the exporter. From the repository root, run:\n\n"
+        "```bash\npython analysis/export_complementarity_site.py --study "
+        "/path/to/complementarity_unweighted_gap_sensitivity_2026-09-01\n```\n"
+    )
 
     exported = {path.name: {"bytes": path.stat().st_size, "sha256": digest(path)}
                 for path in sorted(destination.iterdir()) if path.name != "manifest.json"}
@@ -265,6 +281,8 @@ def export(study: Path, destination: Path):
         "study": payload["study"],
         "generated_from_frozen_outputs": True,
         "weighting": payload["weighting"],
+        "primary_method": payload["primary_method"],
+        "methods": [method for method, _, _ in METHODS],
         "ability_thresholds": payload["ability_thresholds"],
         "files": exported,
         "source_manifest_sha256": audit["source_manifest_sha256"],
