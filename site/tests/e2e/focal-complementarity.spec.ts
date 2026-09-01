@@ -32,6 +32,18 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
   await expect(block.getByLabel("Selected complementary partner")).toHaveValue("p-baa8649cff5a");
   await expect(block.locator(".focal-complementarity-inspector")).toContainText("+3.039 BI");
+  const selectedTransform = await block.locator('.focal-complementarity-point[data-training-rank="1"]').getAttribute("transform");
+  const selectedColor = await block.locator('.focal-complementarity-point[data-training-rank="1"] .focal-complementarity-glyph').getAttribute("fill");
+  await expect(block.getByRole("group", { name: "Selected-model complementarity test outcome" }).getByRole("button")).toHaveCount(2);
+  await block.getByRole("button", { name: "Aggregation BI ↑", exact: true }).click();
+  await expect(block.locator(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "aggregation_bi");
+  await expect(block.getByRole("img", { name: /held-out aggregation Brier Index for partners/ })).toBeVisible();
+  await expect(block.locator(".focal-complementarity-zero")).toHaveCount(0);
+  await expect(block.locator('.focal-complementarity-point[data-training-rank="1"]')).not.toHaveAttribute("transform", selectedTransform ?? "");
+  await expect(block.locator('.focal-complementarity-point[data-training-rank="1"] .focal-complementarity-glyph')).toHaveAttribute("fill", selectedColor ?? "");
+  await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
+  await block.getByRole("button", { name: "Gain vs better single", exact: true }).click();
+  await expect(block.locator(".focal-complementarity-zero")).toHaveCount(1);
   await expect(block.locator(".focal-category-profile")).toBeVisible();
   await expect(block.locator(".focal-category-profile")).not.toContainText(/\d+\s*\/\s*\d+\s+events/);
   await expect(block).not.toContainText("Train / test events");

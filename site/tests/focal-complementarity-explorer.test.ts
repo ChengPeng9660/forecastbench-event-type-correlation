@@ -64,6 +64,40 @@ describe("selected-model complementarity explorer", () => {
     expect(section.querySelector(".focal-transfer-verdict")).not.toBeInTheDocument();
   }, 20_000);
 
+  it("switches the held-out Y axis between gain and absolute aggregation BI without changing the screened pair", async () => {
+    render(createElement(FocalComplementarityExplorer, { selectedConfiguration: claude }));
+    const section = document.querySelector("#focal-model-complementarity") as HTMLElement;
+    await waitFor(() => expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(25), { timeout: 10_000 });
+
+    const outcomeControls = within(section).getByRole("group", { name: "Selected-model complementarity test outcome" });
+    expect(within(outcomeControls).getAllByRole("button")).toHaveLength(2);
+    expect(within(outcomeControls).getByRole("button", { name: "Gain vs better single" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(section).getByRole("img", { name: /held-out aggregation gain for partners/ })).toBeInTheDocument();
+    expect(section.querySelector(".focal-complementarity-zero")).toBeInTheDocument();
+
+    const selectedPoint = section.querySelector('.focal-complementarity-point[data-training-rank="1"]') as SVGGElement;
+    const gainTransform = selectedPoint.getAttribute("transform");
+    const gainColor = selectedPoint.querySelector(".focal-complementarity-glyph")?.getAttribute("fill");
+    const partner = section.querySelector(".focal-complementarity-inspector")?.getAttribute("data-partner-configuration");
+    expect(partner).toBeTruthy();
+
+    fireEvent.click(within(outcomeControls).getByRole("button", { name: "Aggregation BI ↑" }));
+    expect(section.querySelector(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "aggregation_bi");
+    expect(within(section).getByRole("img", { name: /held-out aggregation Brier Index for partners/ })).toBeInTheDocument();
+    expect(section).toHaveTextContent("Held-out aggregation Brier Index (higher is better)");
+    expect(section.querySelector(".focal-complementarity-zero")).not.toBeInTheDocument();
+    expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(25);
+    const absoluteSelectedPoint = section.querySelector('.focal-complementarity-point[data-training-rank="1"]') as SVGGElement;
+    expect(absoluteSelectedPoint.getAttribute("transform")).not.toBe(gainTransform);
+    expect(absoluteSelectedPoint.querySelector(".focal-complementarity-glyph")?.getAttribute("fill")).toBe(gainColor);
+    expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", partner ?? "");
+    expect(section.querySelector(".focal-complementarity-readout")).toHaveTextContent(/aggregation BI \d/);
+
+    fireEvent.click(within(outcomeControls).getByRole("button", { name: "Gain vs better single" }));
+    expect(section.querySelector(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "gain_vs_better_single");
+    expect(section.querySelector(".focal-complementarity-zero")).toBeInTheDocument();
+  }, 20_000);
+
   it("keeps empty source results explicit, exposes the condition-matched control, and follows prop changes", async () => {
     const rendered = render(createElement(FocalComplementarityExplorer, { selectedConfiguration: claude }));
     const section = rendered.container.querySelector("#focal-model-complementarity") as HTMLElement;

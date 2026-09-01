@@ -63,6 +63,10 @@
   flex: 1 1 auto;
 }
 
+.focal-complementarity-axis-controls {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .focal-pair-picker {
   display: grid;
   grid-template-columns: minmax(230px, .72fr) minmax(340px, 1.28fr);
