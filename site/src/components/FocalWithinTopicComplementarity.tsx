@@ -279,8 +279,6 @@ export function FocalWithinTopicComplementarity({ selectedConfiguration }: { sel
   const topBeatRate = topGains.length ? topGains.filter(value => value > EPS).length / topGains.length : null;
   const localCorrelation = correlation(plotted, metric, method, outcome);
   const fullSummary = study ? findWithinTopicSummary(study, scope, overallGap, topicGap, support, method, outcome, metric) : undefined;
-  const validation = study?.validation.validations.find(row => row.pair_scope === scope
-    && row.method === method && row.outcome === outcome && row.metric === metric);
   const topicLabel = study?.topics.find(item => item.id === topic)?.label ?? topic;
   const methodLabel = study?.methods.find(item => item.id === method)?.label ?? method;
   const selectedPartner = selectedPair && selectedConfiguration ? partnerName(selectedPair, selectedConfiguration) : null;
@@ -329,9 +327,6 @@ export function FocalWithinTopicComplementarity({ selectedConfiguration }: { sel
             <div><dt>POG–GAIN r</dt><dd>{score(localCorrelation, 2)}</dd><small>primary holdout · {plotted.length} plotted partners</small></div>
             <div><dt>FULL STUDY · TOP POG</dt><dd>{score(fullSummary?.top_quartile_mean_gain_bi, 3, true)}</dd><small>{fullSummary?.top_quartile_n_defined ?? 0} / {fullSummary?.top_quartile_n ?? 0} defined · 10 directions</small></div>
           </dl>
-          {fullSummary && <p className="within-topic-study-readout"><strong>All-model check under these controls.</strong> Pooled across seven topics and ten fixed split directions, the training top-POG quartile averages <b>{score(fullSummary.top_quartile_mean_gain_bi, 3, true)} BI</b> versus <b>{score(fullSummary.mean_gain_bi, 3, true)} BI</b> for all eligible rows; <b>{percentage(fullSummary.top_quartile_beats_both_rate)}</b> of defined top-quartile rows beat both models. Pearson r = <b>{score(fullSummary.pearson, 2)}</b>; Spearman ρ = <b>{score(fullSummary.spearman, 2)}</b>. These repeated rows are descriptive, not independent trials.</p>}
-          {validation && <p className="within-topic-validation-readout"><strong>Pre-specified ability-control check.</strong> With overall BI gap ≤ 3, topic BI gap ≤ 1, and at least 30 training events, top-POG rows outperform the all-eligible mean in <b>{validation.positive_top_minus_all_directions} / {validation.defined_directions}</b> split directions. After descriptive adjustment for overall ability, topic ability, both BI gaps, support, topic, and split direction, standardized POG β = <b>{score(validation.standardized_pog_beta, 3, true)}</b> and adds <b>{score(validation.pog_incremental_r2, 3, true)}</b> R². POG’s correlation with mean topic BI is <b>{score(validation.topic_mean_bi_correlation, 2)}</b>.</p>}
-
           {!eligible.length ? <div className="configuration-pair-empty"><strong>No partner passes this training screen.</strong><span>Try a wider topic BI gap or lower training-support threshold. The focal model is unchanged.</span></div> : <>
             <div className="focal-pair-picker within-topic-picker">
               <div><span>FIXED FOCAL</span><strong>{identityLabel(focalIdentity, selectedConfiguration)}</strong><small>{focalIdentity ? `${focalIdentity.prompt_label} · ${focalIdentity.information_label}` : selectedConfiguration}</small></div>
@@ -357,7 +352,6 @@ export function FocalWithinTopicComplementarity({ selectedConfiguration }: { sel
                     <div><dt>Gain vs better single</dt><dd>{score(selectedGain, 3, true)} BI</dd></div>
                     <div><dt>Train / test topic events</dt><dd>{selectedPair.train_topic_events} / {selectedPair.test_topic_events}</dd></div>
                   </dl>
-                  <p className={`within-topic-verdict${isFiniteScore(selectedGain) && selectedGain > EPS ? " win" : ""}`}>{!isFiniteScore(selectedGain) ? `Held-out ${topicLabel} gain is undefined because fewer than ${study.test_topic_support} test events are available.` : selectedGain > EPS ? `The unchanged ${methodLabel} pool beats both models on held-out ${outcome === "topic" ? topicLabel : "whole-test"} support.` : `The unchanged ${methodLabel} pool does not beat the better single model on this holdout.`}</p>
                   <small>{selectedPartner}</small>
                 </>}
               </aside>

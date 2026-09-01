@@ -28,37 +28,6 @@
   color: #4f207f;
 }
 
-.within-topic-study-readout {
-  margin: 1rem 0 1.35rem;
-  padding: .9rem 1rem;
-  border: 1px solid rgba(79, 32, 127, .18);
-  border-radius: 6px;
-  background: rgba(79, 32, 127, .045);
-  color: var(--muted);
-  font-size: .86rem;
-  line-height: 1.55;
-}
-
-.within-topic-study-readout strong,
-.within-topic-study-readout b {
-  color: #4f207f;
-}
-
-.within-topic-validation-readout {
-  margin: -1rem 0 1.35rem;
-  padding: .85rem 1rem;
-  border-left: 3px solid #d99b16;
-  background: rgba(217, 155, 22, .065);
-  color: var(--muted);
-  font-size: .84rem;
-  line-height: 1.55;
-}
-
-.within-topic-validation-readout strong,
-.within-topic-validation-readout b {
-  color: #6f5112;
-}
-
 .within-topic-layout {
   align-items: stretch;
 }
@@ -137,22 +106,6 @@
 
 .within-topic-inspector {
   min-width: 0;
-}
-
-.within-topic-verdict {
-  margin: 1rem 0 .8rem;
-  padding: .8rem .9rem;
-  border-left: 3px solid #d99b16;
-  background: rgba(217, 155, 22, .08);
-  color: #5f481b;
-  font-size: .86rem;
-  line-height: 1.5;
-}
-
-.within-topic-verdict.win {
-  border-left-color: #4f207f;
-  background: rgba(79, 32, 127, .07);
-  color: #422160;
 }
 
 .within-topic-mechanism {

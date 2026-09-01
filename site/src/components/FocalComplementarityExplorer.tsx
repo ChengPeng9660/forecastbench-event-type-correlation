@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ResearchDetails } from "./ResearchDetails";
 import {
   eligiblePairs,
   isScore,
@@ -221,8 +220,7 @@ function CategoryProfileChart({
           {([[row.focal_train, row.partner_train, null], [row.focal_test, row.partner_test, row.aggregation_test]] as const).map((valuesForPanel, panel) => {
             const range = panel === 0 ? trainRange : testRange;
             const [focalBi, partnerBi, aggregationBi] = valuesForPanel;
-            const faded = panel === 1 && !row.test_support_ok;
-            return <g key={panel} opacity={faded ? .35 : 1}>
+            return <g key={panel}>
               {isScore(focalBi) && isScore(partnerBi) && <line x1={position(focalBi, input, range)} x2={position(partnerBi, input, range)} y1={y} y2={y} className="focal-category-connector" />}
               {isScore(focalBi) && <g><circle cx={position(focalBi, input, range)} cy={y} r="5.5" fill={PURPLE} /><text x={position(focalBi, input, range)} y={y - 11} textAnchor="middle" className="focal-category-value focal-value">{score(focalBi, 1)}</text></g>}
               {isScore(partnerBi) && <g><circle cx={position(partnerBi, input, range)} cy={y} r="5.5" fill={GOLD} /><text x={position(partnerBi, input, range)} y={y + 20} textAnchor="middle" className="focal-category-value partner-value">{score(partnerBi, 1)}</text></g>}
@@ -232,7 +230,7 @@ function CategoryProfileChart({
         </g>;
       })}
     </svg></div>
-    <figcaption>Numbers show focal / partner BI. Categories with fewer than 30 test events are faded and do not confirm transfer.</figcaption>
+    <figcaption>Numbers show focal / partner BI. Categories with fewer than 30 test events remain descriptive and do not confirm transfer.</figcaption>
   </figure>;
 }
 
@@ -349,8 +347,6 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
         <label><span>PARTNER SCOPE</span><select aria-label="Selected-model partner scope" value={pairScope} onChange={event => setPairScope(event.target.value as PairScope)}>{data.pair_scopes.map(scope => <option value={scope.id} key={scope.id}>{scope.label}</option>)}</select></label>
         <label><span>AGGREGATION METHOD</span><select aria-label="Selected-model aggregation method" value={method} onChange={event => setMethod(event.target.value)}>{data.methods.map(item => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
       </div>
-      <p className="research-scope focal-complementarity-scope"><strong>Training-only screen.</strong> Event type uses seven domains: Health, Politics, Sports, Finance, Technology, Climate / Weather, and Entertainment / Culture. Each displayed partner has at least two supported categories, at least 50% supported training-row mass, and crossed strengths: the focal model and partner each lead by at least 1 training BI in a different category. The default partner is ranked by training D<sub>type</sub>; test outcomes never choose it.</p>
-
       {!selectedConfiguration || !focalKnown ? <div className="configuration-pair-empty"><strong>{selectedConfiguration ? "This exact configuration is outside the complementarity release." : "Select a model in the first chart."}</strong><span>No replacement focal model is substituted.</span></div> : <>
         <dl className="market-performance-kpis focal-complementarity-kpis">
           <div><dt>SCREENED PARTNERS</dt><dd>{pairs.length}</dd><small>{allEligible.length} near-skill candidates before crossed strengths</small></div>
@@ -384,7 +380,6 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
                   <div><dt>Supported train mass</dt><dd>{percentage(selectedPair.train_coverage)}</dd></div>
                   <div><dt>Train / test events</dt><dd>{selectedPair.train_events} / {selectedPair.test_events}</dd></div>
                 </dl>
-                <p className={`focal-transfer-verdict${selectedPair.crossing_persists ? " preserved" : ""}`}>{selectedPair.crossing_persists === true ? "Both training category advantages persist on supported test categories." : selectedPair.crossing_persists === false ? "The two named training advantages do not both persist on test." : "Named-strength transfer is undefined because test support is insufficient."}</p>
                 <small>{selectedPartner}</small>
               </>}
             </aside>
@@ -394,16 +389,6 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
             {profileError ? <div className="configuration-pair-loading" role="alert"><p>{profileError}</p><button type="button" className="market-performance-aggregation-cta" onClick={() => setProfileAttempt(value => value + 1)}>Retry category profile</button></div> : profiles.length && selectedPair ? <CategoryProfileChart pair={selectedPair} profiles={profiles} focal={selectedConfiguration} method={method} identities={identities} /> : <div className="configuration-pair-loading" role="status">Loading the selected pair’s category profile…</div>}
           </div>
         </> : <div className="configuration-pair-empty"><strong>No crossed-strength partner under these controls.</strong><span>{allEligible.length ? `${allEligible.length} near-skill partner${allEligible.length === 1 ? " is" : "s are"} available before the crossed-strength requirement. Try the other grouping, widen the BI gap, or change partner scope.` : "Try the other grouping, widen the BI gap, or change partner scope."}</span></div>}
-
-        <div className="focal-complementarity-evidence"><p className="eyebrow">WHAT THE COMPLETE EXPERIMENT FOUND</p><p>Across all 313 exact configurations, the same gap-3 / 50%-coverage crossed-strength screen produced <strong>+1.359 BI</strong> mean Directional-CF gain for event type and <strong>+0.657 BI</strong> for source/platform. Requiring the same prompt and information condition retained positive gains of <strong>+0.901</strong> and <strong>+0.488 BI</strong>.</p><span>Category labels select and explain pairs; they never enter Simple mean, Log-odds mean, EC, Piecewise odds, or Directional CF. This is internal event-holdout evidence from a repeatedly studied archive.</span></div>
-        <ResearchDetails label="Selected-model complementarity details">
-          <p><strong>Exact focal identity.</strong> The model version, prompt, and information condition selected in the first Markets chart are preserved. Partners retain the same three identity fields. The source/platform grouping means the platform or dataset that supplied the question, not the information shown to a model.</p>
-          <p><strong>Seven event domains.</strong> Health includes science, Politics includes conflict, Finance includes economics, and Technology includes AI. Climate / Weather and Entertainment / Culture remain combined domains. These labels are assigned without using outcomes or model forecasts.</p>
-          <p><strong>Scoring.</strong> BI retains the frozen per-question difficulty correction and its normalization. Every common target row receives equal weight; the experiment does not rebalance Dataset and Market rows. Pair comparisons use identical target support, so the question effect cancels within a target even though it still affects absolute BI and eligibility thresholds.</p>
-          <p><strong>Selection.</strong> Overall ability proximity, category coverage, crossed strengths, and D<sub>type</sub> use the primary training event half only. The default partner maximizes training D<sub>type</sub> among eligible partners. Undefined coordinates or outcomes are omitted rather than replaced with zero or another model.</p>
-          <p><strong>Evaluation.</strong> The Y axis and inspector use the opposite event half. Gain is aggregation BI minus the higher BI of the two single configurations on identical test targets. The better test single is a hindsight evaluation reference and never selects the partner.</p>
-          <p><strong>Interpretation.</strong> Stronger full-test aggregation does not guarantee that both named category advantages transfer. Event-type transfer was more stable than source/platform transfer in the complete experiment. A future untouched sample is still needed for confirmatory claims.</p>
-        </ResearchDetails>
       </>}
     </>}
   </section>;

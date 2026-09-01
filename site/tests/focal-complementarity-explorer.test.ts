@@ -46,8 +46,9 @@ describe("selected-model complementarity explorer", () => {
 
     await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("25"), { timeout: 10_000 });
     expect(section).toHaveTextContent(claude);
-    expect(section).toHaveTextContent("Health, Politics, Sports, Finance, Technology, Climate / Weather, and Entertainment / Culture");
-    expect(section).not.toHaveTextContent("Health & science");
+    expect(section).not.toHaveTextContent("Training-only screen.");
+    expect(section).not.toHaveTextContent("WHAT THE COMPLETE EXPERIMENT FOUND");
+    expect(section).not.toHaveTextContent("Selected-model complementarity details");
     expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("54 near-skill candidates");
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", claude);
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
@@ -57,9 +58,13 @@ describe("selected-model complementarity explorer", () => {
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Same prompt");
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Same information");
     await waitFor(() => expect(section.querySelector(".focal-category-profile")).toBeInTheDocument());
-    expect(section.querySelector(".focal-category-profile")).toHaveTextContent("Finance");
-    expect(section.querySelector(".focal-category-profile")).toHaveTextContent("Politics");
-    expect(section.querySelector(".focal-category-profile")).not.toHaveTextContent("Finance & economics");
+    const profile = section.querySelector(".focal-category-profile") as HTMLElement;
+    expect(profile).toHaveTextContent("Finance");
+    expect(profile).toHaveTextContent("Politics");
+    expect(profile).not.toHaveTextContent("Finance & economics");
+    expect(profile.querySelectorAll('g[opacity="0.35"], g[opacity=".35"]')).toHaveLength(0);
+    expect(profile).not.toHaveTextContent("are faded");
+    expect(section.querySelector(".focal-transfer-verdict")).not.toBeInTheDocument();
   }, 20_000);
 
   it("keeps empty source results explicit, exposes the condition-matched control, and follows prop changes", async () => {

@@ -51,7 +51,9 @@ describe("within-topic focal explorer", () => {
     expect(section.querySelectorAll(".within-topic-glyph.win").length).toBeGreaterThan(0);
     expect(section.querySelectorAll(".within-topic-glyph.miss").length).toBeGreaterThan(0);
     expect(section.querySelector(".within-topic-coverage")).toHaveTextContent("Focal lower loss");
-    expect(section).toHaveTextContent("10 / 10 split directions");
+    expect(section).not.toHaveTextContent("All-model check under these controls.");
+    expect(section).not.toHaveTextContent("Pre-specified ability-control check.");
+    expect(section.querySelector(".within-topic-verdict")).not.toBeInTheDocument();
   }, 25_000);
 
   it("preserves the focal while changing metric, outcome, method, scope, topic gap, and support", async () => {
