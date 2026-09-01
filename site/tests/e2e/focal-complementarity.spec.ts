@@ -36,6 +36,8 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.locator(".focal-complementarity-inspector")).toContainText("+3.039 BI");
   await expect(block.locator(".focal-category-profile")).toBeVisible();
   await expect(block.locator(".focal-category-profile")).not.toContainText(/\d+\s*\/\s*\d+\s+events/);
+  await expect(block).not.toContainText("Train / test events");
+  await expect(block).not.toContainText(/\d+\s*\/\s*\d+\s+events/);
   await expect(block.locator('.focal-category-profile g[opacity="0.35"], .focal-category-profile g[opacity=".35"]')).toHaveCount(0);
   await expect(block.locator(".focal-category-profile figcaption")).not.toContainText("are faded");
 
@@ -58,6 +60,8 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(kpi(block, "SCREENED PARTNERS").locator("dd")).toHaveText("29");
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", kimi);
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Kimi-K2-Thinking (zero shot with freeze values)");
+  await expect(block).not.toContainText("Train / test events");
+  await expect(block).not.toContainText(/\d+\s*\/\s*\d+\s+events/);
 
   const finalOrder = await page.locator("#market-performance").evaluate(element => {
     const market = element.querySelector("#model-market-aggregation");

@@ -172,8 +172,6 @@ function CategoryProfileChart({
   const partner = partnerName(pair, focal);
   const rows = [{
     group: "overall",
-    train_events: pair.train_events,
-    test_events: pair.test_events,
     focal_train: direction.focalTrainBi,
     partner_train: direction.partnerTrainBi,
     focal_test: direction.focalTestBi,
@@ -182,8 +180,6 @@ function CategoryProfileChart({
     test_support_ok: true,
   }, ...profiles.map(profile => ({
     group: profile.group,
-    train_events: profile.train_events,
-    test_events: profile.test_events,
     focal_train: direction.focalIsA ? profile.train_bi_a : profile.train_bi_b,
     partner_train: direction.focalIsA ? profile.train_bi_b : profile.train_bi_a,
     focal_test: direction.focalIsA ? profile.test_bi_a : profile.test_bi_b,
@@ -377,7 +373,6 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
                   <div><dt>Gain vs focal</dt><dd>{score(gainVsFocal, 3, true)} BI</dd></div>
                   <div><dt>Gain vs better single</dt><dd>{score(selectedGain, 3, true)} BI</dd></div>
                   <div><dt>Supported train mass</dt><dd>{percentage(selectedPair.train_coverage)}</dd></div>
-                  <div><dt>Train / test events</dt><dd>{selectedPair.train_events} / {selectedPair.test_events}</dd></div>
                 </dl>
                 <small>{selectedPartner}</small>
               </>}

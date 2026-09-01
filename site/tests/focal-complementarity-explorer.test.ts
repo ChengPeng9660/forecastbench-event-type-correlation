@@ -63,6 +63,8 @@ describe("selected-model complementarity explorer", () => {
     expect(profile).toHaveTextContent("Politics");
     expect(profile).not.toHaveTextContent("Finance & economics");
     expect(profile).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
+    expect(section).not.toHaveTextContent("Train / test events");
+    expect(section).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
     expect(profile.querySelectorAll('g[opacity="0.35"], g[opacity=".35"]')).toHaveLength(0);
     expect(profile).not.toHaveTextContent("are faded");
     expect(section.querySelector(".focal-transfer-verdict")).not.toBeInTheDocument();
@@ -91,10 +93,14 @@ describe("selected-model complementarity explorer", () => {
     await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("58"));
     await waitFor(() => expect(section.querySelector('.focal-complementarity-point[data-training-rank="1"]')).toHaveAttribute("aria-pressed", "true"));
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Claude-2.1 (scratchpad with news with freeze values)");
+    expect(section).not.toHaveTextContent("Train / test events");
+    expect(section).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
 
     rendered.rerender(createElement(FocalComplementarityExplorer, { selectedConfiguration: kimi }));
     await waitFor(() => expect(valueFor(section, "SCREENED PARTNERS")).toHaveTextContent("29"));
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-focal-configuration", kimi);
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Kimi-K2-Thinking (zero shot with freeze values)");
+    expect(section).not.toHaveTextContent("Train / test events");
+    expect(section).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
   }, 20_000);
 });
