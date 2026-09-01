@@ -19,6 +19,8 @@ test("links the first-chart exact configuration to its training-screened complem
     return block.locator(".focal-pair-picker").count();
   }, { timeout: 20_000 }).toBe(1);
   await expect(block.getByRole("heading", { name: "Who complements the selected model?", exact: true })).toBeVisible();
+  await expect(page.locator("#within-topic-complementarity")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Do they solve different questions inside the same topic?", exact: true })).toHaveCount(0);
   await expect(block).not.toContainText("Training-only screen.");
   await expect(block).not.toContainText("WHAT THE COMPLETE EXPERIMENT FOUND");
   await expect(block).not.toContainText("Selected-model complementarity details");

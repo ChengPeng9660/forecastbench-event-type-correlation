@@ -6,9 +6,11 @@ const component = readFileSync(resolve(process.cwd(), "src/components/FocalWithi
 const parent = readFileSync(resolve(process.cwd(), "src/components/MarketDiversityPerformanceExplorer.tsx"), "utf8");
 
 describe("within-topic complementarity source contract", () => {
-  it("is linked to the first-chart exact selection and remains the final Markets block", () => {
-    expect(parent).toContain("<FocalWithinTopicComplementarity selectedConfiguration={selectedConfiguration || null} />");
-    expect(parent.indexOf("<FocalWithinTopicComplementarity")).toBeGreaterThan(parent.indexOf("<FocalComplementarityExplorer"));
+  it("keeps the experiment source available without mounting it on the Markets page", () => {
+    expect(parent).not.toContain('import { FocalWithinTopicComplementarity }');
+    expect(parent).not.toContain("<FocalWithinTopicComplementarity");
+    expect(parent).toContain("<FocalComplementarityExplorer selectedConfiguration={selectedConfiguration || null} />");
+    expect(component).toContain("export function FocalWithinTopicComplementarity");
   });
 
   it("uses triangle/circle only for held-out improvement and explains the two ability gates", () => {
