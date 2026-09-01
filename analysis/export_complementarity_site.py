@@ -1,8 +1,12 @@
-"""Export audited cross-category results for the public Atlas, without refitting.
+"""Export the audited uniform-target complementarity sensitivity to the Atlas.
 
-Usage: python analysis/export_complementarity_site.py --study /path/to/study
-The source study is specialization_argument_2026-08-31. Its frozen outputs stay
-unchanged. Missing values become JSON null, never invented scores or zero gains.
+Usage:
+  python analysis/export_complementarity_site.py \
+    --study /path/to/complementarity_unweighted_gap_sensitivity_2026-09-01
+
+This script only projects frozen experiment outputs into a browser-friendly
+contract. It does not refit an aggregation method or recompute a result.
+Missing values become JSON null and are never replaced by zero.
 """
 from __future__ import annotations
 
@@ -14,6 +18,7 @@ import json
 import math
 from pathlib import Path
 import shutil
+
 
 METHODS = [
     ("type_shrunk", "Category-shrunk", "research"),
@@ -29,149 +34,258 @@ METHODS = [
     ("cf_directional", "Directional CF", "original"),
     ("best_single", "Best single · hindsight", "hindsight"),
 ]
+PRIMARY_SPLIT = "20260910"
+PRIMARY_FOLD = 0
+DATA_ATTRIBUTION = """# Data attribution
+
+Derived with changes from ForecastBench data produced by the Forecasting Research Institute / forecastingresearch.
+
+Original data: [ForecastBench datasets](https://github.com/forecastingresearch/forecastbench-datasets).
+
+Data and derived-data license: [Creative Commons Attribution-ShareAlike4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+Changes include selecting exact plain-zero-shot configurations, removing imputed/unresolved/unscored records, joining an archived official fixed-effect snapshot and existing topic labels, constructing common-support research panels, calculating complementarity decompositions and aggregation results, and generating retrospective summaries and figures.
+
+This is not an official ForecastBench leaderboard release. No new forecasts, model submissions or outcomes were fabricated. Source manifests, fixed-effect snapshot and delivery hashes are provided.
+"""
 
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def atom(value: str):
-    if value in ("", "nan", "NaN"):
+def atom(value):
+    if value is None or value in ("", "nan", "NaN"):
         return None
     if value in ("True", "False"):
         return value == "True"
     try:
         number = float(value)
         return number if math.isfinite(number) else None
-    except ValueError:
+    except (TypeError, ValueError):
         return value
 
 
 def records(path: Path):
-    with (gzip.open(path, "rt") if path.suffix == ".gz" else path.open()) as f:
-        return list(csv.DictReader(f))
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", newline="") as handle:
+        return list(csv.DictReader(handle))
 
 
 def project(row, keys):
-    return {key: atom(row[key]) for key in keys}
+    return {key: atom(row.get(key)) for key in keys}
+
+
+def verify_frozen_inputs(study: Path, source: Path):
+    manifest = json.loads((study / "artifact_manifest.json").read_text())
+    required = [
+        "PROTOCOL.md", "REPORT.md", "README.md", "REPRODUCE.md",
+        "results/pair_results.csv.gz", "results/category_profiles.csv.gz",
+        "results/primary_summary.csv", "results/direction_summary.csv",
+        "results/primary_intervals.csv", "results/requested_primary_results.csv",
+        "results/audit.json", "results/independent_audit.json",
+    ]
+    for name in required:
+        expected = manifest["files"][name]["sha256"]
+        assert digest(study / name) == expected, name
+    audit = json.loads((study / "results/audit.json").read_text())
+    independent = json.loads((study / "results/independent_audit.json").read_text())
+    assert audit["weighting"].startswith("uniform common-target rows")
+    assert audit["no_test_gap_filter"] and audit["train_selection_only"]
+    assert audit["event_overlap_failures"] == 0
+    assert independent["status"].lower() == "pass"
+    assert independent["event_disjointness"].lower() == "pass"
+    assert max(independent["maximum_absolute_differences"].values()) < independent["tolerance"]
+    assert digest(source / "artifact_manifest.json") == audit["source_manifest_sha256"]
+    return manifest, audit, independent
 
 
 def export(study: Path, destination: Path):
-    audited = json.loads((study / "results/independent_mechanism_audit.json").read_text())
-    assert audited["status"] == "PASS"
-    assert digest(study / "results/mechanism_rows.csv.gz") == audited["result_sha256"]
-    for name, expected in audited["code_sha256"].items():
-        assert digest(study / "code" / name) == expected, name
-    frozen = json.loads((study / "artifact_manifest.json").read_text())
-    inputs = [
-        "results/mechanism_enriched.csv.gz", "results/harmonized_group_profiles.csv.gz",
-        "results/aggregation_summary.csv", "results/mechanism_summary.csv",
-        "results/primary_intervals.csv", "results/matched_coverage_primary_intervals.csv",
-        "results/matched_coverage_temporal_summary.csv", "results/label_sensitivity_summary.csv",
-        "results/independent_mechanism_audit.json", "data/audit.json", "data/models.json",
-    ]
-    for name in inputs:
-        assert digest(study / name) == frozen[name]["sha256"], name
-    rows = records(study / inputs[0])
-    primary = [r for r in rows if r["split"] == "20260910" and r["fold"] == "0"]
-    assert len(primary) == 1436
-    groups = {}
-    for r in records(study / inputs[1]):
-        if not r["id"].startswith("20260910_0_"):
-            continue
-        key = (r["dimension"], r["id"])
-        group = project(r, ["group", "train_mass", "test_mass", "train_events", "test_events",
-                            "train_bi_a", "train_bi_b", "test_bi_a", "test_bi_b", "test_support_ok"])
-        group["methods"] = {method: atom(r[method + "_bi"]) for method, _, _ in METHODS}
-        groups.setdefault(key, []).append(group)
-    pairs = []
-    for r in primary:
-        p = project(r, ["train_events", "test_events", "train_rows", "test_rows", "train_gap",
-                        "test_gap", "train_bi_a", "train_bi_b", "test_bi_a", "test_bi_b",
-                        "train_groups", "train_coverage", "train_between_norm", "train_between",
-                        "train_within", "train_total", "train_between_share", "crossing",
-                        "crossing_persists", "complete_test_profile", "train_profile_bi_defined",
-                        "group_a", "group_b", "cross_provider"])
-        p.update(id=r["pair_id"], dimension=r["dimension"], model_a=r["model_a"], model_b=r["model_b"],
-                 methods={m: atom(r[m + "_bi"]) for m, _, _ in METHODS},
-                 profiles=groups.get((r["dimension"], r["id"]), []))
-        pairs.append(p)
-    primary_keys = {(p["dimension"], p["id"]) for p in pairs}
-    assert len(primary_keys) == len(pairs)
+    source = study.parent / "specialization_argument_2026-08-31"
+    manifest, audit, independent = verify_frozen_inputs(study, source)
+    models = json.loads((source / "data/models.json").read_text())
+    sample = json.loads((source / "data/audit.json").read_text())
+    providers = {row["model"]: row["provider"] for row in records(source / "data/model_coverage.csv")}
 
-    cohorts = {}
-    for r in records(study / inputs[3]):
-        if r["cohort"] not in ("eligible", "crossing") or r["split"] == "full":
+    all_pair_rows = records(study / "results/pair_results.csv.gz")
+    primary_rows = [row for row in all_pair_rows if row["split"] == PRIMARY_SPLIT and int(row["fold"]) == PRIMARY_FOLD]
+    assert len(all_pair_rows) == audit["output_rows"] == 25580
+    assert len(primary_rows) == audit["primary_influence_rows"] == 2618
+
+    profile_map = {}
+    for row in records(study / "results/category_profiles.csv.gz"):
+        if not row["id"].startswith(f"{PRIMARY_SPLIT}_{PRIMARY_FOLD}_"):
             continue
-        key = "|".join(r[k] for k in ["split", "fold", "dimension", "threshold", "cohort"])
-        c = project(r, [k for k in r if k not in ("split", "fold", "dimension", "cohort")])
-        c.update(split=r["split"], fold=int(r["fold"]), dimension=r["dimension"], cohort=r["cohort"], methods={})
-        cohorts[key] = c
-    for r in records(study / inputs[2]):
-        key = "|".join(r[k] for k in ["split", "fold", "dimension", "threshold", "cohort"])
-        if key not in cohorts:
-            continue
-        cohorts[key]["methods"][r["method"]] = project(r, ["n_bi", "gain_best_bi", "gain_trainbest_bi",
-                "gain_best_loss", "positive_rate", "n_preservation", "preservation_rate"])
-        # Keep the audited mean of paired increments. A difference of separately
-        # averaged method scores can change the estimand when BI is undefined.
-        cohorts[key]["type_increment_mean"] = atom(r["mean_type_increment"])
-    for c in cohorts.values():
-        assert len(c["methods"]) == len(METHODS)
-        if c["split"] == "20260910" and c["fold"] == 0:
-            included = [p for p in pairs if p["dimension"] == c["dimension"] and
-                        (p["train_groups"] or 0) >= 2 and (p["train_coverage"] or 0) >= c["threshold"]
-                        and (c["cohort"] != "crossing" or p["crossing"] is True)]
-            assert len(included) == c["n"], (c, len(included))
-            for method, _, _ in METHODS:
-                values = [p["methods"][method] - max(p["test_bi_a"], p["test_bi_b"]) for p in included
-                          if all(p[k] is not None for k in ("test_bi_a", "test_bi_b")) and p["methods"][method] is not None]
-                expected = c["methods"][method]["gain_best_bi"]
-                assert (not values and expected is None) or abs(sum(values) / len(values) - expected) < 1e-10
-    matched = [project(r, ["coverage_threshold", "dimension", "triplets", "estimate", "ci_low", "ci_high"])
-               for r in records(study / inputs[5]) if r["endpoint"] == "contrast_type_increment_bi"]
-    labels = [project(r, ["dimension", "cohort", "coverage_threshold", "pairs", "permutations",
-                          "actual_bi", "control_bi", "actual_minus_control_bi",
-                          "control_train_changed_event_fraction", "control_test_changed_event_fraction"])
-              for r in records(study / inputs[7])]
-    intervals = [project(r, list(r)) for r in records(study / inputs[4])]
-    panel = json.loads((study / "data/audit.json").read_text())
+        key = (row["dimension"], row["id"])
+        profile = project(row, [
+            "group", "train_mass", "test_mass", "train_events", "test_events",
+            "train_bi_a", "train_bi_b", "test_bi_a", "test_bi_b", "test_support_ok",
+        ])
+        profile["methods"] = {method: atom(row[f"{method}_bi"]) for method, _, _ in METHODS}
+        profile_map.setdefault(key, []).append(profile)
+
+    pairs = []
+    for row in primary_rows:
+        pair = project(row, [
+            "train_events", "test_events", "train_rows", "test_rows", "train_gap", "test_gap",
+            "train_bi_a", "train_bi_b", "test_bi_a", "test_bi_b", "train_groups",
+            "train_coverage", "train_between_norm", "train_between", "train_within", "train_total",
+            "train_between_share", "crossing", "crossing_persists", "complete_test_profile",
+            "train_profile_bi_defined", "group_a", "group_b",
+        ])
+        pair.update(
+            id=row["pair_id"],
+            dimension=row["dimension"],
+            model_a=row["model_a"],
+            model_b=row["model_b"],
+            train_origin_dataset_fraction=atom(row["train_origin_0_row_fraction"]),
+            cross_provider=providers.get(row["model_a"]) != providers.get(row["model_b"]),
+            methods={method: atom(row[f"{method}_bi"]) for method, _, _ in METHODS},
+            profiles=profile_map.get((row["dimension"], row["id"]), []),
+        )
+        assert row["weighting"] == "uniform_rows"
+        pairs.append(pair)
+    assert len({(pair["dimension"], pair["id"]) for pair in pairs}) == len(pairs)
+
+    summary_keys = [
+        "view", "ability_gap", "coverage", "dimension", "cohort", "method", "n", "n_defined",
+        "mean_gain_vs_test_best_bi", "median_gain_vs_test_best_bi", "beats_both_rate",
+        "mean_gain_vs_train_selected_bi", "beats_train_selected_rate", "mean_increment_vs_global_bi",
+        "mean_gain_vs_test_best_raw_loss", "mean_train_gap", "mean_test_gap", "mean_train_coverage",
+        "mean_test_events",
+    ]
+    summaries = [project(row, summary_keys) for row in records(study / "results/primary_summary.csv")]
+    direction_rows = records(study / "results/direction_summary.csv")
+    directions = [project(row, ["split", "fold", *summary_keys]) for row in direction_rows]
+    for exported, source_row in zip(directions, direction_rows):
+        # Split identifiers are labels even though they contain only digits.
+        exported["split"] = source_row["split"]
+        exported["fold"] = int(source_row["fold"])
+    intervals = [project(row, row.keys()) for row in records(study / "results/primary_intervals.csv")]
+    assert len(summaries) == 352 and len(directions) == 3520 and len(intervals) == 96
+
+    # Contract-check all primary summary rows against the exported pair records.
+    for row in summaries:
+        selected = [pair for pair in pairs
+                    if pair["dimension"] == row["dimension"]
+                    and pair["train_gap"] <= row["ability_gap"] + 1e-12
+                    and (pair["train_groups"] or 0) >= 2
+                    and (pair["train_coverage"] or 0) >= row["coverage"]
+                    and (row["cohort"] != "crossing" or pair["crossing"] is True)]
+        assert len(selected) == int(row["n"]), (row, len(selected))
+        values = []
+        for pair in selected:
+            method_bi = pair["methods"][row["method"]]
+            if method_bi is not None and pair["test_bi_a"] is not None and pair["test_bi_b"] is not None:
+                values.append(method_bi - max(pair["test_bi_a"], pair["test_bi_b"]))
+        assert len(values) == int(row["n_defined"])
+        if values:
+            assert abs(sum(values) / len(values) - row["mean_gain_vs_test_best_bi"]) < 1e-10
+
+    maximum_error = max(independent["maximum_absolute_differences"].values())
     payload = {
-        "schema_version": 1, "study": study.name, "date": "2026-08-31",
-        "primary_split": "20260910", "primary_fold": 0,
-        "models": json.loads((study / "data/models.json").read_text()),
-        "sample": {k: panel[k] for k in ("scored_models", "genuine_scored_predictions", "targets", "events", "dates")},
-        "methods": [{"id": m, "label": label, "kind": kind} for m, label, kind in METHODS],
-        "pairs": pairs, "cohorts": list(cohorts.values()), "matched": matched, "labels": labels,
+        "schema_version": 2,
+        "study": manifest["study"],
+        "date": "2026-09-01",
+        "primary_split": PRIMARY_SPLIT,
+        "primary_fold": PRIMARY_FOLD,
+        "weighting": "uniform_rows",
+        "ability_thresholds": [3, 5],
+        "coverage_thresholds": [.5, .6, .7, .8],
+        "models": models,
+        "methods": [{"id": method, "label": label, "kind": kind} for method, label, kind in METHODS],
+        "pairs": pairs,
+        "summaries": summaries,
+        "directions": directions,
         "intervals": intervals,
-        "audit": {"status": audited["status"], "numeric_checks": audited["numeric_checks"],
-                  "max_absolute_error": audited["max_absolute_error"], "implementation_tests": 22},
-        "provenance": {name: digest(study / name) for name in inputs},
+        "sample": {key: sample[key] for key in ["scored_models", "genuine_scored_predictions", "targets", "events", "dates"]},
+        "audit": {
+            "status": "PASS",
+            "implementation_independent": independent["implementation_independent"],
+            "sampled_rows": independent["sampled_primary_dimension_rows"],
+            "max_absolute_error": maximum_error,
+            "event_disjointness": independent["event_disjointness"].upper(),
+            "output_rows": audit["output_rows"],
+            "category_profile_rows": audit["category_profile_rows"],
+            "source_manifest_sha256": audit["source_manifest_sha256"],
+        },
+        "provenance": {
+            "experiment_manifest_sha256": digest(study / "artifact_manifest.json"),
+            "pair_results_sha256": digest(study / "results/pair_results.csv.gz"),
+            "category_profiles_sha256": digest(study / "results/category_profiles.csv.gz"),
+            "source_manifest_sha256": audit["source_manifest_sha256"],
+        },
     }
-    destination.mkdir(parents=True, exist_ok=True)
-    (destination / "study.json").write_text(json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n")
-    for name in ("REPORT.md", "ARGUMENT.md", "PROTOCOL.md", "CODE_AUDIT.md", "THEORY_DESIGN_REVIEW.md",
-                 "MATCHED_CONTROLS.md", "LABEL_CONTROLS.md", "LICENSE-DATA.md"):
-        shutil.copyfile(study / name, destination / name)
-    with (destination / "primary-pairs.csv").open("w", newline="") as f:
-        keys = ["dimension", "id", "model_a", "model_b", "train_gap", "test_gap", "train_events", "test_events",
-                "train_coverage", "crossing", "train_between_norm", "train_bi_a", "train_bi_b", "test_bi_a", "test_bi_b"]
-        writer = csv.DictWriter(f, fieldnames=keys + [m + "_bi" for m, _, _ in METHODS], lineterminator="\n")
+
+    if destination.exists():
+        shutil.rmtree(destination)
+    destination.mkdir(parents=True)
+    (destination / "LICENSE-DATA.md").write_text(DATA_ATTRIBUTION)
+    (destination / "study.json").write_text(json.dumps(payload, separators=(",", ":")))
+
+    public_rows = []
+    for pair in pairs:
+        public_rows.append({
+            "dimension": pair["dimension"], "pair_id": pair["id"],
+            "model_a": pair["model_a"], "model_b": pair["model_b"],
+            "train_bi_gap": pair["train_gap"], "uniform_row_category_coverage": pair["train_coverage"],
+            "train_crossing": pair["crossing"], "train_category_complementarity": pair["train_between_norm"],
+            "train_dataset_row_fraction": pair["train_origin_dataset_fraction"],
+            "test_bi_a": pair["test_bi_a"], "test_bi_b": pair["test_bi_b"],
+            "global_convex_bi": pair["methods"]["global_convex"],
+            "category_shrunk_bi": pair["methods"]["type_shrunk"],
+            "category_shrunk_gain_vs_better_test_single_bi": (
+                pair["methods"]["type_shrunk"] - max(pair["test_bi_a"], pair["test_bi_b"])
+                if None not in (pair["methods"]["type_shrunk"], pair["test_bi_a"], pair["test_bi_b"]) else None),
+            "category_shrunk_increment_vs_global_bi": (
+                pair["methods"]["type_shrunk"] - pair["methods"]["global_convex"]
+                if None not in (pair["methods"]["type_shrunk"], pair["methods"]["global_convex"]) else None),
+            "train_events": pair["train_events"], "test_events": pair["test_events"],
+        })
+    with (destination / "primary-pairs.csv").open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(public_rows[0]), lineterminator="\n")
         writer.writeheader()
-        for p in pairs:
-            writer.writerow({**{k: p[k] for k in keys}, **{m + "_bi": p["methods"][m] for m, _, _ in METHODS}})
-    manifest = {"study": study.name, "primary_pair_views": len(pairs), "cohort_views": len(cohorts),
-                "source_manifest_sha256": digest(study / "artifact_manifest.json"),
-                "files": {p.name: {"sha256": digest(p), "bytes": p.stat().st_size}
-                          for p in sorted(destination.iterdir()) if p.is_file() and p.name != "manifest.json"}}
-    (destination / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    print(json.dumps({"status": "PASS", "primary_pair_views": len(pairs), "cohort_views": len(cohorts),
-                      "bytes": (destination / "study.json").stat().st_size}))
+        writer.writerows(public_rows)
+
+    copies = {
+        "REPORT.md": "REPORT.md",
+        "PROTOCOL.md": "PROTOCOL.md",
+        "README.md": "README.md",
+        "REPRODUCE.md": "REPRODUCE.md",
+        "results/requested_primary_results.csv": "requested_primary_results.csv",
+        "results/independent_audit.json": "independent_audit.json",
+        "artifact_manifest.json": "experiment_manifest.json",
+    }
+    for source_name, public_name in copies.items():
+        shutil.copyfile(study / source_name, destination / public_name)
+
+    exported = {path.name: {"bytes": path.stat().st_size, "sha256": digest(path)}
+                for path in sorted(destination.iterdir()) if path.name != "manifest.json"}
+    public_manifest = {
+        "study": payload["study"],
+        "generated_from_frozen_outputs": True,
+        "weighting": payload["weighting"],
+        "ability_thresholds": payload["ability_thresholds"],
+        "files": exported,
+        "source_manifest_sha256": audit["source_manifest_sha256"],
+    }
+    (destination / "manifest.json").write_text(json.dumps(public_manifest, indent=2) + "\n")
+    print(json.dumps({
+        "destination": str(destination), "pairs": len(pairs),
+        "profiles": sum(len(pair["profiles"]) for pair in pairs),
+        "summaries": len(summaries), "directions": len(directions),
+        "study_json_bytes": (destination / "study.json").stat().st_size,
+    }, indent=2))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--study", type=Path, required=True)
+    parser.add_argument("--destination", type=Path,
+                        default=Path("site/public/data/complementarity"))
+    args = parser.parse_args()
+    export(args.study.resolve(), args.destination.resolve())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--study", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "site/public/data/complementarity")
-    args = parser.parse_args()
-    export(args.study, args.output)
+    main()

@@ -34,6 +34,7 @@
 .cc-study-meta b { font-size: 13px; color: var(--cc-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .cc-study-meta > span:last-child { margin-left: auto; }
 .cc-filter-dock { display: grid; grid-template-columns: 1.1fr 1fr 1.1fr 1.2fr; gap: 16px; align-items: end; padding: 18px 0 14px; background: #fff; }
+.cc-filter-dock.cc-filter-five { grid-template-columns: 1.35fr .72fr .82fr 1.08fr 1.05fr; gap: 12px; }
 .cc-field-label { display: block; margin-bottom: 6px; color: var(--cc-muted); font-size: 10px; font-weight: 650; letter-spacing: .055em; }
 .cc-study select, .cc-study input[type="search"] { width: 100%; height: 39px; min-width: 0; border: 1px solid #dcd2e4; border-radius: 4px; background: white; color: var(--cc-ink); padding: 6px 10px; font-size: 12px; }
 .cc-segments { display: flex; border: 1px solid #dcd2e4; border-radius: 4px; background: #f8f6fa; padding: 2px; min-height: 39px; }
@@ -109,6 +110,7 @@
 .cc-text-button { display: inline-block; border: 0; padding: 8px 0; background: transparent; color: var(--cc-purple); font-size: 12px; }
 .cc-text-button:hover { text-decoration: underline; text-underline-offset: 4px; }
 .cc-cohort-stats { display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 28px; padding: 21px 0; border-block: 1px solid var(--cc-line); margin-bottom: 24px; }
+.cc-cohort-stats.cc-cohort-four { grid-template-columns: 1.35fr 1fr 1.08fr 1.08fr; gap: 22px; }
 .cc-cohort-stats > div { display: flex; flex-direction: column; gap: 5px; }
 .cc-cohort-stats span, .cc-cohort-stats small { font-size: 11px; color: var(--cc-muted); }
 .cc-cohort-stats strong { font-size: 29px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--cc-purple); letter-spacing: -.035em; }
@@ -165,6 +167,18 @@
 .cc-random-dots { display: flex; flex-wrap: wrap; gap: 8px; }
 .cc-random-dots > span { padding: 9px 10px; background: #fbf4e7; color: #94752e !important; font-size: 11px; font-variant-numeric: tabular-nums; border-radius: 3px; }
 .cc-random-dots > span.is-positive { background: #f1e9f7; color: var(--cc-purple) !important; }
+.cc-gap-layout, .cc-stability-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(270px, .8fr); gap: 55px; align-items: start; }
+.cc-gap-layout > *, .cc-stability-layout > * { min-width: 0; }
+.cc-gap-layout .cc-gain-svg { min-width: 470px; }
+.cc-ring-card, .cc-weighting-card { border-left: 2px solid #d8c7e4; padding: 4px 0 5px 25px; min-width: 0; }
+.cc-ring-card h3, .cc-weighting-card h3 { margin: 8px 0 13px; }
+.cc-ring-number, .cc-weight-number { color: var(--cc-purple); font-size: clamp(42px, 4vw, 57px); font-weight: 500; letter-spacing: -.055em; line-height: 1.25; font-variant-numeric: tabular-nums; margin: 8px 0 5px; }
+.cc-ring-number span { color: var(--cc-muted); font-size: 13px; letter-spacing: 0; margin-left: 9px; }
+.cc-weighting-card { background: #fdf9f0; border-left-color: #d5ac4e; padding: 22px 24px; }
+.cc-weighting-card p { color: var(--cc-muted); font-size: 12px; line-height: 1.8; }
+.cc-weighting-card .cc-inline-caution { color: #876416; margin-bottom: 0; }
+.cc-stability-layout .cc-random-strip { align-items: flex-start; margin-top: 13px; }
+.cc-stability-list { margin-top: 0; }
 .cc-methods-block { border-bottom: 0; padding-bottom: 8px; }
 .cc-claim { max-width: 935px; border-left: 3px solid var(--cc-purple); padding: 4px 0 4px 23px; margin-bottom: 31px; }
 .cc-claim p { font-size: clamp(17px, 1.75vw, 22px); line-height: 1.8; font-weight: 450; margin-bottom: 17px; }
@@ -182,6 +196,7 @@
 @media (min-width: 1100px) { .cc-filter-dock { position: sticky; top: 0; z-index: 9; border-bottom: 1px solid var(--cc-line); } }
 @media (max-width: 1050px) {
   .cc-filter-dock { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cc-filter-dock.cc-filter-five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cc-pair-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .cc-gain-inspector { border-left: 0; border-top: 1px solid var(--cc-line); padding: 21px 0 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: 35px; align-items: start; }
   .cc-gain-inspector > .cc-eyebrow, .cc-gain-inspector > h3 { grid-column: 1; }
@@ -195,6 +210,7 @@
   .cc-mechanism-layout { gap: 30px; }
   .cc-pair-facts > div { flex-direction: column; gap: 3px; }
   .cc-pair-facts strong { font-size: 20px; }
+  .cc-gap-layout, .cc-stability-layout { gap: 30px; }
 }
 @media (max-width: 700px) {
   .cc-study { padding-inline: 19px !important; }
@@ -206,7 +222,7 @@
   .cc-language button { min-width: 32px; min-height: 32px; font-size: 10px; }
   .cc-study-meta { gap: 7px 17px; font-size: 10px; }
   .cc-study-meta > span:last-child { width: 100%; margin-left: 0; font-size: 10px; }
-  .cc-filter-dock { gap: 13px 10px; padding-top: 17px; }
+  .cc-filter-dock, .cc-filter-dock.cc-filter-five { grid-template-columns: 1fr; gap: 13px 10px; padding-top: 17px; }
   .cc-field-label { font-size: 9px; }
   .cc-study select, .cc-study input[type="search"], .cc-segments button { font-size: 11px; }
   .cc-segments button { padding-inline: 4px; }
@@ -234,6 +250,7 @@
   .cc-gain-inspector .cc-insight { padding-top: 17px; }
   .cc-pair-footnote { font-size: 10px; }
   .cc-cohort-stats { grid-template-columns: 1fr 1fr; gap: 19px 12px; margin-bottom: 15px; }
+  .cc-cohort-stats.cc-cohort-four { grid-template-columns: 1fr 1fr; gap: 19px 12px; }
   .cc-cohort-stats > div:first-child { grid-column: 1 / -1; padding-bottom: 15px; border-bottom: 1px solid var(--cc-line); }
   .cc-cohort-stats strong { font-size: 27px; }
   .cc-cohort-stats span, .cc-cohort-stats small { font-size: 10px; }
@@ -253,6 +270,10 @@
   .cc-random-strip { display: block; }
   .cc-random-dots { margin-top: 16px; gap: 6px; }
   .cc-random-dots > span { font-size: 10px; padding: 7px 8px; }
+  .cc-gap-layout, .cc-stability-layout { grid-template-columns: 1fr; gap: 27px; }
+  .cc-gap-layout .cc-gain-svg { min-width: 0; }
+  .cc-ring-card, .cc-weighting-card { padding-left: 17px; }
+  .cc-weighting-card { padding: 18px; }
   .cc-claim { padding-left: 17px; }
   .cc-claim p { font-size: 17px; }
   .cc-claim span { font-size: 11px; }

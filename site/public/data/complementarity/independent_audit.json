@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "implementation_independent": true,
+  "imports_experiment_code": false,
+  "sampled_primary_dimension_rows": 80,
+  "maximum_absolute_differences": {
+    "train_gap": 2.836619827917275e-14,
+    "test_single_bi": 3.552713678800501e-14,
+    "global_convex_bi": 7.815970093361102e-14,
+    "type_shrunk_bi": 4.973799150320701e-14,
+    "type_shrunk_gain_best_bi": 6.400435736964027e-14,
+    "type_increment_bi": 7.111325417419323e-14,
+    "train_coverage": 3.3306690738754696e-16
+  },
+  "tolerance": 2e-09,
+  "rows_confirming_origin_mass_not_forced_to_half": 80,
+  "event_disjointness": "pass"
+}
