@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "implementation_independent": true,
+  "sampled_pair_topic_directions": 256,
+  "numeric_comparisons": 4317,
+  "maximum_absolute_error": 3.339550858072471e-13,
+  "tolerance": 1e-09,
+  "event_disjointness": "PASS",
+  "support_reconstruction": "PASS",
+  "pog_formula": "direct best-mean loss minus mean pointwise-min loss",
+  "aggregation_formulas_reimplemented": [
+    "simple_mean",
+    "log_odds_mean",
+    "ec_w0_56",
+    "piecewise_odds",
+    "cf_directional"
+  ]
+}

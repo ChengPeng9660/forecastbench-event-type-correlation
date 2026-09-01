@@ -4,6 +4,7 @@ import { MarketWinBadge, MarketWinToggle, MarketWinVerdict } from "./MarketWinHi
 import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
 import { ModelMarketAggregationExplorer } from "./ModelMarketAggregationExplorer";
 import { FocalComplementarityExplorer } from "./FocalComplementarityExplorer";
+import { FocalWithinTopicComplementarity } from "./FocalWithinTopicComplementarity";
 import "../modelMarketAggregation.css";
 import { existingAggregationHref, existingLinksForConfiguration } from "../lib/existingAggregationLinks";
 import { highLossAssociationReason, highLossAxis, isHighLossMetric, rawPearson, rawSpearman } from "../lib/highLoss";
@@ -264,6 +265,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         filters={{ provider, prompt, information }}
       />
       <FocalComplementarityExplorer selectedConfiguration={selectedConfiguration || null} />
+      <FocalWithinTopicComplementarity selectedConfiguration={selectedConfiguration || null} />
     </section>
   );
 }
