@@ -51,7 +51,7 @@ type Loaded =
   | { status: "error"; error: string }
   | { status: "ready"; data: ComplementarityData };
 
-type FocalOutcome = "gain_vs_better_single" | "aggregation_bi";
+type FocalOutcome = "gain_vs_better_single" | "aggregation_bi" | "aggregation_ece";
 
 function percentage(value: Score | undefined, digits = 1) {
   return isScore(value) ? `${(value * 100).toFixed(digits)}%` : "—";
@@ -115,13 +115,19 @@ function FocalPartnerScatter({
   const points = pairs.flatMap((pair, index) => {
     const gain = pairGain(pair, method);
     const aggregationBi = pair.methods[method];
-    const value = outcome === "aggregation_bi" ? aggregationBi : gain;
+    const aggregationEce = pair.calibration.methods[method];
+    const value = outcome === "aggregation_bi" ? aggregationBi : outcome === "aggregation_ece" ? aggregationEce : gain;
+    const calibrationWin = isScore(aggregationEce) && isScore(pair.calibration.test_a) && isScore(pair.calibration.test_b)
+      ? aggregationEce < Math.min(pair.calibration.test_a, pair.calibration.test_b) - 1e-10
+      : false;
     return isScore(pair.train_between_norm) && isScore(gain) && isScore(aggregationBi) && isScore(value)
-      ? [{ pair, index, x: pair.train_between_norm, y: value, gain, aggregationBi, partner: partnerName(pair, focal) }]
+      ? [{ pair, index, x: pair.train_between_norm, y: value, gain, aggregationBi, aggregationEce, calibrationWin, partner: partnerName(pair, focal) }]
       : [];
   });
   const xDomain: [number, number] = [0, Math.max(.001, ...points.map(point => point.x)) * 1.07];
-  const yDomain = domain(points.map(point => point.y), outcome === "gain_vs_better_single");
+  const yDomain: [number, number] = outcome === "aggregation_ece"
+    ? [0, Math.max(.001, ...points.map(point => point.y)) * 1.07]
+    : domain(points.map(point => point.y), outcome !== "aggregation_bi");
   const xRange: [number, number] = [MARGIN.left, WIDTH - MARGIN.right];
   const yRange: [number, number] = [HEIGHT - MARGIN.bottom, MARGIN.top];
   const active = points.find(point => point.pair.id === hovered)
@@ -129,15 +135,19 @@ function FocalPartnerScatter({
 
   const chartLabel = outcome === "aggregation_bi"
     ? "Training category complementarity versus held-out aggregation Brier Index for partners of the selected model"
-    : "Training category complementarity versus held-out aggregation gain for partners of the selected model";
+    : outcome === "aggregation_ece"
+      ? "Training category complementarity versus held-out aggregation expected calibration error for partners of the selected model"
+      : "Training category complementarity versus held-out aggregation gain for partners of the selected model";
   const yAxisLabel = outcome === "aggregation_bi"
     ? "Held-out aggregation Brier Index (higher is better)"
-    : "Held-out aggregation BI − better single BI";
+    : outcome === "aggregation_ece"
+      ? "Held-out aggregation ECE (lower is better)"
+      : "Held-out aggregation BI − better single BI";
 
   return <figure className="focal-complementarity-scatter" data-y-axis={outcome}>
     <div className="focal-chart-scroll"><svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={chartLabel}>
       {ticks(xDomain).map(value => <g key={`x-${value}`}><line className="market-performance-grid" x1={position(value, xDomain, xRange)} x2={position(value, xDomain, xRange)} y1={MARGIN.top} y2={HEIGHT - MARGIN.bottom} /><text className="market-performance-tick" x={position(value, xDomain, xRange)} y={HEIGHT - MARGIN.bottom + 23} textAnchor="middle">{score(value)}</text></g>)}
-      {ticks(yDomain).map(value => <g key={`y-${value}`}><line className="market-performance-grid" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={position(value, yDomain, yRange)} y2={position(value, yDomain, yRange)} /><text className="market-performance-tick" x={MARGIN.left - 12} y={position(value, yDomain, yRange) + 4} textAnchor="end">{score(value, 2)}</text></g>)}
+      {ticks(yDomain).map(value => <g key={`y-${value}`}><line className="market-performance-grid" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={position(value, yDomain, yRange)} y2={position(value, yDomain, yRange)} /><text className="market-performance-tick" x={MARGIN.left - 12} y={position(value, yDomain, yRange) + 4} textAnchor="end">{score(value, outcome === "aggregation_ece" ? 3 : 2)}</text></g>)}
       {outcome === "gain_vs_better_single" && <><line className="focal-complementarity-zero" x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={position(0, yDomain, yRange)} y2={position(0, yDomain, yRange)} /><text className="market-performance-tick" x={WIDTH - MARGIN.right} y={position(0, yDomain, yRange) - 8} textAnchor="end">Equal to better single</text></>}
       {points.map(point => {
         const isSelected = point.pair.id === selected?.id;
@@ -145,13 +155,16 @@ function FocalPartnerScatter({
         const identity = identities.get(point.partner);
         const outcomeText = outcome === "aggregation_bi"
           ? `Held-out aggregation BI: ${score(point.aggregationBi, 3)}`
-          : `Held-out gain vs better single: ${score(point.gain, 3, true)} BI`;
+          : outcome === "aggregation_ece"
+            ? `Held-out aggregation ECE: ${score(point.aggregationEce, 3)}`
+            : `Held-out gain vs better single: ${score(point.gain, 3, true)} BI`;
+        const beatsBoth = outcome === "aggregation_ece" ? point.calibrationWin : point.gain > 1e-10;
         const label = `${point.index + 1}. ${point.partner}\nTraining Dtype: ${score(point.x)}\nTrain BI gap: ${score(point.pair.train_gap)}\n${outcomeText}`;
-        return <g className={`focal-complementarity-point${isSelected ? " selected" : ""}`} data-partner={point.partner} data-training-rank={point.index + 1} data-beats-both={point.gain > 1e-10} role="button" tabIndex={0} aria-label={label} aria-pressed={isSelected} transform={`translate(${x} ${y})`} key={point.pair.id}
+        return <g className={`focal-complementarity-point${isSelected ? " selected" : ""}`} data-partner={point.partner} data-training-rank={point.index + 1} data-beats-both={beatsBoth} role="button" tabIndex={0} aria-label={label} aria-pressed={isSelected} transform={`translate(${x} ${y})`} key={point.pair.id}
           onMouseEnter={() => setHovered(point.pair.id)} onMouseLeave={() => setHovered(null)} onFocus={() => setHovered(point.pair.id)} onBlur={() => setHovered(null)}
           onClick={() => onSelect(point.pair.id)} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelect(point.pair.id); } }}>
           {isSelected && <circle className="focal-complementarity-halo" r="12" />}
-          <circle className="focal-complementarity-glyph" r={isSelected ? 6.8 : 5.5} fill={point.gain > 1e-10 ? PURPLE : GOLD} />
+          <circle className="focal-complementarity-glyph" r={isSelected ? 6.8 : 5.5} fill={beatsBoth ? PURPLE : GOLD} />
           {isSelected && <text className="focal-complementarity-point-label" x={x > WIDTH * .68 ? -12 : 12} y="-10" textAnchor={x > WIDTH * .68 ? "end" : "start"}>{identityLabel(identity, point.partner)}</text>}
           <circle className="market-performance-hit-target" r="13" /><title>{label}</title>
         </g>;
@@ -159,8 +172,8 @@ function FocalPartnerScatter({
       <text className="market-performance-axis-label" x={WIDTH / 2} y={HEIGHT - 17} textAnchor="middle">Training cross-category complementarity Dtype (normalized) →</text>
       <text className="market-performance-axis-label" transform={`translate(18 ${HEIGHT / 2}) rotate(-90)`} textAnchor="middle">{yAxisLabel}</text>
     </svg></div>
-    <div className="focal-complementarity-legend"><span><i style={{ background: PURPLE }} />Beats both models</span><span><i style={{ background: GOLD }} />Below / tied</span><span>Partner ranking uses training Dtype only</span></div>
-    <div className="focal-complementarity-readout" aria-live="polite">{active ? <><strong>{identityLabel(identities.get(active.partner), active.partner)}</strong><span>D<sub>type</sub> {score(active.x)} · {outcome === "aggregation_bi" ? <>aggregation BI <b>{score(active.aggregationBi, 3)}</b></> : <>held-out gain <b>{score(active.gain, 3, true)} BI</b></>}</span></> : <span>Select a partner to inspect the pair.</span>}</div>
+    <div className="focal-complementarity-legend"><span><i style={{ background: PURPLE }} />{outcome === "aggregation_ece" ? "Lower ECE than both models" : "Beats both models"}</span><span><i style={{ background: GOLD }} />{outcome === "aggregation_ece" ? "Higher / tied ECE" : "Below / tied"}</span><span>Partner ranking uses training Dtype only</span></div>
+    <div className="focal-complementarity-readout" aria-live="polite">{active ? <><strong>{identityLabel(identities.get(active.partner), active.partner)}</strong><span>D<sub>type</sub> {score(active.x)} · {outcome === "aggregation_bi" ? <>aggregation BI <b>{score(active.aggregationBi, 3)}</b></> : outcome === "aggregation_ece" ? <>aggregation ECE <b>{score(active.aggregationEce, 3)}</b></> : <>held-out gain <b>{score(active.gain, 3, true)} BI</b></>}</span></> : <span>Select a partner to inspect the pair.</span>}</div>
   </figure>;
 }
 
@@ -169,50 +182,54 @@ function CategoryProfileChart({
   profiles,
   focal,
   method,
+  metric,
   identities,
 }: {
   pair: StudyPair;
   profiles: CategoryProfile[];
   focal: string;
   method: string;
+  metric: "bi" | "ece";
   identities: Map<string, ComplementarityConfiguration>;
 }) {
   const direction = oriented(pair, focal);
   const partner = partnerName(pair, focal);
   const rows = [{
     group: "overall",
-    focal_train: direction.focalTrainBi,
-    partner_train: direction.partnerTrainBi,
-    focal_test: direction.focalTestBi,
-    partner_test: direction.partnerTestBi,
-    aggregation_test: pair.methods[method],
+    focal_train: metric === "ece" ? (direction.focalIsA ? pair.calibration.train_a : pair.calibration.train_b) : direction.focalTrainBi,
+    partner_train: metric === "ece" ? (direction.focalIsA ? pair.calibration.train_b : pair.calibration.train_a) : direction.partnerTrainBi,
+    focal_test: metric === "ece" ? (direction.focalIsA ? pair.calibration.test_a : pair.calibration.test_b) : direction.focalTestBi,
+    partner_test: metric === "ece" ? (direction.focalIsA ? pair.calibration.test_b : pair.calibration.test_a) : direction.partnerTestBi,
+    aggregation_test: metric === "ece" ? pair.calibration.methods[method] : pair.methods[method],
     test_support_ok: true,
   }, ...profiles.map(profile => ({
     group: profile.group,
-    focal_train: direction.focalIsA ? profile.train_bi_a : profile.train_bi_b,
-    partner_train: direction.focalIsA ? profile.train_bi_b : profile.train_bi_a,
-    focal_test: direction.focalIsA ? profile.test_bi_a : profile.test_bi_b,
-    partner_test: direction.focalIsA ? profile.test_bi_b : profile.test_bi_a,
-    aggregation_test: profile.methods[method],
+    focal_train: metric === "ece" ? (direction.focalIsA ? profile.calibration.train_a : profile.calibration.train_b) : (direction.focalIsA ? profile.train_bi_a : profile.train_bi_b),
+    partner_train: metric === "ece" ? (direction.focalIsA ? profile.calibration.train_b : profile.calibration.train_a) : (direction.focalIsA ? profile.train_bi_b : profile.train_bi_a),
+    focal_test: metric === "ece" ? (direction.focalIsA ? profile.calibration.test_a : profile.calibration.test_b) : (direction.focalIsA ? profile.test_bi_a : profile.test_bi_b),
+    partner_test: metric === "ece" ? (direction.focalIsA ? profile.calibration.test_b : profile.calibration.test_a) : (direction.focalIsA ? profile.test_bi_b : profile.test_bi_a),
+    aggregation_test: metric === "ece" ? profile.calibration.methods[method] : profile.methods[method],
     test_support_ok: profile.test_support_ok,
   }))].sort((first, second) => {
     const priority = (group: string) => group === "overall" ? 0 : group === direction.focalGroup ? 1 : group === direction.partnerGroup ? 2 : 3;
     return priority(first.group) - priority(second.group) || first.group.localeCompare(second.group);
   });
   const values = rows.flatMap(row => [row.focal_train, row.partner_train, row.focal_test, row.partner_test, row.aggregation_test]).filter(isScore);
-  const low = values.length ? Math.floor((Math.min(...values) - 2) / 5) * 5 : 0;
-  const high = values.length ? Math.ceil((Math.max(...values) + 2) / 5) * 5 : 100;
-  const input: [number, number] = [low, Math.max(low + 5, high)];
+  const low = metric === "ece" ? 0 : values.length ? Math.floor((Math.min(...values) - 2) / 5) * 5 : 0;
+  const high = metric === "ece"
+    ? Math.max(.01, (values.length ? Math.max(...values) : 0) * 1.08)
+    : values.length ? Math.ceil((Math.max(...values) + 2) / 5) * 5 : 100;
+  const input: [number, number] = [low, metric === "ece" ? high : Math.max(low + 5, high)];
   const trainRange: [number, number] = [180, 445], testRange: [number, number] = [585, 850];
   const chartHeight = 73 + rows.length * 64;
   const focalIdentity = identities.get(focal), partnerIdentity = identities.get(partner);
 
-  return <figure className="focal-category-profile">
-    <div className="focal-category-title"><div><span><i style={{ background: PURPLE }} />Focal · {identityLabel(focalIdentity, focal)}</span><span><i style={{ background: GOLD }} />Partner · {identityLabel(partnerIdentity, partner)}</span><span><i className="focal-aggregation-key" />Aggregation</span></div><small>BI further right is better · same train/test scale</small></div>
-    <div className="focal-chart-scroll"><svg viewBox={`0 0 880 ${chartHeight}`} role="img" aria-label="Category-level training strengths and held-out transfer for the selected focal model and partner">
+  return <figure className="focal-category-profile" data-profile-metric={metric}>
+    <div className="focal-category-title"><div><span><i style={{ background: PURPLE }} />Focal · {identityLabel(focalIdentity, focal)}</span><span><i style={{ background: GOLD }} />Partner · {identityLabel(partnerIdentity, partner)}</span><span><i className="focal-aggregation-key" />Aggregation</span></div><small>{metric === "ece" ? "ECE further left is better" : "BI further right is better"} · same train/test scale</small></div>
+    <div className="focal-chart-scroll"><svg viewBox={`0 0 880 ${chartHeight}`} role="img" aria-label={`Category-level training and held-out ${metric === "ece" ? "expected calibration error" : "Brier Index"} for the selected focal model and partner`}>
       <text x={(trainRange[0] + trainRange[1]) / 2} y="20" textAnchor="middle" className="focal-category-heading">TRAIN · identify complementary strengths</text>
       <text x={(testRange[0] + testRange[1]) / 2} y="20" textAnchor="middle" className="focal-category-heading">TEST · evaluate transfer and aggregation</text>
-      {[trainRange, testRange].map((range, panel) => <g key={panel}>{ticks(input, 4).map(value => <g key={value}><line className="market-performance-grid" x1={position(value, input, range)} x2={position(value, input, range)} y1="34" y2={chartHeight - 31} /><text className="market-performance-tick" x={position(value, input, range)} y={chartHeight - 12} textAnchor="middle">{value.toFixed(0)}</text></g>)}</g>)}
+      {[trainRange, testRange].map((range, panel) => <g key={panel}>{ticks(input, 4).map(value => <g key={value}><line className="market-performance-grid" x1={position(value, input, range)} x2={position(value, input, range)} y1="34" y2={chartHeight - 31} /><text className="market-performance-tick" x={position(value, input, range)} y={chartHeight - 12} textAnchor="middle">{value.toFixed(metric === "ece" ? 2 : 0)}</text></g>)}</g>)}
       {rows.map((row, index) => {
         const y = 58 + index * 64;
         const focalEdge = row.group === direction.focalGroup, partnerEdge = row.group === direction.partnerGroup;
@@ -226,15 +243,15 @@ function CategoryProfileChart({
             const [focalBi, partnerBi, aggregationBi] = valuesForPanel;
             return <g key={panel}>
               {isScore(focalBi) && isScore(partnerBi) && <line x1={position(focalBi, input, range)} x2={position(partnerBi, input, range)} y1={y} y2={y} className="focal-category-connector" />}
-              {isScore(focalBi) && <g><circle cx={position(focalBi, input, range)} cy={y} r="5.5" fill={PURPLE} /><text x={position(focalBi, input, range)} y={y - 11} textAnchor="middle" className="focal-category-value focal-value">{score(focalBi, 1)}</text></g>}
-              {isScore(partnerBi) && <g><circle cx={position(partnerBi, input, range)} cy={y} r="5.5" fill={GOLD} /><text x={position(partnerBi, input, range)} y={y + 20} textAnchor="middle" className="focal-category-value partner-value">{score(partnerBi, 1)}</text></g>}
-              {isScore(aggregationBi) && <path d={`M${position(aggregationBi, input, range)},${y - 7}l-5.5,11h11Z`} fill={SLATE} stroke="white"><title>Aggregation BI: {score(aggregationBi)}</title></path>}
+              {isScore(focalBi) && <g><circle cx={position(focalBi, input, range)} cy={y} r="5.5" fill={PURPLE} /><text x={position(focalBi, input, range)} y={y - 11} textAnchor="middle" className="focal-category-value focal-value">{score(focalBi, metric === "ece" ? 3 : 1)}</text></g>}
+              {isScore(partnerBi) && <g><circle cx={position(partnerBi, input, range)} cy={y} r="5.5" fill={GOLD} /><text x={position(partnerBi, input, range)} y={y + 20} textAnchor="middle" className="focal-category-value partner-value">{score(partnerBi, metric === "ece" ? 3 : 1)}</text></g>}
+              {isScore(aggregationBi) && <path d={`M${position(aggregationBi, input, range)},${y - 7}l-5.5,11h11Z`} fill={SLATE} stroke="white"><title>Aggregation {metric === "ece" ? "ECE" : "BI"}: {score(aggregationBi)}</title></path>}
             </g>;
           })}
         </g>;
       })}
     </svg></div>
-    <figcaption>Numbers show focal / partner BI. Categories with fewer than 30 test events remain descriptive and do not confirm transfer.</figcaption>
+    <figcaption>{metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] and pooled common rows; lower is better." : "Numbers show focal / partner BI. Categories with fewer than 30 test events remain descriptive and do not confirm transfer."}</figcaption>
   </figure>;
 }
 
@@ -325,7 +342,12 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
   const selectedGain = selectedPair ? pairGain(selectedPair, method) : null;
   const selectedRank = selectedPair ? pairs.findIndex(pair => pair.id === selectedPair.id) + 1 : 0;
   const selectedAggregationBi = selectedPair?.methods[method];
+  const selectedAggregationEce = selectedPair?.calibration.methods[method];
   const gainVsFocal = isScore(selectedAggregationBi) && isScore(selectedDirection?.focalTestBi) ? selectedAggregationBi - selectedDirection.focalTestBi : null;
+  const focalTestEce = selectedPair && selectedDirection ? (selectedDirection.focalIsA ? selectedPair.calibration.test_a : selectedPair.calibration.test_b) : null;
+  const partnerTestEce = selectedPair && selectedDirection ? (selectedDirection.focalIsA ? selectedPair.calibration.test_b : selectedPair.calibration.test_a) : null;
+  const eceImprovementVsFocal = isScore(selectedAggregationEce) && isScore(focalTestEce) ? focalTestEce - selectedAggregationEce : null;
+  const eceImprovementVsBest = isScore(selectedAggregationEce) && isScore(focalTestEce) && isScore(partnerTestEce) ? Math.min(focalTestEce, partnerTestEce) - selectedAggregationEce : null;
   const methodLabel = data?.methods.find(item => item.id === method)?.label ?? method;
 
   return <section ref={sectionRef} className="focal-complementarity-section configuration-pair-section" id="focal-model-complementarity" aria-labelledby="focal-complementarity-heading" aria-busy={loaded.status === "loading"}>
@@ -347,7 +369,7 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
         <label><span>AGGREGATION METHOD</span><select aria-label="Selected-model aggregation method" value={method} onChange={event => setMethod(event.target.value)}>{data.methods.map(item => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
       </div>
       <div className="market-performance-axis-controls focal-complementarity-axis-controls">
-        <div><span>TEST PERFORMANCE · Y</span><div className="market-performance-tabs" role="group" aria-label="Selected-model complementarity test outcome"><button type="button" className={outcome === "gain_vs_better_single" ? "active" : ""} aria-pressed={outcome === "gain_vs_better_single"} onClick={() => setOutcome("gain_vs_better_single")}>Gain vs better single</button><button type="button" className={outcome === "aggregation_bi" ? "active" : ""} aria-pressed={outcome === "aggregation_bi"} onClick={() => setOutcome("aggregation_bi")}>Aggregation BI ↑</button></div></div>
+        <div><span>TEST PERFORMANCE · Y</span><div className="market-performance-tabs" role="group" aria-label="Selected-model complementarity test outcome"><button type="button" className={outcome === "gain_vs_better_single" ? "active" : ""} aria-pressed={outcome === "gain_vs_better_single"} onClick={() => setOutcome("gain_vs_better_single")}>Gain vs better single</button><button type="button" className={outcome === "aggregation_bi" ? "active" : ""} aria-pressed={outcome === "aggregation_bi"} onClick={() => setOutcome("aggregation_bi")}>Aggregation BI ↑</button><button type="button" className={outcome === "aggregation_ece" ? "active" : ""} aria-pressed={outcome === "aggregation_ece"} onClick={() => setOutcome("aggregation_ece")}>Aggregation ECE ↓</button></div></div>
       </div>
       {!selectedConfiguration || !focalKnown ? <div className="configuration-pair-empty"><strong>{selectedConfiguration ? "This exact configuration is outside the complementarity release." : "Select a model in the first chart."}</strong><span>No replacement focal model is substituted.</span></div> : <>
         {pairs.length ? <>
@@ -366,11 +388,19 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
                   <div><dt>Training D<sub>type</sub></dt><dd>{score(selectedPair.train_between_norm)}</dd></div>
                   <div><dt>Train BI gap</dt><dd>{score(selectedPair.train_gap)}</dd></div>
                   <div><dt>Mean train BI</dt><dd>{score(selectedPair.mean_train_bi, 1)}</dd></div>
-                  <div><dt>{methodLabel} BI</dt><dd>{score(selectedAggregationBi)}</dd></div>
-                  <div><dt>Focal test BI</dt><dd>{score(selectedDirection.focalTestBi)}</dd></div>
-                  <div><dt>Partner test BI</dt><dd>{score(selectedDirection.partnerTestBi)}</dd></div>
-                  <div><dt>Gain vs focal</dt><dd>{score(gainVsFocal, 3, true)} BI</dd></div>
-                  <div><dt>Gain vs better single</dt><dd>{score(selectedGain, 3, true)} BI</dd></div>
+                  {outcome === "aggregation_ece" ? <>
+                    <div><dt>{methodLabel} ECE</dt><dd>{score(selectedAggregationEce)}</dd></div>
+                    <div><dt>Focal test ECE</dt><dd>{score(focalTestEce)}</dd></div>
+                    <div><dt>Partner test ECE</dt><dd>{score(partnerTestEce)}</dd></div>
+                    <div><dt>ECE improvement vs focal</dt><dd>{score(eceImprovementVsFocal, 3, true)}</dd></div>
+                    <div><dt>ECE improvement vs best single</dt><dd>{score(eceImprovementVsBest, 3, true)}</dd></div>
+                  </> : <>
+                    <div><dt>{methodLabel} BI</dt><dd>{score(selectedAggregationBi)}</dd></div>
+                    <div><dt>Focal test BI</dt><dd>{score(selectedDirection.focalTestBi)}</dd></div>
+                    <div><dt>Partner test BI</dt><dd>{score(selectedDirection.partnerTestBi)}</dd></div>
+                    <div><dt>Gain vs focal</dt><dd>{score(gainVsFocal, 3, true)} BI</dd></div>
+                    <div><dt>Gain vs better single</dt><dd>{score(selectedGain, 3, true)} BI</dd></div>
+                  </>}
                   <div><dt>Supported train mass</dt><dd>{percentage(selectedPair.train_coverage)}</dd></div>
                 </dl>
                 <small>{selectedPartner}</small>
@@ -379,7 +409,7 @@ export function FocalComplementarityExplorer({ selectedConfiguration }: { select
           </div>
 
           <div className="focal-category-section"><div className="section-heading"><div><p className="eyebrow">WHY THIS PAIR WAS SCREENED</p><h4>Where do their category strengths differ?</h4></div><p>Training identifies the complementary pattern. Test values show whether the named strengths transfer and whether the unchanged pool improves each category.</p></div>
-            {profileError ? <div className="configuration-pair-loading" role="alert"><p>{profileError}</p><button type="button" className="market-performance-aggregation-cta" onClick={() => setProfileAttempt(value => value + 1)}>Retry category profile</button></div> : profiles.length && selectedPair ? <CategoryProfileChart pair={selectedPair} profiles={profiles} focal={selectedConfiguration} method={method} identities={identities} /> : <div className="configuration-pair-loading" role="status">Loading the selected pair’s category profile…</div>}
+            {profileError ? <div className="configuration-pair-loading" role="alert"><p>{profileError}</p><button type="button" className="market-performance-aggregation-cta" onClick={() => setProfileAttempt(value => value + 1)}>Retry category profile</button></div> : profiles.length && selectedPair ? <CategoryProfileChart pair={selectedPair} profiles={profiles} focal={selectedConfiguration} method={method} metric={outcome === "aggregation_ece" ? "ece" : "bi"} identities={identities} /> : <div className="configuration-pair-loading" role="status">Loading the selected pair’s category profile…</div>}
           </div>
         </> : <div className="configuration-pair-empty"><strong>No crossed-strength partner under these controls.</strong><span>{allEligible.length ? `${allEligible.length} near-skill partner${allEligible.length === 1 ? " is" : "s are"} available before the crossed-strength requirement. Try the other grouping, widen the BI gap, or change partner scope.` : "Try the other grouping, widen the BI gap, or change partner scope."}</span></div>}
       </>}

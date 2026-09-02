@@ -4,6 +4,14 @@ export type AbilityGap = 3 | 5;
 export type PairScope = "all" | "different_model_version" | "matched_conditions";
 export type Score = number | null;
 
+export interface CalibrationScores {
+  train_a: Score;
+  train_b: Score;
+  test_a: Score;
+  test_b: Score;
+  methods: Record<string, Score>;
+}
+
 export interface StudyMethod {
   id: string;
   label: string;
@@ -22,6 +30,7 @@ export interface CategoryProfile {
   test_bi_b: Score;
   test_support_ok: boolean;
   methods: Record<string, Score>;
+  calibration: CalibrationScores;
 }
 
 export interface StudyPair {
@@ -59,6 +68,7 @@ export interface StudyPair {
   same_prompt: boolean;
   same_information: boolean;
   methods: Record<string, Score>;
+  calibration: CalibrationScores;
   profile_key: string;
   profile_shard: string;
 }
@@ -104,7 +114,7 @@ export interface DirectionSummary extends Omit<AggregationSummary, "view"> {
 }
 
 export interface ComplementarityData {
-  schema_version: 5;
+  schema_version: 6;
   study: string;
   date: string;
   primary_split: string;
@@ -121,6 +131,19 @@ export interface ComplementarityData {
   models: string[];
   configurations: ComplementarityConfiguration[];
   methods: StudyMethod[];
+  calibration: {
+    metric: "expected_calibration_error";
+    label: "ECE";
+    implementation: "prophet-arena-engine-2.2.0-compatible";
+    probability_bins: 10;
+    binning: "uniform_equal_width_over_[0,1]";
+    boundaries: "left_closed_right_open_except_last_closed";
+    aggregation: "pooled_common_probability_outcome_pairs";
+    row_weighting: "uniform";
+    uses_question_fixed_effect: false;
+    uses_brier_index_normalization: false;
+    lower_is_better: true;
+  };
   pairs: StudyPair[];
   summaries: AggregationSummary[];
   directions: DirectionSummary[];
@@ -145,6 +168,15 @@ export interface ComplementarityData {
     output_rows: number;
     category_profile_rows: number;
     profile_shards: number;
+    calibration: {
+      status: "PASS";
+      pair_views: number;
+      unique_pairs: number;
+      profile_rows: number;
+      max_overall_bi_reconstruction_error: number;
+      max_profile_bi_reconstruction_error: number;
+      reconstruction_tolerance: number;
+    };
   };
   provenance: Record<string, string>;
 }

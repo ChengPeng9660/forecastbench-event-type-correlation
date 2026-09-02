@@ -21,7 +21,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("audited all-configuration complementarity publication", () => {
   it("publishes the complete exact-configuration universe with frozen provenance", () => {
-    expect(data.schema_version).toBe(5);
+    expect(data.schema_version).toBe(6);
     expect(data.weighting).toBe("uniform_rows");
     expect(data.event_type_taxonomy).toBe("forecastbench-seven-domain-v1.0.0");
     expect(data.event_type_domains).toEqual([
@@ -64,6 +64,18 @@ describe("audited all-configuration complementarity publication", () => {
     ]);
     expect(data.methods.every(method => method.kind === "deployable")).toBe(true);
     expect(data.pairs.every(pair => Object.keys(pair.methods).length === 5)).toBe(true);
+    expect(data.calibration).toMatchObject({
+      metric: "expected_calibration_error",
+      implementation: "prophet-arena-engine-2.2.0-compatible",
+      probability_bins: 10,
+      binning: "uniform_equal_width_over_[0,1]",
+      aggregation: "pooled_common_probability_outcome_pairs",
+      row_weighting: "uniform",
+      uses_question_fixed_effect: false,
+      uses_brier_index_normalization: false,
+      lower_is_better: true,
+    });
+    expect(data.pairs.every(pair => Object.keys(pair.calibration.methods).length === 5)).toBe(true);
     expect(data.audit).toMatchObject({
       status: "PASS",
       implementation_independent: true,
@@ -73,8 +85,16 @@ describe("audited all-configuration complementarity publication", () => {
       output_rows: 221_184,
       category_profile_rows: 62_131,
       profile_shards: 32,
+      calibration: {
+        status: "PASS",
+        pair_views: 16_589,
+        unique_pairs: 10_723,
+        profile_rows: 62_131,
+      },
     });
     expect(data.audit.max_absolute_error).toBeLessThan(2e-11);
+    expect(data.audit.calibration.max_overall_bi_reconstruction_error).toBeLessThan(1e-9);
+    expect(data.audit.calibration.max_profile_bi_reconstruction_error).toBeLessThan(1e-9);
 
     const manifest = JSON.parse(readFileSync(resolve(directory, "manifest.json"), "utf8"));
     expect(manifest.weighting).toBe("uniform_rows");
@@ -151,6 +171,13 @@ describe("audited all-configuration complementarity publication", () => {
     expect(pairGain(pair, "cf_directional")).toBeCloseTo(3.0385659015484023, 12);
     expect(pairGain(pair, "simple_mean")).toBeCloseTo(.712428679063386, 12);
     expect(pairGain(pair, "piecewise_odds")).toBeCloseTo(1.1077415821981873, 12);
+    expect(pair.calibration).toMatchObject({
+      train_a: 0.1325058466813847,
+      train_b: 0.1089033189033189,
+      test_a: 0.15075918932029403,
+      test_b: 0.10384144895448945,
+    });
+    expect(pair.calibration.methods.cf_directional).toBeCloseTo(0.05301426324747844, 14);
     expect(pair.crossing_persists).toBe(true);
 
     const shard = readFileSync(resolve(directory, `profiles/${pair.profile_shard}.json`), "utf8");
@@ -160,6 +187,7 @@ describe("audited all-configuration complementarity publication", () => {
     expect(profiles.length).toBeGreaterThanOrEqual(2);
     expect(profiles.map(profile => profile.group)).toContain(pair.group_a);
     expect(profiles.map(profile => profile.group)).toContain(pair.group_b);
+    expect(profiles.every(profile => Object.keys(profile.calibration.methods).length === 5)).toBe(true);
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 

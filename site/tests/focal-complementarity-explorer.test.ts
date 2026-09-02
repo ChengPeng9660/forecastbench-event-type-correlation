@@ -64,13 +64,13 @@ describe("selected-model complementarity explorer", () => {
     expect(section.querySelector(".focal-transfer-verdict")).not.toBeInTheDocument();
   }, 20_000);
 
-  it("switches the held-out Y axis between gain and absolute aggregation BI without changing the screened pair", async () => {
+  it("switches the held-out Y axis across gain, absolute BI, and 10-bin ECE without changing the screened pair", async () => {
     render(createElement(FocalComplementarityExplorer, { selectedConfiguration: claude }));
     const section = document.querySelector("#focal-model-complementarity") as HTMLElement;
     await waitFor(() => expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(25), { timeout: 10_000 });
 
     const outcomeControls = within(section).getByRole("group", { name: "Selected-model complementarity test outcome" });
-    expect(within(outcomeControls).getAllByRole("button")).toHaveLength(2);
+    expect(within(outcomeControls).getAllByRole("button")).toHaveLength(3);
     expect(within(outcomeControls).getByRole("button", { name: "Gain vs better single" })).toHaveAttribute("aria-pressed", "true");
     expect(within(section).getByRole("img", { name: /held-out aggregation gain for partners/ })).toBeInTheDocument();
     expect(section.querySelector(".focal-complementarity-zero")).toBeInTheDocument();
@@ -93,9 +93,25 @@ describe("selected-model complementarity explorer", () => {
     expect(section.querySelector(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", partner ?? "");
     expect(section.querySelector(".focal-complementarity-readout")).toHaveTextContent(/aggregation BI \d/);
 
+    fireEvent.click(within(outcomeControls).getByRole("button", { name: "Aggregation ECE ↓" }));
+    expect(section.querySelector(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "aggregation_ece");
+    expect(within(section).getByRole("img", { name: /held-out aggregation expected calibration error for partners/ })).toBeInTheDocument();
+    expect(section).toHaveTextContent("Held-out aggregation ECE (lower is better)");
+    expect(section.querySelector(".focal-complementarity-zero")).not.toBeInTheDocument();
+    expect(section.querySelectorAll(".focal-complementarity-point")).toHaveLength(25);
+    expect(section.querySelector(".focal-complementarity-readout")).toHaveTextContent("aggregation ECE 0.053");
+    expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Directional CF ECE0.053");
+    expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Focal test ECE0.151");
+    expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("Partner test ECE0.104");
+    expect(section.querySelector(".focal-complementarity-inspector")).toHaveTextContent("ECE improvement vs best single+0.051");
+    expect(section.querySelector(".focal-category-profile")).toHaveAttribute("data-profile-metric", "ece");
+    expect(section.querySelector(".focal-category-profile")).toHaveTextContent("ECE further left is better");
+    expect(section.querySelector(".focal-category-profile figcaption")).toHaveTextContent("10 fixed equal-width bins over [0, 1]");
+
     fireEvent.click(within(outcomeControls).getByRole("button", { name: "Gain vs better single" }));
     expect(section.querySelector(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "gain_vs_better_single");
     expect(section.querySelector(".focal-complementarity-zero")).toBeInTheDocument();
+    expect(section.querySelector(".focal-category-profile")).toHaveAttribute("data-profile-metric", "bi");
   }, 20_000);
 
   it("keeps empty source results explicit, exposes the condition-matched control, and follows prop changes", async () => {

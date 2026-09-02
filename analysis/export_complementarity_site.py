@@ -11,6 +11,11 @@ import math
 from pathlib import Path
 import shutil
 
+try:
+    from .complementarity_ece import CALIBRATION_DEFINITION, add_primary_calibration
+except ImportError:  # direct ``python analysis/export_complementarity_site.py`` execution
+    from complementarity_ece import CALIBRATION_DEFINITION, add_primary_calibration
+
 
 METHODS = [
     ("simple_mean", "Simple mean", "deployable"),
@@ -174,6 +179,15 @@ def export(study: Path, destination: Path):
         profile["methods"] = {method: atom(row[f"{method}_bi"]) for method, _, _ in METHODS}
         profile_map.setdefault(key, []).append(profile)
 
+    overall_calibration, calibration_audit = add_primary_calibration(
+        study,
+        primary_source,
+        profile_map,
+        [method for method, _, _ in METHODS],
+        seed=PRIMARY_SPLIT,
+        train_fold=PRIMARY_FOLD,
+    )
+
     pair_fields = [
         "train_events", "test_events", "train_rows", "test_rows", "train_gap", "test_gap",
         "mean_train_bi", "train_bi_a", "train_bi_b", "test_bi_a", "test_bi_b",
@@ -204,6 +218,7 @@ def export(study: Path, destination: Path):
             methods={method: atom(row[f"{method}_bi"]) for method, _, _ in METHODS},
             profile_key=profile_key,
             profile_shard=profile_shard(profile_key),
+            calibration=overall_calibration[(row["model_a"], row["model_b"])],
         )
         if row["weighting"] != "uniform_rows":
             raise ValueError("unexpected row weighting")
@@ -259,7 +274,7 @@ def export(study: Path, destination: Path):
     featured = max(candidates, key=lambda pair: (pair["train_between_norm"], pair["id"]))
     diagnostics = json.loads((study / "results/diagnostics.json").read_text())
     payload = {
-        "schema_version": 5,
+        "schema_version": 6,
         "study": "all_exact_configuration_category_complementarity_2026-09-01",
         "date": "2026-09-01",
         "primary_split": PRIMARY_SPLIT,
@@ -280,6 +295,7 @@ def export(study: Path, destination: Path):
         "models": models,
         "configurations": configurations,
         "methods": [{"id": method, "label": label, "kind": kind} for method, label, kind in METHODS],
+        "calibration": CALIBRATION_DEFINITION,
         "pairs": pairs,
         "summaries": summaries,
         "directions": directions,
@@ -306,6 +322,7 @@ def export(study: Path, destination: Path):
             "profile_shards": PROFILE_SHARDS,
             "taxonomy_uses_outcomes": taxonomy_audit["uses_outcomes"],
             "taxonomy_uses_model_forecasts": taxonomy_audit["uses_model_forecasts"],
+            "calibration": calibration_audit,
         },
         "provenance": {
             "experiment_manifest_sha256": digest(study / "artifact_manifest.json"),
@@ -343,11 +360,16 @@ def export(study: Path, destination: Path):
             "train_crossing": pair["crossing"], "train_category_complementarity": pair["train_between_norm"],
             "train_dataset_row_fraction": pair["train_origin_dataset_fraction"],
             "test_bi_a": pair["test_bi_a"], "test_bi_b": pair["test_bi_b"],
+            "train_ece_a": pair["calibration"]["train_a"],
+            "train_ece_b": pair["calibration"]["train_b"],
+            "test_ece_a": pair["calibration"]["test_a"],
+            "test_ece_b": pair["calibration"]["test_b"],
             "train_events": pair["train_events"], "test_events": pair["test_events"],
         }
         for method, _, _ in METHODS:
             value = pair["methods"][method]
             public_row[f"{method}_bi"] = value
+            public_row[f"{method}_ece"] = pair["calibration"]["methods"][method]
             public_row[f"{method}_gain_vs_better_test_single_bi"] = (
                 value - max(pair["test_bi_a"], pair["test_bi_b"])
                 if None not in (value, pair["test_bi_a"], pair["test_bi_b"]) else None
@@ -379,6 +401,7 @@ def export(study: Path, destination: Path):
         "weighting": payload["weighting"],
         "primary_method": payload["primary_method"],
         "methods": [method for method, _, _ in METHODS],
+        "calibration": CALIBRATION_DEFINITION,
         "event_type_taxonomy": payload["event_type_taxonomy"],
         "event_type_domains": [domain["id"] for domain in payload["event_type_domains"]],
         "ability_thresholds": payload["ability_thresholds"],

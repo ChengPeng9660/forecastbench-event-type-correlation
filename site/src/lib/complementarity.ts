@@ -121,7 +121,7 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
   const response = await fetch(`${COMPLEMENTARITY_PATH}study.json`, { signal });
   if (!response.ok) throw new Error(`Results could not be loaded (${response.status}).`);
   const data = await response.json() as ComplementarityData;
-  if (data.schema_version !== 5
+  if (data.schema_version !== 6
     || data.weighting !== "uniform_rows"
     || data.event_type_taxonomy !== "forecastbench-seven-domain-v1.0.0"
     || !Array.isArray(data.event_type_domains)
@@ -135,6 +135,16 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
     || data.primary_method !== "cf_directional"
     || data.methods.length !== COMPLEMENTARITY_METHODS.length
     || data.methods.some((method, index) => method.id !== COMPLEMENTARITY_METHODS[index])
+    || data.calibration?.metric !== "expected_calibration_error"
+    || data.calibration?.implementation !== "prophet-arena-engine-2.2.0-compatible"
+    || data.calibration?.probability_bins !== 10
+    || data.calibration?.binning !== "uniform_equal_width_over_[0,1]"
+    || data.calibration?.aggregation !== "pooled_common_probability_outcome_pairs"
+    || data.calibration?.row_weighting !== "uniform"
+    || data.calibration?.uses_question_fixed_effect !== false
+    || data.calibration?.uses_brier_index_normalization !== false
+    || data.calibration?.lower_is_better !== true
+    || data.audit?.calibration?.status !== "PASS"
     || data.audit?.status !== "PASS") {
     throw new Error("The published results do not match the expected audited study.");
   }

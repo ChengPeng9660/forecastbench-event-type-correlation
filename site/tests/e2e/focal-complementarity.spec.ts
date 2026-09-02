@@ -34,7 +34,7 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.locator(".focal-complementarity-inspector")).toContainText("+3.039 BI");
   const selectedTransform = await block.locator('.focal-complementarity-point[data-training-rank="1"]').getAttribute("transform");
   const selectedColor = await block.locator('.focal-complementarity-point[data-training-rank="1"] .focal-complementarity-glyph').getAttribute("fill");
-  await expect(block.getByRole("group", { name: "Selected-model complementarity test outcome" }).getByRole("button")).toHaveCount(2);
+  await expect(block.getByRole("group", { name: "Selected-model complementarity test outcome" }).getByRole("button")).toHaveCount(3);
   await block.getByRole("button", { name: "Aggregation BI ↑", exact: true }).click();
   await expect(block.locator(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "aggregation_bi");
   await expect(block.getByRole("img", { name: /held-out aggregation Brier Index for partners/ })).toBeVisible();
@@ -42,6 +42,15 @@ test("links the first-chart exact configuration to its training-screened complem
   await expect(block.locator('.focal-complementarity-point[data-training-rank="1"]')).not.toHaveAttribute("transform", selectedTransform ?? "");
   await expect(block.locator('.focal-complementarity-point[data-training-rank="1"] .focal-complementarity-glyph')).toHaveAttribute("fill", selectedColor ?? "");
   await expect(block.locator(".focal-complementarity-inspector")).toHaveAttribute("data-partner-configuration", "Mistral-Large-Latest (zero shot with freeze values)");
+  await block.getByRole("button", { name: "Aggregation ECE ↓", exact: true }).click();
+  await expect(block.locator(".focal-complementarity-scatter")).toHaveAttribute("data-y-axis", "aggregation_ece");
+  await expect(block.getByRole("img", { name: /held-out aggregation expected calibration error for partners/ })).toBeVisible();
+  await expect(block.locator(".focal-complementarity-inspector")).toContainText("Directional CF ECE");
+  await expect(block.locator(".focal-complementarity-inspector")).toContainText("0.053");
+  await expect(block.locator(".focal-category-profile")).toHaveAttribute("data-profile-metric", "ece");
+  await expect(block.locator(".focal-category-profile")).toContainText("ECE further left is better");
+  const eceTicks = await block.locator(".focal-complementarity-scatter .market-performance-tick").allTextContents();
+  expect(eceTicks.some(label => label.trim().startsWith("-"))).toBe(false);
   await block.getByRole("button", { name: "Gain vs better single", exact: true }).click();
   await expect(block.locator(".focal-complementarity-zero")).toHaveCount(1);
   await expect(block.locator(".focal-category-profile")).toBeVisible();
