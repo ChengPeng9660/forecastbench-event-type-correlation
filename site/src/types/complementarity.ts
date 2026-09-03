@@ -2,7 +2,34 @@ export type Dimension = "topic" | "source";
 export type CohortKind = "crossing" | "eligible";
 export type AbilityGap = 3 | 5;
 export type PairScope = "all" | "different_model_version" | "matched_conditions";
+export type StabilityRule = "main" | "strict";
 export type Score = number | null;
+
+export interface CategoryGapStability {
+  gap_bi: Score;
+  se_bi: Score;
+  events: number;
+  ci_low_bi: Score;
+  ci_high_bi: Score;
+  lcb_for_a_bi: Score;
+  lcb_for_b_bi: Score;
+}
+
+export interface PairStability {
+  score_bi: Score;
+  group_a: string | null;
+  group_b: string | null;
+  edge_a_lcb_bi: Score;
+  edge_b_lcb_bi: Score;
+  primary_eligible: boolean;
+  strict_eligible: boolean;
+  overall_gap_signed_bi: Score;
+  overall_gap_se_bi: Score;
+  overall_ci_low_bi: Score;
+  overall_ci_high_bi: Score;
+  overall_equivalent_gap_3: boolean;
+  overall_equivalent_gap_5: boolean;
+}
 
 export interface CalibrationScores {
   train_a: Score;
@@ -31,6 +58,7 @@ export interface CategoryProfile {
   test_support_ok: boolean;
   methods: Record<string, Score>;
   calibration: CalibrationScores;
+  stability: CategoryGapStability;
 }
 
 export interface StudyPair {
@@ -69,6 +97,7 @@ export interface StudyPair {
   same_information: boolean;
   methods: Record<string, Score>;
   calibration: CalibrationScores;
+  stability: PairStability;
   profile_key: string;
   profile_shard: string;
 }
@@ -114,7 +143,7 @@ export interface DirectionSummary extends Omit<AggregationSummary, "view"> {
 }
 
 export interface ComplementarityData {
-  schema_version: 6;
+  schema_version: 7;
   study: string;
   date: string;
   primary_split: string;
@@ -143,6 +172,20 @@ export interface ComplementarityData {
     uses_question_fixed_effect: false;
     uses_brier_index_normalization: false;
     lower_is_better: true;
+  };
+  stability: {
+    metric: "event_clustered_category_bi_edge";
+    label: "Stable category edge";
+    confidence_level: 0.9;
+    z_value: number;
+    interval: "two_sided_delta_method";
+    cluster_unit: "event";
+    primary_rule: "both_opposite_category_edge_lower_bounds_above_0_bi";
+    strict_rule: "both_opposite_category_edge_lower_bounds_above_1_bi";
+    strict_margin_bi: 1;
+    selection_split: "training_only";
+    uses_test_outcomes: false;
+    changes_aggregation: false;
   };
   pairs: StudyPair[];
   summaries: AggregationSummary[];
@@ -175,6 +218,15 @@ export interface ComplementarityData {
       profile_rows: number;
       max_overall_bi_reconstruction_error: number;
       max_profile_bi_reconstruction_error: number;
+      reconstruction_tolerance: number;
+    };
+    stability: {
+      status: "PASS";
+      pair_views: number;
+      profile_rows: number;
+      primary_eligible_views_before_ui_controls: number;
+      strict_eligible_views_before_ui_controls: number;
+      max_profile_bi_gap_reconstruction_error: number;
       reconstruction_tolerance: number;
     };
   };

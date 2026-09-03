@@ -11,6 +11,7 @@ import {
   loadPairProfiles,
   pairGain,
   score,
+  stablePairs,
   studySummary,
 } from "../src/lib/complementarity";
 import type { ComplementarityData, PairScope } from "../src/types/complementarity";
@@ -21,7 +22,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("audited all-configuration complementarity publication", () => {
   it("publishes the complete exact-configuration universe with frozen provenance", () => {
-    expect(data.schema_version).toBe(6);
+    expect(data.schema_version).toBe(7);
     expect(data.weighting).toBe("uniform_rows");
     expect(data.event_type_taxonomy).toBe("forecastbench-seven-domain-v1.0.0");
     expect(data.event_type_domains).toEqual([
@@ -76,6 +77,18 @@ describe("audited all-configuration complementarity publication", () => {
       lower_is_better: true,
     });
     expect(data.pairs.every(pair => Object.keys(pair.calibration.methods).length === 5)).toBe(true);
+    expect(data.stability).toMatchObject({
+      metric: "event_clustered_category_bi_edge",
+      confidence_level: .9,
+      interval: "two_sided_delta_method",
+      cluster_unit: "event",
+      primary_rule: "both_opposite_category_edge_lower_bounds_above_0_bi",
+      strict_rule: "both_opposite_category_edge_lower_bounds_above_1_bi",
+      strict_margin_bi: 1,
+      selection_split: "training_only",
+      uses_test_outcomes: false,
+      changes_aggregation: false,
+    });
     expect(data.audit).toMatchObject({
       status: "PASS",
       implementation_independent: true,
@@ -91,10 +104,18 @@ describe("audited all-configuration complementarity publication", () => {
         unique_pairs: 10_723,
         profile_rows: 62_131,
       },
+      stability: {
+        status: "PASS",
+        pair_views: 16_589,
+        profile_rows: 62_131,
+        primary_eligible_views_before_ui_controls: 3_568,
+        strict_eligible_views_before_ui_controls: 1_457,
+      },
     });
     expect(data.audit.max_absolute_error).toBeLessThan(2e-11);
     expect(data.audit.calibration.max_overall_bi_reconstruction_error).toBeLessThan(1e-9);
     expect(data.audit.calibration.max_profile_bi_reconstruction_error).toBeLessThan(1e-9);
+    expect(data.audit.stability.max_profile_bi_gap_reconstruction_error).toBeLessThan(1e-9);
 
     const manifest = JSON.parse(readFileSync(resolve(directory, "manifest.json"), "utf8"));
     expect(manifest.weighting).toBe("uniform_rows");
@@ -103,6 +124,35 @@ describe("audited all-configuration complementarity publication", () => {
       expect(bytes.length, name).toBe(info.bytes);
       expect(createHash("sha256").update(bytes).digest("hex"), name).toBe(info.sha256);
     }
+  });
+
+  it("publishes nested, training-only stable category cohorts", () => {
+    const expected = [
+      [3, "topic", 1_241, 528], [3, "source", 1_815, 727],
+      [5, "topic", 1_407, 597], [5, "source", 2_161, 860],
+    ] as const;
+    for (const [gap, dimension, mainCount, strictCount] of expected) {
+      const main = stablePairs(data, dimension, gap, "all", "main");
+      const strict = stablePairs(data, dimension, gap, "all", "strict");
+      expect(main).toHaveLength(mainCount);
+      expect(strict).toHaveLength(strictCount);
+      const mainIds = new Set(main.map(pair => pair.id));
+      expect(strict.every(pair => mainIds.has(pair.id))).toBe(true);
+      expect(main.every(pair => pair.stability.score_bi! > 0)).toBe(true);
+      expect(strict.every(pair => pair.stability.score_bi! > 1)).toBe(true);
+    }
+
+    const original = stablePairs(data, "topic", 3, "all", "main").map(pair => pair.id);
+    const perturbed = {
+      ...data,
+      pairs: data.pairs.map(pair => ({
+        ...pair,
+        test_bi_a: -999,
+        test_bi_b: 999,
+        calibration: { ...pair.calibration, test_a: 1, test_b: 0 },
+      })),
+    };
+    expect(stablePairs(perturbed, "topic", 3, "all", "main").map(pair => pair.id)).toEqual(original);
   });
 
   it.each([

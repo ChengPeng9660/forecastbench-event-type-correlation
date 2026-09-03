@@ -4,6 +4,80 @@
   border-top: 3px solid var(--ink);
 }
 
+.stable-complementarity-section {
+  margin-top: 72px;
+  border-top-color: var(--purple-deep);
+}
+
+.stable-complementarity-section .focal-category-section {
+  margin-top: 12px;
+}
+
+.stable-method-note {
+  display: grid;
+  grid-template-columns: minmax(150px, .33fr) minmax(0, 1fr);
+  gap: 16px 28px;
+  margin: 0 0 20px;
+  padding: 15px 18px;
+  border-left: 3px solid var(--purple-deep);
+  background: var(--purple-soft);
+  color: var(--quiet);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.stable-method-note strong {
+  color: var(--purple-deep);
+  font: 700 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em;
+}
+
+.configuration-pair-controls.stable-complementarity-controls {
+  grid-template-columns: 1.25fr repeat(4, minmax(0, 1fr));
+}
+
+.stable-pair-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.stable-pair-summary > div {
+  min-width: 0;
+  padding: 17px 18px 18px;
+  border-right: 1px solid var(--line);
+}
+
+.stable-pair-summary > div:last-child {
+  border-right: 0;
+}
+
+.stable-pair-summary dt {
+  margin-bottom: 8px;
+  color: var(--quiet);
+  font: 9px ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+}
+
+.stable-pair-summary dd {
+  margin: 0;
+  color: var(--purple-deep);
+  font: 700 22px/1 Georgia, serif;
+}
+
+.stable-pair-summary small {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.stable-category-profile {
+  border-top: 3px solid var(--purple-deep);
+}
+
 .focal-complementarity-heading {
   align-items: end;
   margin-bottom: 22px;
@@ -211,11 +285,21 @@
   line-height: 1.55;
 }
 
+@media (max-width: 1100px) {
+  .configuration-pair-controls.stable-complementarity-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 760px) {
   .focal-complementarity-section { margin-top: 44px; padding-top: 38px; }
   .focal-complementarity-heading { align-items: start; }
   .focal-category-pair-controls { grid-template-columns: 1fr; padding-inline: 14px; }
   .configuration-pair-controls.focal-complementarity-controls { grid-template-columns: 1fr; }
+  .stable-method-note { grid-template-columns: 1fr; gap: 5px; }
+  .stable-pair-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stable-pair-summary > div:nth-child(2) { border-right: 0; }
+  .stable-pair-summary > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .focal-profile-metric-control .market-performance-tabs { width: 100%; }
   .focal-profile-metric-control .market-performance-tabs button { flex: 1 1 50%; }
 }

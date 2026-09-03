@@ -13,8 +13,10 @@ import shutil
 
 try:
     from .complementarity_ece import CALIBRATION_DEFINITION, add_primary_calibration
+    from .complementarity_stability import STABILITY_DEFINITION, add_primary_stability
 except ImportError:  # direct ``python analysis/export_complementarity_site.py`` execution
     from complementarity_ece import CALIBRATION_DEFINITION, add_primary_calibration
+    from complementarity_stability import STABILITY_DEFINITION, add_primary_stability
 
 
 METHODS = [
@@ -187,6 +189,13 @@ def export(study: Path, destination: Path):
         seed=PRIMARY_SPLIT,
         train_fold=PRIMARY_FOLD,
     )
+    stability, stability_audit = add_primary_stability(
+        study,
+        primary_source,
+        profile_map,
+        seed=int(PRIMARY_SPLIT),
+        train_fold=PRIMARY_FOLD,
+    )
 
     pair_fields = [
         "train_events", "test_events", "train_rows", "test_rows", "train_gap", "test_gap",
@@ -219,6 +228,7 @@ def export(study: Path, destination: Path):
             profile_key=profile_key,
             profile_shard=profile_shard(profile_key),
             calibration=overall_calibration[(row["model_a"], row["model_b"])],
+            stability=stability[(row["dimension"], row["pair_id"])],
         )
         if row["weighting"] != "uniform_rows":
             raise ValueError("unexpected row weighting")
@@ -274,7 +284,7 @@ def export(study: Path, destination: Path):
     featured = max(candidates, key=lambda pair: (pair["train_between_norm"], pair["id"]))
     diagnostics = json.loads((study / "results/diagnostics.json").read_text())
     payload = {
-        "schema_version": 6,
+        "schema_version": 7,
         "study": "all_exact_configuration_category_complementarity_2026-09-01",
         "date": "2026-09-01",
         "primary_split": PRIMARY_SPLIT,
@@ -296,6 +306,7 @@ def export(study: Path, destination: Path):
         "configurations": configurations,
         "methods": [{"id": method, "label": label, "kind": kind} for method, label, kind in METHODS],
         "calibration": CALIBRATION_DEFINITION,
+        "stability": STABILITY_DEFINITION,
         "pairs": pairs,
         "summaries": summaries,
         "directions": directions,
@@ -323,6 +334,7 @@ def export(study: Path, destination: Path):
             "taxonomy_uses_outcomes": taxonomy_audit["uses_outcomes"],
             "taxonomy_uses_model_forecasts": taxonomy_audit["uses_model_forecasts"],
             "calibration": calibration_audit,
+            "stability": stability_audit,
         },
         "provenance": {
             "experiment_manifest_sha256": digest(study / "artifact_manifest.json"),
@@ -364,6 +376,11 @@ def export(study: Path, destination: Path):
             "train_ece_b": pair["calibration"]["train_b"],
             "test_ece_a": pair["calibration"]["test_a"],
             "test_ece_b": pair["calibration"]["test_b"],
+            "stable_category_edge_bi": pair["stability"]["score_bi"],
+            "stable_category_a": pair["stability"]["group_a"],
+            "stable_category_b": pair["stability"]["group_b"],
+            "stable_primary_eligible": pair["stability"]["primary_eligible"],
+            "stable_strict_eligible": pair["stability"]["strict_eligible"],
             "train_events": pair["train_events"], "test_events": pair["test_events"],
         }
         for method, _, _ in METHODS:
@@ -402,6 +419,7 @@ def export(study: Path, destination: Path):
         "primary_method": payload["primary_method"],
         "methods": [method for method, _, _ in METHODS],
         "calibration": CALIBRATION_DEFINITION,
+        "stability": STABILITY_DEFINITION,
         "event_type_taxonomy": payload["event_type_taxonomy"],
         "event_type_domains": [domain["id"] for domain in payload["event_type_domains"]],
         "ability_thresholds": payload["ability_thresholds"],

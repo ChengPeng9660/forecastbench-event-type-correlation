@@ -77,13 +77,14 @@ function oriented(pair: StudyPair, focal: string) {
   };
 }
 
-function CategoryProfileChart({
+export function CategoryProfileChart({
   pair,
   profiles,
   focal,
   method,
   metric,
   identities,
+  stable = false,
 }: {
   pair: StudyPair;
   profiles: CategoryProfile[];
@@ -91,8 +92,13 @@ function CategoryProfileChart({
   method: string;
   metric: "bi" | "ece";
   identities: Map<string, ComplementarityConfiguration>;
+  stable?: boolean;
 }) {
   const direction = oriented(pair, focal);
+  const stableFocalGroup = direction.focalIsA ? pair.stability.group_a : pair.stability.group_b;
+  const stablePartnerGroup = direction.focalIsA ? pair.stability.group_b : pair.stability.group_a;
+  const focalGroup = stable ? stableFocalGroup : direction.focalGroup;
+  const partnerGroup = stable ? stablePartnerGroup : direction.partnerGroup;
   const partner = partnerName(pair, focal);
   const rows = [{
     group: "overall",
@@ -102,6 +108,7 @@ function CategoryProfileChart({
     partner_test: metric === "ece" ? (direction.focalIsA ? pair.calibration.test_b : pair.calibration.test_a) : direction.partnerTestBi,
     aggregation_test: metric === "ece" ? pair.calibration.methods[method] : pair.methods[method],
     test_support_ok: true,
+    stability: null,
   }, ...profiles.map(profile => ({
     group: profile.group,
     focal_train: metric === "ece" ? (direction.focalIsA ? profile.calibration.train_a : profile.calibration.train_b) : (direction.focalIsA ? profile.train_bi_a : profile.train_bi_b),
@@ -110,8 +117,9 @@ function CategoryProfileChart({
     partner_test: metric === "ece" ? (direction.focalIsA ? profile.calibration.test_b : profile.calibration.test_a) : (direction.focalIsA ? profile.test_bi_b : profile.test_bi_a),
     aggregation_test: metric === "ece" ? profile.calibration.methods[method] : profile.methods[method],
     test_support_ok: profile.test_support_ok,
+    stability: profile.stability,
   }))].sort((first, second) => {
-    const priority = (group: string) => group === "overall" ? 0 : group === direction.focalGroup ? 1 : group === direction.partnerGroup ? 2 : 3;
+    const priority = (group: string) => group === "overall" ? 0 : group === focalGroup ? 1 : group === partnerGroup ? 2 : 3;
     return priority(first.group) - priority(second.group) || first.group.localeCompare(second.group);
   });
   const values = rows.flatMap(row => [row.focal_train, row.partner_train, row.focal_test, row.partner_test, row.aggregation_test]).filter(isScore);
@@ -124,7 +132,7 @@ function CategoryProfileChart({
   const chartHeight = 73 + rows.length * 64;
   const focalIdentity = identities.get(focal), partnerIdentity = identities.get(partner);
 
-  return <figure className="focal-category-profile" data-profile-metric={metric}>
+  return <figure className={`focal-category-profile${stable ? " stable-category-profile" : ""}`} data-profile-metric={metric} data-screening={stable ? "stable" : "point-estimate"}>
     <div className="focal-category-title"><div><span><i style={{ background: PURPLE }} />Focal · {identityLabel(focalIdentity, focal)}</span><span><i style={{ background: GOLD }} />Partner · {identityLabel(partnerIdentity, partner)}</span><span><i className="focal-aggregation-key" />Aggregation</span></div><small>{metric === "ece" ? "ECE further left is better" : "BI further right is better"} · same train/test scale</small></div>
     <div className="focal-chart-scroll"><svg viewBox={`0 0 880 ${chartHeight}`} role="img" aria-label={`Category-level training and held-out ${metric === "ece" ? "expected calibration error" : "Brier Index"} for the selected focal model and partner`}>
       <text x={(trainRange[0] + trainRange[1]) / 2} y="20" textAnchor="middle" className="focal-category-heading">TRAIN · identify complementary strengths</text>
@@ -132,12 +140,17 @@ function CategoryProfileChart({
       {[trainRange, testRange].map((range, panel) => <g key={panel}>{ticks(input, 4).map(value => <g key={value}><line className="market-performance-grid" x1={position(value, input, range)} x2={position(value, input, range)} y1="34" y2={chartHeight - 31} /><text className="market-performance-tick" x={position(value, input, range)} y={chartHeight - 12} textAnchor="middle">{value.toFixed(metric === "ece" ? 2 : 0)}</text></g>)}</g>)}
       {rows.map((row, index) => {
         const y = 58 + index * 64;
-        const focalEdge = row.group === direction.focalGroup, partnerEdge = row.group === direction.partnerGroup;
+        const focalEdge = row.group === focalGroup, partnerEdge = row.group === partnerGroup;
+        const stableLowerBound = row.stability && (focalEdge || partnerEdge)
+          ? direction.focalIsA === focalEdge
+            ? row.stability.lcb_for_a_bi
+            : row.stability.lcb_for_b_bi
+          : null;
         const label = row.group === "overall" ? "Overall" : GROUP_LABELS[row.group] ?? row.group;
         return <g key={row.group}>
           {index === 0 && <rect x="0" y={y - 22} width="875" height="49" rx="4" className="focal-category-overall" />}
           <text x="4" y={y - 3} className={`focal-category-label${index === 0 ? " overall" : ""}`}>{label}</text>
-          {(focalEdge || partnerEdge) && <text x="4" y={y + 17} className={focalEdge ? "focal-edge-label" : "partner-edge-label"}>{focalEdge ? "FOCAL TRAIN EDGE" : "PARTNER TRAIN EDGE"}</text>}
+          {(focalEdge || partnerEdge) && <text x="4" y={y + 17} className={focalEdge ? "focal-edge-label" : "partner-edge-label"}>{stable ? `${focalEdge ? "FOCAL" : "PARTNER"} STABLE EDGE · LCB ${score(stableLowerBound, 2, true)}` : focalEdge ? "FOCAL TRAIN EDGE" : "PARTNER TRAIN EDGE"}</text>}
           {([[row.focal_train, row.partner_train, null], [row.focal_test, row.partner_test, row.aggregation_test]] as const).map((valuesForPanel, panel) => {
             const range = panel === 0 ? trainRange : testRange;
             const [focalBi, partnerBi, aggregationBi] = valuesForPanel;
@@ -151,7 +164,7 @@ function CategoryProfileChart({
         </g>;
       })}
     </svg></div>
-    <figcaption>{metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] and pooled common rows; lower is better." : "Numbers show focal / partner BI. Categories with fewer than 30 test events remain descriptive and do not confirm transfer."}</figcaption>
+    <figcaption>{stable ? <>Stable edges are selected by the lower end of a 90% event-clustered training BI-gap interval. {metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] on the same rows and does not enter partner selection." : "Test BI remains untouched until evaluation."}</> : metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] and pooled common rows; lower is better." : "Numbers show focal / partner BI. Categories with fewer than 30 test events remain descriptive and do not confirm transfer."}</figcaption>
   </figure>;
 }
 

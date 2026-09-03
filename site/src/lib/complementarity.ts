@@ -8,6 +8,7 @@ import type {
   DirectionSummary,
   PairScope,
   Score,
+  StabilityRule,
   StudyPair,
 } from "../types/complementarity";
 
@@ -58,6 +59,17 @@ export function pairGain(pair: StudyPair, method: string): Score {
     ? Math.max(pair.test_bi_a, pair.test_bi_b)
     : null;
   return isScore(prediction) && isScore(base) ? prediction - base : null;
+}
+
+export function stablePairs(
+  data: ComplementarityData,
+  dimension: Dimension,
+  abilityGap: AbilityGap,
+  pairScope: PairScope,
+  rule: StabilityRule,
+): StudyPair[] {
+  return eligiblePairs(data, dimension, .5, "eligible", abilityGap, pairScope)
+    .filter(pair => rule === "strict" ? pair.stability.strict_eligible : pair.stability.primary_eligible);
 }
 
 export function defaultPair(pairs: StudyPair[], requested?: string, featured?: string): StudyPair | undefined {
@@ -121,7 +133,7 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
   const response = await fetch(`${COMPLEMENTARITY_PATH}study.json`, { signal });
   if (!response.ok) throw new Error(`Results could not be loaded (${response.status}).`);
   const data = await response.json() as ComplementarityData;
-  if (data.schema_version !== 6
+  if (data.schema_version !== 7
     || data.weighting !== "uniform_rows"
     || data.event_type_taxonomy !== "forecastbench-seven-domain-v1.0.0"
     || !Array.isArray(data.event_type_domains)
@@ -144,6 +156,14 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
     || data.calibration?.uses_question_fixed_effect !== false
     || data.calibration?.uses_brier_index_normalization !== false
     || data.calibration?.lower_is_better !== true
+    || data.stability?.metric !== "event_clustered_category_bi_edge"
+    || data.stability?.confidence_level !== .9
+    || data.stability?.interval !== "two_sided_delta_method"
+    || data.stability?.cluster_unit !== "event"
+    || data.stability?.selection_split !== "training_only"
+    || data.stability?.uses_test_outcomes !== false
+    || data.stability?.changes_aggregation !== false
+    || data.audit?.stability?.status !== "PASS"
     || data.audit?.calibration?.status !== "PASS"
     || data.audit?.status !== "PASS") {
     throw new Error("The published results do not match the expected audited study.");
