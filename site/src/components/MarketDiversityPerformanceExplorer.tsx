@@ -263,7 +263,10 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         onSelectConfiguration={setSelectedConfiguration}
         filters={{ provider, prompt, information }}
       />
-      <FocalComplementarityExplorer selectedConfiguration={selectedConfiguration || null} />
+      <FocalComplementarityExplorer
+        selectedConfiguration={selectedConfiguration || null}
+        onSelectConfiguration={setSelectedConfiguration}
+      />
     </section>
   );
 }

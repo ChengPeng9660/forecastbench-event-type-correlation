@@ -9,7 +9,9 @@ describe("within-topic complementarity source contract", () => {
   it("keeps the experiment source available without mounting it on the Markets page", () => {
     expect(parent).not.toContain('import { FocalWithinTopicComplementarity }');
     expect(parent).not.toContain("<FocalWithinTopicComplementarity");
-    expect(parent).toContain("<FocalComplementarityExplorer selectedConfiguration={selectedConfiguration || null} />");
+    expect(parent).toContain("<FocalComplementarityExplorer");
+    expect(parent).toContain("selectedConfiguration={selectedConfiguration || null}");
+    expect(parent).toContain("onSelectConfiguration={setSelectedConfiguration}");
     expect(component).toContain("export function FocalWithinTopicComplementarity");
   });
 
