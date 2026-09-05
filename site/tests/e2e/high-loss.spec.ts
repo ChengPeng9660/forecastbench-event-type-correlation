@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 
 const base = "GPT-5.1-2025-11-13 (zero shot with freeze values)";
 const sparsePartner = "Claude-Opus-4-1-20250805 (zero shot)";
-const outlierPartner = "Qwen3-235B-A22B-Thinking-2507 (zero shot with freeze values)";
-const rawMinimum = -34.26282051282051;
+const outlierPartner = "Grok-4-1-Fast-Non-Reasoning (zero shot with freeze values)";
+const rawMinimum = -30.06787521079258;
 
 function valueFor(container: Locator, label: string) {
   return container.locator("div").filter({ has: container.page().getByText(label, { exact: true }) }).locator("dd");
@@ -37,7 +37,7 @@ test("real GPT-5.1 high-loss data retains the negative extreme while hiding null
 
   await block.getByLabel("Exact configuration train sample").selectOption("near_bi");
   await expect(valueFor(kpis, "VISIBLE PARTNERS")).toHaveText("1");
-  await expect(valueFor(kpis, "RETAINED DIRECTIONS")).toHaveText("3–3");
+  await expect(valueFor(kpis, "RETAINED DIRECTIONS")).toHaveText("8–8");
   await expect(valueFor(kpis, "PEARSON r")).toHaveText("—");
   await expect(block.getByRole("note", { name: "High-loss metric diagnostics" })).toHaveCount(0);
   await expect(block.getByText("How to interpret this metric", { exact: true })).toHaveCount(0);
@@ -49,7 +49,7 @@ test("real GPT-5.1 high-loss data retains the negative extreme while hiding null
   await block.getByLabel("Exact configuration support").selectOption("at_least_50");
   await expect(block.locator(".configuration-pair-point")).toHaveCount(1);
   await expect(valueFor(kpis, "SMALL-SUPPORT PAIRS")).toHaveText("0");
-  await expect(valueFor(kpis, "RETAINED DIRECTIONS")).toHaveText("3–3");
+  await expect(valueFor(kpis, "RETAINED DIRECTIONS")).toHaveText("8–8");
   await expect(valueFor(kpis, "PEARSON r")).toHaveText("—");
 
   const chart = block.locator(".configuration-pair-chart");
@@ -58,7 +58,7 @@ test("real GPT-5.1 high-loss data retains the negative extreme while hiding null
     .filter((node) => Number(node.getAttribute("y")) === 416)
     .map((node) => ({ raw: Number(node.textContent), position: Number(node.getAttribute("x")) })));
   expect(ticks.length).toBeGreaterThanOrEqual(6);
-  expect(Math.min(...ticks.map((tick) => tick.raw))).toBe(-34.263);
+  expect(Math.min(...ticks.map((tick) => tick.raw))).toBe(-30.068);
   expect(Math.max(...ticks.map((tick) => tick.raw))).toBe(1);
   const signedLog = (value: number) => Math.sign(value) * Math.log1p(Math.abs(value));
   const expectedPosition = (raw: number) => 80 + (signedLog(raw) - signedLog(rawMinimum))
@@ -74,12 +74,12 @@ test("real GPT-5.1 high-loss data retains the negative extreme while hiding null
   expect(Math.abs(independence!.position - linearZero)).toBeGreaterThan(100);
 
   const outlier = chart.locator(`.configuration-pair-point[data-partner=${JSON.stringify(outlierPartner)}]`);
-  await expect(outlier).toHaveAttribute("aria-label", /High-loss diversity: -34\.263/);
+  await expect(outlier).toHaveAttribute("aria-label", /High-loss diversity: -30\.068/);
   await expect(outlier).toHaveAttribute("transform", /^translate\(80 /);
   await outlier.focus();
   const inspector = block.locator(".configuration-pair-inspector");
-  await expect(valueFor(inspector, "High-loss diversity")).toHaveText("-34.263");
-  await expect(valueFor(inspector, "Retained training directions")).toHaveText("3/20");
+  await expect(valueFor(inspector, "High-loss diversity")).toHaveText("-30.068");
+  await expect(valueFor(inspector, "Retained training directions")).toHaveText("8/20");
 
   const sparse = chart.locator(`.configuration-pair-point[data-partner=${JSON.stringify(sparsePartner)}]`);
   await expect(sparse).toHaveCount(0);
@@ -91,9 +91,9 @@ test("real GPT-5.1 high-loss data retains the negative extreme while hiding null
   await metric.getByRole("button", { name: "Prediction diversity", exact: true }).click();
   await expect(sparse).toBeAttached();
   await sparse.focus();
-  await expect(valueFor(inspector, "Aggregation BI ↑")).toHaveText("78.40");
-  await expect(valueFor(inspector, "Gain vs base")).toHaveText("-45.8%");
-  await expect(valueFor(inspector, "Retained training directions")).toHaveText("1/20");
+  await expect(valueFor(inspector, "Aggregation BI ↑")).toHaveText("81.22");
+  await expect(valueFor(inspector, "Gain vs base")).toHaveText("-93.5%");
+  await expect(valueFor(inspector, "Retained training directions")).toHaveText("2/20");
   await metric.getByRole("button", { name: "High-loss diversity", exact: true }).click();
   await expect(sparse).toHaveCount(0);
 
