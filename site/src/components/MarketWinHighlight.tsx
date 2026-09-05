@@ -21,7 +21,7 @@ export function MarketWinToggle({ checked, onChange, scope, outcome }: {
       <span>Highlight market wins</span>
       {checked && <svg viewBox="-6 -6 12 12" width="17" height="17" aria-hidden="true"><MarketWinBadge floating={false} /></svg>}
     </label>
-    <span className="market-win-key">{outcome === "brier_index" ? "Higher BI" : "Lower Raw Brier"} than each point’s own matched market · point estimates</span>
+    <span className="market-win-key">{outcome === "brier_index" ? "Higher BI" : "Lower Brier score"} than each point’s own matched market · point estimates</span>
   </div>;
 }
 
@@ -31,6 +31,6 @@ export function MarketWinVerdict({ comparison, outcome }: {
 }) {
   return <p className="market-win-verdict" data-market-comparison={comparison}>
     <strong>{matchedMarketLabel[comparison]}</strong>
-    <span>{outcome === "brier_index" ? "Brier Index ↑" : "Raw Brier ↓"} · same events</span>
+    <span>{outcome === "brier_index" ? "Brier Index ↑" : "Brier score ↓"} · same events</span>
   </p>;
 }

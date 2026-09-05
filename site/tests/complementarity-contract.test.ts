@@ -22,8 +22,8 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("audited all-configuration complementarity publication", () => {
   it("publishes the complete exact-configuration universe with frozen provenance", () => {
-    expect(data.schema_version).toBe(7);
-    expect(data.weighting).toBe("uniform_rows");
+    expect(data.schema_version).toBe(8);
+    expect(data.weighting).toBe("equal_events_within_event_equal_targets");
     expect(data.event_type_taxonomy).toBe("forecastbench-seven-domain-v1.0.0");
     expect(data.event_type_domains).toEqual([
       { id: "health", label: "Health" },
@@ -41,8 +41,8 @@ describe("audited all-configuration complementarity publication", () => {
     expect(data.pair_scopes.map(scope => scope.id)).toEqual([
       "all", "different_model_version", "matched_conditions",
     ]);
-    expect(data.pairs).toHaveLength(16_589);
-    expect(new Set(data.pairs.map(pair => `${pair.dimension}:${pair.id}`)).size).toBe(16_589);
+    expect(data.pairs).toHaveLength(16_376);
+    expect(new Set(data.pairs.map(pair => `${pair.dimension}:${pair.id}`)).size).toBe(16_376);
     expect(data.summaries).toHaveLength(480);
     expect(data.directions).toHaveLength(4_800);
     expect(data.configurations).toHaveLength(313);
@@ -82,6 +82,8 @@ describe("audited all-configuration complementarity publication", () => {
       confidence_level: .9,
       interval: "two_sided_delta_method",
       cluster_unit: "event",
+      score_weighting: "equal_events_within_event_equal_targets",
+      brier_index: "100 * (1 - sqrt(event_averaged_ordinary_brier_score))",
       primary_rule: "both_opposite_category_edge_lower_bounds_above_0_bi",
       strict_rule: "both_opposite_category_edge_lower_bounds_above_1_bi",
       strict_margin_bi: 1,
@@ -93,23 +95,23 @@ describe("audited all-configuration complementarity publication", () => {
       status: "PASS",
       implementation_independent: true,
       sampled_rows: 80,
-      restricted_run_invariance_rows: 25_580,
+      restricted_run_invariance_rows: 0,
       event_disjointness: "PASS",
-      output_rows: 221_184,
-      category_profile_rows: 62_131,
+      output_rows: 216_874,
+      category_profile_rows: 60_792,
       profile_shards: 32,
       calibration: {
         status: "PASS",
-        pair_views: 16_589,
-        unique_pairs: 10_723,
-        profile_rows: 62_131,
+        pair_views: 16_376,
+        unique_pairs: 10_570,
+        profile_rows: 60_792,
       },
       stability: {
         status: "PASS",
-        pair_views: 16_589,
-        profile_rows: 62_131,
-        primary_eligible_views_before_ui_controls: 3_568,
-        strict_eligible_views_before_ui_controls: 1_457,
+        pair_views: 16_376,
+        profile_rows: 60_792,
+        primary_eligible_views_before_ui_controls: 3_465,
+        strict_eligible_views_before_ui_controls: 1_490,
       },
     });
     expect(data.audit.max_absolute_error).toBeLessThan(2e-11);
@@ -118,7 +120,7 @@ describe("audited all-configuration complementarity publication", () => {
     expect(data.audit.stability.max_profile_bi_gap_reconstruction_error).toBeLessThan(1e-9);
 
     const manifest = JSON.parse(readFileSync(resolve(directory, "manifest.json"), "utf8"));
-    expect(manifest.weighting).toBe("uniform_rows");
+    expect(manifest.weighting).toBe("equal_events_within_event_equal_targets");
     for (const [name, info] of Object.entries(manifest.files) as [string, { sha256: string; bytes: number }][]) {
       const bytes = readFileSync(resolve(directory, name));
       expect(bytes.length, name).toBe(info.bytes);
@@ -128,8 +130,8 @@ describe("audited all-configuration complementarity publication", () => {
 
   it("publishes nested, training-only stable category cohorts", () => {
     const expected = [
-      [3, "topic", 1_241, 528], [3, "source", 1_815, 727],
-      [5, "topic", 1_407, 597], [5, "source", 2_161, 860],
+      [3, "topic", 997, 418], [3, "source", 1_931, 886],
+      [5, "topic", 1_155, 493], [5, "source", 2_310, 997],
     ] as const;
     for (const [gap, dimension, mainCount, strictCount] of expected) {
       const main = stablePairs(data, dimension, gap, "all", "main");
@@ -156,9 +158,9 @@ describe("audited all-configuration complementarity publication", () => {
   });
 
   it.each([
-    ["all", 3, .5, 2449, 3126], ["all", 5, .5, 2834, 3786],
-    ["different_model_version", 3, .5, 2333, 3053],
-    ["matched_conditions", 3, .5, 582, 989], ["matched_conditions", 5, .5, 636, 1177],
+    ["all", 3, .5, 2431, 3181], ["all", 5, .5, 2805, 3819],
+    ["different_model_version", 3, .5, 2334, 3118],
+    ["matched_conditions", 3, .5, 624, 1065], ["matched_conditions", 5, .5, 667, 1201],
   ] as const)("reproduces %s gap %s / coverage %s crossing counts", (scope, gap, coverage, topic, source) => {
     expect(eligiblePairs(data, "topic", coverage, "crossing", gap, scope)).toHaveLength(topic);
     expect(eligiblePairs(data, "source", coverage, "crossing", gap, scope)).toHaveLength(source);
@@ -185,10 +187,10 @@ describe("audited all-configuration complementarity publication", () => {
   });
 
   it.each([
-    ["all", "topic", 2449, 1.3585742185517307, .9661086157615353],
-    ["all", "source", 3126, .6572334789868046, .9065898912348048],
-    ["matched_conditions", "topic", 582, .9008249254738067, .9398625429553265],
-    ["matched_conditions", "source", 989, .48811149505403795, .8746208291203236],
+    ["all", "topic", 2431, 1.4269637524878005, .9658576717400247],
+    ["all", "source", 3181, .850282189700947, .9371266897202137],
+    ["matched_conditions", "topic", 624, .9406039637263786, .9663461538461539],
+    ["matched_conditions", "source", 1065, .5999251690836802, .9117370892018779],
   ] as const)("uses unchanged Directional CF for %s / %s", (scope, dimension, n, gain, winRate) => {
     const summary = studySummary(
       data, dimension, .5, "crossing", 3, "cf_directional", scope as PairScope,
@@ -217,17 +219,17 @@ describe("audited all-configuration complementarity publication", () => {
     )!;
     expect(pair.id).toBe("p-baa8649cff5a");
     expect(pair).toMatchObject({ same_model_version: false, same_prompt: true, same_information: true });
-    expect(pair.train_gap).toBeCloseTo(1.695995146570617, 12);
-    expect(pairGain(pair, "cf_directional")).toBeCloseTo(3.0385659015484023, 12);
-    expect(pairGain(pair, "simple_mean")).toBeCloseTo(.712428679063386, 12);
-    expect(pairGain(pair, "piecewise_odds")).toBeCloseTo(1.1077415821981873, 12);
+    expect(pair.train_gap).toBeCloseTo(.6856989397119051, 12);
+    expect(pairGain(pair, "cf_directional")).toBeCloseTo(2.9259845278732897, 12);
+    expect(pairGain(pair, "simple_mean")).toBeCloseTo(.9438221699917761, 12);
+    expect(pairGain(pair, "piecewise_odds")).toBeCloseTo(1.4237562756255215, 12);
     expect(pair.calibration).toMatchObject({
       train_a: 0.1325058466813847,
       train_b: 0.1089033189033189,
       test_a: 0.15075918932029403,
       test_b: 0.10384144895448945,
     });
-    expect(pair.calibration.methods.cf_directional).toBeCloseTo(0.05301426324747844, 14);
+    expect(pair.calibration.methods.cf_directional).toBeCloseTo(0.05815280712563299, 14);
     expect(pair.crossing_persists).toBe(true);
 
     const shard = readFileSync(resolve(directory, `profiles/${pair.profile_shard}.json`), "utf8");
@@ -273,6 +275,6 @@ describe("audited all-configuration complementarity publication", () => {
     vi.stubGlobal("fetch", fetcher);
     await expect(loadComplementarity()).rejects.toThrow(/503/);
     await expect(loadComplementarity()).rejects.toThrow(/expected audited study/);
-    await expect(loadComplementarity()).resolves.toHaveProperty("pairs.length", 16_589);
+    await expect(loadComplementarity()).resolves.toHaveProperty("pairs.length", 16_376);
   });
 });

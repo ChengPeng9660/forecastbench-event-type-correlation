@@ -18,7 +18,7 @@ from analysis import configuration_pair_aggregation as pair
 from analysis.pair_aggregation import event_fold, sha256_file
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 MARKET_BASE = "Polymarket Freeze"
 REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
 
@@ -36,11 +36,26 @@ def _public_path(path: Path, repository_root: Path = REPOSITORY_ROOT) -> str:
         return path.name
 
 
-def load_verified_inputs(clean_cache: Path, panel_path: Path, taxonomy_path: Path, catalog_path: Path):
-    source_audit = json.loads((clean_cache.parent / "audit.json").read_text(encoding="utf-8"))
-    if sha256_file(Path(pair.__file__)) != source_audit["provenance"]["producer_sha256"]:
-        raise ValueError("cached experiment producer SHA-256 differs from the audited scoring module")
-    return pair.load_clean_cache(clean_cache, panel_path, taxonomy_path, catalog_path)
+def load_verified_inputs(
+    clean_cache: Path,
+    panel_path: Path,
+    taxonomy_path: Path,
+    catalog_path: Path,
+    *,
+    allow_metric_refresh: bool = False,
+):
+    # The clean cache fixes support and raw probabilities.  Its producer hash is
+    # expected to differ when the scoring definition is deliberately revised;
+    # load_clean_cache verifies the cache hash and reconstructs every catalog
+    # score under the current metric contract.
+    if not allow_metric_refresh:
+        source_audit = json.loads((clean_cache.parent / "audit.json").read_text(encoding="utf-8"))
+        if sha256_file(Path(pair.__file__)) != source_audit["provenance"]["producer_sha256"]:
+            raise ValueError("cached experiment producer SHA-256 differs from the audited scoring module")
+    return pair.load_clean_cache(
+        clean_cache, panel_path, taxonomy_path, catalog_path,
+        allow_metric_refresh=allow_metric_refresh,
+    )
 
 
 def evaluate_model_market(
@@ -75,9 +90,13 @@ def run_experiment(
     output_dir: Path, site_output_dir: Path, *, split_seeds: Iterable[int] = pair.DEFAULT_SEEDS,
     minimum_fold_overlap: int = 1, repository_root: Path = REPOSITORY_ROOT,
     baseline_commit: str | None = None,
+    metric_definition_refresh: bool = False,
 ) -> dict[str, Any]:
     seeds = tuple(split_seeds)
-    panel, market, identities, input_audit = load_verified_inputs(clean_cache, panel_path, taxonomy_path, catalog_path)
+    panel, market, identities, input_audit = load_verified_inputs(
+        clean_cache, panel_path, taxonomy_path, catalog_path,
+        allow_metric_refresh=metric_definition_refresh,
+    )
     prepared_market = pair.prepare_panel(market)
     assignments = {key: tuple(event_fold(key[1], key[2], seed) == "A" for seed in seeds) for key in market}
     print(json.dumps({"stage": "inputs_verified", "configurations": len(identities),
@@ -115,7 +134,7 @@ def run_experiment(
         **{name: _public_path(path, repository_root) for name, path in
            (("clean_cache", clean_cache), ("source_audit", clean_cache.parent / "audit.json"),
             ("panel", panel_path), ("taxonomy", taxonomy_path), ("catalog", catalog_path))},
-        **{f"{name}_sha256": sha256_file(path) for name, path in
+        **{f"{name}_sha256": sha256_file(path) if path.is_file() else input_audit.get("original_provenance", {}).get(f"{name}_sha256") for name, path in
            (("clean_cache", clean_cache), ("source_audit", clean_cache.parent / "audit.json"),
             ("panel", panel_path), ("taxonomy", taxonomy_path), ("catalog", catalog_path))},
         "producer": "analysis/model_market_aggregation.py", "producer_sha256": sha256_file(Path(__file__)),
@@ -127,6 +146,8 @@ def run_experiment(
         "join_key": "date + lowercase Polymarket source + event_id + horizon",
         "processed_raw_files_reread": False,
     }
+    verified_cache = input_audit["verified_clean_cache"]
+    source_presence = verified_cache["original_source_hashes_verified_when_present"]
     audit = {
         "configuration_count": len(points), "configuration_status_counts": dict(statuses),
         "configuration_target_rows": sum(map(len, panel.values())),
@@ -140,7 +161,11 @@ def run_experiment(
         "all_fixed_base_scores_equal_matched_market": True,
         "event_disjoint_splits_checked": True, "strict_train_fold_near_bi": True,
         "test_event_outcomes_used_for_training": False,
-        "source_hashes_verified": True,
+        "clean_cache_hash_verified": True,
+        "source_hashes_verified": all(source_presence.values()),
+        "source_files_present": source_presence,
+        "catalog_identity_support_and_scores_reconstructed":
+            verified_cache["catalog_identity_support_and_scores_reconstructed"],
         "published_configuration_support_checks": len(input_audit["published_configuration_support_checks"]),
         "maximum_catalog_score_difference": max((row["maximum_score_difference"]
                                                   for row in input_audit["published_configuration_support_checks"]), default=0),
@@ -158,9 +183,10 @@ def run_experiment(
                   "unit": "source + event_id, shared across dates and horizons", "event_disjoint": True},
         "aggregation": {
             "base": "Polymarket is the fixed base; the exact model configuration is the partner",
-            "diversity": "train-target weighted fold metrics; null if any included fold metric is undefined",
-            "brier_index": "test-target weighted fold BI; null if any included fold BI is undefined",
-            "loss": "test-target weighted fold Brier", "gain": "ratio of pooled adjusted losses",
+            "diversity": "train-target weighted fold diagnostics; null if any included fold metric is undefined",
+            "brier_score": "within each fold, average squared error within event and then equally across events; combine folds by event count",
+            "brier_index": "100 * (1 - sqrt(Brier score)), transformed once after event averaging",
+            "loss": "event-equal ordinary Brier score", "gain": "relative reduction in event-equal ordinary Brier score",
             "directional_cf": "fit sign-specific clipped C/D weights on train observations, anchored at Polymarket",
             "best_single": "test-fold hindsight constituent, not deployable",
             "near_bi": "filter individual directions by training model-market BI gap before aggregation",
@@ -187,9 +213,12 @@ def main() -> None:
     parser.add_argument("--repository-root", type=Path, default=REPOSITORY_ROOT,
                         help="Repository root used to keep provenance paths relative when executing an isolated source snapshot")
     parser.add_argument("--baseline-commit", help="Commit supplying the imported scoring dependencies")
+    parser.add_argument("--metric-definition-refresh", action="store_true",
+                        help="Allow a deliberate scoring-code and catalog refresh over the same audited cache")
     args = parser.parse_args()
     run_experiment(args.clean_cache, args.panel, args.taxonomy, args.catalog, args.output_dir, args.site_output_dir,
-                   repository_root=args.repository_root, baseline_commit=args.baseline_commit)
+                   repository_root=args.repository_root, baseline_commit=args.baseline_commit,
+                   metric_definition_refresh=args.metric_definition_refresh)
 
 
 if __name__ == "__main__":

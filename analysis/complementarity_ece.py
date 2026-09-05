@@ -122,14 +122,16 @@ def _pool_predictions(p0, p1, alpha_up: float, alpha_down: float):
     ])
 
 
-def _adjusted_bi(predictions, outcome, offset):
+def _event_bi(predictions, outcome, event):
     import numpy as np
 
     values = np.asarray(predictions)
     if values.ndim == 1:
         values = values[:, None]
-    adjusted = np.mean((values - outcome[:, None]) ** 2, axis=0) + float(np.mean(offset))
-    return 100 * (1 - np.sqrt(adjusted))
+    _, inverse, counts = np.unique(event, return_inverse=True, return_counts=True)
+    weights = 1.0 / (len(counts) * counts[inverse])
+    brier = weights @ ((values - outcome[:, None]) ** 2)
+    return 100 * (1 - np.sqrt(brier))
 
 
 def _calibration_bundle(
@@ -168,7 +170,6 @@ def add_primary_calibration(
     panel = np.load(study / "data/panel.npz")
     probability = panel["predictions"]
     outcome = panel["outcome"]
-    offset = panel["offset"]
     event_index = panel["event"]
     labels = {dimension: panel[dimension] for dimension in ("topic", "source")}
     models = json.loads((study / "data/models.json").read_text())
@@ -198,14 +199,14 @@ def add_primary_calibration(
         source_row = views[0]
         train_a_b = probability[train][:, [i, j]]
         test_a_b = probability[test][:, [i, j]]
-        train_bi = _adjusted_bi(train_a_b, outcome[train], offset[train])
+        train_bi = _event_bi(train_a_b, outcome[train], event_index[train])
         base, partner = (i, j) if train_bi[0] >= train_bi[1] else (j, i)
         alpha_up = float(source_row["alpha_up"])
         alpha_down = float(source_row["alpha_down"])
         method_predictions = _pool_predictions(
             probability[test, base], probability[test, partner], alpha_up, alpha_down
         )
-        method_bi = _adjusted_bi(method_predictions, outcome[test], offset[test])
+        method_bi = _event_bi(method_predictions, outcome[test], event_index[test])
         expected_method_bi = np.asarray([
             float(source_row[f"{method}_bi"]) for method in method_ids
         ])
@@ -253,10 +254,10 @@ def add_primary_calibration(
                     "methods": {method: None for method in method_ids},
                 }
                 if test_mask.any():
-                    profile_method_bi = _adjusted_bi(
+                    profile_method_bi = _event_bi(
                         profile_method_predictions,
                         outcome[test][test_mask],
-                        offset[test][test_mask],
+                        event_index[test][test_mask],
                     )
                     expected_profile_bi = np.asarray([
                         float(profile["methods"][method])

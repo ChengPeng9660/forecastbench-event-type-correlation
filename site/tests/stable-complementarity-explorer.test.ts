@@ -42,14 +42,14 @@ describe("stable selected-model category complementarity", () => {
     const section = rendered.container.querySelector("#stable-category-complementarity") as HTMLElement;
 
     await waitFor(() => expect(within(section).getByLabelText("Stable complementary partner"))
-      .toHaveDisplayValue(/1\. Grok-4-0709 · stable edge \+0\.28 BI/), { timeout: 10_000 });
+      .toHaveDisplayValue(/1\. GPT-4\.1-2025-04-14 · stable edge \+2\.08 BI/), { timeout: 10_000 });
     await waitFor(() => expect(section.querySelector(".stable-category-profile")).toBeInTheDocument());
 
     expect(within(section).getByLabelText("Stable focal model")).toHaveValue(grok);
     const partnerSummary = section.querySelector(".stable-pair-summary > div") as HTMLElement;
     expect(partnerSummary).toHaveTextContent("STABLE PARTNERS");
-    expect(partnerSummary).toHaveTextContent("2");
-    expect(partnerSummary).toHaveTextContent("49 near-skill candidates");
+    expect(partnerSummary).toHaveTextContent("5");
+    expect(partnerSummary).toHaveTextContent("40 near-skill candidates");
     expect(section).toHaveTextContent("FOCAL STABLE EDGE · LCB");
     expect(section).toHaveTextContent("PARTNER STABLE EDGE · LCB");
     expect(section).not.toHaveTextContent(/\d+\s*\/\s*\d+\s+events/);
@@ -86,13 +86,13 @@ describe("stable selected-model category complementarity", () => {
     const section = rendered.container.querySelector("#stable-category-complementarity") as HTMLElement;
     await waitFor(() => expect(section.querySelector(".stable-category-profile")).toBeInTheDocument(), { timeout: 10_000 });
 
+    fireEvent.click(within(section).getByRole("button", { name: "Source / platform" }));
     fireEvent.change(within(section).getByLabelText("Stable category rule"), { target: { value: "strict" } });
     await waitFor(() => expect(section).toHaveTextContent("No stable partner under these controls."));
     expect(within(section).getByLabelText("Stable complementary partner")).toBeDisabled();
 
     fireEvent.change(within(section).getByLabelText("Stable category rule"), { target: { value: "main" } });
-    fireEvent.click(within(section).getByRole("button", { name: "Source / platform" }));
-    await waitFor(() => expect(within(section).getByLabelText("Stable complementary partner")).toHaveDisplayValue(/1\. Claude-Sonnet-4-6 · stable edge \+0\.77 BI/));
+    await waitFor(() => expect(within(section).getByLabelText("Stable complementary partner")).toHaveDisplayValue(/1\. O3-2025-04-16 · stable edge \+0\.64 BI/));
     await waitFor(() => expect(section.querySelector(".stable-category-profile")).toBeInTheDocument());
   }, 20_000);
 });

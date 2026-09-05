@@ -13,10 +13,16 @@ import csv
 import json
 import math
 from collections import Counter, defaultdict
+from datetime import date
 from pathlib import Path
 from typing import Any, Mapping
 
-from analysis.metrics import brier_index, pearson_correlation
+from analysis.event_weighted_scoring import (
+    brier_index as event_brier_index,
+    event_count,
+    event_weighted_mean,
+)
+from analysis.metrics import pearson_correlation
 from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 from analysis.model_versions import split_model_version
 from analysis.pair_aggregation import (
@@ -140,10 +146,13 @@ def raw_brier(
     panel: Mapping[tuple[str, ...], Mapping[str, str]],
     keys: list[tuple[str, ...]],
 ) -> float:
-    return sum(
-        (float(panel[key]["prediction"]) - float(panel[key]["outcome"])) ** 2
-        for key in keys
-    ) / len(keys)
+    return event_weighted_mean(
+        keys,
+        [
+            (float(panel[key]["prediction"]) - float(panel[key]["outcome"])) ** 2
+            for key in keys
+        ],
+    )
 
 
 def adjusted_brier(
@@ -156,6 +165,17 @@ def adjusted_brier(
             adjusted_loss(panel[key], float(panel[key]["prediction"])),
         )
         for key in keys
+    )
+
+
+def event_adjusted_brier(
+    panel: Mapping[tuple[str, ...], Mapping[str, str]],
+    keys: list[tuple[str, ...]],
+) -> float:
+    """Event-equal adjusted loss retained only as a legacy diagnostic."""
+    return event_weighted_mean(
+        keys,
+        [adjusted_loss(panel[key], float(panel[key]["prediction"])) for key in keys],
     )
 
 
@@ -184,13 +204,12 @@ def build_payload(
             near_bi_gap=2.0,
             high_loss_threshold=0.25,
         )
-        model_adjusted = adjusted_brier(panel[name], keys)
-        market_adjusted = adjusted_brier(market_panel, keys)
-        model_bi, model_bi_reason = brier_index(model_adjusted)
-        market_bi, market_bi_reason = brier_index(market_adjusted)
-        if model_bi is None or market_bi is None:
-            exclusions[name] = f"undefined BI: model={model_bi_reason}; market={market_bi_reason}"
-            continue
+        model_raw = raw_brier(panel[name], keys)
+        market_raw = raw_brier(market_panel, keys)
+        model_adjusted = event_adjusted_brier(panel[name], keys)
+        market_adjusted = event_adjusted_brier(market_panel, keys)
+        model_bi = event_brier_index(model_raw)
+        market_bi = event_brier_index(market_raw)
         configuration = metadata[name]["model_configuration"]
         prompt_id, prompt_label = prompt_metadata(configuration)
         information_id, information_label = information_metadata(configuration)
@@ -208,18 +227,19 @@ def build_payload(
                 "information_type": information_id,
                 "information_label": information_label,
                 "n_common": len(keys),
+                "n_events": event_count(keys),
                 "date_min": min(key[0][:10] for key in keys),
                 "date_max": max(key[0][:10] for key in keys),
                 "prediction_pearson": prediction_r,
                 "diversity": metrics,
                 "high_loss_diagnostics": dependence["high_loss_diagnostics"],
                 "model": {
-                    "raw_brier": raw_brier(panel[name], keys),
+                    "raw_brier": model_raw,
                     "adjusted_brier": model_adjusted,
                     "brier_index": model_bi,
                 },
                 "matched_market": {
-                    "raw_brier": raw_brier(market_panel, keys),
+                    "raw_brier": market_raw,
                     "adjusted_brier": market_adjusted,
                     "brier_index": market_bi,
                 },
@@ -240,8 +260,8 @@ def build_payload(
     prompt_counts = Counter(row["prompt_type"] for row in points)
     provider_counts = Counter(row["provider"] for row in points)
     return {
-        "schema_version": "1.0.0",
-        "generated_at": "2026-08-27",
+        "schema_version": "2.0.0",
+        "generated_at": date.today().isoformat(),
         "title": "Market diversity versus forecasting performance",
         "scope": (
             "All eligible exact clean-LLM configurations on non-imputed Polymarket rows. "
@@ -278,15 +298,18 @@ def build_payload(
         },
         "outcomes": {
             "raw_brier": {
-                "label": "Raw Brier Score",
-                "axis": "Raw Brier Score (lower is better)",
+                "label": "Brier Score",
+                "axis": "Brier Score (lower is better)",
                 "higher_is_better": False,
+                "formula": "mean over events of the within-event mean squared probability error",
+                "weighting": "equal events; equal targets within each event",
             },
             "brier_index": {
                 "label": "Brier Index",
                 "axis": "Brier Index (higher is better)",
                 "higher_is_better": True,
-                "formula": "(1 - sqrt(adjusted Brier)) × 100",
+                "formula": "100 × (1 - sqrt(event-averaged Brier Score))",
+                "weighting": "transform once after event averaging",
             },
         },
         "encoding": {
@@ -312,7 +335,11 @@ def build_payload(
             "prompt_counts": dict(sorted(prompt_counts.items())),
             "provider_counts": dict(sorted(provider_counts.items())),
             "model_event_cells": sum(row["n_common"] for row in points),
+            "model_unique_event_cells": sum(row["n_events"] for row in points),
             "all_scores_use_identical_pair_support": True,
+            "brier_score_weighting": "equal events; equal targets within event",
+            "brier_index_uses_ordinary_brier_score": True,
+            "brier_index_transformed_after_event_averaging": True,
             "imputation_audit": imputation_audit,
             "snapshot_audit": snapshot_audit,
             "match_audit": match_audit,

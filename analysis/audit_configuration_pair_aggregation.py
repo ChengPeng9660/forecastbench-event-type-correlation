@@ -25,6 +25,7 @@ METHODS = ("simple_mean", "log_odds_mean", "ec_w0_56", "piecewise_odds",
 METRICS = ("prediction_diversity", "adjusted_pog", "high_loss_lift",
            "adjusted_loss_corr", "total_variation")
 SEEDS = tuple(range(20260825, 20260835))
+CF_DENOMINATOR_EPSILON = 1e-24
 Key = tuple[str, str, str, str]
 Panel = Mapping[Key, Mapping[str, Any]]
 
@@ -36,6 +37,19 @@ def event_half(key: Key, seed: int) -> str:
 
 def mean(values: Sequence[float]) -> float:
     return math.fsum(values) / len(values)
+
+
+def event_identity(key: Key) -> tuple[str, str]:
+    return key[1].casefold(), key[2]
+
+
+def event_weights(keys: Sequence[Key]) -> list[float]:
+    counts = Counter(event_identity(key) for key in keys)
+    return [1 / (len(counts) * counts[event_identity(key)]) for key in keys]
+
+
+def event_mean(keys: Sequence[Key], values: Sequence[float]) -> float:
+    return math.fsum(weight * value for weight, value in zip(event_weights(keys), values))
 
 
 def brier_index(loss: float) -> float | None:
@@ -79,17 +93,17 @@ def train_coordinates(first: Panel, second: Panel, keys: list[Key]) -> dict[str,
 
 def directional_weights(first: Panel, second: Panel, keys: list[Key]) -> tuple[float, float]:
     numerator, denominator = [[], []], [[], []]
-    for key in keys:
+    for key, weight in zip(keys, event_weights(keys)):
         p, q, y = (float(first[key]["prediction"]), float(second[key]["prediction"]),
                    float(first[key]["outcome"]))
         d = q - p
         side = 0 if d >= 0 else 1
-        numerator[side].append(d * (y - p))
-        denominator[side].append(d * d)
+        numerator[side].append(weight * d * (y - p))
+        denominator[side].append(weight * d * d)
     result = []
     for c, d in zip(numerator, denominator):
         scale = math.fsum(d)
-        result.append(min(1.0, max(0.0, math.fsum(c) / scale)) if scale else 0.0)
+        result.append(min(1.0, max(0.0, math.fsum(c) / scale)) if scale > CF_DENOMINATOR_EPSILON else 0.0)
     return result[0], result[1]
 
 
@@ -121,8 +135,12 @@ def support_folds(first: Panel, second: Panel, market: Panel, *, seeds: Sequence
             continue
         for train, test in (("A", "B"), ("B", "A")):
             train_keys = halves[train]
-            first_bi = brier_index(mean(adjusted_losses(first, train_keys)))
-            second_bi = brier_index(mean(adjusted_losses(second, train_keys)))
+            first_bi = brier_index(event_mean(train_keys, [
+                (float(first[key]["prediction"]) - float(first[key]["outcome"])) ** 2 for key in train_keys
+            ]))
+            second_bi = brier_index(event_mean(train_keys, [
+                (float(second[key]["prediction"]) - float(second[key]["outcome"])) ** 2 for key in train_keys
+            ]))
             gap = abs(first_bi - second_bi) if first_bi is not None and second_bi is not None else None
             records.append({"fold_id": f"split_{repetition:02d}_seed_{seed}__{train}_train__{test}_test",
                             "seed": seed, "train_fold": train, "test_fold": test,
@@ -140,18 +158,25 @@ def reference_folds(first: Panel, second: Panel, market: Panel, *, seeds: Sequen
         fold["weights"] = weights
         fold["train_diversity"] = train_coordinates(first, second, train)
         fold["train_target_cells"], fold["test_target_cells"] = len(train), len(test)
+        fold["train_event_cells"] = len({event_identity(key) for key in train})
+        fold["test_event_cells"] = len({event_identity(key) for key in test})
+        # Public fold records use ``n_*_events`` while pooled views use
+        # ``*_event_cells``.  Keep both names in the independent reference so
+        # each artifact layer can be checked from the same direct event count.
+        fold["n_train_events"] = fold["train_event_cells"]
+        fold["n_test_events"] = fold["test_event_cells"]
 
         def scores(predicted: Sequence[float]) -> dict[str, float | None]:
-            raw = mean([(value - float(first[key]["outcome"])) ** 2 for key, value in zip(test, predicted)])
-            adjusted = mean(adjusted_losses(first, test, predicted))
-            return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(adjusted)}
+            raw = event_mean(test, [(value - float(first[key]["outcome"])) ** 2 for key, value in zip(test, predicted)])
+            adjusted = event_mean(test, adjusted_losses(first, test, predicted))
+            return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(raw)}
 
         for name, panel in (("base", first), ("partner", second), ("market", market)):
             fold[name] = scores([float(panel[key]["prediction"]) for key in test])
         predictions = [pool_predictions(float(first[key]["prediction"]), float(second[key]["prediction"]), weights)
                        for key in test]
         fold["methods"] = {method: scores([row[method] for row in predictions]) for method in METHODS[:-1]}
-        fold["methods"]["best_single"] = dict(min((fold["base"], fold["partner"]), key=lambda row: row["adjusted_brier"]))
+        fold["methods"]["best_single"] = dict(min((fold["base"], fold["partner"]), key=lambda row: row["raw_brier"]))
     return folds
 
 
@@ -168,33 +193,39 @@ def aggregate_reference(folds: list[dict[str, Any]]) -> dict[str, Any] | None:
     output = {"fold_count": len(folds), "fold_ids": [row["fold_id"] for row in folds],
               "train_target_cells": sum(row["train_target_cells"] for row in folds),
               "test_target_cells": sum(row["test_target_cells"] for row in folds),
+              "train_event_cells": sum(row["train_event_cells"] for row in folds),
+              "test_event_cells": sum(row["test_event_cells"] for row in folds),
               "min_train_rows": min(row["train_target_cells"] for row in folds),
               "min_test_rows": min(row["test_target_cells"] for row in folds),
-              "small_support": any(min(row["train_target_cells"], row["test_target_cells"]) < 50 for row in folds),
-              "train_bi_gap": weighted(lambda row: row["train_bi_gap"], "train_target_cells", require_all=True),
+              "min_train_events": min(row["train_event_cells"] for row in folds),
+              "min_test_events": min(row["test_event_cells"] for row in folds),
+              "small_support": any(min(row["train_event_cells"], row["test_event_cells"]) < 50 for row in folds),
+              "train_bi_gap": weighted(lambda row: row["train_bi_gap"], "train_event_cells", require_all=True),
               "train_diversity": {metric: weighted(lambda row: row["train_diversity"][metric], "train_target_cells", require_all=True)
                                   for metric in METRICS},
               "train_diversity_target_cells": {
                   metric: sum(row["train_target_cells"] for row in folds if row["train_diversity"][metric] is not None)
                   for metric in METRICS}}
-    score_fields = ("raw_brier", "adjusted_brier", "brier_index")
+    score_fields = ("raw_brier", "adjusted_brier")
     for name in ("base", "partner", "market"):
-        output[name] = {field: weighted(lambda row: row[name][field], "test_target_cells", require_all=field == "brier_index")
+        output[name] = {field: weighted(lambda row: row[name][field], "test_event_cells", require_all=True)
                         for field in score_fields}
+        output[name]["brier_index"] = brier_index(output[name]["raw_brier"]) if output[name]["raw_brier"] is not None else None
     methods = {}
     for method in METHODS:
-        row = {field: weighted(lambda fold: fold["methods"][method][field], "test_target_cells", require_all=field == "brier_index")
+        row = {field: weighted(lambda fold: fold["methods"][method][field], "test_event_cells", require_all=True)
                for field in score_fields}
+        row["brier_index"] = brier_index(row["raw_brier"]) if row["raw_brier"] is not None else None
         for name in ("base", "partner", "market"):
-            denominator = output[name]["adjusted_brier"]
-            row[f"gain_vs_{name}"] = ((denominator - row["adjusted_brier"]) / denominator
+            denominator = output[name]["raw_brier"]
+            row[f"gain_vs_{name}"] = ((denominator - row["raw_brier"]) / denominator
                                      if denominator is not None and denominator > 0 else None)
         row["beats_market"] = (row["brier_index"] is not None and output["market"]["brier_index"] is not None
                                and row["brier_index"] > output["market"]["brier_index"] + 1e-12)
         methods[method] = row
-    best_loss = methods["best_single"]["adjusted_brier"]
+    best_loss = methods["best_single"]["raw_brier"]
     for row in methods.values():
-        row["gain_vs_best_single"] = (best_loss - row["adjusted_brier"]) / best_loss if best_loss > 0 else None
+        row["gain_vs_best_single"] = (best_loss - row["raw_brier"]) / best_loss if best_loss > 0 else None
     output["methods"] = methods
     return output
 
@@ -275,7 +306,10 @@ def read_clean_intermediate(path: Path) -> tuple[dict[str, dict[Key, dict[str, s
 def compact_support(first: Panel, second: Panel, market: Panel) -> dict[str, Any]:
     common, folds = support_folds(first, second, market)
     metadata = [{field: row[field] for field in ("fold_id", "seed", "train_fold", "test_fold", "train_bi_gap", "train_near_bi")}
-                | {"n_train": len(row["train_keys"]), "n_test": len(row["test_keys"])} for row in folds]
+                | {"n_train": len(row["train_keys"]), "n_test": len(row["test_keys"]),
+                   "n_train_events": len({event_identity(key) for key in row["train_keys"]}),
+                   "n_test_events": len({event_identity(key) for key in row["test_keys"]})}
+                for row in folds]
     return {"n_common": len(common), "folds": metadata,
             "status": "eligible" if folds else "zero_common_support" if not common else "insufficient_split_support",
             "unique_event_count": len({(key[1], key[2]) for key in common}),
@@ -291,11 +325,15 @@ def audit_view_contract(view: Any, folds: list[dict[str, Any]], path: str) -> li
     if not folds:
         return [] if view is None else [f"{path}: empty support must have null view"]
     train_total = sum(row["n_train"] for row in folds)
+    train_event_total = sum(row["n_train_events"] for row in folds)
     expected = {"fold_count": len(folds), "fold_ids": [row["fold_id"] for row in folds],
                 "train_target_cells": train_total, "test_target_cells": sum(row["n_test"] for row in folds),
+                "train_event_cells": train_event_total, "test_event_cells": sum(row["n_test_events"] for row in folds),
                 "min_train_rows": min(row["n_train"] for row in folds), "min_test_rows": min(row["n_test"] for row in folds),
-                "small_support": any(min(row["n_train"], row["n_test"]) < 50 for row in folds),
-                "train_bi_gap": math.fsum(row["train_bi_gap"] * row["n_train"] for row in folds) / train_total
+                "min_train_events": min(row["n_train_events"] for row in folds),
+                "min_test_events": min(row["n_test_events"] for row in folds),
+                "small_support": any(min(row["n_train_events"], row["n_test_events"]) < 50 for row in folds),
+                "train_bi_gap": math.fsum(row["train_bi_gap"] * row["n_train_events"] for row in folds) / train_event_total
                 if all(row["train_bi_gap"] is not None for row in folds) else None}
     errors = compare_expected(expected, view, path)
     if not isinstance(view, dict):
@@ -334,11 +372,11 @@ def audit_view_contract(view: Any, folds: list[dict[str, Any]], path: str) -> li
             errors.append(f"{path}.{name}: raw Brier outside [0,1]")
     for name, score in view.get("methods", {}).items():
         for reference in ("base", "partner", "market"):
-            denominator = view[reference]["adjusted_brier"]
-            gain = ((denominator - score["adjusted_brier"]) / denominator if denominator > 0 else None)
+            denominator = view[reference]["raw_brier"]
+            gain = ((denominator - score["raw_brier"]) / denominator if denominator > 0 else None)
             errors.extend(compare_expected(gain, score.get(f"gain_vs_{reference}"), f"{path}.{name}.gain_vs_{reference}"))
-        best_loss = view["methods"]["best_single"]["adjusted_brier"]
-        best_gain = ((best_loss - score["adjusted_brier"]) / best_loss if best_loss > 0 else None)
+        best_loss = view["methods"]["best_single"]["raw_brier"]
+        best_gain = ((best_loss - score["raw_brier"]) / best_loss if best_loss > 0 else None)
         errors.extend(compare_expected(best_gain, score.get("gain_vs_best_single"), f"{path}.{name}.gain_vs_best_single"))
         bi, market_bi = score["brier_index"], view["market"]["brier_index"]
         expected_win = bi is not None and market_bi is not None and bi > market_bi + 1e-12
@@ -439,7 +477,7 @@ def audit_fold_artifacts(derived: Path, supports: Mapping[tuple[str, str], dict[
 
 
 def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline_path: Path,
-                    *, sampled_pair_count: int = 18) -> dict[str, Any]:
+                    *, sampled_pair_count: int = 18, allow_scoring_refresh: bool = False) -> dict[str, Any]:
     experiment_dir = site_data / "configuration-pair-aggregation"
     manifest = read_json(experiment_dir / "manifest.json")
     catalog = read_json(catalog_path)
@@ -465,7 +503,7 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
     recorded_producer = manifest.get("provenance", {}).get("producer_sha256")
     if not refresh_verified and recorded_producer is not None and recorded_producer != file_sha256(producer_path):
         errors.append("manifest provenance producer checksum differs from current source")
-    errors.extend(compare_expected({"schema_version": 1, "method_order": list(METHODS), "metric_order": list(METRICS),
+    errors.extend(compare_expected({"schema_version": 2, "method_order": list(METHODS), "metric_order": list(METRICS),
                                     "split": {"repetitions": 10, "seeds": list(SEEDS), "minimum_fold_overlap": 1, "near_bi_gap": 2}},
                                    manifest, "manifest"))
     if set(manifest.get("methods", {})) != set(METHODS) or set(manifest.get("metrics", {})) != set(METRICS):
@@ -487,9 +525,9 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
             errors.append(f"{name}: clean support differs from catalog")
         keys = sorted(rows)
         for label, source in (("model", rows), ("matched_market", market)):
-            raw = mean([(float(source[key]["prediction"]) - float(source[key]["outcome"])) ** 2 for key in keys])
-            adjusted = mean(adjusted_losses(source, keys))
-            errors.extend(compare_expected({"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(adjusted)},
+            raw = event_mean(keys, [(float(source[key]["prediction"]) - float(source[key]["outcome"])) ** 2 for key in keys])
+            adjusted = event_mean(keys, adjusted_losses(source, keys))
+            errors.extend(compare_expected({"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(raw)},
                                            point[label], f"catalog.{name}.{label}", 1e-12))
     print(json.dumps({"stage": "clean_verified", "configurations": len(panels), "rows": sum(map(len, panels.values()))}), flush=True)
     supports: dict[tuple[str, str], dict[str, Any]] = {}
@@ -501,7 +539,7 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
         if not shard_path.resolve().is_relative_to(experiment_dir.resolve()):
             raise ValueError("shard path leaves experiment directory")
         payload = read_json(shard_path)
-        errors.extend(compare_expected({"schema_version": 1, "base_configuration": name, "base": identities[name]}, payload, name))
+        errors.extend(compare_expected({"schema_version": 2, "base_configuration": name, "base": identities[name]}, payload, name))
         partners = {row["partner"]["exact_configuration"]: row for row in payload["partners"]}
         if set(partners) != set(identities) - {name} or len(partners) != len(payload["partners"]):
             errors.append(f"{name}: missing/duplicate/substituted partner identities")
@@ -547,8 +585,20 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
     refreshed_baseline = [relative for relative, expected in baseline.items()
                           if relative in refresh_files and refresh_files[relative]["before_sha256"] == expected
                           and file_sha256(site_data / relative) == refresh_files[relative]["after_sha256"]]
+    refresh_scope = (
+        "configuration-pair-aggregation/",
+        "model-market-aggregation/",
+        "complementarity/",
+    )
+    explicitly_refreshed = [
+        relative for relative, expected in baseline.items()
+        if allow_scoring_refresh
+        and (relative.startswith(refresh_scope) or relative == "polymarket-aggregation/market-diversity-performance.json")
+        and (not (site_data / relative).is_file() or file_sha256(site_data / relative) != expected)
+    ]
     old_changed = [relative for relative, expected in baseline.items()
                    if relative not in refreshed_baseline
+                   and relative not in explicitly_refreshed
                    and (not (site_data / relative).is_file() or file_sha256(site_data / relative) != expected)]
     errors.extend(f"pre-existing public JSON changed: {relative}" for relative in old_changed)
     statuses = Counter(row["status"] for row in supports.values())
@@ -557,7 +607,7 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
                       "unordered_pair_status_counts": dict(statuses), "unordered_fold_records": sum(len(row["folds"]) for row in supports.values()),
                       "configuration_target_rows": sum(map(len, panels.values()))}
     errors.extend(compare_expected(expected_audit, manifest["audit"], "manifest.audit"))
-    return {"passed": not errors, "schema_version": 1, "audit": "Independent exact-configuration pair support, schema and sampled direct-array arithmetic",
+    return {"passed": not errors, "schema_version": 2, "audit": "Independent exact-configuration pair support, schema and sampled direct-array arithmetic",
             "auditor_sha256": file_sha256(Path(__file__)),
             "producer_sha256": recorded_producer,
             "baseline_public_sha256_manifest_sha256": file_sha256(baseline_path),
@@ -569,12 +619,14 @@ def audit_artifacts(site_data: Path, derived: Path, catalog_path: Path, baseline
             "unordered_pair_fold_histogram": dict(sorted(histogram.items())),
             "clean_configuration_target_rows": sum(map(len, panels.values())),
             "catalog_score_checks": {"configurations": len(panels), "model_and_market_scalar_checks": len(panels) * 6, "tolerance": 1e-12},
-            "high_support_eligible_pairs": sum(row["status"] == "eligible" and all(min(fold["n_train"], fold["n_test"]) >= 50 for fold in row["folds"])
+            "high_support_eligible_pairs": sum(row["status"] == "eligible" and all(min(fold["n_train_events"], fold["n_test_events"]) >= 50 for fold in row["folds"])
                                                 for row in supports.values()),
             "sampled_unordered_pairs": len(samples), "sampled_results": samples,
             "fold_artifacts": fold_artifacts,
             "pre_existing_public_json": {"checked": len(baseline), "changed_or_missing": old_changed,
-                                          "verified_diagnostics_only_refresh": refreshed_baseline, "passed": not old_changed},
+                                          "verified_diagnostics_only_refresh": refreshed_baseline,
+                                          "authorized_scoring_refresh": explicitly_refreshed,
+                                          "passed": not old_changed},
             "diagnostics_refresh": diagnostics_refresh,
             "shard_files": file_reports, "errors": errors,
             "limitations": ["Original processed forecast JSON was not re-read; the producer's provenance-cleaned intermediate is the numeric input.",
@@ -589,9 +641,13 @@ def main() -> None:
     parser.add_argument("--catalog", type=Path, default=Path("site/public/data/polymarket-aggregation/market-diversity-performance.json"))
     parser.add_argument("--baseline", type=Path, default=Path("data/derived/configuration_pair_aggregation_audit/previous_public_sha256.json"))
     parser.add_argument("--sample-pairs", type=int, default=18)
+    parser.add_argument("--allow-scoring-refresh", action="store_true",
+                        help="Allow the known event-weighted scoring outputs to differ from the prior public baseline.")
     parser.add_argument("--output", type=Path, default=Path("data/derived/configuration_pair_aggregation_audit/report.json"))
     args = parser.parse_args()
-    report = audit_artifacts(args.site_data, args.derived, args.catalog, args.baseline, sampled_pair_count=args.sample_pairs)
+    report = audit_artifacts(args.site_data, args.derived, args.catalog, args.baseline,
+                             sampled_pair_count=args.sample_pairs,
+                             allow_scoring_refresh=args.allow_scoring_refresh)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     print(json.dumps({field: report[field] for field in ("passed", "configuration_count", "ordered_partner_records", "sampled_unordered_pairs")}), flush=True)

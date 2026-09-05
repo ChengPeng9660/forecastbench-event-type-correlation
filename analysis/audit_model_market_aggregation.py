@@ -16,7 +16,7 @@ from typing import Any, Mapping
 from analysis.audit_configuration_pair_aggregation import (
     IDENTITY_FIELDS, METHODS, METRICS, SEEDS, Panel, adjusted_losses,
     audit_view_contract, brier_index, compact_support, compare_expected,
-    file_sha256, mean, read_clean_intermediate, read_json, reference_folds,
+    event_mean, file_sha256, mean, read_clean_intermediate, read_json, reference_folds,
     reference_views, selected_support,
 )
 
@@ -34,9 +34,9 @@ def check_split_isolation(folds: list[dict[str, Any]], common: set) -> list[str]
 
 
 def _score_panel(panel: Panel, keys: list) -> dict[str, float | None]:
-    raw = mean([(float(panel[key]["prediction"]) - float(panel[key]["outcome"])) ** 2 for key in keys])
-    adjusted = mean(adjusted_losses(panel, keys))
-    return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(adjusted)}
+    raw = event_mean(keys, [(float(panel[key]["prediction"]) - float(panel[key]["outcome"])) ** 2 for key in keys])
+    adjusted = event_mean(keys, adjusted_losses(panel, keys))
+    return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(raw)}
 
 
 def audit_payload(payload: Mapping[str, Any], panels: Mapping[str, Panel], market: Panel,
@@ -55,7 +55,7 @@ def audit_payload(payload: Mapping[str, Any], panels: Mapping[str, Panel], marke
         errors.append("catalog, clean cache, and published points are not the same exact-configuration set")
     if expected_configuration_count is not None and len(identities) != expected_configuration_count:
         errors.append(f"expected {expected_configuration_count} exact configurations, got {len(identities)}")
-    errors.extend(compare_expected({"schema_version": 1, "method_order": list(METHODS), "metric_order": list(METRICS),
+    errors.extend(compare_expected({"schema_version": 2, "method_order": list(METHODS), "metric_order": list(METRICS),
                                     "split": {"repetitions": 10, "seeds": list(SEEDS),
                                               "minimum_fold_overlap": 1, "near_bi_gap": 2}}, payload, "summary"))
     if set(payload.get("methods", {})) != set(METHODS) or set(payload.get("metrics", {})) != set(METRICS):
@@ -145,7 +145,7 @@ def audit_payload(payload: Mapping[str, Any], panels: Mapping[str, Panel], marke
                        "Exact date/source/event/horizon support shared by model, market and aggregate",
                        "Ten source/event-grouped seeds, both train-to-test directions, no event leakage",
                        "All train X values and all opposite-fold method scores independently recomputed",
-                       "Training-count weighted X; test-count weighted fold BI; pooled adjusted-loss gains",
+                       "Training-target weighted X diagnostics; event-equal Brier and BI; ordinary-Brier gains",
                        "Near-BI selected by each individual training direction before aggregation",
                        "Undefined fold metrics and BI remain null in combined views"],
             "limitations": ["The audited numeric input is the previously provenance-cleaned cache; original provider JSON and freeze snapshots are not re-read.",
@@ -187,7 +187,7 @@ def audit_artifacts(summary_path: Path, clean_path: Path, catalog_path: Path, *,
 def audit_fold_artifacts(derived: Path, panels: Mapping[str, Panel], market: Panel) -> dict[str, Any]:
     """Check every stored fold and market-anchor weight against direct arrays."""
     manifest = read_json(derived / "fold-results-manifest.json")
-    errors = compare_expected({"schema_version": 1, "market_base": "Polymarket Freeze"}, manifest, "fold_manifest")
+    errors = compare_expected({"schema_version": 2, "market_base": "Polymarket Freeze"}, manifest, "fold_manifest")
     seen: dict[str, set[str]] = {}
     expected_ids: dict[str, set[str]] = {}
     current_name = None
@@ -219,7 +219,8 @@ def audit_fold_artifacts(derived: Path, panels: Mapping[str, Panel], market: Pan
                     continue
                 reference = references[fold_id]
                 expected = {field: reference[field] for field in ("fold_id", "seed", "train_fold", "test_fold",
-                                                                   "train_bi_gap", "train_near_bi", "train_diversity")}
+                                                                   "train_bi_gap", "train_near_bi", "train_diversity",
+                                                                   "n_train_events", "n_test_events")}
                 expected.update(first_configuration="Polymarket Freeze", second_configuration=name,
                                 n_train=len(reference["train_keys"]), n_test=len(reference["test_keys"]),
                                 first=reference["base"], second=reference["partner"], market=reference["market"],

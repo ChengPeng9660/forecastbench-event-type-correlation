@@ -47,9 +47,9 @@ test("keeps pair selection and BI/ECE profiles after removing the upper result a
   await focalSelect.selectOption(kimi);
   await expect(focalSelect).toHaveValue(kimi);
   await expect(overviewPoint(page, kimi)).toHaveAttribute("aria-pressed", "true");
-  await expect(partnerSelect).toHaveValue("p-1577b1cde3a9");
+  await expect(partnerSelect).toHaveValue("p-27031dd0e2bd");
   await expect(block.locator(".focal-category-profile")).toContainText("Focal · Kimi-K2-Instruct-0905");
-  await expect(block.locator(".focal-category-profile")).toContainText("Partner · Kimi-K2-Thinking");
+  await expect(block.locator(".focal-category-profile")).toContainText("Partner · Claude-Sonnet-4-20250514");
 
   await block.getByRole("button", { name: "Source / platform", exact: true }).click();
   await expect(partnerSelect).toBeEnabled();

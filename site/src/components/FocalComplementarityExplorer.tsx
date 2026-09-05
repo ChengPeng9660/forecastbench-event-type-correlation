@@ -164,7 +164,7 @@ export function CategoryProfileChart({
         </g>;
       })}
     </svg></div>
-    <figcaption>{stable ? <>Stable edges are selected by the lower end of a 90% event-clustered training BI-gap interval. {metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] on the same rows and does not enter partner selection." : "Test BI remains untouched until evaluation."}</> : metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] and pooled common rows; lower is better." : "Numbers show focal / partner BI. Categories with fewer than 30 test events remain descriptive and do not confirm transfer."}</figcaption>
+    <figcaption>{stable ? <>Stable edges are selected by the lower end of a 90% event-clustered training BI-gap interval. {metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] on the same targets and does not enter partner selection." : "BI is computed from event-equal Brier scores; test BI remains untouched until evaluation."}</> : metric === "ece" ? "ECE uses 10 fixed equal-width bins over [0, 1] and pooled common targets; lower is better." : "BI gives each event equal weight, with equal target weights inside an event. Categories with fewer than 30 test events remain descriptive."}</figcaption>
   </figure>;
 }
 
@@ -261,7 +261,7 @@ export function FocalComplementarityExplorer({
   return <section ref={sectionRef} className="focal-complementarity-section configuration-pair-section" id="focal-model-complementarity" aria-labelledby="focal-complementarity-heading" aria-busy={loaded.status === "loading"}>
     <div className="section-heading market-performance-heading focal-complementarity-heading">
       <div><p className="eyebrow">SELECTED MODEL · CATEGORY COMPLEMENTARITY</p><h3 id="focal-complementarity-heading">Who complements the selected model?</h3></div>
-      <p>Fix the exact configuration selected in the first chart, screen similarly skilled partners using training categories, then evaluate existing aggregation methods on different events.</p>
+      <p>{selectedPair && isScore(pairGain(selectedPair, method)) ? `The training-ranked partner changes held-out ${data?.methods.find(item => item.id === method)?.label ?? method} BI by ${score(pairGain(selectedPair, method), 3, true)} relative to the better single model.` : "Fix the exact configuration selected in the first chart and screen similarly skilled partners using training categories."} Test events never select the partner.</p>
     </div>
 
     {!activated && <div className="configuration-pair-loading" role="status">Complementarity results load when this section enters view.</div>}

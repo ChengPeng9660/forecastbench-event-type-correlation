@@ -143,12 +143,12 @@ export interface DirectionSummary extends Omit<AggregationSummary, "view"> {
 }
 
 export interface ComplementarityData {
-  schema_version: 7;
+  schema_version: 8;
   study: string;
   date: string;
   primary_split: string;
   primary_fold: number;
-  weighting: "uniform_rows";
+  weighting: "equal_events_within_event_equal_targets";
   event_type_taxonomy: "forecastbench-seven-domain-v1.0.0";
   event_type_domains: Array<{ id: string; label: string }>;
   event_type_fold_ins: Record<"science" | "conflict" | "economics" | "ai", string>;
@@ -180,6 +180,8 @@ export interface ComplementarityData {
     z_value: number;
     interval: "two_sided_delta_method";
     cluster_unit: "event";
+    score_weighting: "equal_events_within_event_equal_targets";
+    brier_index: "100 * (1 - sqrt(event_averaged_ordinary_brier_score))";
     primary_rule: "both_opposite_category_edge_lower_bounds_above_0_bi";
     strict_rule: "both_opposite_category_edge_lower_bounds_above_1_bi";
     strict_margin_bi: 1;

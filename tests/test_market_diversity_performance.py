@@ -67,3 +67,16 @@ def test_market_performance_exports_five_metrics_with_matched_original_probabili
     changed = market_performance.build_payload(Path("panel"), Path("taxonomy"), Path("raw"), minimum_overlap=2)
     assert changed["points"][0]["n_common"] == point["n_common"]
     assert changed["points"][0]["diversity"]["total_variation"] == point["diversity"]["total_variation"]
+
+
+def test_market_brier_score_gives_each_event_equal_weight() -> None:
+    keys = [
+        ("2026-01-01", "polymarket", "repeated", "h1"),
+        ("2026-01-02", "polymarket", "repeated", "h2"),
+        ("2026-01-01", "polymarket", "single", "h1"),
+    ]
+    rows = {
+        key: {"prediction": str(prediction), "outcome": str(outcome)}
+        for key, prediction, outcome in zip(keys, (0, 1, 0), (0, 1, 1))
+    }
+    assert market_performance.raw_brier(rows, keys) == pytest.approx(0.5)

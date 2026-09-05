@@ -4,6 +4,10 @@ This package expands the near-skill category-complementarity study to every
 clean exact ForecastBench configuration while keeping model version, prompt,
 and information condition distinct.
 
+Forecasting loss follows the event-equal definition used by the accompanying
+paper: average squared errors within each event, average those event scores,
+and transform the resulting ordinary Brier score to BI once.
+
 - `PROTOCOL.md` defines the design.
 - `REPORT.md` interprets the results.
 - `code/` contains panel construction, evaluation, diagnostics, and audit code.

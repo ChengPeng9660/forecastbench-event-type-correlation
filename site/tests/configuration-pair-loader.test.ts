@@ -18,7 +18,7 @@ describe("exact-configuration lazy loader", () => {
   });
 
   it("rejects unsupported schemas and unsafe shard paths", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ ...manifest, schema_version: 2 }))));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ ...manifest, schema_version: 1 }))));
     await expect(loadConfigurationPairManifest()).rejects.toThrow(/unsupported schema/);
     await expect(loadConfigurationPairShard({ ...configurations[0], file: "../other.json" }, manifest)).rejects.toThrow(/Invalid.*path/);
   });

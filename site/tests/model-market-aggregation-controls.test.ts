@@ -15,7 +15,7 @@ describe("model + market aggregation controls", () => {
     renderChart();
     await screen.findByRole("img");
     expect(within(screen.getByRole("group", { name: "Model + market diversity metric" })).getAllByRole("button").map((button) => button.textContent)).toEqual(["Prediction diversity", "Adjusted POG", "High-loss diversity", "Adjusted-loss diversity", "Total variation (TV)"]);
-    expect(within(screen.getByRole("group", { name: "Model + market performance outcome" })).getAllByRole("button").map((button) => button.textContent)).toEqual(["Raw Brier Score ↓", "Brier Index ↑"]);
+    expect(within(screen.getByRole("group", { name: "Model + market performance outcome" })).getAllByRole("button").map((button) => button.textContent)).toEqual(["Brier Score ↓", "Brier Index ↑"]);
     const methods = screen.getByLabelText("Model + market aggregation method");
     expect(methods).toHaveValue("ec_w0_56");
     expect([...methods.querySelectorAll("option")].map((option) => option.value)).toEqual(modelMarketFixture().method_order);
@@ -44,7 +44,7 @@ describe("model + market aggregation controls", () => {
     expect(byExact(configurations[0].exact_configuration).querySelector(".market-win-badge")).not.toBeNull();
     expect(byExact(configurations[1].exact_configuration).querySelector(".market-win-badge")).toBeNull();
     expect(signature()).toEqual(before);
-    fireEvent.click(screen.getByRole("button", { name: "Raw Brier Score ↓" }));
+    fireEvent.click(screen.getByRole("button", { name: "Brier Score ↓" }));
     expect(badges()).toHaveLength(2);
     expect(byExact(configurations[1].exact_configuration)).toHaveAttribute("data-market-comparison", "above");
     expect(count()).toBe("2 / 3");

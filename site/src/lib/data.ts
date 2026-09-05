@@ -63,8 +63,17 @@ export function loadFreezeMarketCorrelationData(): Promise<FreezeMarketCorrelati
   return loadJson<FreezeMarketCorrelationData>("polymarket-aggregation/freeze-exposed-correlation.json");
 }
 
-export function loadMarketDiversityPerformanceData(): Promise<MarketDiversityPerformanceData> {
-  return loadJson<MarketDiversityPerformanceData>("polymarket-aggregation/market-diversity-performance.json");
+export async function loadMarketDiversityPerformanceData(): Promise<MarketDiversityPerformanceData> {
+  const data = await loadJson<MarketDiversityPerformanceData>("polymarket-aggregation/market-diversity-performance.json");
+  if (data.schema_version !== "2.0.0"
+    || data.audit?.brier_score_weighting !== "equal events; equal targets within event"
+    || data.audit?.brier_index_uses_ordinary_brier_score !== true
+    || data.audit?.brier_index_transformed_after_event_averaging !== true
+    || !Array.isArray(data.points)
+    || data.points.some((point) => !Number.isInteger(point.n_events) || point.n_events < 1 || point.n_events > point.n_common)) {
+    throw new Error("Market performance data do not match the event-weighted scoring contract.");
+  }
+  return data;
 }
 
 export function loadUpperLeftModelPairAggregationData(): Promise<UpperLeftModelPairAggregationData> {

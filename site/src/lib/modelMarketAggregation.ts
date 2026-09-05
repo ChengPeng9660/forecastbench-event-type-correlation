@@ -20,7 +20,7 @@ function validView(value: unknown, maximumDirections: number): boolean {
   if (!record(value) || !count(value.fold_count) || value.fold_count === 0 || (value.fold_count as number) > maximumDirections
     || !Array.isArray(value.fold_ids) || value.fold_ids.length !== value.fold_count || !value.fold_ids.every((id) => typeof id === "string")
     || new Set(value.fold_ids).size !== value.fold_ids.length
-    || !["train_target_cells", "test_target_cells", "min_train_rows", "min_test_rows"].every((key) => count(value[key]))
+    || !["train_target_cells", "test_target_cells", "train_event_cells", "test_event_cells", "min_train_rows", "min_test_rows", "min_train_events", "min_test_events"].every((key) => count(value[key]))
     || typeof value.small_support !== "boolean" || !numeric(value.train_bi_gap) || !record(value.train_diversity)
     || !scores(value.base) || !scores(value.partner) || !scores(value.market) || !record(value.methods)) return false;
   const diversity = value.train_diversity;
@@ -42,7 +42,7 @@ export async function loadModelMarketAggregation(signal?: AbortSignal): Promise<
   const response = await fetch(`${import.meta.env.BASE_URL}data/model-market-aggregation/summary.json`, { signal });
   if (!response.ok) throw new Error(`Unable to load model + market aggregation (${response.status}).`);
   const payload: unknown = await response.json();
-  if (!record(payload) || payload.schema_version !== 1 || payload.market_base !== "Polymarket Freeze"
+  if (!record(payload) || payload.schema_version !== 2 || payload.market_base !== "Polymarket Freeze"
     || typeof payload.generated_at !== "string" || (!record(payload.scope) && typeof payload.scope !== "string")
     || !record(payload.methods) || !record(payload.metrics) || !record(payload.split) || !record(payload.aggregation)
     || !record(payload.audit) || !record(payload.provenance) || !Array.isArray(payload.points)

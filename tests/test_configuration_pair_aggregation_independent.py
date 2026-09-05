@@ -8,7 +8,7 @@ import pytest
 
 from analysis.audit_configuration_pair_aggregation import (
     METHODS, METRICS, SEEDS, adjusted_losses, aggregate_reference, compare_expected,
-    directional_weights, event_half, pool_predictions, reference_folds,
+    directional_weights, event_half, event_mean, pool_predictions, reference_folds,
     reference_views, support_folds, train_coordinates, audit_artifacts,
     file_sha256, mean, brier_index,
 )
@@ -123,15 +123,16 @@ def test_best_single_is_one_constituent_per_test_fold_not_per_question():
         assert set(fold["train_diversity"]) == set(METRICS)
 
 
-def test_aggregation_uses_train_and_test_weights_and_ratio_of_pooled_losses():
+def test_aggregation_transforms_pooled_event_weighted_brier_once():
     first, second, market = basic_panels()
     folds = reference_folds(first, second, market, seeds=[SEEDS[0]])
     result = aggregate_reference(folds)
-    n = sum(len(f["test_keys"]) for f in folds)
-    expected = sum(f["methods"]["simple_mean"]["brier_index"] * len(f["test_keys"]) for f in folds) / n
+    n = sum(f["test_event_cells"] for f in folds)
+    pooled = sum(f["methods"]["simple_mean"]["raw_brier"] * f["test_event_cells"] for f in folds) / n
+    expected = brier_index(pooled)
     assert result["methods"]["simple_mean"]["brier_index"] == pytest.approx(expected)
-    base_loss = result["base"]["adjusted_brier"]
-    pool_loss = result["methods"]["simple_mean"]["adjusted_brier"]
+    base_loss = result["base"]["raw_brier"]
+    pool_loss = result["methods"]["simple_mean"]["raw_brier"]
     assert result["methods"]["simple_mean"]["gain_vs_base"] == pytest.approx((base_loss - pool_loss) / base_loss)
 
 
@@ -150,13 +151,13 @@ def test_independent_comparison_rejects_boolean_zero_and_missing_metric():
     assert not compare_expected({"value": None}, {"value": None, "provenance": "extra allowed"})
 
 
-def test_one_invalid_fold_bi_is_not_silently_omitted_from_average():
+def test_negative_adjusted_loss_does_not_make_ordinary_brier_index_undefined():
     first = {key(i): row(0, 0, offset=-0.01 if event_half(key(i), SEEDS[0]) == "A" else 0.04) for i in range(24)}
     folds = reference_folds(first, first, first, seeds=[SEEDS[0]])
-    assert sorted(fold["base"]["brier_index"] is None for fold in folds) == [False, True]
+    assert all(fold["base"]["brier_index"] == 100 for fold in folds)
     combined = aggregate_reference(folds)
-    assert combined["base"]["brier_index"] is None
-    assert combined["methods"]["simple_mean"]["brier_index"] is None
+    assert combined["base"]["brier_index"] == 100
+    assert combined["methods"]["simple_mean"]["brier_index"] == 100
     assert combined["methods"]["simple_mean"]["beats_market"] is False
 
 
@@ -288,9 +289,9 @@ def test_full_artifact_auditor_checks_shards_cache_chunks_and_old_file_hashes(tm
 
     def score(panel):
         keys = list(first)
-        raw = mean([(float(panel[k]["prediction"]) - float(panel[k]["outcome"])) ** 2 for k in keys])
-        adjusted = mean(adjusted_losses(panel, keys))
-        return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(adjusted)}
+        raw = event_mean(keys, [(float(panel[k]["prediction"]) - float(panel[k]["outcome"])) ** 2 for k in keys])
+        adjusted = event_mean(keys, adjusted_losses(panel, keys))
+        return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(raw)}
 
     catalog_path.write_text(json.dumps({"points": [
         {**identities[name], "n_common": len(first), "model": score(panel), "matched_market": score(market)}
@@ -314,7 +315,7 @@ def test_full_artifact_auditor_checks_shards_cache_chunks_and_old_file_hashes(tm
         configurations.append({**identities[name], "file": file, "eligible_partner_count": 1})
         pair = {key: value for key, value in result.items() if key != "folds"}
         pair.update(partner=identities[partner], views=build_views(result, reverse=bool(index)))
-        (experiment / file).write_text(json.dumps({"schema_version": 1, "base_configuration": name,
+        (experiment / file).write_text(json.dumps({"schema_version": 2, "base_configuration": name,
                                                   "base": identities[name], "partners": [pair]}))
     fold_path = derived / "part.jsonl.gz"
     with gzip.open(fold_path, "wt") as handle:
@@ -324,7 +325,7 @@ def test_full_artifact_auditor_checks_shards_cache_chunks_and_old_file_hashes(tm
         "row_count": len(result["folds"]), "files": [{"file": fold_path.name, "row_count": len(result["folds"]),
                                                       "bytes": fold_path.stat().st_size, "sha256": file_sha256(fold_path)}]}))
     (experiment / "manifest.json").write_text(json.dumps({
-        "schema_version": 1, "methods": dict.fromkeys(METHODS, {}), "method_order": METHODS,
+        "schema_version": 2, "methods": dict.fromkeys(METHODS, {}), "method_order": METHODS,
         "metrics": dict.fromkeys(METRICS, {}), "metric_order": METRICS,
         "split": {"repetitions": 10, "seeds": SEEDS, "minimum_fold_overlap": 1, "near_bi_gap": 2},
         "configurations": configurations,

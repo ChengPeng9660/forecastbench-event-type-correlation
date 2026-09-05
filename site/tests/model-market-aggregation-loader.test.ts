@@ -28,7 +28,7 @@ describe("model + market aggregation data contract", () => {
     const view = data.points[0].views.all.combined!;
     if (fault === "wrong market") view.market = { ...view.market, brier_index: 99 };
     if (fault === "wrong win flag") view.methods.ec_w0_56.beats_market = false;
-    const payload = fault === "unsupported schema" ? { ...data, schema_version: 2 } : data;
+    const payload = fault === "unsupported schema" ? { ...data, schema_version: 1 } : data;
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify(payload))));
     await expect(loadModelMarketAggregation()).rejects.toThrow(/Invalid model \+ market/);
   });

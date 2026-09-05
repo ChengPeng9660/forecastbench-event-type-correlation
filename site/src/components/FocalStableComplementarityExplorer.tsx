@@ -136,7 +136,7 @@ export function FocalStableComplementarityExplorer({
   return <section ref={sectionRef} className="focal-complementarity-section stable-complementarity-section configuration-pair-section" id="stable-category-complementarity" aria-labelledby="stable-complementarity-heading" aria-busy={loaded.status === "loading"}>
     <div className="section-heading market-performance-heading focal-complementarity-heading">
       <div><p className="eyebrow">SELECTED MODEL · STABLE CATEGORY COMPLEMENTARITY</p><h3 id="stable-complementarity-heading">Which category strengths survive uncertainty?</h3></div>
-      <p>Penalize noisy training gaps with event-clustered uncertainty, then inspect held-out BI and ECE for the unchanged aggregation methods.</p>
+      <p>{selectedPair && isScore(aggregationBi) && isScore(bestBi) ? `${pairs.length} stable partner${pairs.length === 1 ? " survives" : "s survive"}; the selected pair changes held-out BI by ${score(aggregationBi - bestBi, 3, true)} relative to the better single model.` : "Penalize noisy training gaps with event-clustered uncertainty, then inspect held-out BI and ECE."} Partner selection remains training-only.</p>
     </div>
 
     {!activated && <div className="configuration-pair-loading" role="status">Stable complementarity results load when this section enters view.</div>}

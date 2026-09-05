@@ -30,6 +30,8 @@ STABILITY_DEFINITION = {
     "z_value": Z_VALUE,
     "interval": "two_sided_delta_method",
     "cluster_unit": "event",
+    "score_weighting": "equal_events_within_event_equal_targets",
+    "brier_index": "100 * (1 - sqrt(event_averaged_ordinary_brier_score))",
     "primary_rule": "both_opposite_category_edge_lower_bounds_above_0_bi",
     "strict_rule": f"both_opposite_category_edge_lower_bounds_above_{STRICT_MARGIN_BI:g}_bi",
     "strict_margin_bi": STRICT_MARGIN_BI,
@@ -60,10 +62,9 @@ def event_clustered_bi_gap(
 ) -> dict[str, float | int | None]:
     """Return BI(A)-BI(B) and its event-clustered delta-method SE.
 
-    Uniform target-row weighting matches the published complementarity study.
-    The question fixed effect and normalization term remain inside each
-    adjusted loss.  The event cluster keeps repeated target rows from being
-    treated as independent observations.
+    Each event receives equal mass, split equally among its targets.  BI is
+    computed from ordinary squared error.  The event cluster keeps repeated
+    target rows from being treated as independent observations.
     """
 
     import numpy as np
@@ -82,9 +83,12 @@ def event_clustered_bi_gap(
     if not all(np.isfinite(values).all() for values in (first, second, resolved, adjustment)):
         raise ValueError("stable-gap inputs must be finite")
 
-    loss_a = (first - resolved) ** 2 + adjustment
-    loss_b = (second - resolved) ** 2 + adjustment
-    mean_a, mean_b = float(loss_a.mean()), float(loss_b.mean())
+    loss_a = (first - resolved) ** 2
+    loss_b = (second - resolved) ** 2
+    _, inverse, counts = np.unique(clusters, return_inverse=True, return_counts=True)
+    cluster_count = len(counts)
+    weights = 1.0 / (cluster_count * counts[inverse])
+    mean_a, mean_b = float(weights @ loss_a), float(weights @ loss_b)
     if mean_a <= 0 or mean_b <= 0:
         return {
             "gap_bi": None,
@@ -99,12 +103,10 @@ def event_clustered_bi_gap(
         (-50 / math.sqrt(mean_a)) * (loss_a - mean_a)
         - (-50 / math.sqrt(mean_b)) * (loss_b - mean_b)
     )
-    _, inverse = np.unique(clusters, return_inverse=True)
-    cluster_count = int(inverse.max()) + 1
     if cluster_count < 2:
         standard_error = None
     else:
-        cluster_sums = np.bincount(inverse, weights=influence) / first.size
+        cluster_sums = np.bincount(inverse, weights=weights * influence)
         standard_error = math.sqrt(
             cluster_count / (cluster_count - 1) * float(cluster_sums @ cluster_sums)
         )

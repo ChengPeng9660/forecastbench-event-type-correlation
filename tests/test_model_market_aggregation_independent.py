@@ -5,7 +5,7 @@ import pytest
 
 from analysis.audit_configuration_pair_aggregation import (
     IDENTITY_FIELDS, METHODS, METRICS, SEEDS, adjusted_losses, brier_index,
-    compare_expected, event_half, mean, reference_folds, reference_views,
+    compare_expected, event_half, event_mean, mean, reference_folds, reference_views,
 )
 from analysis.audit_model_market_aggregation import audit_payload
 from analysis.configuration_pair_aggregation import build_views, prepare_panel
@@ -132,14 +132,14 @@ def test_artifact_auditor_detects_reversed_anchor_bad_x_and_dropped_configuratio
                                          "zero_shot", "Zero shot", "freeze_values", "Freeze values")))
     def score(panel):
         keys = sorted(panel)
-        adjusted = mean(adjusted_losses(panel, keys))
-        return {"raw_brier": mean([(float(r["prediction"])-float(r["outcome"]))**2 for r in panel.values()]),
-                "adjusted_brier": adjusted, "brier_index": brier_index(adjusted)}
+        raw = event_mean(keys, [(float(panel[key]["prediction"])-float(panel[key]["outcome"]))**2 for key in keys])
+        adjusted = event_mean(keys, adjusted_losses(panel, keys))
+        return {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": brier_index(raw)}
     catalog = {"points": [{**identity, "n_common": len(model), "model": score(model), "matched_market": score(market)}]}
     result = produced(model, market)
     point = {"configuration": identity, **{k: v for k, v in result.items() if k not in ("folds", "first_configuration", "second_configuration")},
              "views": build_views(result)}
-    payload = {"schema_version": 1, "method_order": list(METHODS), "metric_order": list(METRICS),
+    payload = {"schema_version": 2, "method_order": list(METHODS), "metric_order": list(METRICS),
                "methods": dict.fromkeys(METHODS, {}), "metrics": dict.fromkeys(METRICS, {}),
                "split": {"repetitions": 10, "seeds": list(SEEDS), "minimum_fold_overlap": 1, "near_bi_gap": 2}, "points": [point]}
     assert audit_payload(payload, {NAME: model}, market, catalog, expected_configuration_count=1)["passed"]

@@ -1122,6 +1122,7 @@ export interface MarketDiversityPerformancePoint {
   information_type: MarketInformationType;
   information_label: string;
   n_common: number;
+  n_events: number;
   date_min: string;
   date_max: string;
   prediction_pearson: number | null;
@@ -1165,6 +1166,10 @@ export interface MarketDiversityPerformanceData {
     prompt_counts: Record<string, number>;
     provider_counts: Record<string, number>;
     model_event_cells: number;
+    model_unique_event_cells: number;
+    brier_score_weighting: string;
+    brier_index_uses_ordinary_brier_score: boolean;
+    brier_index_transformed_after_event_averaging: boolean;
     all_scores_use_identical_pair_support: boolean;
   };
   provenance: Record<string, unknown>;

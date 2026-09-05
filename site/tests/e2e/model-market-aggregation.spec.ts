@@ -39,7 +39,7 @@ test("adds the final model-market block and follows the exact overview selection
   }
   const outcomes = block.getByRole("group", { name: "Model + market performance outcome" });
   await expect(outcomes.getByRole("button")).toHaveCount(2);
-  await expect(outcomes.getByRole("button", { name: "Raw Brier Score ↓", exact: true })).toBeVisible();
+  await expect(outcomes.getByRole("button", { name: "Brier Score ↓", exact: true })).toBeVisible();
   await expect(outcomes.getByRole("button", { name: "Brier Index ↑", exact: true })).toBeVisible();
   await expect(block.getByLabel("Model + market aggregation method").locator("option")).toHaveCount(6);
 
@@ -75,7 +75,7 @@ test("uses the published paired-market comparison for every unchanged method and
   await expect(block.locator(".model-market-baseline")).toHaveCount(0);
   await highlight.check();
   for (const outcome of ["brier_index", "raw_brier"] as const) {
-    await block.getByRole("button", { name: outcome === "brier_index" ? "Brier Index ↑" : "Raw Brier Score ↓", exact: true }).click();
+    await block.getByRole("button", { name: outcome === "brier_index" ? "Brier Index ↑" : "Brier Score ↓", exact: true }).click();
     for (const method of payload.method_order) {
       await methodControl.selectOption(method);
       for (const direction of ["combined", "a_to_b", "b_to_a"] as const) {

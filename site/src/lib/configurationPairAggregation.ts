@@ -12,7 +12,7 @@ const scores = (value: unknown) => record(value) && ["raw_brier", "adjusted_brie
 function validView(value: unknown): boolean {
   if (value === null) return true;
   if (!record(value) || !count(value.fold_count) || !Array.isArray(value.fold_ids) || value.fold_ids.length !== value.fold_count
-    || !["train_target_cells", "test_target_cells", "min_train_rows", "min_test_rows"].every((key) => count(value[key]))
+    || !["train_target_cells", "test_target_cells", "train_event_cells", "test_event_cells", "min_train_rows", "min_test_rows", "min_train_events", "min_test_events"].every((key) => count(value[key]))
     || typeof value.small_support !== "boolean" || !numeric(value.train_bi_gap) || !record(value.train_diversity)
     || !scores(value.base) || !scores(value.partner) || !scores(value.market) || !record(value.methods)) return false;
   const diversity = value.train_diversity;
@@ -39,7 +39,7 @@ async function readJson(file: string, signal?: AbortSignal): Promise<unknown> {
 }
 export async function loadConfigurationPairManifest(signal?: AbortSignal): Promise<ConfigurationPairManifest> {
   const payload = await readJson("manifest.json", signal);
-  if (!record(payload) || payload.schema_version !== 1 || !Array.isArray(payload.configurations) || !record(payload.methods)
+  if (!record(payload) || payload.schema_version !== 2 || !Array.isArray(payload.configurations) || !record(payload.methods)
     || !record(payload.metrics) || !record(payload.split) || !record(payload.audit) || !Array.isArray(payload.method_order)
     || !Array.isArray(payload.metric_order) || typeof payload.generated_at !== "string") throw new Error("Invalid configuration-aggregation manifest or unsupported schema.");
   const methods = payload.methods;

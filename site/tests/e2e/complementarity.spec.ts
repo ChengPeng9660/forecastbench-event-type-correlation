@@ -11,7 +11,7 @@ test("presents five existing aggregation methods and the shareable pair explorer
   await expect(page.getByRole("link", { name: /GitHub/i })).toHaveCount(0);
   expect(await section.textContent()).not.toMatch(/[\u3400-\u9fff]/u);
   await expect(page.getByTestId("cc-scope")).toContainText("Main sensitivity · Training BI gap ≤ 3");
-  await expect(page.getByTestId("cc-scope")).toContainText("Uniform target weights (1/n); no Dataset/Market 50:50 balancing");
+  await expect(page.getByTestId("cc-scope")).toContainText("Events receive equal weight, divided equally among targets within an event");
   await expect(section).toContainText("313 exact configurations");
   await expect(section).toContainText("96 model versions");
   await expect(page.getByLabel("Exact configuration pair scope")).toHaveValue("all");
@@ -23,8 +23,8 @@ test("presents five existing aggregation methods and the shareable pair explorer
   await expect(page.getByLabel("Complementarity aggregation method").locator("option")).toHaveText([
     "Simple mean", "Log-odds mean", "EC · w = 0.56", "Piecewise odds", "Directional CF",
   ]);
-  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+3.039");
-  await expect(section.locator(".cc-heading-note").first()).toContainText("2449 eligible pairs");
+  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+2.926");
+  await expect(section.locator(".cc-heading-note").first()).toContainText("2431 eligible pairs");
   await expect(section).toContainText("96.6%");
   await expect(section).toContainText("10 / 10");
   await expect(section).toContainText("313 exact configurations from 96 model versions");
@@ -36,7 +36,7 @@ test("presents five existing aggregation methods and the shareable pair explorer
   }
 
   await page.getByLabel("Complementarity aggregation method").selectOption("piecewise_odds");
-  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+1.108");
+  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+1.424");
   await page.getByLabel("Complementarity aggregation method").selectOption("cf_directional");
   await page.getByLabel("Next pair", { exact: true }).click();
   const newPair = await page.getByLabel("Select exact model pair").inputValue();
@@ -47,17 +47,17 @@ test("presents five existing aggregation methods and the shareable pair explorer
 
   await page.getByLabel("Train BI gap limit", { exact: true }).selectOption("5");
   await expect(page.getByTestId("cc-scope")).toContainText("Wider robustness · Training BI gap ≤ 5");
-  await expect(section.locator(".cc-heading-note").first()).toContainText("2834 eligible pairs");
+  await expect(section.locator(".cc-heading-note").first()).toContainText("2805 eligible pairs");
   await page.getByLabel("Train BI gap limit", { exact: true }).selectOption("3");
   await page.getByLabel("Category coverage", { exact: true }).selectOption("0.8");
-  await expect(section.locator(".cc-heading-note").first()).toContainText("706 eligible pairs");
+  await expect(section.locator(".cc-heading-note").first()).toContainText("627 eligible pairs");
   await page.getByRole("button", { name: "Question source / platform", exact: true }).click();
   await page.getByLabel("Category coverage", { exact: true }).selectOption("0.5");
-  await expect(section.locator(".cc-heading-note").first()).toContainText("3126 eligible pairs");
-  await expect(section).toContainText("90.7%");
+  await expect(section.locator(".cc-heading-note").first()).toContainText("3181 eligible pairs");
+  await expect(section).toContainText("93.7%");
   await page.getByLabel("Exact configuration pair scope").selectOption("matched_conditions");
-  await expect(section.locator(".cc-heading-note").first()).toContainText("989 eligible pairs");
-  await expect(section).toContainText("87.5%");
+  await expect(section.locator(".cc-heading-note").first()).toContainText("1065 eligible pairs");
+  await expect(section).toContainText("91.2%");
   const size = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth }));
   expect(size.width).toBeLessThanOrEqual(size.viewport + 1);
   expect(errors).toEqual([]);
@@ -73,7 +73,7 @@ test("recovers from a failed study fetch without keeping a stale error", async (
   await expect(page).not.toHaveURL(/cc_lang=/);
   await expect(page.locator("#complementarity")).toContainText("Results unavailable");
   await page.getByRole("button", { name: "Try again" }).click();
-  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+3.039");
+  await expect(page.getByTestId("cc-gain-inspector").locator(".cc-big-number")).toContainText("+2.926");
   await expect(page.getByText("Results unavailable")).toHaveCount(0);
 });
 

@@ -55,7 +55,7 @@ Original data: [ForecastBench datasets](https://github.com/forecastingresearch/f
 
 Data and derived-data license: [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-Changes include retaining every clean exact model-version, prompt, and information configuration; removing imputed, unresolved, and unscored records; joining an archived official fixed-effect snapshot; mapping the prior audited semantic topics into seven displayed event domains; constructing event-disjoint common-support panels; evaluating training-only category complementarity and five unchanged aggregation formulas; and generating retrospective summaries.
+Changes include retaining every clean exact model-version, prompt, and information configuration; removing imputed, unresolved, and unscored records; mapping the prior audited semantic topics into seven displayed event domains; constructing event-disjoint common-support panels; weighting events equally with equal target weights inside each event; evaluating training-only category complementarity and five unchanged aggregation formulas; and generating retrospective summaries.
 
 This is not an official ForecastBench leaderboard release. No forecasts, submissions, or outcomes were fabricated.
 """
@@ -119,8 +119,10 @@ def verify_frozen_inputs(study: Path):
     data_audit = json.loads((study / "data/audit.json").read_text())
     taxonomy_audit = json.loads((study / "data/fine_event_taxonomy_audit.json").read_text())
     independent = json.loads((study / "results/independent_audit.json").read_text())
-    if not audit["weighting"].startswith("uniform common-target rows"):
-        raise ValueError("unexpected target weighting")
+    if audit["weighting"] != "equal events; equal targets within each event":
+        raise ValueError("unexpected event weighting")
+    if audit.get("brier_index_uses_official_offsets") is not False:
+        raise ValueError("BI must be derived from ordinary event-averaged Brier score")
     if not audit["no_test_gap_filter"] or not audit["train_selection_only"]:
         raise ValueError("pair selection is not training-only")
     if audit["event_overlap_failures"] or independent["event_disjointness"] != "PASS":
@@ -168,7 +170,7 @@ def export(study: Path, destination: Path):
         and atom(row["train_groups"]) >= 2
         and atom(row["train_coverage"]) >= 0.5
     ]
-    if len(all_rows) != audit["output_rows"] or len(primary_source) != 16_589:
+    if len(all_rows) != audit["output_rows"] or not primary_source:
         raise ValueError("expanded result row count changed")
 
     profile_map = {}
@@ -230,8 +232,8 @@ def export(study: Path, destination: Path):
             calibration=overall_calibration[(row["model_a"], row["model_b"])],
             stability=stability[(row["dimension"], row["pair_id"])],
         )
-        if row["weighting"] != "uniform_rows":
-            raise ValueError("unexpected row weighting")
+        if row["weighting"] != "equal_events_within_event_equal_targets":
+            raise ValueError("unexpected event weighting")
         pairs.append(pair)
     if len({(pair["dimension"], pair["id"]) for pair in pairs}) != len(pairs):
         raise ValueError("duplicate dimension/pair view")
@@ -284,12 +286,12 @@ def export(study: Path, destination: Path):
     featured = max(candidates, key=lambda pair: (pair["train_between_norm"], pair["id"]))
     diagnostics = json.loads((study / "results/diagnostics.json").read_text())
     payload = {
-        "schema_version": 7,
-        "study": "all_exact_configuration_category_complementarity_2026-09-01",
-        "date": "2026-09-01",
+        "schema_version": 8,
+        "study": "all_exact_configuration_category_complementarity_event_weighted_2026-09-05",
+        "date": "2026-09-05",
         "primary_split": PRIMARY_SPLIT,
         "primary_fold": PRIMARY_FOLD,
-        "weighting": "uniform_rows",
+        "weighting": "equal_events_within_event_equal_targets",
         "event_type_taxonomy": EVENT_TYPE_TAXONOMY,
         "event_type_domains": EVENT_TYPE_DOMAINS,
         "event_type_fold_ins": EVENT_TYPE_FOLD_INS,
@@ -368,9 +370,9 @@ def export(study: Path, destination: Path):
             "information_a": pair["information_type_a"], "information_b": pair["information_type_b"],
             "same_model_version": pair["same_model_version"], "same_prompt": pair["same_prompt"],
             "same_information": pair["same_information"], "train_bi_gap": pair["train_gap"],
-            "mean_train_bi": pair["mean_train_bi"], "uniform_row_category_coverage": pair["train_coverage"],
+            "mean_train_bi": pair["mean_train_bi"], "event_weighted_category_coverage": pair["train_coverage"],
             "train_crossing": pair["crossing"], "train_category_complementarity": pair["train_between_norm"],
-            "train_dataset_row_fraction": pair["train_origin_dataset_fraction"],
+            "train_dataset_event_weight_fraction": pair["train_origin_dataset_fraction"],
             "test_bi_a": pair["test_bi_a"], "test_bi_b": pair["test_bi_b"],
             "train_ece_a": pair["calibration"]["train_a"],
             "train_ece_b": pair["calibration"]["train_b"],

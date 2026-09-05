@@ -65,7 +65,7 @@ describe("all-configuration aggregation controls", () => {
     const badges = () => container.querySelectorAll(".configuration-pair-point .market-win-badge");
     fireEvent.click(toggle);
     expect(badges()).toHaveLength(2);
-    for (const label of ["Raw Brier ↓", "Gain vs base", "Gain vs market", "Aggregation BI ↑"]) {
+    for (const label of ["Brier Score ↓", "Gain vs base", "Gain vs market", "Aggregation BI ↑"]) {
       fireEvent.click(screen.getByRole("button", { name: label }));
       expect(badges()).toHaveLength(2);
     }
@@ -98,7 +98,7 @@ describe("all-configuration aggregation controls", () => {
       ? Promise.resolve(new Response(JSON.stringify(data), { status: 200 })) : fixtureFetch(input)));
     const { container } = renderBase();
     await screen.findByRole("img");
-    fireEvent.click(screen.getByRole("button", { name: "Raw Brier ↓" }));
+    fireEvent.click(screen.getByRole("button", { name: "Brier Score ↓" }));
     fireEvent.click(screen.getByRole("checkbox", { name: "Exact configuration aggregation: highlight market wins" }));
     expect(container.querySelectorAll(".configuration-pair-point")).toHaveLength(2);
     expect(container.querySelectorAll(".configuration-pair-point .market-win-badge")).toHaveLength(0);
@@ -145,8 +145,8 @@ describe("all-configuration aggregation controls", () => {
     expect(container.querySelectorAll(".configuration-pair-point")).toHaveLength(1);
     expect(container.querySelector(".configuration-pair-point")).toHaveAttribute("data-partner", configurations[2].exact_configuration);
     fireEvent.change(screen.getByLabelText("Exact configuration aggregation method"), { target: { value: "cf_directional" } });
-    fireEvent.click(screen.getByRole("button", { name: "Raw Brier ↓" }));
-    expect(screen.getByRole("img")).toHaveAccessibleName(/Raw Brier/);
+    fireEvent.click(screen.getByRole("button", { name: "Brier Score ↓" }));
+    expect(screen.getByRole("img")).toHaveAccessibleName(/Brier Score/);
   });
 
   it("reports unavailable pairs rather than inventing scores", async () => {

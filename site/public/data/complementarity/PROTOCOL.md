@@ -28,11 +28,12 @@ configurations.
 
 ## Scores and support
 
-- Each pair is evaluated on its common target rows.
-- Every common row receives weight `1/n`; Dataset and Market are not forced to
-  receive equal total weight.
-- The archived official question fixed effect and its date/origin normalization
-  remain in adjusted Brier and Brier Index.
+- Each pair is evaluated on its common resolved targets.
+- Squared errors are averaged within each event and then equally across events;
+  targets within the same event divide that event's weight equally.
+- The Brier Index is `100 * (1 - sqrt(BS))`, applied once to the resulting
+  event-averaged ordinary Brier score. Archived fixed effects remain only as
+  provenance diagnostics and do not enter BS or BI.
 - Five deterministic event-cluster splits (`20260910` through `20260914`) are
   evaluated in both directions. The primary view trains on fold A of split
   `20260910` and tests on fold B.
@@ -54,7 +55,7 @@ audited semantic taxonomy; it reads neither outcomes nor model forecasts.
 
 For event type and question source/platform separately, only categories with at
 least 30 training events enter the profile. At least two supported categories
-and the selected row-mass coverage threshold are required. The crossed-strength
+and the selected event-mass coverage threshold are required. The crossed-strength
 cohort additionally requires configuration A to lead by at least 1 training BI
 point in one category and configuration B to lead by at least 1 training BI
 point in another.
@@ -63,8 +64,8 @@ The training complementarity coordinate is
 
 `D_type = min(R_A, R_B) - sum_g pi_g min(R_A,g, R_B,g)`,
 
-divided by the two configurations' mean raw Brier risk on supported training
-rows. `R` is raw Brier risk and `pi_g` is category row mass. This quantity is
+divided by the two configurations' mean ordinary Brier risk on supported training
+events. `R` is event-averaged Brier risk and `pi_g` is category event mass. This quantity is
 the part of reciprocal error advantage attributable to the identity of the
 better configuration changing across categories. It is computed on training
 questions only.
@@ -103,7 +104,7 @@ The primary endpoint is aggregation test BI minus the higher BI of the two
 single configurations on identical test targets. The better test single is a
 hindsight reference, not a selectable method. Secondary diagnostics include
 the fraction beating both singles, gain over the training-selected single,
-raw-Brier reduction, crossed-strength persistence, ability tiers, condition
+ordinary-Brier reduction, crossed-strength persistence, ability tiers, condition
 matching, and stability over ten event directions.
 
 This is internal holdout evidence from a repeatedly studied historical archive.

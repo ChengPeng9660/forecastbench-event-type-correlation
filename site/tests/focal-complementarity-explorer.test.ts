@@ -39,7 +39,7 @@ describe("selected-model category profile", () => {
     const rendered = render(createElement(FocalComplementarityExplorer, { selectedConfiguration: claude, onSelectConfiguration }));
     const section = rendered.container.querySelector("#focal-model-complementarity") as HTMLElement;
 
-    await waitFor(() => expect(within(section).getByLabelText("Selected complementary partner")).toHaveDisplayValue(/1\. Mistral-Large-Latest · Dtype 0\.181/), { timeout: 10_000 });
+    await waitFor(() => expect(within(section).getByLabelText("Selected complementary partner")).toHaveDisplayValue(/1\. Mistral-Large-Latest · Dtype 0\.170/), { timeout: 10_000 });
     await waitFor(() => expect(section.querySelector(".focal-category-profile")).toBeInTheDocument());
 
     expect(within(section).getByLabelText("Selected focal model")).toHaveValue(claude);
@@ -96,7 +96,7 @@ describe("selected-model category profile", () => {
 
     fireEvent.click(within(section).getByRole("button", { name: "Event type" }));
     fireEvent.change(within(section).getByLabelText("Selected-model partner scope"), { target: { value: "matched_conditions" } });
-    await waitFor(() => expect(within(section).getByLabelText("Selected complementary partner").querySelectorAll("option").length).toBe(7));
+    await waitFor(() => expect(within(section).getByLabelText("Selected complementary partner").querySelectorAll("option").length).toBe(5));
     await waitFor(() => expect(section.querySelector(".focal-category-profile")).toBeInTheDocument());
 
     rendered.rerender(createElement(FocalComplementarityExplorer, { selectedConfiguration: mistral, onSelectConfiguration: vi.fn() }));

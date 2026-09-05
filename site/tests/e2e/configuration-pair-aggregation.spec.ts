@@ -79,7 +79,7 @@ test("loads the selected exact configuration on activation, with every metric an
     await expect(block.locator(".configuration-pair-point").first()).toBeAttached();
   }
   const outcomes = block.getByRole("group", { name: "Exact configuration aggregation outcome" });
-  for (const label of ["Raw Brier ↓", "Gain vs base", "Gain vs market", "Aggregation BI ↑"]) {
+  for (const label of ["Brier Score ↓", "Gain vs base", "Gain vs market", "Aggregation BI ↑"]) {
     await outcomes.getByRole("button", { name: label, exact: true }).click();
     await expect(block.getByRole("img")).toHaveAccessibleName(new RegExp(label));
   }
@@ -103,7 +103,7 @@ test("supports previously uncovered scratchpad configurations without swapping i
   await page.goto("/#market-performance");
   let block = await activate(page, scratchpad);
   await block.getByRole("group", { name: "Exact configuration diversity metric" }).getByRole("button", { name: "Total variation (TV)" }).click();
-  await block.getByRole("group", { name: "Exact configuration aggregation outcome" }).getByRole("button", { name: "Raw Brier ↓", exact: true }).click();
+  await block.getByRole("group", { name: "Exact configuration aggregation outcome" }).getByRole("button", { name: "Brier Score ↓", exact: true }).click();
   await expect(block.locator(".configuration-pair-point").first()).toBeAttached();
   await block.getByLabel("Aggregation partner provider").selectOption("OpenAI");
   await expect(block.getByLabel("Aggregation partner provider")).toHaveValue("OpenAI");

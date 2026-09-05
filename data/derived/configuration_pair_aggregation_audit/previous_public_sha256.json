@@ -1,5 +1,5 @@
 {
-  "description": "SHA-256 snapshot of the 112 pre-existing public JSON files, captured before the all-configuration experiment; excludes any new experiment files.",
+  "description": "SHA-256 snapshot of the 109 public JSON files committed at HEAD before the event-weighted scoring refresh; excludes experiment outputs added after that snapshot.",
   "files": {
     "audit.json": "06cd2209939967bdc9cb9cdd6dd606673969795898d30e7d0a96aba46e1bb011",
     "cross-type/audit.json": "5ad6b02b76b06f3f40ec015ad6421deae783d3e1faf4fc3e56c1668f5feed9e4",
@@ -23,10 +23,8 @@
     "event-types/politics_conflict.json": "ccd94d52672a28793f24c4523d93ee8d5a5bf7547b8ad77db01676dab53dec1d",
     "event-types/sports.json": "82d597359e1097d4c66c58df3a6a00d991f2f34ab1ba04f08ef1ca8b70a51351",
     "event-types/technology_ai.json": "b2bdcc413fe1c249678a2ec2bb50a4364155ab25ca8bb7fa52ad425c46d2bd7c",
-    "focal-gain/gpt-4-1-2025-04-14.json": "992d86fde8ebfb43f9728193d06f269b43e85ad021f2a0900b4a4dfb6fa23496",
-    "global-baseline/audit 2.json": "4a58969c9416fb928b79008bdf6ca4488d675a15ef3ee68c8f9bd7ec08d44bd1",
+    "focal-gain/gpt-4-1-2025-04-14.json": "cd2e47bf41d60e9a0f40707506318fd38840e5ddd8869b820e9192eb20e47353",
     "global-baseline/audit.json": "38ec3fb22109ba37775ebbafab9df25d481c1d703641f8cfc7e0d0a84e5ff581",
-    "global-baseline/manifest 2.json": "96a0987ca511a54c33ec0fb875b33da725639293fcc719641fd23deba60a464f",
     "global-baseline/manifest.json": "d425218e64870c7ef874298baed675610d5c6dd9f65934a810ff4ca5ecff4dc3",
     "global-baseline/pair-matrices/official_full.json": "8e0aaac1b7b2d333a7bb0b81c1813f7c90cb76996aaf72728de6b193beacbc66",
     "global-baseline/pair-matrices/seven_topic_union.json": "ad0282d73f9bfb01511f7ddd464ec0552714f767160cfecb54743daf4cb7325d",
@@ -100,18 +98,17 @@
     "global-baseline/partner-profiles/m-f0311033bb98.json": "ce4d06132784afde710accca06aa4920040283e0dc2f6d272a7b8b4fee7bd62f",
     "global-baseline/partner-profiles/m-f24e45c2ffe1.json": "42c609d40022c2eeddabd91f69c337043a52f696b2e9954be9c9987b9f80f6fd",
     "global-baseline/partner-profiles/m-f7d79f342a93.json": "e73e0ce7b1a1d9712b1bfaba410f3f7580d0f83a3ea980aeffef7afd1bbfaaa2",
-    "global-baseline/summary 2.json": "be1fdcfe26d8135bdc1f165accc98a1b72a47c73893636d4029dbd60f08b1e64",
     "global-baseline/summary.json": "24a691404aca159c9d89ec3459048e1a3f6eae3e39ac9655409f54e4af679b50",
     "manifest.json": "bfb3e0d969b1a721f12bfb978c0fbe45ee426f7ff420b519a9751af0afcca3f1",
     "models.json": "654cc47da5e40aa90929cb55bdf9d098c08c6dda90a0415b065efc1b3f1df606",
     "pair-aggregation/all-gpt-claude-pairs.json": "48f40fb484bd224024ab0e32610a71e5612ce6f94c442ecb0303f5dffc73765d",
-    "pair-aggregation/all-six-family-pairs.json": "e31bc332f899201c6eabec5e67f6c5c4e3bd718ffb3c7efe46708c9b524a9e16",
-    "pair-aggregation/fixed-focal-without-freeze.json": "a9e2c900d93ec5d4e12164fd602e2a04c109f200dbd91702f6370bd5788c8809",
-    "pair-aggregation/upper-left-model-pairs.json": "5c7a8112e934721138d6b39f6ec9c998933959e8a93ff040749ed40d1f642856",
-    "polymarket-aggregation/freeze-baseline.json": "66591662873c8d276aa678d8681ba9065b06fccbc50dd947066ab1a8590c0bbe",
-    "polymarket-aggregation/freeze-exposed-correlation.json": "ca623cbb9ae23987400b9e982c7a6a960849f84ecdcf009b74f87b3fd008eaa0",
+    "pair-aggregation/all-six-family-pairs.json": "833330ac74515d2d2fa4f0a950b85c11f090db4719720ad46b3aef20e5ebad09",
+    "pair-aggregation/fixed-focal-without-freeze.json": "804d517cf4faa644d378b11b61aa284038422cb4f9e2f110e450dcab0634e19c",
+    "pair-aggregation/upper-left-model-pairs.json": "85becdc5eb460bc4133ad36562fc112962a0da8653b95f63f37aaa6fc8f68db1",
+    "polymarket-aggregation/freeze-baseline.json": "450ff5b8c77e9e96263407c9340a0f66f7cf893f7362c1d775e98b3d395e9c76",
+    "polymarket-aggregation/freeze-exposed-correlation.json": "fe41d55b418d07a283387653cdaa46bd33eb54751e8bb2202da165fb5b4627dc",
     "polymarket-aggregation/market-diversity-performance.json": "a061383c84cac9e5647319d4c7886309c94f7a409f20b839fcbf7b8a1535db67",
-    "polymarket-aggregation/without-freeze-base.json": "f6fe1de47086f6cab1efba2b5b16cfad04e09d18aa0e891c3da0f35e8b14ef5b",
+    "polymarket-aggregation/without-freeze-base.json": "701283c9887eb146553b73778aedab464b0c968d6528083df2fa691e3954c2a4",
     "taxonomy.json": "265da2430c8a468ce22034a8322fe2c134e6afe17d5abe00c96ca3d20b99934f"
   }
 }

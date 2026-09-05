@@ -5,7 +5,7 @@ import { configurations, manifest, view } from "./configuration-pair";
 
 export function modelMarketFixture(): ModelMarketAggregationData {
   return {
-    schema_version: 1, generated_at: "2026-08-31T00:00:00Z", scope: "Polymarket market questions only", market_base: "Polymarket Freeze",
+    schema_version: 2, generated_at: "2026-09-05T00:00:00Z", scope: "Polymarket market questions only", market_base: "Polymarket Freeze",
     methods: manifest.methods, method_order: manifest.method_order, metrics: manifest.metrics, metric_order: manifest.metric_order,
     split: manifest.split, aggregation: {}, audit: {}, provenance: {},
     points: configurations.map((configuration, index) => {

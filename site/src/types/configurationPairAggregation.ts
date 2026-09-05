@@ -24,8 +24,12 @@ export interface ConfigurationPairView {
   fold_ids: string[];
   train_target_cells: number;
   test_target_cells: number;
+  train_event_cells: number;
+  test_event_cells: number;
   min_train_rows: number;
   min_test_rows: number;
+  min_train_events: number;
+  min_test_events: number;
   small_support: boolean;
   train_diversity: Record<MarketPerformanceDiversityMetricId, number | null>;
   train_bi_gap: number | null;

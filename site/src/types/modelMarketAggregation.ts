@@ -19,7 +19,7 @@ export interface ModelMarketAggregationPoint {
 }
 
 export interface ModelMarketAggregationData {
-  schema_version: 1;
+  schema_version: 2;
   generated_at: string;
   scope: string | Record<string, unknown>;
   market_base: "Polymarket Freeze";

@@ -136,15 +136,41 @@ def test_view_metrics_and_bi_do_not_silently_drop_undefined_folds():
     folds = copy.deepcopy(result["folds"][:2])
     folds[0]["train_diversity"]["total_variation"] = None
     folds[0]["train_metric_reasons"]["total_variation"] = "fixture_missing"
-    folds[0]["methods"]["simple_mean"]["brier_index"] = None
+    folds[0]["methods"]["simple_mean"]["raw_brier"] = None
     for fold in folds:
-        fold["first"]["adjusted_brier"] = 0
+        fold["first"]["raw_brier"] = None
     view = experiment.aggregate_view(folds)
     assert view["train_diversity"]["total_variation"] is None
     assert view["train_diversity_target_cells"]["total_variation"] == folds[1]["n_train"]
     assert view["methods"]["simple_mean"]["brier_index"] is None
     assert view["methods"]["simple_mean"]["beats_market"] is False
     assert all(method["gain_vs_base"] is None for method in view["methods"].values())
+
+
+def test_brier_score_weights_events_equally_and_transforms_bi_once():
+    seed = experiment.DEFAULT_SEEDS[0]
+    event_ids = {fold: next(f"event-{i}" for i in range(1000)
+                            if event_fold("polymarket", f"event-{i}", seed) == fold)
+                 for fold in ("A", "B")}
+    keys = [
+        ("2026-01-01", "polymarket", event_ids["A"], "h1"),
+        ("2026-01-02", "polymarket", event_ids["A"], "h2"),
+        ("2026-01-01", "polymarket", event_ids["B"], "h1"),
+    ]
+    # Event A has two perfect targets; event B has one maximally wrong target.
+    # The event-equal Brier score is therefore (0 + 1) / 2 = 0.5 rather than 1/3.
+    first = {key: row(key, probability, outcome, adjustment=0)
+             for key, probability, outcome in zip(keys, (0, 1, 0), (0, 1, 1))}
+    second = {key: row(key, 0.5, outcome, adjustment=0)
+              for key, outcome in zip(keys, (0, 1, 1))}
+    market = {key: row(key, 0.5, outcome, adjustment=0)
+              for key, outcome in zip(keys, (0, 1, 1))}
+    result = experiment.evaluate_pair("first", "second", first, second, market, split_seeds=[seed])
+    view = experiment.build_views(result)["all"]["combined"]
+    assert view["base"]["raw_brier"] == pytest.approx(0.5)
+    assert view["base"]["brier_index"] == pytest.approx(100 * (1 - 0.5 ** 0.5))
+    assert view["test_event_cells"] == 2
+    assert view["test_target_cells"] == 3
 
 
 def test_near_bi_is_filtered_per_training_fold_and_market_wins_use_tolerance():

@@ -115,8 +115,8 @@ export function directionSummaries(
 export function csvForPairs(pairs: StudyPair[], method: string): string {
   const rows: unknown[][] = [[
     "dimension", "pair_id", "model_a", "model_b", "train_bi_gap",
-    "uniform_row_category_coverage", "train_category_complementarity", "train_crossing",
-    "train_dataset_row_fraction", "test_model_a_bi", "test_model_b_bi", "method",
+    "event_weighted_category_coverage", "train_category_complementarity", "train_crossing",
+    "train_dataset_event_weight_fraction", "test_model_a_bi", "test_model_b_bi", "method",
     "test_method_bi", "gain_vs_better_test_single_bi", "train_events", "test_events",
     "same_model_version", "same_prompt", "same_information",
   ], ...pairs.map(pair => [
@@ -133,8 +133,8 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
   const response = await fetch(`${COMPLEMENTARITY_PATH}study.json`, { signal });
   if (!response.ok) throw new Error(`Results could not be loaded (${response.status}).`);
   const data = await response.json() as ComplementarityData;
-  if (data.schema_version !== 7
-    || data.weighting !== "uniform_rows"
+  if (data.schema_version !== 8
+    || data.weighting !== "equal_events_within_event_equal_targets"
     || data.event_type_taxonomy !== "forecastbench-seven-domain-v1.0.0"
     || !Array.isArray(data.event_type_domains)
     || data.event_type_domains.map(domain => domain.id).join("|") !== EVENT_TYPE_DOMAINS.join("|")
@@ -160,6 +160,8 @@ export async function loadComplementarity(signal?: AbortSignal): Promise<Complem
     || data.stability?.confidence_level !== .9
     || data.stability?.interval !== "two_sided_delta_method"
     || data.stability?.cluster_unit !== "event"
+    || data.stability?.score_weighting !== "equal_events_within_event_equal_targets"
+    || data.stability?.brier_index !== "100 * (1 - sqrt(event_averaged_ordinary_brier_score))"
     || data.stability?.selection_split !== "training_only"
     || data.stability?.uses_test_outcomes !== false
     || data.stability?.changes_aggregation !== false

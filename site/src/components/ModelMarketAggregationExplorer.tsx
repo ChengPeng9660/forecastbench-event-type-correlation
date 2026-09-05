@@ -21,7 +21,7 @@ const METRICS: Array<{ id: MarketPerformanceDiversityMetricId; label: string }> 
   { id: "total_variation", label: "Total variation (TV)" },
 ];
 const OUTCOMES: Array<{ id: MarketPerformanceOutcomeId; label: string; axis: string }> = [
-  { id: "raw_brier", label: "Raw Brier Score ↓", axis: "Aggregation Raw Brier Score (lower is better)" },
+  { id: "raw_brier", label: "Brier Score ↓", axis: "Aggregation Brier Score (lower is better)" },
   { id: "brier_index", label: "Brier Index ↑", axis: "Aggregation Brier Index (higher is better)" },
 ];
 const FOLDS: Array<{ id: FreezeFoldView; label: string }> = [
@@ -90,7 +90,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
   const orderedPoints = [...points.filter((point) => point !== selected), ...(selected ? [selected] : [])];
   const xs = points.map((point) => point.x);
   const ys = points.map((point) => point.y);
-  const support = points.reduce((sum, point) => sum + point.view.test_target_cells, 0);
+  const support = points.reduce((sum, point) => sum + point.view.test_event_cells, 0);
   const marketWins = matchedMarketWinSummary(points.map((point) => point.comparison));
   const xDomain: [number, number] = metric === "total_variation" ? [0, 1] : finiteExtent(xs);
   const rawYDomain = finiteExtent(ys);
@@ -113,7 +113,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
   return <section className="model-market-section configuration-pair-section" id="model-market-aggregation" aria-labelledby="model-market-heading" aria-busy={loaded.status === "loading"}>
     <div className="section-heading market-performance-heading">
       <div><p className="eyebrow">MODEL + POLYMARKET · CROSS-FIT</p><h3 id="model-market-heading">Model + market aggregation</h3></div>
-      <p>One point per exact model configuration combined with Polymarket. Training diversity versus aggregation performance on the opposite fold.</p>
+      <p>{data ? `${marketWins.wins} of ${marketWins.total} displayed model–market pairs beat their matched market under the selected metric.` : "One point represents each exact model configuration combined with Polymarket."} Training diversity is evaluated against aggregation performance on the opposite fold.</p>
     </div>
     <p className="research-scope model-market-filter-note">Provider, prompt, and information filters follow the first chart. Its selected exact configuration is highlighted here whenever this view has a defined result.</p>
     {loaded.status === "loading" && <div className="configuration-pair-loading" role="status">Loading model + market aggregation results…</div>}
@@ -131,10 +131,10 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
       <MarketWinToggle scope="Model + market aggregation" checked={highlightMarketWins} onChange={setHighlightMarketWins} outcome={outcome} />
       <dl className="market-performance-kpis model-market-kpis">
         <div><dt>MODEL–MARKET PAIRS</dt><dd>{points.length}</dd><small>{candidates.length} exact candidates under filters</small></div>
-        <div><dt>BEATS MATCHED MARKET</dt><dd>{marketWins.wins} / {marketWins.total}</dd><small>{marketWins.rate} · {outcome === "brier_index" ? "BI ↑" : "Raw Brier ↓"} · point estimates</small></div>
+        <div><dt>BEATS MATCHED MARKET</dt><dd>{marketWins.wins} / {marketWins.total}</dd><small>{marketWins.rate} · {outcome === "brier_index" ? "BI ↑" : "Brier score ↓"} · point estimates</small></div>
         <div><dt>PEARSON r</dt><dd>{format(pearson)}</dd><small>{outcome === "raw_brier" ? "positive means worse Brier" : "positive means better BI"}</small></div>
         <div><dt>SPEARMAN ρ</dt><dd>{format(spearman)}</dd><small>unweighted configuration ranks</small></div>
-        <div><dt>REPEATED TEST CELLS</dt><dd>{support.toLocaleString()}</dd><small>not independent new events</small></div>
+        <div><dt>REPEATED TEST EVENTS</dt><dd>{support.toLocaleString()}</dd><small>fold evaluations, not independent events</small></div>
       </dl>
       {method === "best_single" && <p className="model-market-method-notice research-scope"><strong>Best Single is a test-fold hindsight reference.</strong> It is not a deployable aggregation method.</p>}
       <div className="market-performance-layout model-market-layout">
@@ -153,7 +153,7 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
               const active = exact === selectedConfiguration;
               const x = xPosition(point.x);
               const y = linearPosition(point.y, yDomain, [HEIGHT - MARGIN.bottom, MARGIN.top]);
-              const label = `${exact}\n${metricMeta.label}: ${formatX(metric, point.x)}\nAggregation ${outcomeMeta.label}: ${formatY(outcome, point.y)}\nMatched market ${outcomeMeta.label}: ${formatY(outcome, point.view.market[outcome])}\n${matchedMarketLabel[point.comparison]} · ${outcome === "brier_index" ? "BI" : "Raw Brier"}\n${point.view.fold_count}/${maximumDirections} directions · ${point.row.n_common} common targets`;
+              const label = `${exact}\n${metricMeta.label}: ${formatX(metric, point.x)}\nAggregation ${outcomeMeta.label}: ${formatY(outcome, point.y)}\nMatched market ${outcomeMeta.label}: ${formatY(outcome, point.view.market[outcome])}\n${matchedMarketLabel[point.comparison]} · ${outcome === "brier_index" ? "BI" : "Brier score"}\n${point.view.fold_count}/${maximumDirections} directions · ${point.row.unique_event_count} events · ${point.row.n_common} targets`;
               return <g key={exact} className={`model-market-point${active ? " selected" : ""}`} data-configuration={exact} data-marker-shape="circle" data-market-comparison={point.comparison} data-above-market={point.beatsMarket} transform={`translate(${x} ${y})`} role="button" tabIndex={0} aria-label={label} aria-pressed={active} aria-controls="market-performance" onClick={() => onSelectConfiguration(exact)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelectConfiguration(exact); } }}>
                 {active && <circle className="model-market-selection-halo" r={12} />}
                 <circle className="model-market-glyph" r={6.5} fill={configurationProviderColor(point.row.configuration.provider)} />
@@ -176,16 +176,16 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
               <div><dt>Aggregation BI ↑</dt><dd>{format(selectedScore.brier_index)}</dd></div>
               <div><dt>Matched market BI ↑</dt><dd>{format(selectedView.market.brier_index)}</dd></div>
               <div><dt>Model BI ↑</dt><dd>{format(selectedView.partner.brier_index)}</dd></div>
-              <div><dt>Aggregation Raw Brier ↓</dt><dd>{format(selectedScore.raw_brier, 3)}</dd></div>
-              <div><dt>Matched market Raw Brier ↓</dt><dd>{format(selectedView.market.raw_brier, 3)}</dd></div>
+              <div><dt>Aggregation Brier score ↓</dt><dd>{format(selectedScore.raw_brier, 3)}</dd></div>
+              <div><dt>Matched market Brier score ↓</dt><dd>{format(selectedView.market.raw_brier, 3)}</dd></div>
               <div><dt>Gain vs market</dt><dd>{percentage(selectedScore.gain_vs_market)}</dd></div>
               <div><dt>Train BI gap</dt><dd>{format(selectedView.train_bi_gap)}</dd></div>
               <div><dt>Available directions</dt><dd>{selectedView.fold_count}/{maximumDirections}</dd></div>
-              <div><dt>Min train / test rows</dt><dd>{selectedView.min_train_rows} / {selectedView.min_test_rows}</dd></div>
+              <div><dt>Min train / test events</dt><dd>{selectedView.min_train_events} / {selectedView.min_test_events}</dd></div>
               <div><dt>Common targets</dt><dd>{selectedRow.n_common.toLocaleString()}</dd></div>
               <div><dt>Unique events</dt><dd>{selectedRow.unique_event_count.toLocaleString()}</dd></div>
             </dl>}
-            {selectedView?.small_support && <p className="configuration-pair-small-support">Small-support estimate: at least one included half has fewer than 50 targets.</p>}
+            {selectedView?.small_support && <p className="configuration-pair-small-support">Small-support estimate: at least one included half has fewer than 50 events.</p>}
             <small>{selectedRow.configuration.exact_configuration}</small>
           </>}
         </aside>
@@ -195,9 +195,9 @@ export function ModelMarketAggregationExplorer({ selectedConfiguration, onSelect
       {!isHighLossMetric(metric) && <p className="research-scope">{candidates.length - inView.length} candidate(s) have no eligible view. {missingMetricCount} view(s) have an undefined selected diversity; {missingOutcomeCount} have an undefined selected outcome; {missingComparisonCount} have an undefined matched-market comparison. These counts may overlap.</p>}
       <ResearchDetails label="Model + market evaluation details">
         <p><strong>Exact configurations.</strong> Each model version, prompt, and information condition is kept separate. Color identifies the model provider; shape does not encode prompt or information. The selected exact configuration stays linked to the first chart.</p>
-        <p><strong>Cross-fit evaluation.</strong> {data.split.repetitions} event-grouped splits are attempted in both directions. Diversity uses each training half; aggregation and market scores use the opposite half on identical non-imputed model–market target support. Combined pools available directions. Near-BI retains directions whose training BI gap is at most {data.split.near_bi_gap}, before pooling. It does not filter on test performance.</p>
+        <p><strong>Cross-fit evaluation.</strong> {data.split.repetitions} event-grouped splits are attempted in both directions. Diversity uses each training half; aggregation and market scores use the opposite half on identical non-imputed support. Squared errors are averaged within event and then across events. Combined views pool event losses across available directions and apply BI = 100 × (1 − √BS) once. Near-BI retains directions whose training BI gap is at most {data.split.near_bi_gap}, before pooling.</p>
         <p><strong>Unchanged methods.</strong> All six published methods retain their definitions. Directional CF uses Polymarket as the base and fits its weights on training data. Best Single chooses one forecaster using test-fold hindsight and is a reference, not a deployable method.</p>
-        <p><strong>Interpretation.</strong> Prediction diversity is 1 − prediction correlation; TV is the mean absolute model–market probability difference. Loss-based measures use training outcomes. Correlations use raw coordinates and are descriptive; choosing a model after viewing the overview is exploratory post-selection. The optional badge and win count compare pooled aggregation and matched-market scores under the selected Y metric: higher BI or lower Raw Brier, with a 1e−12 numerical tolerance. Ties receive no badge. The published experiment’s BI-based beats_market field remains unchanged.</p>
+        <p><strong>Interpretation.</strong> Prediction diversity is 1 − prediction correlation; TV is the mean absolute model–market probability difference. Loss-based diversity measures use training outcomes but remain target-level diagnostics. Correlations use raw coordinates and are descriptive. The badge and win count compare pooled aggregation with its matched market: higher BI or lower Brier score, with a 1e−12 numerical tolerance. Ties receive no badge.</p>
       </ResearchDetails>
     </>}
   </section>;

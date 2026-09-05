@@ -19,7 +19,7 @@ def test_identical_predictions_have_zero_gap_and_uncertainty():
     assert result == {"gap_bi": 0.0, "se_bi": 0.0, "events": 2}
 
 
-def test_event_clustered_gap_matches_adjusted_brier_index_difference():
+def test_event_clustered_gap_matches_event_weighted_ordinary_brier_index_difference():
     prediction_a = np.array([0.1, 0.2, 0.6, 0.8, 0.3, 0.7])
     prediction_b = np.array([0.3, 0.4, 0.7, 0.6, 0.2, 0.9])
     outcome = np.array([0.0, 0.0, 1.0, 1.0, 0.0, 1.0])
@@ -32,12 +32,21 @@ def test_event_clustered_gap_matches_adjusted_brier_index_difference():
         np.array([10, 10, 20, 20, 30, 30]),
     )
 
-    adjusted_a = np.mean((prediction_a - outcome) ** 2 + offset)
-    adjusted_b = np.mean((prediction_b - outcome) ** 2 + offset)
-    expected = 100 * (math.sqrt(adjusted_b) - math.sqrt(adjusted_a))
+    brier_a = np.mean((prediction_a - outcome) ** 2)
+    brier_b = np.mean((prediction_b - outcome) ** 2)
+    expected = 100 * (math.sqrt(brier_b) - math.sqrt(brier_a))
     assert result["gap_bi"] == pytest.approx(expected)
     assert result["se_bi"] is not None and result["se_bi"] > 0
     assert result["events"] == 3
+
+
+def test_event_clustered_gap_gives_unequal_size_events_equal_mass():
+    result = event_clustered_bi_gap(
+        [0.0, 1.0, 0.0], [0.0, 1.0, 0.9], [0.0, 1.0, 1.0],
+        [10.0, 10.0, 10.0], [1, 1, 2],
+    )
+    # A has event-level losses 0 and 1; B has 0 and .01.
+    assert result["gap_bi"] == pytest.approx(100 * (math.sqrt(0.005) - math.sqrt(0.5)))
 
 
 def test_single_event_leaves_uncertainty_undefined():

@@ -9,7 +9,7 @@ export const configurations: ConfigurationPairIndexEntry[] = [
 ];
 const metricLabels = ["Prediction diversity", "Adjusted POG", "High-loss diversity", "Adjusted-loss diversity", "Total variation (TV)"];
 export const manifest: ConfigurationPairManifest = {
-  schema_version: 1, generated_at: "2026-08-30T00:00:00Z",
+  schema_version: 2, generated_at: "2026-09-05T00:00:00Z",
   method_order: [...CONFIGURATION_PAIR_METHODS], metric_order: [...CONFIGURATION_PAIR_METRICS],
   methods: Object.fromEntries(CONFIGURATION_PAIR_METHODS.map((id) => [id, { label: id }])) as ConfigurationPairManifest["methods"],
   metrics: Object.fromEntries(CONFIGURATION_PAIR_METRICS.map((id, index) => [id, { label: metricLabels[index], axis: metricLabels[index] }])) as ConfigurationPairManifest["metrics"],
@@ -20,7 +20,8 @@ export const manifest: ConfigurationPairManifest = {
 export function view(overrides: Partial<ConfigurationPairView> = {}): ConfigurationPairView {
   return {
     fold_count: 20, fold_ids: Array.from({ length: 20 }, (_, i) => String(i)), train_target_cells: 1500, test_target_cells: 1500,
-    min_train_rows: 70, min_test_rows: 70, small_support: false, train_bi_gap: 1,
+    train_event_cells: 600, test_event_cells: 600, min_train_rows: 70, min_test_rows: 70,
+    min_train_events: 55, min_test_events: 55, small_support: false, train_bi_gap: 1,
     train_diversity: { prediction_diversity: .1, adjusted_pog: .2, high_loss_lift: -.3, adjusted_loss_corr: -.4, total_variation: 0 },
     base: { raw_brier: .2, adjusted_brier: .2, brier_index: 70 }, partner: { raw_brier: .21, adjusted_brier: .21, brier_index: 69 }, market: { raw_brier: .22, adjusted_brier: .22, brier_index: 68 },
     methods: Object.fromEntries(CONFIGURATION_PAIR_METHODS.map((id) => [id, { raw_brier: .15, adjusted_brier: .15, brier_index: 80, gain_vs_base: .25, gain_vs_partner: .28, gain_vs_market: .3, beats_market: true }])) as ConfigurationPairView["methods"],
@@ -31,11 +32,11 @@ export function view(overrides: Partial<ConfigurationPairView> = {}): Configurat
 export function shard(baseIndex = 0): ConfigurationPairShard {
   const base = configurations[baseIndex];
   return {
-    schema_version: 1, base_configuration: base.exact_configuration, base,
+    schema_version: 2, base_configuration: base.exact_configuration, base,
     partners: configurations.filter((item) => item !== base).map((partner) => {
       const unavailable = baseIndex === 3 || partner === configurations[3];
       const small = partner === configurations[2];
-      const combined = view(small ? { min_train_rows: 12, min_test_rows: 13, small_support: true, train_diversity: { ...view().train_diversity, total_variation: .2 } } : {});
+      const combined = view(small ? { min_train_events: 12, min_test_events: 13, small_support: true, train_diversity: { ...view().train_diversity, total_variation: .2 } } : {});
       const directional = view({ ...combined, fold_count: 10, fold_ids: Array.from({ length: 10 }, (_, i) => String(i)) });
       const near = view({ fold_count: 3, fold_ids: ["0", "1", "2"], train_diversity: { ...view().train_diversity, total_variation: .75 } });
       return {

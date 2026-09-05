@@ -28,15 +28,22 @@ from typing import Any, Iterable, Mapping
 
 from analysis.high_loss_diagnostics import fold_diagnostics, high_loss_details, oriented_diagnostics
 from analysis.market_diversity_performance import read_exact_panel
-from analysis.metrics import adjusted_pog, brier_index, high_loss_lift, pearson_correlation, total_variation
+from analysis.event_weighted_scoring import (
+    brier_index as event_brier_index,
+    event_count,
+    event_equal_weights,
+    event_weighted_mean,
+)
+from analysis.metrics import adjusted_pog, high_loss_lift, pearson_correlation, total_variation
 from analysis.pair_aggregation import KEY, event_fold, predictions, sha256_file
 from analysis.polymarket_aggregation import build_freeze_panel, read_freeze_snapshots
 from analysis.polymarket_cleaning import exclude_imputed_polymarket_rows
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DEFAULT_SEEDS = tuple(range(20260825, 20260835))
 MARKET_COMPARISON_TOLERANCE = 1e-12
+CF_DENOMINATOR_EPSILON = 1e-24
 METHOD_ORDER = ("simple_mean", "log_odds_mean", "ec_w0_56", "piecewise_odds", "cf_directional", "best_single")
 FIXED_METHODS = METHOD_ORDER[:4]
 METRIC_ORDER = ("prediction_diversity", "adjusted_pog", "high_loss_lift", "adjusted_loss_corr", "total_variation")
@@ -48,7 +55,7 @@ METHODS = {
     "ec_w0_56": {"label": "EC · w = 0.56", "deployable": True, "formula": "sigmoid(0.56 * (logit(p_base) + logit(p_partner)))"},
     "piecewise_odds": {"label": "Piecewise Odds", "deployable": True, "formula": "threshold-5 piecewise summed-logit transform"},
     "cf_directional": {"label": "Directional CF", "deployable": True, "formula": "fixed base plus sign-specific clipped train C/D times partner-minus-base"},
-    "best_single": {"label": "Best Single · hindsight", "deployable": False, "formula": "lower adjusted-loss constituent per test fold, not a per-target oracle"},
+    "best_single": {"label": "Best Single · hindsight", "deployable": False, "formula": "lower event-averaged Brier-score constituent per test fold, not a per-target oracle"},
 }
 METRICS = {
     "prediction_diversity": {"label": "Prediction diversity", "axis": "1 − prediction-level Pearson r"},
@@ -98,15 +105,13 @@ def prepare_panel(rows: Panel) -> dict[TargetKey, Observation]:
 
 
 def _score(raw: float, adjustment: float) -> dict[str, Any]:
-    if -1e-14 <= raw < 0:  # Roundoff in the exact CF quadratic at zero loss.
+    if -1e-14 <= raw <= 1e-14:  # Roundoff in the exact CF quadratic at zero loss.
         raw = 0.0
     if not math.isfinite(raw) or raw < 0:
         raise ValueError(f"invalid raw Brier: {raw}")
     adjusted = raw + adjustment
-    index, reason = brier_index(adjusted)
+    index = event_brier_index(raw)
     result = {"raw_brier": raw, "adjusted_brier": adjusted, "brier_index": index}
-    if reason:
-        result["brier_index_reason"] = reason
     return result
 
 
@@ -132,19 +137,20 @@ def _correlation(first: list[float], second: list[float]) -> tuple[float | None,
 
 def _half_summary(cells: list[PairCell]) -> dict[str, Any]:
     n = len(cells)
-    adjustment = math.fsum(cell.adjustment for cell in cells) / n
+    keys = [cell.key for cell in cells]
+    weights = event_equal_weights(keys)
+    adjustment = math.fsum(weight * cell.adjustment for weight, cell in zip(weights, cells))
     p, q = [cell.first for cell in cells], [cell.second for cell in cells]
     first_loss = [cell.raw_losses[0] + cell.adjustment for cell in cells]
     second_loss = [cell.raw_losses[1] + cell.adjustment for cell in cells]
     prediction_r, prediction_reason = _correlation(p, q)
     loss_r, loss_reason = _correlation(first_loss, second_loss)
     lift, _, _, _, _, lift_reason = high_loss_lift(first_loss, second_loss, 0.25)
-    scores = {name: _score(math.fsum(cell.raw_losses[index] for cell in cells) / n, adjustment)
+    scores = {name: _score(math.fsum(weight * cell.raw_losses[index] for weight, cell in zip(weights, cells)), adjustment)
               for index, name in enumerate(("first", "second", "market", *FIXED_METHODS))}
     a, b = scores["first"]["brier_index"], scores["second"]["brier_index"]
-    up, down = [cell for cell in cells if cell.second >= cell.first], [cell for cell in cells if cell.second < cell.first]
     return {
-        "n": n, "adjustment": adjustment, "scores": scores,
+        "n": n, "n_events": event_count(keys), "adjustment": adjustment, "scores": scores,
         "high_loss_diagnostics": high_loss_details(first_loss, second_loss),
         "bi_gap": abs(a - b) if a is not None and b is not None else None,
         "diversity": {
@@ -156,8 +162,12 @@ def _half_summary(cells: list[PairCell]) -> dict[str, Any]:
         },
         "metric_reasons": {"prediction_diversity": prediction_reason, "adjusted_pog": "",
                            "high_loss_lift": lift_reason, "adjusted_loss_corr": loss_reason, "total_variation": ""},
-        "cf_statistics": {"up_c": math.fsum(cell.c for cell in up) / n, "up_d": math.fsum(cell.d for cell in up) / n,
-                          "down_c": math.fsum(cell.c for cell in down) / n, "down_d": math.fsum(cell.d for cell in down) / n},
+        "cf_statistics": {
+            "up_c": math.fsum(weight * cell.c for weight, cell in zip(weights, cells) if cell.second >= cell.first),
+            "up_d": math.fsum(weight * cell.d for weight, cell in zip(weights, cells) if cell.second >= cell.first),
+            "down_c": math.fsum(weight * cell.c for weight, cell in zip(weights, cells) if cell.second < cell.first),
+            "down_d": math.fsum(weight * cell.d for weight, cell in zip(weights, cells) if cell.second < cell.first),
+        },
     }
 
 
@@ -170,8 +180,8 @@ def _oriented_statistics(summary: Mapping[str, Any], reverse: bool) -> tuple[flo
 
 def _cf_score(train: Mapping[str, Any], test: Mapping[str, Any], reverse: bool) -> tuple[dict[str, Any], dict[str, float]]:
     uc, ud, dc, dd = _oriented_statistics(train, reverse)
-    up = min(1.0, max(0.0, uc / ud)) if ud > 0 else 0.0
-    down = min(1.0, max(0.0, dc / dd)) if dd > 0 else 0.0
+    up = min(1.0, max(0.0, uc / ud)) if ud > CF_DENOMINATOR_EPSILON else 0.0
+    down = min(1.0, max(0.0, dc / dd)) if dd > CF_DENOMINATOR_EPSILON else 0.0
     tuc, tud, tdc, tdd = _oriented_statistics(test, reverse)
     raw = test["scores"]["second" if reverse else "first"]["raw_brier"] - 2 * up * tuc + up ** 2 * tud - 2 * down * tdc + down ** 2 * tdd
     return _score(raw, test["adjustment"]), {"upward_alpha": up, "downward_alpha": down}
@@ -227,11 +237,13 @@ def evaluate_prepared_pair(
             train, test = summaries[train_fold], summaries[test_fold]
             cf_first, weights_first = _cf_score(train, test, False)
             cf_second, weights_second = _cf_score(train, test, True)
-            best = min(("first", "second"), key=lambda name: test["scores"][name]["adjusted_brier"])
+            best = min(("first", "second"), key=lambda name: test["scores"][name]["raw_brier"])
             result["folds"].append({
                 "fold_id": f"split_{repeat + 1:02d}_seed_{seed}__{train_fold}_train__{test_fold}_test",
                 "seed": seed, "train_fold": train_fold, "test_fold": test_fold,
-                "n_train": train["n"], "n_test": test["n"], "train_bi_gap": train["bi_gap"],
+                "n_train": train["n"], "n_test": test["n"],
+                "n_train_events": train["n_events"], "n_test_events": test["n_events"],
+                "train_bi_gap": train["bi_gap"],
                 "train_near_bi": train["bi_gap"] is not None and train["bi_gap"] <= 2.0,
                 "train_diversity": train["diversity"], "train_metric_reasons": train["metric_reasons"],
                 "train_high_loss_diagnostics": train["high_loss_diagnostics"],
@@ -253,26 +265,37 @@ def evaluate_pair(first_name: str, second_name: str, first_panel: Panel, second_
 
 def _weighted_score(scores: list[Mapping[str, Any]], weights: list[int]) -> dict[str, Any]:
     total = sum(weights)
-    result = {field: (math.fsum(score[field] * weight for score, weight in zip(scores, weights)) / total
-                      if all(score[field] is not None for score in scores) else None)
-              for field in ("raw_brier", "adjusted_brier", "brier_index")}
-    if result["brier_index"] is None:
-        result["brier_index_reason"] = "one_or_more_included_fold_indices_undefined"
+    raw = (math.fsum(score["raw_brier"] * weight for score, weight in zip(scores, weights)) / total
+           if all(score["raw_brier"] is not None for score in scores) else None)
+    adjusted = (math.fsum(score["adjusted_brier"] * weight for score, weight in zip(scores, weights)) / total
+                if all(score["adjusted_brier"] is not None for score in scores) else None)
+    result = {
+        "raw_brier": raw,
+        "adjusted_brier": adjusted,
+        "brier_index": event_brier_index(raw) if raw is not None else None,
+    }
+    if raw is None:
+        result["brier_index_reason"] = "one_or_more_included_fold_brier_scores_undefined"
     return result
 
 
 def aggregate_view(folds: list[dict[str, Any]], reverse: bool = False) -> dict[str, Any] | None:
     if not folds:
         return None
-    train_total, test_weights = sum(row["n_train"] for row in folds), [row["n_test"] for row in folds]
+    train_total = sum(row["n_train"] for row in folds)
+    train_event_total = sum(row["n_train_events"] for row in folds)
+    test_weights = [row["n_test_events"] for row in folds]
     first, second = ("second", "first") if reverse else ("first", "second")
     references = {name: _weighted_score([row[field] for row in folds], test_weights)
                   for name, field in (("base", first), ("partner", second), ("market", "market"))}
     best = _weighted_score([row["methods"]["best_single"] for row in folds], test_weights)
 
     def gain(score: Mapping[str, Any], reference: Mapping[str, Any]) -> float | None:
-        denominator = reference["adjusted_brier"]
-        return (denominator - score["adjusted_brier"]) / denominator if denominator is not None and math.isfinite(denominator) and denominator > 0 else None
+        denominator = reference["raw_brier"]
+        value = score["raw_brier"]
+        return ((denominator - value) / denominator
+                if denominator is not None and value is not None
+                and math.isfinite(denominator) and math.isfinite(value) and denominator > 0 else None)
 
     methods = {}
     for method in METHOD_ORDER:
@@ -290,6 +313,8 @@ def aggregate_view(folds: list[dict[str, Any]], reverse: bool = False) -> dict[s
         valid_support[metric] = support
         reasons[metric] = dict(Counter(row["train_metric_reasons"][metric] for row in folds if row["train_metric_reasons"][metric]))
     min_train, min_test = min(row["n_train"] for row in folds), min(row["n_test"] for row in folds)
+    min_train_events = min(row["n_train_events"] for row in folds)
+    min_test_events = min(row["n_test_events"] for row in folds)
     high_loss_diagnostics = fold_diagnostics(
         [row["train_diversity"]["high_loss_lift"] for row in folds],
         [row["n_train"] for row in folds],
@@ -297,11 +322,14 @@ def aggregate_view(folds: list[dict[str, Any]], reverse: bool = False) -> dict[s
         details=[row.get("train_high_loss_diagnostics") for row in folds],
     )
     return {"fold_count": len(folds), "fold_ids": [row["fold_id"] for row in folds],
-            "train_target_cells": train_total, "test_target_cells": sum(test_weights),
-            "min_train_rows": min_train, "min_test_rows": min_test, "small_support": min(min_train, min_test) < 50,
+            "train_target_cells": train_total, "test_target_cells": sum(row["n_test"] for row in folds),
+            "train_event_cells": train_event_total, "test_event_cells": sum(test_weights),
+            "min_train_rows": min_train, "min_test_rows": min_test,
+            "min_train_events": min_train_events, "min_test_events": min_test_events,
+            "small_support": min(min_train_events, min_test_events) < 50,
             "train_diversity": diversity, "train_diversity_target_cells": valid_support, "train_metric_reasons": reasons,
             "high_loss_diagnostics": oriented_diagnostics(high_loss_diagnostics, reverse),
-            "train_bi_gap": math.fsum(row["train_bi_gap"] * row["n_train"] for row in folds) / train_total if all(row["train_bi_gap"] is not None for row in folds) else None,
+            "train_bi_gap": math.fsum(row["train_bi_gap"] * row["n_train_events"] for row in folds) / train_event_total if all(row["train_bi_gap"] is not None for row in folds) else None,
             **references, "methods": methods}
 
 
@@ -384,8 +412,8 @@ def _check_catalog_support(catalog: Mapping[str, Any], panel: Mapping[str, Panel
         differences = []
         for source, label in ((panel[name], "model"), (market, "matched_market")):
             prepared = prepare_panel({key: source[key] for key in common})
-            raw = math.fsum(row.raw_loss for row in prepared.values()) / len(common)
-            offset = math.fsum(row.adjustment for row in prepared.values()) / len(common)
+            raw = event_weighted_mean(common, [prepared[key].raw_loss for key in common])
+            offset = event_weighted_mean(common, [prepared[key].adjustment for key in common])
             score = _score(raw, offset)
             for metric in ("raw_brier", "adjusted_brier", "brier_index"):
                 if score[metric] is None or abs(score[metric] - point[label][metric]) > 1e-12:
@@ -429,7 +457,14 @@ def load_inputs(panel_path: Path, taxonomy_path: Path, processed_root: Path, cat
     }
 
 
-def load_clean_cache(clean_path: Path, panel_path: Path, taxonomy_path: Path, catalog_path: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
+def load_clean_cache(
+    clean_path: Path,
+    panel_path: Path,
+    taxonomy_path: Path,
+    catalog_path: Path,
+    *,
+    allow_metric_refresh: bool = False,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     """Reuse only a hash-verified clean snapshot and its original input audit.
 
     The processed raw files are not reread: their imputation decisions are frozen
@@ -441,9 +476,13 @@ def load_clean_cache(clean_path: Path, panel_path: Path, taxonomy_path: Path, ca
     clean_hash = sha256_file(clean_path)
     if clean_hash != prior["clean_intermediate_sha256"]:
         raise ValueError("clean cache SHA-256 differs from its recorded audit")
-    for name, path in (("panel", panel_path), ("taxonomy", taxonomy_path), ("catalog", catalog_path)):
-        if sha256_file(path) != prior["provenance"][f"{name}_sha256"]:
+    source_hash_checks = {}
+    for name, path in (("panel", panel_path), ("taxonomy", taxonomy_path)):
+        source_hash_checks[name] = path.is_file()
+        if path.is_file() and sha256_file(path) != prior["provenance"][f"{name}_sha256"]:
             raise ValueError(f"clean cache original {name} SHA-256 differs from current input")
+    if not allow_metric_refresh and sha256_file(catalog_path) != prior["provenance"]["catalog_sha256"]:
+        raise ValueError("clean cache original catalog SHA-256 differs from current input")
     catalog, identities = _read_catalog(catalog_path)
     panel: dict[str, dict[TargetKey, dict[str, str]]] = {name: {} for name in identities}
     market: dict[TargetKey, dict[str, str]] = {}
@@ -470,9 +509,13 @@ def load_clean_cache(clean_path: Path, panel_path: Path, taxonomy_path: Path, ca
     if sum(len(rows) for rows in panel.values()) != prior["configuration_target_rows"]:
         raise ValueError("clean cache row count differs from its recorded audit")
     source_checks = _check_catalog_support(catalog, panel, market)
-    input_audit = {**prior["inputs"], "published_configuration_support_checks": source_checks,
+    input_audit = {**prior["inputs"], "original_provenance": prior.get("provenance", {}),
+                   "published_configuration_support_checks": source_checks,
                    "verified_clean_cache": {"sha256": clean_hash,
-                                            "panel_taxonomy_catalog_hashes_verified": True,
+                                            "original_source_hashes_verified_when_present": source_hash_checks,
+                                            "panel_taxonomy_catalog_hashes_verified": not allow_metric_refresh and all(source_hash_checks.values()),
+                                            "catalog_identity_support_and_scores_reconstructed": True,
+                                            "metric_definition_refresh": allow_metric_refresh,
                                             "processed_raw_files_reread": False}}
     return panel, market, identities, input_audit
 
@@ -493,10 +536,12 @@ def run_experiment(
     panel_path: Path, taxonomy_path: Path, processed_root: Path, catalog_path: Path,
     output_dir: Path, site_output_dir: Path, *, split_seeds: Iterable[int] = DEFAULT_SEEDS,
     minimum_fold_overlap: int = 1, clean_cache: Path | None = None,
+    metric_definition_refresh: bool = False,
 ) -> dict[str, Any]:
     start = time.perf_counter()
     seeds = tuple(split_seeds)
-    panel, market, identities, input_audit = (load_clean_cache(clean_cache, panel_path, taxonomy_path, catalog_path)
+    panel, market, identities, input_audit = (load_clean_cache(clean_cache, panel_path, taxonomy_path, catalog_path,
+                                                               allow_metric_refresh=metric_definition_refresh)
                                             if clean_cache is not None else load_inputs(panel_path, taxonomy_path, processed_root, catalog_path))
     output_dir.mkdir(parents=True, exist_ok=True)
     clean_path = output_dir / "clean_panel.csv.gz"
@@ -523,7 +568,7 @@ def run_experiment(
             fold_histogram[len(result["folds"])] += 1
             if result["status"] == "eligible":
                 eligible_cells += result["n_common"]
-                high_support_pairs += int(all(min(fold["n_train"], fold["n_test"]) >= 50 for fold in result["folds"]))
+                high_support_pairs += int(all(min(fold["n_train_events"], fold["n_test_events"]) >= 50 for fold in result["folds"]))
             for fold in result["folds"]:
                 fold_writer.write({"first_configuration": first, "second_configuration": second, **fold})
                 fold_count += 1
@@ -565,8 +610,9 @@ def run_experiment(
         "peak_rss_bytes": peak_rss if sys.platform == "darwin" else peak_rss * 1024,
         "public_shards_bytes": public_bytes,
     }
-    provenance = {"panel": str(panel_path), "panel_sha256": sha256_file(panel_path),
-                  "taxonomy": str(taxonomy_path), "taxonomy_sha256": sha256_file(taxonomy_path),
+    prior_provenance = input_audit.get("original_provenance", {}) if isinstance(input_audit, dict) else {}
+    provenance = {"panel": str(panel_path), "panel_sha256": sha256_file(panel_path) if panel_path.is_file() else prior_provenance.get("panel_sha256"),
+                  "taxonomy": str(taxonomy_path), "taxonomy_sha256": sha256_file(taxonomy_path) if taxonomy_path.is_file() else prior_provenance.get("taxonomy_sha256"),
                   "catalog": str(catalog_path), "catalog_sha256": sha256_file(catalog_path),
                   "producer_sha256": sha256_file(Path(__file__)),
                   "market_probability": "valid audited freeze_datetime_value, not later market values",
@@ -577,8 +623,10 @@ def run_experiment(
         "split": {"repetitions": len(seeds), "seeds": seeds, "minimum_fold_overlap": minimum_fold_overlap,
                   "support_warning_threshold": 50, "near_bi_gap": 2.0,
                   "unit": "source + event_id, shared across dates and horizons", "event_disjoint": True},
-        "aggregation": {"diversity": "train-target weighted fold metrics; null if any included fold metric is undefined; exact constant vectors have undefined correlation", "brier_index": "test-target weighted fold BI; null if any included fold BI is undefined",
-                        "loss": "test-target weighted fold Brier", "gain": "ratio of pooled adjusted losses",
+        "aggregation": {"diversity": "train-target weighted fold diagnostics; null if any included fold metric is undefined; exact constant vectors have undefined correlation",
+                        "brier_score": "within each fold, average squared error within event and then equally across events; combine folds by event count",
+                        "brier_index": "100 * (1 - sqrt(Brier score)), transformed once after event averaging",
+                        "loss": "event-equal ordinary Brier score", "gain": "relative reduction in event-equal ordinary Brier score",
                         "best_single": "test-fold hindsight constituent, not deployable", "near_bi": "filter individual training folds before aggregation",
                         "beats_market_bi_tolerance": MARKET_COMPARISON_TOLERANCE},
         "configurations": configurations, "audit": audit, "provenance": provenance,
@@ -598,9 +646,11 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=Path("data/derived/configuration_pair_aggregation"))
     parser.add_argument("--site-output-dir", type=Path, default=Path("site/public/data/configuration-pair-aggregation"))
     parser.add_argument("--clean-cache", type=Path, help="Reuse a clean CSV.gz only after checking adjacent audit.json hashes and catalog supports/scores")
+    parser.add_argument("--metric-definition-refresh", action="store_true",
+                        help="Allow a deliberately rescored catalog while retaining the audited clean cache")
     args = parser.parse_args()
     run_experiment(args.panel, args.taxonomy, args.processed_root, args.catalog, args.output_dir, args.site_output_dir,
-                   clean_cache=args.clean_cache)
+                   clean_cache=args.clean_cache, metric_definition_refresh=args.metric_definition_refresh)
 
 
 if __name__ == "__main__":
