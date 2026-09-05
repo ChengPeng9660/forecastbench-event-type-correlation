@@ -242,7 +242,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
             {aggregationLinks.length > 0 && <p className="eyebrow">EARLIER EXPERIMENTS</p>}
             {aggregationLinks.map((link) => <div key={`${link.page}-${link.evaluation}`}>
               <a href={existingAggregationHref(link)}>{link.label} →</a>
-              <small>{link.evaluation === "cross_fit" ? "Cross-fit OOS" : "Full-sample descriptive"} · {link.methods.length} published methods. {link.scope === "all_events" ? "Dataset + market questions: broader support than this overview." : "Polymarket questions only; each pair uses its own matched support."}</small>
+              <small>{link.evaluation === "cross_fit" ? "Cross-fit OOS" : "Full-sample descriptive"} · legacy adjusted-Brier scoring · {link.methods.length} published methods. {link.scope === "all_events" ? "Dataset + market questions: broader support than this overview." : "Polymarket questions only; each pair uses its own matched support."}</small>
             </div>)}
           </div>
         </aside>}
