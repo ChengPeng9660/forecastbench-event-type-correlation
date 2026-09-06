@@ -26,6 +26,12 @@ function configurationCount() {
 }
 
 describe("all-configuration market diversity controls", () => {
+  it("keeps the pair profile and omits the stable category complementarity block", () => {
+    const { container } = render(createElement(MarketDiversityPerformanceExplorer, { data: fixture }));
+    expect(container.querySelector("#focal-model-complementarity")).toBeInTheDocument();
+    expect(container.querySelector("#stable-category-complementarity")).not.toBeInTheDocument();
+  });
+
   it("keeps TV zero as a valid configuration and plotted value", () => {
     const zeroFixture: MarketDiversityPerformanceData = {
       ...fixture,
