@@ -41,3 +41,27 @@ python -m analysis.type_selection --study /path/to/complementarity_all_configura
 The protocol is in `docs/type-selection-protocol.md`; outputs are in
 `site/public/data/type-selection`. Direct section URL:
 `?cc_section=type-selection#complementarity`.
+
+## Type-selection mechanism follow-up (2026-09-07)
+
+The nested `TypeSelectionMechanisms` section examines the same frozen panel,
+training filters and two test scopes. It adds confidence-group gain attribution,
+training-fitted calibration and nested joint-prediction controls, convex pooling
+with a separate extremization step, and descriptive matching within pair, type
+and selected-probability bins. Contributions retain the original event weights
+and sum to the full-scope gain. The four original formulas and their predictions
+are unchanged. This is an exploratory follow-up to previously inspected
+historical holdouts; ten directions are stability checks, not independent trials.
+
+Reproduce the complete export and independent audit with NumPy and pandas:
+
+```bash
+OPENBLAS_NUM_THREADS=1 python -m analysis.type_selection_mechanisms --study /path/to/complementarity_all_configurations_event_weighted_2026-09-05
+```
+
+The fixed settings and interpretation limits are in
+`docs/type-selection-mechanisms-protocol.md`. The publication in
+`site/public/data/type-selection-mechanisms` includes all-direction scores,
+primary-pair fitted coefficients and diagnostics, 24 filter views, a source-hash
+manifest, an independent numerical audit and a report. Direct section URL:
+`?cc_section=type-selection-mechanisms#complementarity`.
