@@ -86,3 +86,25 @@ Definitions are in `docs/type-selection-no-calibration-protocol.md`. Exported
 scores, primary pair outputs, filter views and independent audits are in
 `site/public/data/type-selection-no-calibration`. Direct section URL:
 `?cc_section=type-selection-no-calibration#complementarity`.
+
+## Probability-calibrated pooling (2026-09-07)
+
+`TypeSelectionCalibratedPooling` repeats the same ten methods with two fixed
+calibration locations. Input calibration fits the two exact models separately
+and then pools; output calibration fits each raw method's pooled output. Each
+location has its own equally calibrated selection baseline. The raw-training
+router and complete test support remain unchanged. The module displays both
+test scopes, all shared training filters, raw and calibrated Brier/ECE, gains
+against selection or a frozen same-pipeline duplicate, and all ten directions.
+Multiple fitted stages reuse the outer training sample; no inner cross-fitting
+or independence of internal evidence is claimed.
+
+```bash
+OPENBLAS_NUM_THREADS=1 python -m analysis.type_selection_calibrated_pooling --study /path/to/complementarity_all_configurations_event_weighted_2026-09-05
+```
+
+The frozen protocol is `docs/type-selection-calibrated-pooling-protocol.md`.
+All 24 views, primary-pair coefficients and scores, all-direction scores,
+source/code hashes, protocol lock, independent audit and report are in
+`site/public/data/type-selection-calibrated-pooling`. Direct section URL:
+`?cc_section=type-selection-calibrated-pooling#complementarity`.
