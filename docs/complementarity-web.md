@@ -175,3 +175,18 @@ The Selection vs aggregation navigation entry follows Model performance inside
 Markets. Long explanatory paragraphs have been removed from the concise views;
 score tables, controls, comparator labels and collapsed supporting evidence remain.
 The full research explorer and its methods remain available at the existing URL.
+
+## Uncalibrated fifth pipeline row
+
+The main comparison now appends `Uncalibrated aggregation` in both overall and
+individual-pair views, including the Markets-linked experiment. Its selector exposes
+the four existing fixed formulas: Simple mean (the fixed default), Log-odds mean,
+EC with w = 0.56, and Piecewise odds. `cc_raw_method` persists the method choice.
+No method is automatically chosen from its test performance.
+
+This row reads the original mechanism publication's uncalibrated formula scores
+(indices 1–4), on the same pair and event scope as the preceding four rows. Its gain
+compares with raw type selection (row 1). The main matched result still compares
+rows 3 and 4; row 4 and row 5 use different aggregation families, so their difference
+is not an isolated calibration effect. ECE follows the selected fifth-row formula.
+No predictions, calibration fits, training rules or exported scores are changed.

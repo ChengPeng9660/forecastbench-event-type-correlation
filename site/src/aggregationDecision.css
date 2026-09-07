@@ -72,6 +72,13 @@
 .ad-main-table .ad-joint-row { background: #f5effa; }
 .ad-main-table .ad-single-row th,.ad-main-table .ad-joint-row th { padding-left: 12px; }
 .ad-main-table .ad-joint-row td:last-child { color: #4f207f; font-size: 21px; }
+.ad-main-table .ad-raw-row { background: #fffcf5; }
+.ad-main-table .ad-raw-row th { padding-left: 12px; border-left: 3px solid #efab02; }
+.ad-raw-method { min-width: 0; }
+.ad-raw-method select { display: block; width: 230px; max-width: 100%; min-height: 44px; margin-top: 8px; padding: 8px; border: 1px solid #d9c9e4; border-radius: 4px; color: #4d385d; background: white; font-size: 12px; }
+.ad-raw-method select:focus-visible { outline: 2px solid #4f207f; outline-offset: 2px; }
+.ad-raw-method small.ad-positive { color: #4f207f; }
+.ad-raw-method small.ad-negative { color: #a47722; }
 .ad-main-table em { display: inline-block; font-style: normal; font-size: 9px; color: #967025; margin-top: 6px; letter-spacing: .025em; }
 .ad-main-table .ad-joint-row em { color: #6c3f91; }
 .ad-comparison-note { border-left: 2px solid #4f207f; margin: 20px 0 12px; padding-left: 15px; color: #5b3b6c; font-size: 12px; line-height: 1.8; }
@@ -150,6 +157,8 @@
   .ad-main-table td:last-child { font-size: 14px; padding-inline: 8px; }
   .ad-main-table .ad-joint-row td:last-child { font-size: 16px; }
   .ad-main-table .ad-single-row th,.ad-main-table .ad-joint-row th { padding-left: 7px; }
+  .ad-main-table .ad-raw-row th { padding-left: 7px; }
+  .ad-raw-method select { width: 100%; min-width: 0; font-size: 11px; }
   .ad-reading { grid-template-columns: 1fr; gap: 21px; }
   .ad-footer { display: block; }
   .ad-footer button { margin-top: 15px; }
