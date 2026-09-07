@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("presents five existing aggregation methods and the shareable pair explorer", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_view=explorer#complementarity");
   const section = page.locator("#complementarity");
   await expect(section.getByRole("heading", { level: 1 })).toHaveText("Can category complementarity identify pairs that aggregate well?");
   await expect(section).toHaveAttribute("lang", "en");
@@ -69,7 +69,7 @@ test("recovers from a failed study fetch without keeping a stale error", async (
     if (fail) { fail = false; await route.fulfill({ status: 503, body: "Unavailable" }); }
     else await route.continue();
   });
-  await page.goto("/?cc_lang=zh#complementarity");
+  await page.goto("/?cc_view=explorer&cc_lang=zh#complementarity");
   await expect(page).not.toHaveURL(/cc_lang=/);
   await expect(page.locator("#complementarity")).toContainText("Results unavailable");
   await page.getByRole("button", { name: "Try again" }).click();
@@ -78,7 +78,7 @@ test("recovers from a failed study fetch without keeping a stale error", async (
 });
 
 test("normalizes obsolete category-aggregation links to Directional CF", async ({ page }) => {
-  await page.goto("/?cc_method=type_shrunk#complementarity");
+  await page.goto("/?cc_view=explorer&cc_method=type_shrunk#complementarity");
   await expect(page).toHaveURL(/cc_method=cf_directional/);
   await expect(page.getByLabel("Complementarity aggregation method")).toHaveValue("cf_directional");
 });

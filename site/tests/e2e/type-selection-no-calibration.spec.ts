@@ -2,7 +2,7 @@ import { expect,test } from "@playwright/test";
 
 test("compares raw pooling on both scopes and changes the duplicate baseline",async({page})=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/?cc_section=type-selection-no-calibration#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection-no-calibration#complementarity");
   const section=page.locator("#type-selection-no-calibration");
   await expect(section.getByRole("heading",{name:"Does a second raw forecast help?"})).toBeVisible();
   await expect(section.getByTestId("nc-context")).toContainText("2,431 pairs");
@@ -34,7 +34,7 @@ test("recovers a failed raw-pooling fetch and preserves the original experiment"
   await page.route("**/data/type-selection-no-calibration/views/gap3-coverage50-all.json",async route=>{
     if(fail){fail=false;await route.fulfill({status:503,body:"Unavailable"});}else await route.continue();
   });
-  await page.goto("/?cc_section=type-selection-no-calibration#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection-no-calibration#complementarity");
   const section=page.locator("#type-selection-no-calibration");
   await expect(section.getByRole("alert")).toContainText("503");
   await expect(page.getByTestId("ts-all")).toContainText("0.15728");

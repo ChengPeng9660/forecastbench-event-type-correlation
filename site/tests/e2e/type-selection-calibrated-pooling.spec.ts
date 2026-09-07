@@ -6,7 +6,7 @@ const signed=(n:number)=>`${n>=0?"+":""}${n.toFixed(6)}`;
 
 test("switches both calibration locations, scopes and duplicate controls",async({page})=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/?cc_section=type-selection-calibrated-pooling#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection-calibrated-pooling#complementarity");
   const section=page.locator("#type-selection-calibrated-pooling");
   await expect(section.getByRole("heading",{name:"Does calibration change the value of a second forecast?",exact:true})).toBeVisible();
   await expect(section.getByTestId("cp-context")).toContainText("2,431 pairs");
@@ -42,7 +42,7 @@ test("retries calibrated pooling data without breaking the raw experiment",async
   await page.route("**/data/type-selection-calibrated-pooling/views/gap3-coverage50-all.json",async route=>{
     if(fail){fail=false;await route.fulfill({status:503,body:"Unavailable"});}else await route.continue();
   });
-  await page.goto("/?cc_section=type-selection-calibrated-pooling#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection-calibrated-pooling#complementarity");
   const section=page.locator("#type-selection-calibrated-pooling");
   await expect(section.getByRole("alert")).toContainText("503");
   await expect(page.getByTestId("nc-context")).toContainText("2,431 pairs");

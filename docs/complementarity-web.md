@@ -108,3 +108,25 @@ All 24 views, primary-pair coefficients and scores, all-direction scores,
 source/code hashes, protocol lock, independent audit and report are in
 `site/public/data/type-selection-calibrated-pooling`. Direct section URL:
 `?cc_section=type-selection-calibrated-pooling#complementarity`.
+
+## Aggregation verdict presentation (2026-09-07)
+
+The public `#complementarity` entry now opens `AggregationDecisionExplorer`.
+It leads with the matched contrast between flexible type-adjusted selection
+and the joint predictor, using the existing mechanism publication. A four-row
+table separates raw routing, global calibration, flexible type adjustment and
+adding the other forecast. The two test scopes and three training filters
+continue to use the same archived data, weighting and pair eligibility.
+
+Formula comparisons, direction stability and downloads are collapsed by
+default. Formula evidence loads on demand and reports gains against both its
+own selection baseline and the stronger single-forecast baseline. This avoids
+presenting an improvement over simple calibration as a gain over the strongest
+tested single-forecast control. No experiment, exported score or calibration
+formula changes in this presentation revision.
+
+The previous complete explorer and all detailed experiments remain accessible
+through `?cc_view=explorer#complementarity`; retain `cc_section` to target a
+specific original experiment there. Existing type-selection section links
+without `cc_view=explorer` now lead to the concise verdict. The preferred link
+is `?cc_section=aggregation-verdict#complementarity`.

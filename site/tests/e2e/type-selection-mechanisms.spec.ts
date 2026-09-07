@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("links mechanism diagnostics to test scope, confidence threshold and training filters", async ({page}) => {
   const errors: string[]=[];
   page.on("pageerror",error=>errors.push(error.message));
-  await page.goto("/?cc_section=type-selection-mechanisms#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection-mechanisms#complementarity");
   const section=page.locator("#type-selection-mechanisms");
   await expect(section.getByRole("heading",{name:"Does agreement justify more confidence?"})).toBeVisible();
   await expect(section.getByTestId("tm-context")).toContainText("2,431 pairs");
@@ -33,7 +33,7 @@ test("recovers from unavailable mechanism results without blocking parent compar
   await page.route("**/data/type-selection-mechanisms/views/gap3-coverage50-all.json",async route=>{
     if(fail){fail=false;await route.fulfill({status:503,body:"Unavailable"});}else await route.continue();
   });
-  await page.goto("/?cc_section=type-selection-mechanisms#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection-mechanisms#complementarity");
   const section=page.locator("#type-selection-mechanisms");
   await expect(section.getByRole("alert")).toContainText("503");
   await expect(page.getByTestId("ts-all")).toContainText("0.15728");

@@ -20,7 +20,7 @@ import { loadAppData, loadCrossTypeData, loadEventType, loadFixedFocalWithoutFre
 import { dependenceDirectionLabel, MODEL_DEPENDENCE_DIRECTION, orientMetricToDependence } from "./lib/metrics";
 import type { AppData, CrossTypeData, EventTypeData, FixedBaseAggregationData, FixedFocalWithoutFreezeData, FreezeMarketCorrelationData, GlobalBaselineData, MarketDiversityPerformanceData, MetricId, PairAggregationData, PairMetrics, PolymarketAggregationData, UpperLeftModelPairAggregationData } from "./types/data";
 
-const ComplementarityExplorer = lazy(() => import("./components/ComplementarityExplorer"));
+const ComplementarityExplorer = lazy(() => import("./components/AggregationDecisionExplorer"));
 
 interface Filters {
   eventType: string;

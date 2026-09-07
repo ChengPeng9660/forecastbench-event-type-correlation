@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("compares two scopes, changes metrics, links pair/filter choices and preserves a routing map", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/?cc_section=type-selection#complementarity");
+  await page.goto("/?cc_view=explorer&cc_section=type-selection#complementarity");
   const section = page.locator("#type-selection");
   await expect(section.getByRole("heading", { name: "Choose the specialist, or combine both?" })).toBeVisible();
   await expect(section.getByTestId("ts-filter-context")).toContainText("2,431 crossed-strength pairs");
@@ -45,7 +45,7 @@ test("recovers when the new experiment's data fetch fails", async ({ page }) => 
     if (fail) { fail = false; await route.fulfill({ status: 503, body: "Unavailable" }); }
     else await route.continue();
   });
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_view=explorer#complementarity");
   const section = page.locator("#type-selection");
   await expect(section.getByRole("alert")).toContainText("503");
   await section.getByRole("button", { name: "Retry type-selection results" }).click();
