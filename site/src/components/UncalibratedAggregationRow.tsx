@@ -30,13 +30,13 @@ export function useUncalibratedMethod():UncalibratedChoice{
   return {method,choose};
 }
 
-export function UncalibratedAggregationRow({brier,method,onChange}:{brier:readonly number[];method:Method;onChange:(id:string)=>void}){
+export function UncalibratedAggregationRow({brier,method,onChange,referenceLabel="type selection"}:{brier:readonly number[];method:Method;onChange:(id:string)=>void;referenceLabel?:string}){
   const value=brier[method.index],gain=brier[0]-value,relative=brier[0]>0?100*gain/brier[0]:null;
   return <tr className="ad-raw-row" data-testid="ad-uncalibrated-row">
     <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">5</span><div className="ad-raw-method">
       <b>Uncalibrated aggregation</b>
       <select aria-label="Uncalibrated aggregation method" value={method.id} onChange={event=>onChange(event.target.value)}>{METHODS.map(option=><option key={option.id} value={option.id}>{option.label}</option>)}</select>
-      <small data-testid="ad-uncalibrated-gain" className={gain>1e-10?"ad-positive":gain< -1e-10?"ad-negative":""}>Brier gain vs type selection: {score(gain,6,true)}{relative!=null&&` (${Math.abs(relative).toFixed(2)}% ${relative<0?"higher":"lower"})`}</small>
+      <small data-testid="ad-uncalibrated-gain" className={gain>1e-10?"ad-positive":gain< -1e-10?"ad-negative":""}>Brier gain vs {referenceLabel}: {score(gain,6,true)}{relative!=null&&` (${Math.abs(relative).toFixed(2)}% ${relative<0?"higher":"lower"})`}</small>
     </div></div></th>
     <td>2</td><td data-testid="ad-uncalibrated-score">{score(value,6)}</td>
   </tr>;

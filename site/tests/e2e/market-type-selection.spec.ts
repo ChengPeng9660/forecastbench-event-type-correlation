@@ -15,7 +15,7 @@ const pair=(id:string):DecisionPair=>JSON.parse(readFileSync(resolve(`public/dat
 
 test("the first market chart selects the base for the following experiment",async({page},testInfo)=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/#market-performance");
+  await page.goto("/?cc_stability=original#market-performance");
   const block=page.locator("#market-type-selection");
   for(const base of bases){
     expect(base).toBeTruthy();
@@ -56,7 +56,7 @@ test("the first market chart selects the base for the following experiment",asyn
 test("market bases without eligible partners keep their own identity and market score",async({page})=>{
   const empty=market.points.find(p=>p.diversity.prediction_diversity!=null&&pairsForBase(index.pairs,p.exact_configuration,filters).length===0)!;
   expect(empty).toBeTruthy();
-  await page.goto("/#market-performance");
+  await page.goto("/?cc_stability=original#market-performance");
   const marker=page.locator(`.market-performance-hit[data-configuration=${JSON.stringify(empty.exact_configuration)}]`);
   await marker.focus();await marker.press("Enter");
   const block=page.locator("#market-type-selection");

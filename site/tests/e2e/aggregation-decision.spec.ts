@@ -6,7 +6,7 @@ import {expectPoolingComparison} from "./pooling-comparison-check";
 test("leads legacy section links with the matched verdict and keeps details closed",async({page},testInfo)=>{
   const requests:string[]=[],errors:string[]=[];
   page.on("request",r=>requests.push(r.url()));page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/?cc_section=type-selection-calibrated-pooling&type=finance_economics#complementarity");
+  await page.goto("/?cc_stability=original&cc_section=type-selection-calibrated-pooling&type=finance_economics#complementarity");
   const section=page.locator("#complementarity");
   await expect(section.getByRole("heading",{level:1})).toHaveText("Selection vs aggregation");
   await expect(page.getByTestId("ad-effect")).toContainText("1.31%");
@@ -36,7 +36,7 @@ test("leads legacy section links with the matched verdict and keeps details clos
 test("compares four pools with the matching selection and sorts every calibration mode",async({page},testInfo)=>{
   const read=(name:string)=>JSON.parse(readFileSync(resolve(`public/data/${name}/views/gap3-coverage50-all.json`),"utf8"));
   const raw=read("type-selection-no-calibration"),calibrated=read("type-selection-calibrated-pooling");
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_stability=original#complementarity");
   await page.getByText("Pooling methods",{exact:true}).click();
   const table=page.getByTestId("ad-pool-table"),sort=page.getByLabel("Pooling table sort order",{exact:true});
   for(const [scope,scopeLabel] of [["all","All test events"],["complementary","Complementary events only"]]){
@@ -61,7 +61,7 @@ test("compares four pools with the matching selection and sorts every calibratio
 });
 
 test("preserves training filters and makes the full explorer reachable",async({page})=>{
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_stability=original#complementarity");
   await page.getByText("Change study scope",{exact:true}).click();
   await page.getByLabel("Verdict training ability gap",{exact:true}).selectOption("5");
   await expect(page.getByTestId("ad-context")).toContainText("2,805 model pairs");
@@ -82,7 +82,7 @@ test("recovers the verdict from a fetch failure",async({page})=>{
   await page.route("**/data/type-selection-mechanisms/views/gap3-coverage50-all.json",async route=>{
     if(fail){await route.fulfill({status:503,body:"Unavailable"});}else await route.continue();
   });
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_stability=original#complementarity");
   await expect(page.getByRole("alert")).toContainText("503");
   await expect(page.getByTestId("ad-effect")).toHaveCount(0);
   fail=false;

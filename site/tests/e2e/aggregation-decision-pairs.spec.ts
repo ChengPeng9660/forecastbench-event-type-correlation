@@ -8,7 +8,7 @@ const id="p-feba1dc1f7ef",pair=read("pairs/fe.json")[id];
 test("opens base and partner controls while retaining exact negative scores",async({page},testInfo)=>{
   const requests:string[]=[],errors:string[]=[];
   page.on("request",r=>requests.push(r.url()));page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_stability=original#complementarity");
   const section=page.locator("#complementarity");
   await expect(section.getByTestId("ad-effect")).toContainText("1.31%");
   expect(requests.some(u=>u.includes("/aggregation-decision-pairs/"))).toBe(false);
@@ -34,7 +34,7 @@ test("opens base and partner controls while retaining exact negative scores",asy
 });
 
 test("pins the base while browsing partners and orients both sides correctly",async({page})=>{
-  await page.goto(`/?cc_result=pair&cc_pair=${id}#complementarity`);
+  await page.goto(`/?cc_stability=original&cc_result=pair&cc_pair=${id}#complementarity`);
   const section=page.locator("#complementarity");
   await expect(section.getByTestId("ad-pair-results")).toBeVisible();
   await section.getByRole("button",{name:"Next partner →",exact:true}).click();
@@ -59,7 +59,7 @@ test("pins the base while browsing partners and orients both sides correctly",as
 });
 
 test("pair pooling compares selection and four pools with persistent Brier sorting",async({page},testInfo)=>{
-  await page.goto(`/?cc_result=pair&cc_pair=${id}#complementarity`);
+  await page.goto(`/?cc_stability=original&cc_result=pair&cc_pair=${id}#complementarity`);
   const section=page.locator("#complementarity");
   await section.getByText("Pooling methods",{exact:true}).click();
   const table=section.getByTestId("ad-pair-pool-table"),sort=section.getByLabel("Pooling table sort order",{exact:true});
@@ -86,7 +86,7 @@ test("pair pooling compares selection and four pools with persistent Brier sorti
 test("pair data failure supports retry without stale scores",async({page})=>{
   let fail=true;
   await page.route("**/aggregation-decision-pairs/pairs/fe.json",async route=>{if(fail)await route.fulfill({status:503,body:"Unavailable"});else await route.continue();});
-  await page.goto(`/?cc_result=pair&cc_pair=${id}#complementarity`);
+  await page.goto(`/?cc_stability=original&cc_result=pair&cc_pair=${id}#complementarity`);
   const section=page.locator("#complementarity");
   await expect(section.getByRole("alert")).toContainText("503");
   await expect(section.getByTestId("ad-pair-results")).toHaveCount(0);

@@ -22,6 +22,14 @@
 .ad-result-switch button[aria-pressed="true"] { color: #4f207f; border-color: #4f207f; font-weight: 600; }
 .ad-scope-line { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 22px; }
 .ad-scope-line > span { font-size: 11px; color: #776d7d; }
+.ad-cohort-line { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px 22px; padding: 17px 0 4px; }
+.ad-cohort-line label { display: flex; flex-direction: column; gap: 7px; color: #796482; font-size: 11px; min-width: 0; }
+.ad-cohort-line select { width: 280px; max-width: 100%; min-height: 44px; border: 1px solid #dfd2e8; border-radius: 4px; background: white; padding: 9px; color: #4d385d; font-size: 12px; }
+.ad-cohort-line > span { color: #8b795a; font-size: 10px; padding-bottom: 13px; }
+.ad-stability-status { display: flex; flex-direction: column; gap: 5px; padding: 12px 14px; margin-top: 15px; border-left: 3px solid #4f207f; background: #f5effa; font-size: 11px; color: #614078; overflow-wrap: anywhere; }
+.ad-stability-status b { font-weight: 550; }
+.ad-stability-fallback { border-color: #efab02; background: #fffcf5; color: #896725; }
+.ad-empty-reversal { display: block; margin-top: 10px; }
 .ad-switch { display: inline-flex; gap: 3px; background: #f5f1f8; padding: 4px; border-radius: 6px; max-width: 100%; }
 .ad-switch button { border: 0; background: transparent; color: #72647b; font-size: 12px; padding: 10px 15px; border-radius: 3px; line-height: 1.5; min-height: 42px; }
 .ad-switch button[aria-pressed="true"] { background: #4f207f; color: white; }

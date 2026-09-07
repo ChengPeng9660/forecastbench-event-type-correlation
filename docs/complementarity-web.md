@@ -190,3 +190,35 @@ compares with raw type selection (row 1). The main matched result still compares
 rows 3 and 4; row 4 and row 5 use different aggregation families, so their difference
 is not an isolated calibration effect. ECE follows the selected fifth-row formula.
 No predictions, calibration fits, training rules or exported scores are changed.
+
+## Post-hoc no-reversal pairs and training-overall fallback
+
+The default concise verdict now uses `aggregation-stability/`, restricted to
+the same crossed-training-strength model pairs. `cc_stability=stable` selects
+pairs with no held-out reversal in any training-defined complementary type;
+`fallback` selects reversed or unverified pairs and `all` includes both groups.
+No unrelated model pairs are added. The default is `stable`. The original
+training-only scores remain accessible with `cc_stability=original` and in the
+full research explorer.
+
+The reversal check uses the raw model forecasts once per pair/direction and
+is shared by all calibration modes and both test scopes. Any reversed type
+causes the entire pair to use its training-overall Brier winner. A missing test
+type is unverified and also falls back; ties do not count as reversals. The
+new calibrations and matched controls are fitted on training data using the
+resulting selected/other roles. Tests explicitly distinguish the training
+fallback winner from the better test model.
+
+The UI labels these test-conditioned groups as post-hoc. It displays the
+fallback model and each type's training/test support and reversal status.
+Original archived forecasts, scores and protocols are retained unchanged.
+
+```sh
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m analysis.aggregation_stability --study /path/to/complementarity_all_configurations_event_weighted_2026-09-05 --workers 4
+```
+
+The new protocol, source/code hashes, numerical audit, all-direction JSONL,
+primary fitted coefficients, per-pair shards and 24 filtered cohort views are
+published under `site/public/data/aggregation-stability/`. Export requires
+independent event-level score reconstruction, unchanged-score checks against
+the original publication, and primary cohort reconstruction from pair records.

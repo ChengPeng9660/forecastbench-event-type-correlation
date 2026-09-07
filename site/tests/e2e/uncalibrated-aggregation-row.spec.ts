@@ -9,7 +9,7 @@ const id="p-8ff6126fb390",pair=read("aggregation-decision-pairs/pairs/8f.json")[
 const signed=(value:number)=>`${value>0?"+":""}${value.toFixed(6)}`;
 
 test("fifth row uses the four raw formulas and the raw selection comparator for every scope",async({page})=>{
-  await page.goto("/#complementarity");
+  await page.goto("/?cc_stability=original#complementarity");
   const block=page.locator("#complementarity"),row=block.getByTestId("ad-uncalibrated-row");
   await expect(block.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(5);
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("simple_mean");
@@ -39,7 +39,7 @@ test("fifth row uses the four raw formulas and the raw selection comparator for 
 
 test("market pair fifth row stays uncalibrated across partner and test scope changes",async({page},testInfo)=>{
   const errors:string[]=[];page.on("pageerror",error=>errors.push(error.message));
-  await page.goto(`/?cc_base=${encodeURIComponent(pair.model_a)}&cc_pair=${id}&cc_raw_method=ec_w0_56#market-performance`);
+  await page.goto(`/?cc_stability=original&cc_base=${encodeURIComponent(pair.model_a)}&cc_pair=${id}&cc_raw_method=ec_w0_56#market-performance`);
   const block=page.locator("#market-type-selection"),row=block.getByTestId("ad-uncalibrated-row");
   await expect(block.getByTestId("ad-pair-main-table").locator("tbody tr")).toHaveCount(5);
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("ec_w0_56");
@@ -75,7 +75,7 @@ test("market pair fifth row stays uncalibrated across partner and test scope cha
 });
 
 test("invalid raw method values return to the fixed simple mean",async({page})=>{
-  await page.goto(`/?cc_result=pair&cc_pair=${id}&cc_raw_method=joint_model#complementarity`);
+  await page.goto(`/?cc_stability=original&cc_result=pair&cc_pair=${id}&cc_raw_method=joint_model#complementarity`);
   const row=page.getByTestId("ad-uncalibrated-row");
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("simple_mean");
   await expect(row.getByTestId("ad-uncalibrated-score")).toHaveText(pair.scopes.all.brier[1].toFixed(6));
