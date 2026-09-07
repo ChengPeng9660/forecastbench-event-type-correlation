@@ -19,3 +19,25 @@ Re-export with `uv run --with numpy python analysis/export_complementarity_site.
 - A live browser check confirms method switching, the Gain / BI / ECE outcome control, scatter-to-profile selection, both BI-gap thresholds, both grouping dimensions, and URL persistence.
 - At a 390-pixel viewport the page has no document overflow. Ability profiles switch between train and test using one fixed BI scale. The page is English-only; keyboard activation and reduced-motion styling are supported.
 - The full research module loads only when the Complementarity page is visited. On Markets, the same data snapshot loads lazily when the embedded focal-model section approaches the viewport. Existing market controls and method calculations are unchanged.
+
+
+## Type-based selection extension (2026-09-07)
+
+The independent `TypeSelectionExperiment` section adds a trained 0/1 router to
+the event-type page, using the frozen 2026-09-05 event-weighted panel. It compares
+selection with Simple mean, Log-odds mean, EC (w=0.56), and Piecewise odds on
+training-defined complementary types and on all shared test events. The original
+five-formula experiment and its scores remain unchanged. The new section shares
+the gap, coverage, identity-scope and selected-pair controls, always requires
+crossed training strengths, and exposes Brier/BI/ECE, pair routing maps, ten
+direction summaries, downloads and numerical audits.
+
+Reproduce with NumPy and pandas:
+
+```bash
+python -m analysis.type_selection --study /path/to/complementarity_all_configurations_event_weighted_2026-09-05
+```
+
+The protocol is in `docs/type-selection-protocol.md`; outputs are in
+`site/public/data/type-selection`. Direct section URL:
+`?cc_section=type-selection#complementarity`.
