@@ -130,3 +130,24 @@ through `?cc_view=explorer#complementarity`; retain `cc_section` to target a
 specific original experiment there. Existing type-selection section links
 without `cc_view=explorer` now lead to the concise verdict. The preferred link
 is `?cc_section=aggregation-verdict#complementarity`.
+
+## Individual pair verdicts
+
+The concise aggregation verdict also supports `cc_result=pair&cc_pair=<published pair id>`.
+The Overall evidence / One model pair tabs preserve the training cohort and test-scope
+filters. Pair search and previous/next navigation follow alphabetical configuration
+order, not held-out performance. Exact prompt and information labels remain visible.
+
+Each pair shows the same raw routing / global calibration / flexible selection / matched
+joint sequence, using its own event-equal test Brier. Positive and negative added-forecast
+gains are retained. Supporting disclosures contain raw, input-calibrated and output-calibrated
+pooling scores, training type routing, ECE, and eligible repeated directions. Direction
+eligibility uses that direction's training gap and coverage. A pair excluded by the active
+filters shows an explicit empty state, never an aggregate score or a substituted pair.
+
+`python3 site/scripts/export-decision-pairs.py` packages existing published records into
+`site/public/data/aggregation-decision-pairs/`. It does not refit, rescore, or alter the
+original experiment files. The index and a small pair shard are fetched only after opening
+the individual-pair view. The export preserves source values and verifies 3,840 primary
+mean scores across all 24 cohort settings against the existing mechanism/raw/calibrated
+publications. `provenance.json` records source hashes and the validation count.

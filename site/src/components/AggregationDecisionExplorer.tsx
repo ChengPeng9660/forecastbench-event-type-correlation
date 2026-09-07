@@ -8,6 +8,7 @@ import "../complementarity.css";
 import "../aggregationDecision.css";
 
 const FullExplorer=lazy(()=>import("./ComplementarityExplorer"));
+const PairDecision=lazy(()=>import("./AggregationPairDecision"));
 const percent=(v:number|null|undefined,digits=1)=>v==null?"—":`${(100*v).toFixed(digits)}%`;
 const tone=(v:number|null)=>v==null||Math.abs(v)<1e-10?"":v>0?"ad-positive":"ad-negative";
 const labels=[
@@ -50,6 +51,7 @@ function PoolingEvidence({data,filters,active}:{data:MechanismData;filters:Decis
 
 function Verdict({onExplore}:{onExplore:()=>void}){
   const [filters,setFilters]=useState<DecisionFilters>(()=>initialDecisionFilters(location.search));
+  const [pairMode,setPairMode]=useState(()=>new URLSearchParams(location.search).get("cc_result")==="pair");
   const [data,setData]=useState<MechanismData|null>(null),[error,setError]=useState(""),[attempt,setAttempt]=useState(0);
   const [poolsOpen,setPoolsOpen]=useState(false);
   const key=mechanismKey(filters.gap,filters.coverage,filters.pairScope),ref=useRef<HTMLElement>(null);
@@ -58,7 +60,8 @@ function Verdict({onExplore}:{onExplore:()=>void}){
     loadMechanisms(key,controller.signal).then(v=>{if(!controller.signal.aborted)setData(v);}).catch(e=>{if(!controller.signal.aborted)setError(String(e.message??e));});
     return ()=>controller.abort();
   },[key,attempt]);
-  useEffect(()=>{const listener=()=>setFilters(initialDecisionFilters(location.search));window.addEventListener("popstate",listener);return()=>window.removeEventListener("popstate",listener);},[]);
+  useEffect(()=>{const listener=()=>{setFilters(initialDecisionFilters(location.search));setPairMode(new URLSearchParams(location.search).get("cc_result")==="pair");};window.addEventListener("popstate",listener);return()=>window.removeEventListener("popstate",listener);},[]);
+  function changeResult(next:boolean){setPairMode(next);const q=new URLSearchParams(location.search);q.set("cc_result",next?"pair":"overall");q.set("cc_section","aggregation-verdict");history.replaceState(null,"",`${location.pathname}?${q}#complementarity`);}
   function change(patch:Partial<DecisionFilters>){
     const next={...filters,...patch};setFilters(next);
     const q=new URLSearchParams(location.search);q.set("cc_section","aggregation-verdict");q.set("cc_gap",String(next.gap));q.set("cc_coverage",String(next.coverage));q.set("cc_scope",next.pairScope);q.set("cc_test_scope",next.scope);
@@ -74,8 +77,10 @@ function Verdict({onExplore}:{onExplore:()=>void}){
     </div><p>Pairs have similar Overall training ability and crossed event-type strengths. Eligibility and type routing use training events only. This verdict is about this screened cohort, not every possible model pair.</p></details>);
   return <section id="complementarity" className="cc-study ad-study" lang="en" ref={ref}>
     <header className="ad-header"><p className="ad-eyebrow">FORECASTBENCH / TYPE SELECTION VS AGGREGATION</p><h1>Is aggregation worth adding?</h1><p>When history tells us which model is better for each event type, does a second forecast still help?</p></header>
+    <div className="ad-result-switch" role="group" aria-label="Aggregation result level"><button aria-pressed={!pairMode} onClick={()=>changeResult(false)}>Overall evidence</button><button aria-pressed={pairMode} onClick={()=>changeResult(true)}>One model pair</button></div>
     <div className="ad-scope-line"><div className="ad-switch" role="group" aria-label="Aggregation verdict test scope"><button aria-pressed={filters.scope==="all"} onClick={()=>change({scope:"all"})}>All test events</button><button aria-pressed={filters.scope==="complementary"} onClick={()=>change({scope:"complementary"})}>Complementary events only</button></div><span>{filters.scope==="all"?"Every shared test event, including fallback cases.":"Only event types with a supported training advantage."}</span></div>
 
+    {pairMode?<>{filterControls}<Suspense fallback={<p className="ad-pending" role="status">Loading pair comparison…</p>}><PairDecision filters={filters}/></Suspense></>:<>
     {!data||!summary?<div className="ad-pending" role={error?"alert":"status"}><p>{error||"Loading the matched selection and aggregation comparison…"}</p>{error&&<button className="research-button" onClick={()=>setAttempt(a=>a+1)}>Retry aggregation verdict</button>}</div>:!defined?<p className="ad-pending">No eligible pairs for these training filters. No conclusion is substituted from another cohort.</p>:<>
       <section className="ad-verdict" aria-labelledby="ad-verdict-title"><div><p className="ad-eyebrow">THE MATCHED COMPARISON</p><h2 id="ad-verdict-title" data-testid="ad-verdict-title">{verdict}</h2><p>{(summary.gain??0)>1e-10?"Even after giving the selected forecast event-type adjustments and flexible calibration, adding the other forecast improves mean test Brier in this study.":"With event-type adjustments and flexible calibration in both pipelines, the added forecast does not lower mean test Brier in this scope."}</p><p className="ad-verdict-limit">Whether an extra model call is worth its cost remains untested.</p></div><div className={`ad-effect ${tone(summary.gain)}`} data-testid="ad-effect"><strong>{percent(summary.relative,2)}</strong><span>relative Brier reduction</span><small>vs the strong single-forecast baseline</small></div></section>
       <div className="ad-facts" data-testid="ad-facts"><div><strong>{score(summary.gain,6,true)}</strong><span>absolute Brier improvement</span></div><div><strong>{percent(summary.pairWins)}</strong><span>of model pairs improve</span></div><div><strong>{summary.directions.positive}/{summary.directions.total}</strong><span>fixed directions improve</span></div></div>
@@ -94,6 +99,7 @@ function Verdict({onExplore}:{onExplore:()=>void}){
         <details className="ad-disclosure"><summary>How stable is the gain across test directions?</summary><div className="ad-detail-body"><div className="ad-table-scroll"><table className="ad-direction-table"><caption>Strong single-forecast baseline → matched joint model. Positive is better.</caption><thead><tr><th>Split / train → test</th><th>Pairs</th><th>Brier improvement</th><th>Pair wins</th></tr></thead><tbody>{data.view.directions.map(d=>{const r=d.scopes[filters.scope],g=brierGain(r.brier,6,7);return <tr key={`${d.split}-${d.fold}`}><th scope="row">{d.split} · {d.fold===0?"A → B":"B → A"}{d.split===data.index.primary_split&&d.fold===data.index.primary_fold?" · primary":""}</th><td>{r.pairs.toLocaleString()}</td><td className={tone(g)}>{score(g,6,true)}</td><td>{percent(r.wins?.[1])}</td></tr>;})}</tbody></table></div><p className="ad-footnote">Five event-cluster splits, each evaluated in both directions. Pair wins count lower mean Brier for a model pair, not the share of individual events predicted correctly.</p></div></details>
         <details className="ad-disclosure"><summary>Calibration, scoring and downloadable evidence</summary><div className="ad-detail-body"><p>The strong single-forecast baseline uses the selected forecast’s log-odds, three hinge terms and event-type indicators. The matched joint model adds the difference between the two forecasts’ log-odds. Both minimize the same regularized, event-weighted training log loss.</p><p>Brier averages targets within each event, then weights events equally within each pair, then pairs equally. ECE uses ten equal-width bins and target weights within each pair. Multiple fitted stages reuse their outer training sample; no inner cross-fitting is claimed.</p><div className="ad-table-scroll"><table className="ad-ece-table"><thead><tr><th>Pipeline</th><th>ECE ↓</th></tr></thead><tbody>{summary.rows.map((r,k)=><tr key={r.method}><th scope="row">{labels[k][0]}</th><td>{score(r.ece,6)}</td></tr>)}</tbody></table></div><div className="ad-downloads"><a href={`${MECHANISM_PATH}REPORT.md`}>Matched comparison report ↗</a><a href={`${MECHANISM_PATH}PROTOCOL.md`}>Study protocol ↗</a><a href={`${MECHANISM_PATH}primary-pair-diagnostics.json.gz`} download>Pair results and fitted coefficients ↗</a><a href={`${MECHANISM_PATH}all-direction-scores.csv.gz`} download>All test directions ↗</a><a href={`${MECHANISM_PATH}audit.json`}>Numerical audit ↗</a></div></div></details>
       </div>
+    </>}
     </>}
     <footer className="ad-footer"><div><b>Need a specific model pair or the full diagnostics?</b><p>The complete research explorer remains available.</p></div><button className="ad-explore-button" onClick={onExplore}>Open full research explorer →</button></footer>
   </section>;
