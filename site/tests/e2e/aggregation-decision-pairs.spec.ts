@@ -1,6 +1,7 @@
 import {expect,test} from "@playwright/test";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
+import {expectPoolingComparison} from "./pooling-comparison-check";
 const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data/aggregation-decision-pairs",p),"utf8"));
 const id="p-feba1dc1f7ef",pair=read("pairs/fe.json")[id];
 
@@ -57,18 +58,24 @@ test("pins the base while browsing partners and orients both sides correctly",as
   await expect(section.getByTestId("ad-effect")).toContainText("1.11%");
 });
 
-test("pair supporting tables retain every pooling score",async({page})=>{
+test("pair pooling compares selection and four pools with persistent Brier sorting",async({page},testInfo)=>{
   await page.goto(`/?cc_result=pair&cc_pair=${id}#complementarity`);
   const section=page.locator("#complementarity");
   await section.getByText("Pooling methods",{exact:true}).click();
-  for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
-    await section.getByRole("group",{name:"Pair pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
-    const table=section.getByTestId("ad-pair-pool-table");
-    await expect(table.locator("tbody tr")).toHaveCount(8);
-    await expect(table).toContainText(pair.scopes.all.pools[mode].brier[8].toFixed(6));
-    const gain=pair.scopes.all.brier[6]-pair.scopes.all.pools[mode].brier[8];
-    await expect(table).toContainText(`${gain>0?"+":""}${gain.toFixed(6)}`);
+  const table=section.getByTestId("ad-pair-pool-table"),sort=section.getByLabel("Pooling table sort order",{exact:true});
+  await expectPoolingComparison(table,pair.scopes.all.pools.raw.brier);
+  await sort.selectOption("brier");
+  for(const [scope,scopeLabel] of [["all","All test events"],["complementary","Complementary events only"]]){
+    await section.getByRole("button",{name:scopeLabel,exact:true}).click();
+    for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
+      await section.getByRole("group",{name:"Pair pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
+      await expectPoolingComparison(table,pair.scopes[scope].pools[mode].brier,true);
+    }
   }
+  await table.locator("..").locator("..").screenshot({path:testInfo.outputPath("pair-pooling-sorted.png")});
+  await page.reload();await section.getByText("Pooling methods",{exact:true}).click();
+  await expect(sort).toHaveValue("brier");await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier,true);
+  await sort.selectOption("method");await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier);
   await section.getByText("Test directions",{exact:true}).click();
   await expect(section.getByTestId("ad-pair-directions").locator("tbody tr")).toHaveCount(pair.directions.filter((d:any)=>d.train_gap<=3+1e-12&&d.train_coverage>=.5).length);
   await section.getByText("Event-type selections",{exact:true}).click();

@@ -1,4 +1,7 @@
 import {expect,test} from "@playwright/test";
+import {readFileSync} from "node:fs";
+import {resolve} from "node:path";
+import {expectPoolingComparison} from "./pooling-comparison-check";
 
 test("leads legacy section links with the matched verdict and keeps details closed",async({page},testInfo)=>{
   const requests:string[]=[],errors:string[]=[];
@@ -30,15 +33,25 @@ test("leads legacy section links with the matched verdict and keeps details clos
   expect(width[0]).toBeLessThanOrEqual(width[1]+1);expect(errors).toEqual([]);
 });
 
-test("expands formula evidence and keeps the stronger comparator explicit",async({page})=>{
+test("compares four pools with the matching selection and sorts every calibration mode",async({page},testInfo)=>{
+  const read=(name:string)=>JSON.parse(readFileSync(resolve(`public/data/${name}/views/gap3-coverage50-all.json`),"utf8"));
+  const raw=read("type-selection-no-calibration"),calibrated=read("type-selection-calibrated-pooling");
   await page.goto("/#complementarity");
   await page.getByText("Pooling methods",{exact:true}).click();
-  for(const mode of ["No calibration","Calibrate models → pool","Pool → calibrate output"]){
-    await page.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:mode,exact:true}).click();
-    await expect(page.getByTestId("ad-pool-table").locator("tbody tr")).toHaveCount(8);
+  const table=page.getByTestId("ad-pool-table"),sort=page.getByLabel("Pooling table sort order",{exact:true});
+  for(const [scope,scopeLabel] of [["all","All test events"],["complementary","Complementary events only"]]){
+    await page.getByRole("group",{name:"Aggregation verdict test scope",exact:true}).getByRole("button",{name:scopeLabel,exact:true}).click();
+    for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
+      await page.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
+      const brier=mode==="raw"?raw.primary.scopes[scope].brier:calibrated.primary.stages[mode][scope].brier;
+      await sort.selectOption("method");await expectPoolingComparison(table,brier);
+      await sort.selectOption("brier");await expectPoolingComparison(table,brier,true);
+    }
   }
-  await expect(page.getByTestId("ad-pool-table")).toContainText("+0.002755");
-  await expect(page.getByTestId("ad-pool-table")).toContainText("-0.000486");
+  await expect(page).toHaveURL(/cc_pool_sort=brier/);
+  await table.locator("..").locator("..").screenshot({path:testInfo.outputPath("pooling-comparison-sorted.png")});
+  await page.reload();await page.getByText("Pooling methods",{exact:true}).click();
+  await expect(sort).toHaveValue("brier");await expectPoolingComparison(table,raw.primary.scopes.complementary.brier,true);
   await page.getByText("Test directions",{exact:true}).click();
   await expect(page.locator(".ad-direction-table tbody tr")).toHaveCount(10);
   await page.getByText("ECE & downloads",{exact:true}).click();

@@ -1,12 +1,13 @@
 import {lazy,Suspense,useEffect,useState} from "react";
 import {score} from "../lib/complementarity";
 import {loadMechanisms,mechanismKey,MECHANISM_PATH,brierGain,type MechanismIndex,type MechanismView} from "../lib/typeSelectionMechanisms";
-import {decisionSummary,gainAgainstStrongSelection,initialDecisionFilters,loadDecisionPools,type DecisionFilters,type PoolMode} from "../lib/aggregationDecision";
+import {decisionSummary,initialDecisionFilters,loadDecisionPools,type DecisionFilters,type PoolMode} from "../lib/aggregationDecision";
 import {writeDecisionQuery} from "../lib/aggregationDecisionPairs";
 import type {MarketDiversityPerformancePoint} from "../types/data";
 import {RAW_POOL_PATH} from "../lib/typeSelectionNoCalibration";
 import {CAL_POOL_PATH} from "../lib/typeSelectionCalibratedPooling";
 import {UncalibratedAggregationRow,useUncalibratedMethod} from "./UncalibratedAggregationRow";
+import {PoolingComparisonTable} from "./PoolingComparisonTable";
 import "../complementarity.css";
 import "../aggregationDecision.css";
 
@@ -25,12 +26,12 @@ function PoolingEvidence({data,filters,active}:{data:MechanismData;filters:Decis
   if(!active)return null;
   if(!pools)return <div className="ad-pending" role={error?"alert":"status"}>{error||"Loading pooling scores…"}{error&&<button className="ad-link-button" onClick={()=>setAttempt(a=>a+1)}>Retry formula comparisons</button>}</div>;
   const row=mode==="raw"?pools.raw.view.primary.scopes[filters.scope]:pools.calibrated.view.primary.stages[mode][filters.scope];
-  const main=data.view.primary.scopes[filters.scope],strong=main.brier?.[6]??null;
+  const main=data.view.primary.scopes[filters.scope];
   if(row.pairs!==main.pairs||row.events!==main.events||row.targets!==main.targets)return <p role="alert">Inconsistent test support.</p>;
   const methodLabels=mode==="raw"?pools.raw.index.method_labels:pools.calibrated.index.method_labels;
   return <div className="ad-detail-body">
     <div className="ad-switch ad-pool-switch" role="group" aria-label="Supporting pooling pipeline">{([['raw','No calibration'],['input','Calibrate models → pool'],['output','Pool → calibrate output']] as const).map(([v,label])=><button key={v} aria-pressed={mode===v} onClick={()=>setMode(v)}>{label}</button>)}</div>
-    <div className="ad-table-scroll"><table className="ad-pool-table" data-testid="ad-pool-table"><thead><tr><th>Method</th><th>Brier ↓</th><th>Gain vs pipeline selection</th><th>Gain vs strong single</th></tr></thead><tbody>{[2,3,4,5,6,7,8,9].map(m=>{const own=row.brier?row.brier[0]-row.brier[m]:null,matched=gainAgainstStrongSelection(row,m,strong);return <tr key={m}><th scope="row">{methodLabels[m]}</th><td>{score(row.brier?.[m],6)}</td><td className={tone(own)}>{score(own,6,true)}</td><td className={tone(matched)}>{score(matched,6,true)}</td></tr>;})}</tbody></table></div>
+    <PoolingComparisonTable brier={row.brier} methodLabels={methodLabels} testId="ad-pool-table"/>
     <div className="ad-downloads"><a href={`${RAW_POOL_PATH}REPORT.md`}>Raw pooling report ↗</a><a href={`${CAL_POOL_PATH}REPORT.md`}>Calibrated pooling report ↗</a></div>
   </div>;
 }
