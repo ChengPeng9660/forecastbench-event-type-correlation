@@ -41,3 +41,10 @@ export function UncalibratedAggregationRow({brier,method,onChange,referenceLabel
     <td>2</td><td data-testid="ad-uncalibrated-score">{score(value,6)}</td>
   </tr>;
 }
+
+export function UncalibratedJointRow({brier}:{brier:number|null}){
+  return <tr data-testid="ad-uncalibrated-joint-row">
+    <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">6</span><b>Matched aggregation · no calibration</b></div></th>
+    <td>2</td><td>{score(brier,6)}</td>
+  </tr>;
+}

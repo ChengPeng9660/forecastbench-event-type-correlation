@@ -14,6 +14,7 @@ test("defaults to non-reversing complementary pairs and recomputes each pooled c
   await page.goto("/#complementarity");
   const section=page.locator("#complementarity"),group=section.getByLabel("Complementary-pair group",{exact:true});
   await expect(group).toHaveValue("stable");
+  await expect(section.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(6);
   await expect(section.getByTestId("ad-posthoc-label")).toHaveText("Post-hoc · test-defined groups");
   for(const cohort of ["stable","fallback","all"]){
     await group.selectOption(cohort);
@@ -28,6 +29,7 @@ test("defaults to non-reversing complementary pairs and recomputes each pooled c
         await section.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
         await section.getByLabel("Pooling table sort order",{exact:true}).selectOption("brier");
         await expectPoolingComparison(section.getByTestId("ad-pool-table"),expected[scope].pools[mode].brier,true);
+        await expect(section.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(expected[scope].pools.raw.brier[7].toFixed(6));
       }
     }
   }
@@ -53,6 +55,8 @@ test("a reversed complementary pair is excluded by default and can be opened wit
   for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
     await section.getByRole("group",{name:"Pair pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
     await expectPoolingComparison(section.getByTestId("ad-pair-pool-table"),reversed.scopes.complementary.pools[mode].brier);
+    await expect(table.locator("tbody tr")).toHaveCount(6);
+    await expect(section.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(reversed.scopes.complementary.pools.raw.brier[7].toFixed(6));
   }
   await section.getByText("Event-type selections",{exact:true}).click();
   const health=section.getByTestId("ad-pair-routes").getByRole("row").filter({hasText:"Health"});
@@ -88,6 +92,7 @@ test("market chart selection keeps the base and restricts partners to no reversa
   await block.getByLabel("Partner model",{exact:true}).selectOption(ids[0]);
   await expect(block.getByTestId("ad-stability-status")).toContainText("No type reversals");
   await expect(block.getByTestId("ad-base-ability")).toContainText(base.model.raw_brier.toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(loadPair(ids[0]).scopes.all.pools.raw.brier[7].toFixed(6));
   await block.scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath("market-stable-pairs.png")});
   await expect(page).toHaveURL(/#market-performance$/);
 });

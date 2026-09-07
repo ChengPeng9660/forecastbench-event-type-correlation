@@ -11,9 +11,19 @@ export type DecisionAggregate=Pick<MechanismAggregate,"pairs"|"events"|"targets"
 export type DecisionDirection={split:number;fold:number;scopes:Record<TestScope,DecisionAggregate>};
 export type DecisionView=Pick<MechanismView,"key"|"gap"|"coverage"|"pair_scope"> & {primary:DecisionDirection;directions:DecisionDirection[]};
 export async function loadDecisionMechanisms(key:string,signal?:AbortSignal,cohort:StabilityGroup="original"){
-  if(cohort==="original")return {...await loadMechanisms(key,signal),cohort};
+  if(cohort==="original"){
+    const [data,raw]=await Promise.all([loadMechanisms(key,signal),loadRawPooling(key,signal)]);
+    for(const scope of ["all","complementary"] as const){
+      const main=data.view.primary.scopes[scope],pool=raw.view.primary.scopes[scope];
+      if(pool.pairs!==main.pairs||pool.events!==main.events||pool.targets!==main.targets||pool.pairs>0&&(!pool.brier||!Number.isFinite(pool.brier[7])||Math.abs(pool.brier[0]-main.brier![0])>1e-9))
+        throw new Error("Uncalibrated matched aggregation does not share the published test support.");
+    }
+    return {...data,cohort,rawPrimary:raw.view.primary};
+  }
   const {index,view}=await loadStabilityView(key,signal);
-  return {index,view:{...view,...view.cohorts[cohort]} as DecisionView,cohort,counts:view.counts};
+  const primary=view.cohorts[cohort].primary;
+  return {index,view:{...view,...view.cohorts[cohort]} as DecisionView,cohort,counts:view.counts,
+    rawPrimary:{...primary,scopes:{all:primary.scopes.all.pools.raw,complementary:primary.scopes.complementary.pools.raw}}};
 }
 export function initialDecisionFilters(search:string):DecisionFilters {
   const q=new URLSearchParams(search),coverage=Number(q.get("cc_coverage")??.5);

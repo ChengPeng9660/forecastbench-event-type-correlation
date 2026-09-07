@@ -12,7 +12,7 @@ test("leads legacy section links with the matched verdict and keeps details clos
   await expect(page.getByTestId("ad-effect")).toContainText("1.31%");
   await expect(page.getByTestId("ad-facts")).toContainText("+0.001889");
   await expect(page.getByTestId("ad-facts")).toContainText("89.1%");
-  await expect(page.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(5);
+  await expect(page.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(6);
   await expect(page.getByTestId("ad-main-table")).toContainText("0.144590");
   await expect(page.getByTestId("ad-main-table")).toContainText("0.142701");
   await expect(section.locator("details[open]")).toHaveCount(0);

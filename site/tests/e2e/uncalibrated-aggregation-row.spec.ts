@@ -11,12 +11,13 @@ const signed=(value:number)=>`${value>0?"+":""}${value.toFixed(6)}`;
 test("fifth row uses the four raw formulas and the raw selection comparator for every scope",async({page})=>{
   await page.goto("/?cc_stability=original#complementarity");
   const block=page.locator("#complementarity"),row=block.getByTestId("ad-uncalibrated-row");
-  await expect(block.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(5);
+  await expect(block.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(6);
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("simple_mean");
   await block.getByText("ECE & downloads",{exact:true}).click();
   for(const scope of ["all","complementary"]){
     await block.getByRole("button",{name:scope==="all"?"All test events":"Complementary events only",exact:true}).click();
     const scores=read("type-selection-mechanisms/views/gap3-coverage50-all.json").primary.scopes[scope];
+    const joint=read("type-selection-no-calibration/views/gap3-coverage50-all.json").primary.scopes[scope];
     const firstFour=await block.getByTestId("ad-main-table").locator("tbody tr").evaluateAll(rows=>rows.slice(0,4).map(r=>r.textContent));
     for(const method of methods){
       await row.getByLabel("Uncalibrated aggregation method").selectOption(method);
@@ -24,7 +25,9 @@ test("fifth row uses the four raw formulas and the raw selection comparator for 
       await expect(row.getByTestId("ad-uncalibrated-score")).toHaveText(scores.brier[m].toFixed(6));
       await expect(row.getByTestId("ad-uncalibrated-gain")).toContainText(signed(gain));
       await expect(row.getByTestId("ad-uncalibrated-gain")).toContainText(`${(100*Math.abs(gain)/scores.brier[0]).toFixed(2)}%`);
-      await expect(block.locator(".ad-ece-table tbody tr").last()).toContainText(scores.ece[m].toFixed(6));
+      await expect(block.locator(".ad-ece-table tbody tr").nth(4)).toContainText(scores.ece[m].toFixed(6));
+      await expect(block.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(joint.brier[7].toFixed(6));
+      await expect(block.locator(".ad-ece-table tbody tr").last()).toContainText(joint.ece[7].toFixed(6));
       expect(await block.getByTestId("ad-main-table").locator("tbody tr").evaluateAll(rows=>rows.slice(0,4).map(r=>r.textContent))).toEqual(firstFour);
     }
   }
@@ -41,7 +44,7 @@ test("market pair fifth row stays uncalibrated across partner and test scope cha
   const errors:string[]=[];page.on("pageerror",error=>errors.push(error.message));
   await page.goto(`/?cc_stability=original&cc_base=${encodeURIComponent(pair.model_a)}&cc_pair=${id}&cc_raw_method=ec_w0_56#market-performance`);
   const block=page.locator("#market-type-selection"),row=block.getByTestId("ad-uncalibrated-row");
-  await expect(block.getByTestId("ad-pair-main-table").locator("tbody tr")).toHaveCount(5);
+  await expect(block.getByTestId("ad-pair-main-table").locator("tbody tr")).toHaveCount(6);
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("ec_w0_56");
   for(const scope of ["all","complementary"]){
     await block.getByRole("button",{name:scope==="all"?"All test events":"Complementary events only",exact:true}).click();
@@ -50,6 +53,7 @@ test("market pair fifth row stays uncalibrated across partner and test scope cha
       const m=index.methods.indexOf(method),scores=pair.scopes[scope];
       await expect(row.getByTestId("ad-uncalibrated-score")).toHaveText(scores.brier[m].toFixed(6));
       await expect(row.getByTestId("ad-uncalibrated-gain")).toContainText(signed(scores.brier[0]-scores.brier[m]));
+      await expect(block.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(scores.pools.raw.brier[7].toFixed(6));
       await expect(block.getByTestId("ad-pair-main-table").locator("tbody tr").nth(3)).toContainText(scores.brier[7].toFixed(6));
     }
   }
@@ -63,13 +67,14 @@ test("market pair fifth row stays uncalibrated across partner and test scope cha
   const changed=read(`aggregation-decision-pairs/pairs/${partner.slice(2,4)}.json`)[partner];
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("piecewise_odds");
   await expect(row.getByTestId("ad-uncalibrated-score")).toHaveText(changed.scopes.complementary.brier[4].toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(changed.scopes.complementary.pools.raw.brier[7].toFixed(6));
   await block.getByLabel("Partner model",{exact:true}).selectOption(id);
   await row.getByLabel("Uncalibrated aggregation method").selectOption("simple_mean");
   await page.reload();
   await expect(row.getByLabel("Uncalibrated aggregation method")).toHaveValue("simple_mean");
   await expect(row.getByTestId("ad-uncalibrated-score")).toHaveText("0.190222");
   await expect(page).toHaveURL(/#market-performance$/);
-  await block.getByTestId("ad-pair-main-table").screenshot({path:testInfo.outputPath("five-pipeline-rows.png")});
+  await block.getByTestId("ad-pair-main-table").screenshot({path:testInfo.outputPath("six-pipeline-rows.png")});
   const width=await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
   expect(width[0]).toBeLessThanOrEqual(width[1]+1);expect(errors).toEqual([]);
 });
