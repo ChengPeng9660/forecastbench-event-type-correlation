@@ -8,6 +8,7 @@ import {
 import type { AbilityGap, Dimension, PairScope, Score, StudyPair } from "../types/complementarity";
 import "../typeSelection.css";
 import TypeSelectionMechanisms from "./TypeSelectionMechanisms";
+import TypeSelectionNoCalibration from "./TypeSelectionNoCalibration";
 
 const TYPE_NAMES: Record<string, string> = {
   politics: "Politics", finance: "Finance", health: "Health", sports: "Sports",
@@ -116,6 +117,11 @@ function Experiment({ data, ...props }: Props & { data: RoutingData }) {
       history.replaceState(null, "", `${location.pathname}?${query}${location.hash}`);
       document.getElementById("type-selection-mechanisms")?.scrollIntoView({block:"start", behavior:"smooth"});
     }}>Explore why pooling can beat selection ↓</button>
+    <button className="research-button" onClick={() => {
+      const query = new URLSearchParams(location.search); query.set("cc_section", "type-selection-no-calibration");
+      history.replaceState(null,"",`${location.pathname}?${query}#complementarity`);
+      document.getElementById("type-selection-no-calibration")?.scrollIntoView({block:"start",behavior:"smooth"});
+    }}>New: compare pooling without calibration ↓</button>
     <div className="ts-controls"><div className="cc-segments" role="group" aria-label="Type-selection result view"><button aria-pressed={view === "cohort"} onClick={() => change(metric, "cohort")}>Cohort results</button><button aria-pressed={view === "pair"} onClick={() => change(metric, "pair")}>Selected pair</button></div>
       <div className="cc-segments" role="group" aria-label="Type-selection metric">{(["brier", "bi", "ece"] as const).map(value => <button key={value} aria-pressed={metric === value} onClick={() => change(value, view)}>{metricName(value)}</button>)}</div></div>
     <p className="ts-filter-context" data-testid="ts-filter-context"><strong>{currentCrossedPairs.toLocaleString()} crossed-strength pairs</strong> · Train BI gap ≤{props.abilityGap} · ≥{props.coverage * 100}% training coverage · {scopeDescription}</p>
@@ -135,6 +141,7 @@ function Experiment({ data, ...props }: Props & { data: RoutingData }) {
     </details>
     <div className="cc-downloads"><a href={`${ROUTING_PATH}REPORT.md`}>Results report ↗</a><a href={`${ROUTING_PATH}PROTOCOL.md`}>Routing protocol ↗</a><a href={`${ROUTING_PATH}primary-pairs.csv`} download>Primary pair results CSV ↗</a><a href={`${ROUTING_PATH}all-directions.csv.gz`} download>All ten directions CSV.gz ↗</a><a href={`${ROUTING_PATH}audit.json`}>Numerical audit ↗</a></div>
     <p className="cc-caption">{data.date} · Derived from ForecastBench · CC BY-SA 4.0.</p>
+    <TypeSelectionNoCalibration gap={props.abilityGap} coverage={props.coverage} pairScope={props.pairScope} />
     <TypeSelectionMechanisms gap={props.abilityGap} coverage={props.coverage} pairScope={props.pairScope} />
   </>;
 }

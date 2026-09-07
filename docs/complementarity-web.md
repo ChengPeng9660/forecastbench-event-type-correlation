@@ -65,3 +65,24 @@ The fixed settings and interpretation limits are in
 primary-pair fitted coefficients and diagnostics, 24 filter views, a source-hash
 manifest, an independent numerical audit and a report. Direct section URL:
 `?cc_section=type-selection-mechanisms#complementarity`.
+
+## Pooling without calibration (2026-09-07)
+
+`TypeSelectionNoCalibration` adds the requested raw-forecast comparison on the
+same two scopes and training filters. The four unchanged fixed methods and a
+normalized-product rule use no fitted parameters. A matched uncalibrated joint
+model fixes every preceding calibration/type coefficient at zero and fits only
+the other-forecast coefficient. Bounded log-odds and Brier probability mixtures
+provide two additional one-weight controls. A selectable same-formula duplicate
+baseline compares F(s,o) with F(s,s), preserving learned weights at evaluation.
+This distinguishes replacing a duplicate from changing confidence through the
+formula itself, without claiming independent internal evidence.
+
+```bash
+OPENBLAS_NUM_THREADS=1 python -m analysis.type_selection_no_calibration --study /path/to/complementarity_all_configurations_event_weighted_2026-09-05
+```
+
+Definitions are in `docs/type-selection-no-calibration-protocol.md`. Exported
+scores, primary pair outputs, filter views and independent audits are in
+`site/public/data/type-selection-no-calibration`. Direct section URL:
+`?cc_section=type-selection-no-calibration#complementarity`.

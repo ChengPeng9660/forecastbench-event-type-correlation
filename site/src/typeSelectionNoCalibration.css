@@ -1,0 +1,7 @@
+.nc-contract { padding: .9rem 1rem; border-left: 3px solid #bf8a16; background: #fcfaf5; color: #6d5b3d; font-size: .84rem; line-height: 1.7; margin: 1.2rem 0; }
+.nc-results { min-width: 870px; font-variant-numeric: tabular-nums; }
+.nc-group-table { min-width: 520px; }
+.nc-experiment .tm-block > h4 { font-size: 1.3rem; letter-spacing: -.025em; margin: 0 0 1.3rem; }
+.nc-experiment .tm-diagnostics article > p { overflow-wrap: anywhere; }
+.nc-experiment .tm-diagnostics article > span { display: block; line-height: 1.5; }
+.nc-experiment .tm-chart-row { min-height: 66px; }
