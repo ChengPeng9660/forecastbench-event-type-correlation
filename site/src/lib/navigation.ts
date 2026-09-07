@@ -15,7 +15,6 @@ export const RESEARCH_GROUPS = [
     description: "Fix a model, vary its partner, and compare aggregation methods on held-out events.",
     sections: [
       { id: "gain", label: "Model pairs" },
-      { id: "complementarity", label: "Selection vs aggregation" },
       { id: "fixed-focal-no-freeze", label: "Without market information" },
       { id: "without-freeze-base", label: "Information exposure" },
     ],
@@ -25,6 +24,7 @@ export const RESEARCH_GROUPS = [
     description: "Compare forecasts with Polymarket, then explore when combining them helps.",
     sections: [
       { id: "market-performance", label: "Model performance" },
+      { id: "complementarity", label: "Selection vs aggregation" },
       { id: "polymarket-aggregation", label: "Market + model" },
       { id: "freeze-correlation", label: "Market-informed models" },
       { id: "upper-left-pairs", label: "Selected model pairs" },

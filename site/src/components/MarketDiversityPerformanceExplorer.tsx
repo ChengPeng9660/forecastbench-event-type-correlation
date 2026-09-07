@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { ResearchDetails } from "./ResearchDetails";
 import { MarketWinBadge, MarketWinToggle, MarketWinVerdict } from "./MarketWinHighlight";
 import { MarketConfigurationAggregationExplorer } from "./MarketConfigurationAggregationExplorer";
@@ -25,6 +25,7 @@ import type {
 } from "../types/data";
 
 const WIDTH = 1080;
+const MarketTypeSelection=lazy(()=>import("./AggregationDecisionExplorer").then(module=>({default:module.MarketAggregationDecision})));
 const HEIGHT = 500;
 const MARGIN = { top: 32, right: 34, bottom: 78, left: 88 };
 
@@ -100,7 +101,9 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
   const [provider, setProvider] = useState("all");
   const [prompt, setPrompt] = useState<"all" | MarketPromptType>("all");
   const [information, setInformation] = useState<"all" | MarketInformationType>("all");
-  const [selectedConfiguration, setSelectedConfiguration] = useState(data.points[0]?.exact_configuration ?? "");
+  const [selectedConfiguration, setSelectedState] = useState(()=>new URLSearchParams(location.search).get("cc_base")||data.points[0]?.exact_configuration||"");
+  const setSelectedConfiguration=(exact:string)=>{setSelectedState(exact);const q=new URLSearchParams(location.search);q.set("cc_base",exact);history.replaceState(null,"",`${location.pathname}?${q}${location.hash}`);};
+  useEffect(()=>{const restore=()=>{const exact=new URLSearchParams(location.search).get("cc_base");if(exact)setSelectedState(exact);};window.addEventListener("popstate",restore);window.addEventListener("hashchange",restore);return()=>{window.removeEventListener("popstate",restore);window.removeEventListener("hashchange",restore);};},[]);
   const [pinnedBaseConfiguration, setPinnedBaseConfiguration] = useState<string | null>(null);
   const [aggregationScrollRequest, setAggregationScrollRequest] = useState(0);
   const pinnedBase = data.points.find((point) => point.exact_configuration === pinnedBaseConfiguration) ?? null;
@@ -214,7 +217,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         </div>
 
         {selected && <aside className="market-performance-inspector" aria-live="polite">
-          <p className="eyebrow">SELECTED CONFIGURATION</p>
+          <p className="eyebrow">BASE MODEL · POLYMARKET</p>
           <h3>{selected.canonical_model_version}</h3>
           <p>{selected.information_label} · {selected.prompt_label}</p>
           {selectedUnavailableNotice && <p className="model-market-unavailable">{selectedUnavailableNotice}</p>}
@@ -237,6 +240,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
           </dl>}
           <small>{selected.exact_configuration}</small>
           <div className="market-performance-aggregation-links">
+            <button type="button" className="market-performance-aggregation-cta" aria-controls="market-type-selection" onClick={()=>document.getElementById("market-type-selection")?.scrollIntoView({block:"start"})}>Selection vs aggregation ↓</button>
             <button type="button" className="market-performance-aggregation-cta" aria-controls="configuration-pair-aggregation" onClick={() => { activateConfiguration(selected.exact_configuration); setAggregationScrollRequest((value) => value + 1); }}>Explore aggregation ↓</button>
             {aggregationLinks.length > 0 && <p className="eyebrow">EARLIER EXPERIMENTS</p>}
             {aggregationLinks.map((link) => <div key={`${link.page}-${link.evaluation}`}>
@@ -258,6 +262,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <p><strong>Total variation.</strong> TV is the mean absolute probability difference between the model and its matched market forecast. It ranges from 0 to 1 and uses no outcomes. Higher TV means greater prediction diversity; it is distinct from 1 − prediction correlation.</p>
         <p><strong>Interpretation.</strong> Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
       </ResearchDetails>
+      <Suspense fallback={<div id="market-type-selection" className="research-pending" role="status">Loading selection comparison…</div>}><MarketTypeSelection base={selected} baseConfiguration={selectedConfiguration}/></Suspense>
       {pinnedBase && <MarketConfigurationAggregationExplorer base={pinnedBase} />}
       <ModelMarketAggregationExplorer
         selectedConfiguration={selectedConfiguration || null}

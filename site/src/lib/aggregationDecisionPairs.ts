@@ -21,6 +21,16 @@ export interface DecisionPairIndex {
   schema_version:1;primary_split:number;primary_fold:number;mechanism_methods:string[];
   pool_methods:string[];pool_labels:string[];pairs:DecisionPairMeta[];
 }
+export const pairHasBase=(pair:DecisionPairMeta,base:string)=>pair.model_a===base||pair.model_b===base;
+export const pairPartner=(pair:DecisionPairMeta,base:string)=>pair.model_a===base?pair.model_b:pair.model_a;
+export const pairBaseSide=(pair:DecisionPairMeta,base:string)=>pair.model_a===base?0:1;
+export function pairsForBase(pairs:DecisionPairMeta[],base:string,filters:DecisionFilters){
+  return pairs.filter(p=>pairHasBase(p,base)&&pairEligible(p,filters)).sort((a,b)=>pairPartner(a,base).localeCompare(pairPartner(b,base)));
+}
+export function writeDecisionQuery(values:Record<string,string>){
+  const q=new URLSearchParams(location.search);for(const [key,value] of Object.entries(values))q.set(key,value);
+  history.replaceState(null,"",`${location.pathname}?${q}${location.hash}`);
+}
 export function pairEligible(p:Pick<DecisionPairMeta,"train_gap"|"train_coverage"|"same_model_version"|"same_prompt"|"same_information">,f:DecisionFilters){
   return p.train_gap<=f.gap+1e-12&&p.train_coverage>=f.coverage&&(f.pairScope==="all"||f.pairScope==="different_model_version"&&!p.same_model_version||f.pairScope==="matched_conditions"&&p.same_prompt&&p.same_information);
 }

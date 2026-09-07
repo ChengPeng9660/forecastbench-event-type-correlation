@@ -135,8 +135,11 @@ is `?cc_section=aggregation-verdict#complementarity`.
 
 The concise aggregation verdict also supports `cc_result=pair&cc_pair=<published pair id>`.
 The Overall evidence / One model pair tabs preserve the training cohort and test-scope
-filters. Pair search and previous/next navigation follow alphabetical configuration
-order, not held-out performance. Exact prompt and information labels remain visible.
+filters. Base model and Partner model selectors retain exact prompt and information
+labels. Previous/next navigation stays within the selected base's eligible partners,
+ordered alphabetically rather than by held-out performance. Base/partner labels and
+training routing columns follow the reader's orientation even when the base is stored
+as the second member of the published pair.
 
 Each pair shows the same raw routing / global calibration / flexible selection / matched
 joint sequence, using its own event-equal test Brier. Positive and negative added-forecast
@@ -151,3 +154,24 @@ original experiment files. The index and a small pair shard are fetched only aft
 the individual-pair view. The export preserves source values and verifies 3,840 primary
 mean scores across all 24 cohort settings against the existing mechanism/raw/calibrated
 publications. `provenance.json` records source hashes and the validation count.
+
+## Select the base in Markets
+
+The first Markets scatter now selects the base for a compact Selection vs aggregation
+block immediately below it. Its inspector shows `BASE MODEL · POLYMARKET` and a
+button that scrolls to the comparison. Clicking or keyboard-selecting a point updates
+the experiment's exact base; only the Partner model selector is editable inside the
+embedded comparison. `cc_base` and `cc_pair` preserve the selection across refreshes,
+while changes to the experiment controls retain `#market-performance`.
+
+The compact ability strip copies Brier, BI and event support from the selected chart
+point. These scores use that configuration's shared Polymarket events across event
+types; they are not full ForecastBench scores or scores on a partner-specific test
+intersection. They remain fixed when the partner or experiment test scope changes.
+The aggregation table still reads the original experiment's held-out results. A base
+without an eligible partner stays selected and shows an empty comparison.
+
+The Selection vs aggregation navigation entry follows Model performance inside
+Markets. Long explanatory paragraphs have been removed from the concise views;
+score tables, controls, comparator labels and collapsed supporting evidence remain.
+The full research explorer and its methods remain available at the existing URL.

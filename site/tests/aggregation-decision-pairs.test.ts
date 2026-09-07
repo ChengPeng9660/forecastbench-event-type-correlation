@@ -2,12 +2,23 @@ import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {afterEach,describe,expect,it,vi} from "vitest";
 import {initialDecisionFilters} from "../src/lib/aggregationDecision";
-import {loadDecisionPair,loadDecisionPairIndex,pairEligible,pairDecisionSummary,searchDecisionPairs,type DecisionPairIndex,type DecisionPair} from "../src/lib/aggregationDecisionPairs";
+import {loadDecisionPair,loadDecisionPairIndex,pairEligible,pairDecisionSummary,searchDecisionPairs,pairsForBase,pairBaseSide,pairPartner,type DecisionPairIndex,type DecisionPair} from "../src/lib/aggregationDecisionPairs";
 const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data",p),"utf8"));
 const index:DecisionPairIndex=read("aggregation-decision-pairs/index.json");
 const pair=(id:string):DecisionPair=>read(`aggregation-decision-pairs/pairs/${id.slice(2,4)}.json`)[id];
 afterEach(()=>vi.unstubAllGlobals());
 describe("individual pair evidence",()=>{
+  it("keeps exact base configurations and reverses role labels without changing scores",()=>{
+    const p=pair("p-feba1dc1f7ef"),f=initialDecisionFilters("");
+    for(const base of [p.model_a,p.model_b]){
+      const partners=pairsForBase(index.pairs,base,f);
+      expect(partners.every(v=>v.model_a===base||v.model_b===base)).toBe(true);
+      expect(partners.some(v=>v.id===p.id)).toBe(true);
+      expect(pairPartner(p,base)).toBe(base===p.model_a?p.model_b:p.model_a);
+      expect(pairBaseSide(p,base)).toBe(base===p.model_a?0:1);
+    }
+    expect(pairsForBase(index.pairs,"missing exact configuration",f)).toEqual([]);
+  });
   it("reproduces the eligible primary pair counts for every cohort",()=>{
     const mechanisms=read("type-selection-mechanisms/index.json");
     for(const key of mechanisms.views){

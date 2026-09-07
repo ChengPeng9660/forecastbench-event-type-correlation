@@ -11,7 +11,7 @@ vi.mock("../src/components/ModelMarketAggregationExplorer", () => ({ ModelMarket
 
 const original = payload as unknown as MarketDiversityPerformanceData;
 const data: MarketDiversityPerformanceData = { ...original, points: configurations.map((item) => ({ ...original.points[0], ...item })) };
-beforeEach(() => vi.stubGlobal("fetch", vi.fn(fixtureFetch)));
+beforeEach(() => { history.replaceState(null,"","/"); vi.stubGlobal("fetch", vi.fn(fixtureFetch)); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 describe("overview-to-aggregation activation", () => {

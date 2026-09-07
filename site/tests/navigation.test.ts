@@ -20,6 +20,8 @@ describe("public research navigation", () => {
   });
 
   it("shows shared atlas filters only where they actually apply", () => {
+    expect(researchGroupFor("complementarity")?.id).toBe("markets");
+    expect(researchGroupFor("complementarity")?.sections[1].id).toBe("complementarity");
     expect(usesAtlasFilters("matrix")).toBe(true);
     expect(usesAtlasFilters("ranking")).toBe(true);
     expect(usesAtlasFilters("model-view")).toBe(true);
