@@ -5,7 +5,7 @@ import {DECISION_PAIR_PATH,loadDecisionPairIndex,loadDecisionPair,pairDecisionSu
 import type {MarketDiversityPerformancePoint} from "../types/data";
 import {UNCALIBRATED_METHODS,UncalibratedAggregationRows,UncalibratedJointRow} from "./UncalibratedAggregationRow";
 import {PoolingComparisonTable} from "./PoolingComparisonTable";
-import {STABILITY_PATH,type StabilityGroup} from "../lib/aggregationStability";
+import {STABILITY_PATH} from "../lib/aggregationStability";
 
 const pct=(v:number|null,digits=1)=>v==null?"—":`${(100*v).toFixed(digits)}%`;
 const color=(v:number)=>v>1e-10?"ad-positive":v< -1e-10?"ad-negative":"";
@@ -45,7 +45,7 @@ function PairEvidence({pair,index,filters,base}:{pair:DecisionPair;index:Decisio
 }
 
 function querySelection(){const q=new URLSearchParams(location.search);return {id:q.get("cc_pair")??"",base:q.get("cc_base")??""};}
-export default function AggregationPairDecision({filters,baseConfiguration,marketBase,onStabilityChange}:{filters:DecisionFilters;baseConfiguration?:string;marketBase?:MarketDiversityPerformancePoint|null;onStabilityChange:(group:StabilityGroup)=>void}){
+export default function AggregationPairDecision({filters,baseConfiguration,marketBase}:{filters:DecisionFilters;baseConfiguration?:string;marketBase?:MarketDiversityPerformancePoint|null}){
   const [index,setIndex]=useState<DecisionPairIndex|null>(null),[pair,setPair]=useState<DecisionPair|null>(null);
   const [error,setError]=useState(""),[pairError,setPairError]=useState(""),[attempt,setAttempt]=useState(0),[pairAttempt,setPairAttempt]=useState(0);
   const [selection,setSelection]=useState(querySelection);
@@ -66,6 +66,6 @@ export default function AggregationPairDecision({filters,baseConfiguration,marke
     <div className="ad-pair-picker">{baseConfiguration===undefined?<label>Base model<select aria-label="Base model" value={base} onChange={e=>{setSelection({id:"",base:e.target.value});writeDecisionQuery({cc_base:e.target.value,cc_pair:""});}}>{base&&!models.includes(base)&&<option value={base}>{base}</option>}{models.map(model=><option key={model} value={model}>{model}</option>)}</select></label>:<div className="ad-fixed-base"><span>BASE MODEL · MARKET CHART</span><b>{base}</b></div>}<label>Partner model<select aria-label="Partner model" value={meta?.id??""} onChange={e=>choose(e.target.value)}><option value="" disabled>Select partner</option>{eligible.map(p=><option key={p.id} value={p.id}>{pairPartner(p,base)}</option>)}</select></label></div>
     {marketBase&&marketBase.exact_configuration===base&&<div className="ad-base-ability" data-testid="ad-base-ability"><span>POLYMARKET · ALL EVENT TYPES</span><b>Brier {score(marketBase.model.raw_brier,6)}</b><b>BI {score(marketBase.model.brier_index,2)}</b><span>{marketBase.n_events} events</span></div>}
     <div className="ad-pair-browse"><span>{eligible.length} eligible partners</span><div><button onClick={()=>choose(eligible[position-1].id)} disabled={position<=0}>← Previous partner</button><span>{position>=0?`${position+1} / ${eligible.length}`:"—"}</span><button onClick={()=>choose(eligible[position+1].id)} disabled={position<0||position>=eligible.length-1}>Next partner →</button></div></div>
-    {!meta?<div role="status" className="ad-pending">{eligible.length?"Selected pair is outside the current filters. Select a partner.":"No eligible partners for this base model and training scope."}{saved?.stability&&saved.stability!=="no_reversal"&&filters.stability==="stable"&&<><span className="ad-empty-reversal">This complementary pair has {saved.stability==="reversed"?"a type reversal":"an unverified type"}.</span><button className="ad-link-button" onClick={()=>onStabilityChange("fallback")}>View this pair with overall fallback</button></>}</div>:!pair||pair.id!==meta.id?<div className="ad-pending" role={pairError?"alert":"status"}>{pairError||"Loading pair scores…"}{pairError&&<button className="ad-link-button" onClick={()=>setPairAttempt(v=>v+1)}>Retry selected pair</button>}</div>:<PairEvidence key={pair.id} pair={pair} index={index} filters={filters} base={base}/>}
+    {!meta?<div role="status" className="ad-pending">{eligible.length?"Selected pair is outside the current filters. Select a partner.":"No eligible partners for this base model and training scope."}{saved?.stability&&saved.stability!=="no_reversal"&&filters.stability==="stable"&&<span className="ad-empty-reversal">This pair is outside the No reversals group. Choose a listed partner to view results.</span>}</div>:!pair||pair.id!==meta.id?<div className="ad-pending" role={pairError?"alert":"status"}>{pairError||"Loading pair scores…"}{pairError&&<button className="ad-link-button" onClick={()=>setPairAttempt(v=>v+1)}>Retry selected pair</button>}</div>:<PairEvidence key={pair.id} pair={pair} index={index} filters={filters} base={base}/>}
   </section>;
 }

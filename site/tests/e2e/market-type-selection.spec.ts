@@ -4,14 +4,14 @@ import {resolve} from "node:path";
 import type {DecisionPairIndex,DecisionPair} from "../../src/lib/aggregationDecisionPairs";
 import type {MarketDiversityPerformanceData} from "../../src/types/data";
 
-const index=JSON.parse(readFileSync(resolve("public/data/aggregation-decision-pairs/index.json"),"utf8")) as DecisionPairIndex;
+const index=JSON.parse(readFileSync(resolve("public/data/aggregation-stability/index.json"),"utf8")) as DecisionPairIndex;
 const market=JSON.parse(readFileSync(resolve("public/data/polymarket-aggregation/market-diversity-performance.json"),"utf8")) as MarketDiversityPerformanceData;
 const filters={gap:3 as const,coverage:.5,pairScope:"all" as const,scope:"all" as const};
-const pairsForBase=(pairs:DecisionPairIndex["pairs"],base:string,_filters:typeof filters)=>pairs.filter(p=>(p.model_a===base||p.model_b===base)&&p.train_gap<=3+1e-12&&p.train_coverage>=.5).sort((a,b)=>(a.model_a===base?a.model_b:a.model_a).localeCompare(b.model_a===base?b.model_b:b.model_a));
+const pairsForBase=(pairs:DecisionPairIndex["pairs"],base:string,_filters:typeof filters)=>pairs.filter(p=>p.stability==="no_reversal"&&(p.model_a===base||p.model_b===base)&&p.train_gap<=3+1e-12&&p.train_coverage>=.5).sort((a,b)=>(a.model_a===base?a.model_b:a.model_a).localeCompare(b.model_a===base?b.model_b:b.model_a));
 const pairBaseSide=(p:DecisionPair,base:string)=>p.model_a===base?0:1;
 const available=market.points.filter(p=>pairsForBase(index.pairs,p.exact_configuration,filters).length>=2);
 const bases=[available.find(p=>p.canonical_model_version.startsWith("GPT-5-"))!,available.find(p=>p.canonical_model_version.startsWith("Claude-3-5"))!];
-const pair=(id:string):DecisionPair=>JSON.parse(readFileSync(resolve(`public/data/aggregation-decision-pairs/pairs/${id.slice(2,4)}.json`),"utf8"))[id];
+const pair=(id:string):DecisionPair=>JSON.parse(readFileSync(resolve(`public/data/aggregation-stability/pairs/${id.slice(2,4)}.json`),"utf8"))[id];
 
 test("the first market chart selects the base for the following experiment",async({page},testInfo)=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));

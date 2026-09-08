@@ -44,3 +44,19 @@ export function UncalibratedJointRow({brier,ece,referenceBrier,referenceLabel="t
     <td data-testid="ad-uncalibrated-joint-ece">{score(ece,6)}</td>
   </tr>;
 }
+
+export function EventTypeJointRow({brier,ece,referenceBrier,globalBrier,globalEce,referenceLabel="type selection"}:{brier:number|null;ece:number|null;referenceBrier:number|null;globalBrier:number|null;globalEce:number|null;referenceLabel?:string}){
+  const globalBrierGain=globalBrier!=null&&brier!=null?globalBrier-brier:null;
+  const globalEceGain=globalEce!=null&&ece!=null?globalEce-ece:null;
+  return <tr className="ad-raw-joint-row ad-raw-typewise-row" data-testid="ad-event-type-joint-row">
+    <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">4</span><div className="ad-raw-method">
+      <span className="ad-raw-kind">Learned by event type · exploratory</span>
+      <b>Matched aggregation · event-type weights</b>
+      <small className="ad-raw-description">One train-fitted λ per supported type · no calibration</small>
+      {brier!=null&&referenceBrier!=null&&<Gain before={referenceBrier} after={brier} referenceLabel={referenceLabel} testId="ad-event-type-joint-gain"/>}
+      {globalBrierGain!=null&&globalEceGain!=null&&<small className="ad-typewise-global" data-testid="ad-event-type-vs-global">Vs global weight · Brier {score(globalBrierGain,6,true)} · ECE {score(globalEceGain,6,true)}</small>}
+    </div></div></th>
+    <td data-testid="ad-event-type-joint-brier">{score(brier,6)}</td>
+    <td data-testid="ad-event-type-joint-ece">{score(ece,6)}</td>
+  </tr>;
+}

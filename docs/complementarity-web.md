@@ -222,3 +222,54 @@ primary fitted coefficients, per-pair shards and 24 filtered cohort views are
 published under `site/public/data/aggregation-stability/`. Export requires
 independent event-level score reconstruction, unchanged-score checks against
 the original publication, and primary cohort reconstruction from pair records.
+
+## Event-type matched aggregation row (2026-09-08)
+
+The overall pipeline table now adds `Matched aggregation · event-type weights`
+after the global no-calibration coefficient. Each supported training event type
+fits its own coefficient on the other-minus-selected log-odds difference; types
+with fewer than 30 training events and unseen types use the published pooled
+fallback. The row reports both Brier and ECE, its Brier gain against the displayed
+selection baseline, and separate Brier/ECE gains against the global coefficient.
+
+The row is available for the original training-only routing population and the
+default no-reversal cohort, where its selected/other roles and test support match
+the surrounding table. It is deliberately omitted for the overall-fallback and
+mixed-policy cohorts: those views replace the selected model after inspecting
+test reversal status, but the event-type experiment does not refit coefficients
+under that changed policy. The UI explains the omission instead of joining
+incomparable scores.
+
+An expandable evidence table retains all ten fixed directions and reports gains
+against both raw selection and the global coefficient. Report, protocol,
+coefficient summary, and audit downloads are linked from the same disclosure.
+The published data contract verifies the frozen method identities, complete
+directions, cohort partition, shared support, and exact reproduction of the raw
+selection and global-weight columns before displaying the new result.
+
+Reproduce the publication with:
+
+```sh
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m analysis.typewise_matched_aggregation --study /path/to/complementarity_all_configurations_event_weighted_2026-09-05 --output site/public/data/typewise-matched-aggregation --workers 4
+```
+
+The locked protocol is `docs/typewise-matched-aggregation-protocol.md`; frontend
+artifacts are published under `site/public/data/typewise-matched-aggregation/`.
+This remains an exploratory no-calibration result. No existing selection,
+scoring, ranking, fallback, or pair-level calculation is changed.
+
+## Temporary No reversals presentation scope (2026-09-09)
+
+The aggregation verdict and its Markets-embedded pair view now display only
+No reversals. The cohort picker is replaced by a fixed label, and legacy
+`cc_stability=fallback|all|original` links normalize to `stable`. Reversed or
+unverified pair bookmarks show an empty state and eligible partners, without
+a link to fallback results. The full research explorer entry is hidden from
+the focused verdict; the archived explorer remains available at its existing
+direct URL.
+
+Both all-test-event and complementary-event scopes remain available within
+No reversals, together with study filters, model-pair browsing and the existing
+2–4-model no-reversal explorer. The test-defined cohort label stays visible.
+This is a presentation change: experimental outputs, archived cohort loaders,
+scoring, routing, fitted coefficients and calibration behavior are unchanged.

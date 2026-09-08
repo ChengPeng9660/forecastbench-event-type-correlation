@@ -13,7 +13,7 @@ describe("post-hoc no-reversal pairs and training-overall fallback",()=>{
   it("defaults to no reversals and keeps cohort grouping separate from test scopes",()=>{
     expect(initialDecisionFilters("").stability).toBe("stable");
     expect(initialDecisionFilters("?cc_stability=unknown").stability).toBe("stable");
-    expect(initialDecisionFilters("?cc_stability=fallback&cc_test_scope=complementary")).toMatchObject({stability:"fallback",scope:"complementary"});
+    expect(initialDecisionFilters("?cc_stability=fallback&cc_test_scope=complementary")).toMatchObject({stability:"stable",scope:"complementary"});
   });
   it("retains only originally complementary pairs and validates every primary policy",()=>{
     const original=read("aggregation-decision-pairs/index.json");
@@ -56,12 +56,12 @@ describe("post-hoc no-reversal pairs and training-overall fallback",()=>{
     expect(p.stability).toBe("reversed");expect(p.overall_choice).toBe(0);
     expect(p.routes.find(r=>r.type==="health")).toMatchObject({train_events:30,test_events:29,test_status:"reversed",policy_selected:0});
     expect(pairEligible(p,initialDecisionFilters(""))).toBe(false);
-    expect(pairEligible(p,initialDecisionFilters("?cc_stability=fallback"))).toBe(true);
+    expect(pairEligible(p,{...initialDecisionFilters(""),stability:"fallback"})).toBe(true);
     expect(p.scopes.complementary.brier[0]).toBeCloseTo(.19803627545510083,12);
     expect(p.scopes.complementary.single_brier[1]).toBeLessThan(p.scopes.complementary.brier[0]);
     for(const mode of ["raw","input","output"] as const)expect(p.scopes.complementary.pools[mode].brier.slice(2,6)).toEqual(old.scopes.complementary.pools[mode].brier.slice(2,6));
     expect(p.scopes.complementary.pools.output.brier[0]).not.toBe(old.scopes.complementary.pools.output.brier[0]);
-    const summary=pairDecisionSummary(p,initialDecisionFilters("?cc_stability=fallback"));
+    const summary=pairDecisionSummary(p,{...initialDecisionFilters(""),stability:"fallback"});
     expect(summary.directions.every(d=>d.stability!=="no_reversal")).toBe(true);
   });
   it("loads the new source and preserves the same support in all calibration modes",async()=>{

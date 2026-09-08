@@ -2,7 +2,7 @@ import {expect,test} from "@playwright/test";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {expectPoolingComparison} from "./pooling-comparison-check";
-const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data/aggregation-decision-pairs",p),"utf8"));
+const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data/aggregation-stability",p),"utf8"));
 const id="p-feba1dc1f7ef",pair=read("pairs/fe.json")[id];
 
 test("opens base and partner controls while retaining the exact raw scores",async({page},testInfo)=>{
@@ -10,7 +10,7 @@ test("opens base and partner controls while retaining the exact raw scores",asyn
   page.on("request",r=>requests.push(r.url()));page.on("pageerror",e=>errors.push(e.message));
   await page.goto("/?cc_stability=original#complementarity");
   const section=page.locator("#complementarity");
-  await expect(section.getByTestId("ad-effect")).toContainText("1.77%");
+  await expect(section.getByTestId("ad-effect")).toContainText("1.42%");
   expect(requests.some(u=>u.includes("/aggregation-decision-pairs/"))).toBe(false);
   await section.getByRole("button",{name:"One model pair",exact:true}).click();
   await section.getByLabel("Base model",{exact:true}).selectOption(pair.model_a);
@@ -57,7 +57,7 @@ test("pins the base while browsing partners and orients both sides correctly",as
   await expect(section.getByRole("status")).toContainText(/outside the current filters|No eligible partners/);
   await expect(section.getByTestId("ad-effect")).toHaveCount(0);
   await section.getByRole("button",{name:"Overall evidence",exact:true}).click();
-  await expect(section.getByTestId("ad-effect")).toContainText("1.60%");
+  await expect(section.getByTestId("ad-effect")).toContainText("1.24%");
 });
 
 test("pair pooling compares selection and four pools with persistent Brier sorting",async({page},testInfo)=>{
@@ -79,7 +79,7 @@ test("pair pooling compares selection and four pools with persistent Brier sorti
   await expect(sort).toHaveValue("brier");await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier,true);
   await sort.selectOption("method");await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier);
   await section.getByText("Test directions",{exact:true}).click();
-  await expect(section.getByTestId("ad-pair-directions").locator("tbody tr")).toHaveCount(pair.directions.filter((d:any)=>d.train_gap<=3+1e-12&&d.train_coverage>=.5).length);
+  await expect(section.getByTestId("ad-pair-directions").locator("tbody tr")).toHaveCount(pair.directions.filter((d:any)=>d.stability==="no_reversal"&&d.train_gap<=3+1e-12&&d.train_coverage>=.5).length);
   await section.getByText("Event-type selections",{exact:true}).click();
   await expect(section.getByTestId("ad-pair-routes").locator("tbody tr")).toHaveCount(pair.routes.length);
   const width=await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);expect(width[0]).toBeLessThanOrEqual(width[1]+1);
@@ -87,7 +87,7 @@ test("pair pooling compares selection and four pools with persistent Brier sorti
 
 test("pair data failure supports retry without stale scores",async({page})=>{
   let fail=true;
-  await page.route("**/aggregation-decision-pairs/pairs/fe.json",async route=>{if(fail)await route.fulfill({status:503,body:"Unavailable"});else await route.continue();});
+  await page.route("**/aggregation-stability/pairs/fe.json",async route=>{if(fail)await route.fulfill({status:503,body:"Unavailable"});else await route.continue();});
   await page.goto(`/?cc_stability=original&cc_result=pair&cc_pair=${id}#complementarity`);
   const section=page.locator("#complementarity");
   await expect(section.getByRole("alert")).toContainText("503");

@@ -48,7 +48,7 @@ test('changing inclusion order and final team rebinds every score, and pair view
  await checkRows(block,path,data,'complementary','calibrated');
  await block.getByLabel('Number of models',{exact:true}).selectOption('3');await expect(block.getByTestId('mm-results').locator('tbody tr')).toHaveCount(2);
  await block.getByLabel('Number of models',{exact:true}).selectOption('2');await expect(block.getByTestId('mm-results').locator('tbody tr')).toHaveCount(1);
- await block.getByRole('button',{name:'Overall evidence',exact:true}).click();await expect(block.getByTestId('ad-main-table').locator('tbody tr')).toHaveCount(6);
+ await block.getByRole('button',{name:'Overall evidence',exact:true}).click();await expect(block.getByTestId('ad-main-table').locator('tbody tr')).toHaveCount(7);
  await block.getByRole('button',{name:'2–4 models',exact:true}).click();await expect(block.getByLabel('Number of models',{exact:true})).toHaveValue('2');
 });
 

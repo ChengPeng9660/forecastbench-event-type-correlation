@@ -7,13 +7,14 @@ const index=read("type-selection-mechanisms/index.json");
 const methods=["simple_mean","log_odds_mean","ec_w0_56","piecewise_odds"];
 const labels:Record<string,string>={simple_mean:"Simple mean",log_odds_mean:"Log-odds mean",ec_w0_56:"EC · w = 0.56",piecewise_odds:"Piecewise odds"};
 const signed=(value:number)=>`${value>0?"+":""}${value.toFixed(6)}`;
-const marketId="p-8ff6126fb390",marketPair=read("aggregation-decision-pairs/pairs/8f.json")[marketId];
+const marketId="p-cfe6642e611e",marketPair=read("aggregation-stability/pairs/cf.json")[marketId];
 const featuredId="p-cfe6642e611e",featuredPair=read("aggregation-stability/pairs/cf.json")[featuredId];
+const typewise=read("typewise-matched-aggregation/views/gap3-coverage50-all.json");
 
 test("expands all four raw rules and removes the three calibrated rows",async({page})=>{
   await page.goto("/?cc_stability=original#complementarity");
   const block=page.locator("#complementarity"),table=block.getByTestId("ad-main-table");
-  await expect(table.locator("tbody tr")).toHaveCount(6);
+  await expect(table.locator("tbody tr")).toHaveCount(7);
   await expect(table.getByText("Calibrated selection",{exact:true})).toHaveCount(0);
   await expect(table.getByText("Strong single-forecast baseline",{exact:true})).toHaveCount(0);
   await expect(table.getByText("Matched aggregation",{exact:true})).toHaveCount(0);
@@ -23,8 +24,8 @@ test("expands all four raw rules and removes the three calibrated rows",async({p
   await block.getByText("ECE & downloads",{exact:true}).click();
   for(const scope of ["all","complementary"]){
     await block.getByRole("button",{name:scope==="all"?"All test events":"Complementary events only",exact:true}).click();
-    const scores=read("type-selection-mechanisms/views/gap3-coverage50-all.json").primary.scopes[scope];
-    const joint=read("type-selection-no-calibration/views/gap3-coverage50-all.json").primary.scopes[scope];
+    const scores=read("aggregation-stability/views/gap3-coverage50-all.json").cohorts.stable.primary.scopes[scope];
+    const joint=scores.pools.raw;
     for(const method of methods){
       const m=index.methods.indexOf(method),row=block.getByTestId(`ad-uncalibrated-row-${method}`);
       await expect(row).toContainText(labels[method]);
@@ -37,10 +38,16 @@ test("expands all four raw rules and removes the three calibrated rows",async({p
     await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(joint.brier[7].toFixed(6));
     await expect(block.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(joint.ece[7].toFixed(6));
     await expect(block.getByTestId("ad-uncalibrated-joint-gain")).toContainText(signed(joint.brier[0]-joint.brier[7]));
+    const eventType=typewise.cohorts.no_reversal.primary.scopes[scope];
+    await expect(block.getByTestId("ad-event-type-joint-brier")).toHaveText(eventType.brier[2].toFixed(6));
+    await expect(block.getByTestId("ad-event-type-joint-ece")).toHaveText(eventType.ece[2].toFixed(6));
+    await expect(block.getByTestId("ad-event-type-joint-gain")).toContainText(signed(eventType.brier[0]-eventType.brier[2]));
+    await expect(block.getByTestId("ad-event-type-vs-global")).toContainText(`ECE ${signed(eventType.ece[1]-eventType.ece[2])}`);
+    await expect(block.getByTestId("ad-event-type-ece-summary")).toContainText(eventType.ece[2].toFixed(6));
   }
   await block.getByText("Change study scope",{exact:true}).click();
   await block.getByLabel("Verdict training ability gap",{exact:true}).selectOption("5");
-  const changed=read("type-selection-mechanisms/views/gap5-coverage50-all.json").primary.scopes.complementary;
+  const changed=read("aggregation-stability/views/gap5-coverage50-all.json").cohorts.stable.primary.scopes.complementary;
   for(const method of methods){
     const m=index.methods.indexOf(method);
     await expect(block.getByTestId(`ad-uncalibrated-score-${method}`)).toHaveText(changed.brier[m].toFixed(6));
@@ -49,6 +56,7 @@ test("expands all four raw rules and removes the three calibrated rows",async({p
   await page.reload();
   await expect(block.getByTestId("ad-uncalibrated-row-simple_mean")).toBeVisible();
   await expect(block.getByTestId("ad-uncalibrated-row-piecewise_odds")).toBeVisible();
+  await expect(block.getByTestId("ad-event-type-joint-row")).toBeVisible();
 });
 
 test("shows the selected pair's complementary event types and specialist side",async({page},testInfo)=>{
@@ -87,9 +95,10 @@ test("market pair keeps every raw rule expanded across partner and scope changes
       await expect(table.getByTestId(`ad-uncalibrated-gain-${method}`)).toContainText(signed(scores.brier[0]-scores.brier[m]));
     }
   }
-  await block.getByRole("button",{name:"Previous partner",exact:false}).click();
+  const nextPartner=await block.getByLabel("Partner model",{exact:true}).locator("option").evaluateAll(options=>options.map(o=>(o as HTMLOptionElement).value).find(value=>value&&value!=="p-cfe6642e611e")!);
+  await block.getByLabel("Partner model",{exact:true}).selectOption(nextPartner);
   const partner=await block.getByLabel("Partner model",{exact:true}).inputValue();
-  const changed=read(`aggregation-decision-pairs/pairs/${partner.slice(2,4)}.json`)[partner];
+  const changed=read(`aggregation-stability/pairs/${partner.slice(2,4)}.json`)[partner];
   for(const method of methods){
     const m=index.methods.indexOf(method);
     await expect(table.getByTestId(`ad-uncalibrated-score-${method}`)).toHaveText(changed.scopes.complementary.brier[m].toFixed(6));
