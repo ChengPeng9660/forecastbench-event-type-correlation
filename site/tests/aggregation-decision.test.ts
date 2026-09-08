@@ -7,8 +7,8 @@ const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data",p),"utf8"))
 afterEach(()=>vi.unstubAllGlobals());
 describe("aggregation verdict uses the strong matched comparator",()=>{
   it("keeps historical global atlas filters separate and validates the three study filters",()=>{
-    expect(initialDecisionFilters("?type=finance_economics&metric=adjusted_pog&cc_gap=100&cc_scope=bad&cc_coverage=0.9")).toEqual({gap:3,pairScope:"all",coverage:.5,scope:"all",stability:"stable"});
-    expect(initialDecisionFilters("?cc_gap=5&cc_scope=matched_conditions&cc_coverage=0.8&cc_test_scope=complementary")).toEqual({gap:5,pairScope:"matched_conditions",coverage:.8,scope:"complementary",stability:"stable"});
+    expect(initialDecisionFilters("?type=finance_economics&metric=adjusted_pog&cc_gap=100&cc_scope=bad&cc_coverage=0.9")).toEqual({gap:3,pairScope:"all",coverage:.5,scope:"complementary",stability:"stable"});
+    expect(initialDecisionFilters("?cc_gap=5&cc_scope=matched_conditions&cc_coverage=0.8&cc_test_scope=all")).toEqual({gap:5,pairScope:"matched_conditions",coverage:.8,scope:"complementary",stability:"stable"});
   });
   it("uses flexible selection versus the matched joint in every published view",()=>{
     const index=read("type-selection-mechanisms/index.json");

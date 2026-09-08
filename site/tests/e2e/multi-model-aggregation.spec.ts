@@ -18,16 +18,16 @@ async function checkRows(block:any,path:number[],team:any,scope:string,mode:stri
  }
 }
 
-test('model-count growth uses matched support in both scopes and calibration modes',async({page},testInfo)=>{
+test('model-count growth uses matched complementary support in both calibration modes',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(selectedUrl());
  const block=page.locator('#complementarity');
  await expect(block.getByRole('button',{name:'2–4 models',exact:true})).toHaveAttribute('aria-pressed','true');
  await expect(block.getByTestId('mm-explorer')).toContainText('Every model has a specialty');
- for(const [scope,label] of [['all','All test events'],['complementary','Complementary events only']]){
-  await block.getByRole('button',{name:label,exact:true}).click();
-  for(const [mode,label] of [['calibrated','Match + calibrate'],['raw','Match only · no calibration']]){
-   await block.getByRole('button',{name:label,exact:true}).click();await checkRows(block,four.paths[0],record,scope,mode);
-  }
+ await expect(block.getByTestId('ad-test-scope-label')).toHaveText('Complementary events only');
+ await expect(block.getByRole('button',{name:'All test events',exact:true})).toHaveCount(0);
+ await expect(block.locator('.mm-context')).not.toContainText('Post-hoc');
+ for(const [mode,label] of [['calibrated','Match + calibrate'],['raw','Match only · no calibration']]){
+  await block.getByRole('button',{name:label,exact:true}).click();await checkRows(block,four.paths[0],record,'complementary',mode);
  }
  await block.getByRole('button',{name:'Match + calibrate',exact:true}).click();
  await block.getByText('Type specialists',{exact:true}).click();

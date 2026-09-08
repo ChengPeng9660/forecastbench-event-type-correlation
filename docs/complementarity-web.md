@@ -268,8 +268,13 @@ a link to fallback results. The full research explorer entry is hidden from
 the focused verdict; the archived explorer remains available at its existing
 direct URL.
 
-Both all-test-event and complementary-event scopes remain available within
-No reversals, together with study filters, model-pair browsing and the existing
-2–4-model no-reversal explorer. The test-defined cohort label stays visible.
+The focused results use complementary events only; the All test events switch
+is removed and legacy `cc_test_scope=all` links normalize to `complementary`.
+The same scope applies to overall evidence, model pairs, Markets and 2–4 models.
+Study filters and model-pair browsing remain available. Pair metadata, reversal
+explanations, the duplicated Polymarket ability summary, the eligible-partner
+count, Test directions disclosures and the Post-hoc context annotation are
+removed from the focused UI. Study protocols and downloadable evidence retain
+the full methodology and provenance.
 This is a presentation change: experimental outputs, archived cohort loaders,
 scoring, routing, fitted coefficients and calibration behavior are unchanged.

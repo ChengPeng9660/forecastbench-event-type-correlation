@@ -262,7 +262,7 @@ export function MarketDiversityPerformanceExplorer({ data }: { data: MarketDiver
         <p><strong>Total variation.</strong> TV is the mean absolute probability difference between the model and its matched market forecast. It ranges from 0 to 1 and uses no outcomes. Higher TV means greater prediction diversity; it is distinct from 1 − prediction correlation.</p>
         <p><strong>Interpretation.</strong> Correlations are descriptive and do not establish that diversity causes forecasting quality.</p>
       </ResearchDetails>
-      <Suspense fallback={<div id="market-type-selection" className="research-pending" role="status">Loading selection comparison…</div>}><MarketTypeSelection base={selected} baseConfiguration={selectedConfiguration}/></Suspense>
+      <Suspense fallback={<div id="market-type-selection" className="research-pending" role="status">Loading selection comparison…</div>}><MarketTypeSelection baseConfiguration={selectedConfiguration}/></Suspense>
       {pinnedBase && <MarketConfigurationAggregationExplorer base={pinnedBase} />}
       <ModelMarketAggregationExplorer
         selectedConfiguration={selectedConfiguration || null}

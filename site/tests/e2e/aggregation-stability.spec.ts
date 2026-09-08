@@ -16,34 +16,31 @@ test("defaults to non-reversing complementary pairs and recomputes each pooled c
   const section=page.locator("#complementarity"),group=section.getByTestId("ad-cohort-label");
   await expect(group).toHaveText("No reversals");
   await expect(section.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
-  await expect(section.getByTestId("ad-posthoc-label")).toHaveText("Post-hoc · test-defined group");
+  await expect(section.getByTestId("ad-posthoc-label")).toHaveCount(0);
+  await expect(section.getByTestId("ad-test-scope-label")).toHaveText("Complementary events only");
   for(const cohort of ["stable","fallback","all","original"]){
-    await page.goto(`/?cc_stability=${cohort}#complementarity`);
+    await page.goto(`/?cc_stability=${cohort}&cc_test_scope=all#complementarity`);
     await expect(page).toHaveURL(/cc_stability=stable/);
+    await expect(page).toHaveURL(/cc_test_scope=complementary/);
     await expect(group).toHaveText("No reversals");
     await expect(section.getByLabel("Complementary-pair group",{exact:true})).toHaveCount(0);
     const expected=view.cohorts.stable.primary.scopes;
     await expect(section.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
     await expect(section.getByTestId("ad-event-type-joint-row")).toHaveCount(1);
     await expect(section.getByTestId("ad-event-type-unavailable")).toHaveCount(0);
-    await expect(section.getByTestId("ad-context")).toContainText(`${expected.all.pairs.toLocaleString()} model pairs`);
+    await expect(section.getByTestId("ad-context")).toContainText(`${expected.complementary.pairs.toLocaleString()} model pairs`);
     const disclosure=section.getByText("Pooling methods",{exact:true}).locator("..");
     if(!await disclosure.evaluate(el=>(el as HTMLDetailsElement).open))await section.getByText("Pooling methods",{exact:true}).click();
-    for(const [scope,label] of [["all","All test events"],["complementary","Complementary events only"]]){
-      await section.getByRole("button",{name:label,exact:true}).click();
-      {
-        const eventType=typewise.cohorts.no_reversal.primary.scopes[scope];
-        await expect(section.getByTestId("ad-event-type-joint-brier")).toHaveText(eventType.brier[2].toFixed(6));
-        await expect(section.getByTestId("ad-event-type-joint-ece")).toHaveText(eventType.ece[2].toFixed(6));
-      }
-      await expect(section.getByTestId("ad-main-table").locator("tbody tr").first()).toContainText(expected[scope].brier[0].toFixed(6));
-      for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
-        await section.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
-        await section.getByLabel("Pooling table sort order",{exact:true}).selectOption("brier");
-        await expectPoolingComparison(section.getByTestId("ad-pool-table"),expected[scope].pools[mode].brier,true);
-        await expect(section.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(expected[scope].pools.raw.brier[7].toFixed(6));
-        await expect(section.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(expected[scope].pools.raw.ece[7].toFixed(6));
-      }
+    const eventType=typewise.cohorts.no_reversal.primary.scopes.complementary;
+    await expect(section.getByTestId("ad-event-type-joint-brier")).toHaveText(eventType.brier[2].toFixed(6));
+    await expect(section.getByTestId("ad-event-type-joint-ece")).toHaveText(eventType.ece[2].toFixed(6));
+    await expect(section.getByTestId("ad-main-table").locator("tbody tr").first()).toContainText(expected.complementary.brier[0].toFixed(6));
+    for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
+      await section.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
+      await section.getByLabel("Pooling table sort order",{exact:true}).selectOption("brier");
+      await expectPoolingComparison(section.getByTestId("ad-pool-table"),expected.complementary.pools[mode].brier,true);
+      await expect(section.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(expected.complementary.pools.raw.brier[7].toFixed(6));
+      await expect(section.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(expected.complementary.pools.raw.ece[7].toFixed(6));
     }
   }
   await page.reload();
@@ -58,6 +55,7 @@ test("a reversed pair stays hidden through old cohort links and can switch to an
   for(const cohort of ["fallback","all","original"]){
     await page.goto(`/?cc_stability=${cohort}&cc_result=pair&cc_pair=${reversed.id}&cc_base=${encodeURIComponent(reversed.model_a)}&cc_test_scope=complementary#complementarity`);
     await expect(page).toHaveURL(/cc_stability=stable/);
+    await expect(page).toHaveURL(/cc_test_scope=complementary/);
     await expect(section.getByTestId("ad-pair-results")).toHaveCount(0);
     await expect(section.getByRole("status")).toContainText("outside the No reversals group");
     await expect(section.getByRole("button",{name:"View this pair with overall fallback",exact:true})).toHaveCount(0);
@@ -66,11 +64,13 @@ test("a reversed pair stays hidden through old cohort links and can switch to an
   const partner=await section.getByLabel("Partner model",{exact:true}).locator("option").evaluateAll(options=>options.map(o=>(o as HTMLOptionElement).value).find(Boolean)!);
   const expected=loadPair(partner);
   await section.getByLabel("Partner model",{exact:true}).selectOption(partner);
-  await expect(section.getByTestId("ad-stability-status")).toContainText("No type reversals");
+  await expect(section.getByTestId("ad-stability-status")).toHaveCount(0);
+  await expect(section.getByTestId("ad-pair-main-table")).toBeVisible();
   await expect(table.locator("tbody tr").first()).toContainText(expected.scopes.complementary.brier[0].toFixed(6));
   await page.reload();
-  await expect(section.getByTestId("ad-stability-status")).toContainText("No type reversals");
-  await section.getByTestId("ad-stability-status").scrollIntoViewIfNeeded();
+  await expect(section.getByTestId("ad-stability-status")).toHaveCount(0);
+  await expect(section.getByTestId("ad-pair-main-table")).toBeVisible();
+  await table.scrollIntoViewIfNeeded();
   await page.screenshot({path:testInfo.outputPath("no-reversal-pair-recovery.png")});
 });
 
@@ -79,7 +79,8 @@ test("no-reversal partner options contain only complementary pairs whose type ed
   const section=page.locator("#complementarity");
   const partners=index.pairs.filter((p:any)=>eligible(p)&&p.stability==="no_reversal"&&(p.model_a===stable.model_a||p.model_b===stable.model_a));
   await expect(section.getByLabel("Partner model",{exact:true}).locator("option")).toHaveCount(partners.length+1);
-  await expect(section.getByTestId("ad-stability-status")).toContainText("No type reversals");
+  await expect(section.getByTestId("ad-stability-status")).toHaveCount(0);
+  await expect(section.getByTestId("ad-pair-main-table")).toBeVisible();
   await expect(section.getByTestId("ad-pair-main-table").locator("tbody tr").first()).toContainText("Type-based selection");
   const available=await section.getByLabel("Partner model",{exact:true}).locator("option").evaluateAll(options=>options.map(o=>(o as HTMLOptionElement).value).filter(Boolean));
   expect(available.sort()).toEqual(partners.map((p:any)=>p.id).sort());
@@ -98,10 +99,10 @@ test("market chart selection keeps the base and restricts partners to no reversa
   expect(ids.length).toBeGreaterThan(0);
   for(const id of ids)expect(loadPair(id).stability).toBe("no_reversal");
   await block.getByLabel("Partner model",{exact:true}).selectOption(ids[0]);
-  await expect(block.getByTestId("ad-stability-status")).toContainText("No type reversals");
-  await expect(block.getByTestId("ad-base-ability")).toContainText(base.model.raw_brier.toFixed(6));
-  await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(loadPair(ids[0]).scopes.all.pools.raw.brier[7].toFixed(6));
-  await expect(block.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(loadPair(ids[0]).scopes.all.pools.raw.ece[7].toFixed(6));
+  await expect(block.getByTestId("ad-stability-status")).toHaveCount(0);
+  await expect(block.getByTestId("ad-base-ability")).toHaveCount(0);
+  await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(loadPair(ids[0]).scopes.complementary.pools.raw.brier[7].toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(loadPair(ids[0]).scopes.complementary.pools.raw.ece[7].toFixed(6));
   await block.scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath("market-stable-pairs.png")});
   await expect(page).toHaveURL(/#market-performance$/);
 });
@@ -112,5 +113,5 @@ test("stability data failures support retry without displaying older scores",asy
   await page.goto("/#complementarity");
   await expect(page.getByRole("alert")).toContainText("503");await expect(page.getByTestId("ad-main-table")).toHaveCount(0);
   fail=false;await page.getByRole("button",{name:"Retry aggregation verdict",exact:true}).click();
-  await expect(page.getByTestId("ad-context")).toContainText(`${view.cohorts.stable.primary.scopes.all.pairs.toLocaleString()} model pairs`);
+  await expect(page.getByTestId("ad-context")).toContainText(`${view.cohorts.stable.primary.scopes.complementary.pairs.toLocaleString()} model pairs`);
 });

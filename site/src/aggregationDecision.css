@@ -5,8 +5,6 @@
 .ad-fixed-base { align-self: center; min-width: 0; }
 .ad-fixed-base span { display: block; font-size: 10px; color: #8b7795; margin-bottom: 7px; }
 .ad-fixed-base b { font-size: 13px; font-weight: 550; overflow-wrap: anywhere; }
-.ad-base-ability { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px 25px; padding: 14px 0 2px; color: #725480; font-size: 12px; }
-.ad-base-ability span { font-size: 10px; color: #907c97; }
 .ad-result-strip { display: grid; grid-template-columns: minmax(190px,1fr) minmax(0,2.5fr); gap: 28px; align-items: center; padding: 25px 0 10px; }
 .ad-result-strip .ad-effect { border: 0; padding: 0; }
 .ad-result-strip .ad-effect strong { font-size: 42px; }
@@ -25,10 +23,6 @@
 .ad-cohort-line { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px 22px; padding: 17px 0 4px; }
 .ad-cohort-label { display: flex; flex-direction: column; gap: 7px; color: #796482; font-size: 11px; min-width: 0; }
 .ad-cohort-label strong { border-left: 3px solid #4f207f; background: #f5effa; padding: 10px 14px; color: #4d385d; font-size: 13px; font-weight: 600; }
-.ad-cohort-line > span { color: #8b795a; font-size: 10px; padding-bottom: 13px; }
-.ad-stability-status { display: flex; flex-direction: column; gap: 5px; padding: 12px 14px; margin-top: 15px; border-left: 3px solid #4f207f; background: #f5effa; font-size: 11px; color: #614078; overflow-wrap: anywhere; }
-.ad-stability-status b { font-weight: 550; }
-.ad-stability-fallback { border-color: #efab02; background: #fffcf5; color: #896725; }
 .ad-empty-reversal { display: block; margin-top: 10px; }
 .ad-switch { display: inline-flex; gap: 3px; background: #f5f1f8; padding: 4px; border-radius: 6px; max-width: 100%; }
 .ad-switch button { border: 0; background: transparent; color: #72647b; font-size: 12px; padding: 10px 15px; border-radius: 3px; line-height: 1.5; min-height: 42px; }

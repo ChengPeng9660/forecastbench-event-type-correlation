@@ -6,27 +6,25 @@ import {expectPoolingComparison} from "./pooling-comparison-check";
 test("leads legacy section links with the raw aggregation comparison and keeps details closed",async({page},testInfo)=>{
   const requests:string[]=[],errors:string[]=[];
   page.on("request",r=>requests.push(r.url()));page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/?cc_stability=original&cc_section=type-selection-calibrated-pooling&type=finance_economics#complementarity");
+  await page.goto("/?cc_stability=original&cc_test_scope=all&cc_section=type-selection-calibrated-pooling&type=finance_economics#complementarity");
   const section=page.locator("#complementarity");
   await expect(section.getByRole("heading",{level:1})).toHaveText("Selection vs aggregation");
-  await expect(page.getByTestId("ad-effect")).toContainText("1.42%");
-  await expect(page.getByTestId("ad-facts")).toContainText("+0.002243");
-  await expect(page.getByTestId("ad-facts")).toContainText("0.156044");
+  await expect(page.getByTestId("ad-effect")).toContainText("0.56%");
+  await expect(page.getByTestId("ad-facts")).toContainText("+0.000851");
+  await expect(page.getByTestId("ad-facts")).toContainText("0.152295");
   await expect(page.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
-  await expect(page.getByTestId("ad-main-table")).toContainText("0.158287");
-  await expect(page.getByTestId("ad-main-table")).toContainText("0.156044");
-  await expect(page.getByTestId("ad-event-type-joint-brier")).toHaveText("0.155653");
-  await expect(page.getByTestId("ad-event-type-joint-ece")).toHaveText("0.088925");
+  await expect(page.getByTestId("ad-main-table")).toContainText("0.153146");
+  await expect(page.getByTestId("ad-main-table")).toContainText("0.152295");
+  await expect(page.getByTestId("ad-event-type-joint-brier")).toHaveText("0.152190");
+  await expect(page.getByTestId("ad-event-type-joint-ece")).toHaveText("0.087643");
   await expect(section.locator("details[open]")).toHaveCount(0);
   await expect(page.locator("#type-selection-calibrated-pooling")).toHaveCount(0);
   await expect(page.getByLabel("Select exact model pair")).toHaveCount(0);
   expect(requests.some(u=>u.includes("/data/complementarity/study.json"))).toBe(false);
   expect(requests.some(u=>u.includes("/data/type-selection-calibrated-pooling/"))).toBe(false);
   await page.screenshot({path:testInfo.outputPath("aggregation-verdict-first-screen.png")});
-  await page.getByRole("group",{name:"Aggregation verdict test scope",exact:true}).getByRole("button",{name:"Complementary events only",exact:true}).click();
-  await expect(page.getByTestId("ad-effect")).toContainText("0.56%");
-  await expect(page.getByTestId("ad-facts")).toContainText("0.152295");
-  await expect(page.getByTestId("ad-main-table")).toContainText("0.153146");
+  await expect(section.getByTestId("ad-test-scope-label")).toHaveText("Complementary events only");
+  await expect(section.getByRole("button",{name:"All test events",exact:true})).toHaveCount(0);
   await expect(page).toHaveURL(/cc_test_scope=complementary/);
   await page.reload();await expect(page.getByTestId("ad-effect")).toContainText("0.56%");
   await page.getByRole("heading",{name:"Pipeline comparison",exact:true}).scrollIntoViewIfNeeded();
@@ -41,21 +39,18 @@ test("compares four pools with the matching selection and sorts every calibratio
   await page.goto("/?cc_stability=original#complementarity");
   await page.getByText("Pooling methods",{exact:true}).click();
   const table=page.getByTestId("ad-pool-table"),sort=page.getByLabel("Pooling table sort order",{exact:true});
-  for(const [scope,scopeLabel] of [["all","All test events"],["complementary","Complementary events only"]]){
-    await page.getByRole("group",{name:"Aggregation verdict test scope",exact:true}).getByRole("button",{name:scopeLabel,exact:true}).click();
-    for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
-      await page.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
-      const brier=scopes[scope].pools[mode].brier;
-      await sort.selectOption("method");await expectPoolingComparison(table,brier);
-      await sort.selectOption("brier");await expectPoolingComparison(table,brier,true);
-    }
+  for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
+    await page.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
+    const brier=scopes.complementary.pools[mode].brier;
+    await sort.selectOption("method");await expectPoolingComparison(table,brier);
+    await sort.selectOption("brier");await expectPoolingComparison(table,brier,true);
   }
   await expect(page).toHaveURL(/cc_pool_sort=brier/);
   await table.locator("..").locator("..").screenshot({path:testInfo.outputPath("pooling-comparison-sorted.png")});
   await page.reload();await page.getByText("Pooling methods",{exact:true}).click();
   await expect(sort).toHaveValue("brier");await expectPoolingComparison(table,scopes.complementary.pools.raw.brier,true);
-  await page.getByText("Test directions",{exact:true}).click();
-  await expect(page.getByTestId("ad-test-directions").locator("tbody tr")).toHaveCount(10);
+  await expect(page.getByText("Test directions",{exact:true})).toHaveCount(0);
+  await expect(page.getByTestId("ad-test-directions")).toHaveCount(0);
   await page.getByText("ECE & downloads",{exact:true}).click();
   await expect(page.getByRole("link",{name:"Matched comparison report ↗",exact:true})).toHaveAttribute("href",/aggregation-stability\/REPORT.md$/);
   const width=await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
@@ -70,7 +65,7 @@ test("preserves study filters while keeping the focused results in No reversals"
   await page.getByLabel("Verdict training ability gap",{exact:true}).selectOption("3");
   await page.getByLabel("Verdict model-pair scope",{exact:true}).selectOption("matched_conditions");
   await expect(page.getByTestId("ad-context")).toContainText("360 model pairs");
-  await expect(page.getByTestId("ad-effect")).toContainText("1.24%");
+  await expect(page.getByTestId("ad-effect")).toContainText("0.79%");
   await expect(page.getByRole("button",{name:"Open full research explorer →",exact:true})).toHaveCount(0);
   await expect(page.getByTestId("ad-cohort-label")).toHaveText("No reversals");
   await page.reload();
@@ -88,6 +83,6 @@ test("recovers the verdict from a fetch failure",async({page})=>{
   await expect(page.getByTestId("ad-effect")).toHaveCount(0);
   fail=false;
   await page.getByRole("button",{name:"Retry aggregation verdict",exact:true}).click();
-  await expect(page.getByTestId("ad-effect")).toContainText("1.42%");
+  await expect(page.getByTestId("ad-effect")).toContainText("0.56%");
   await expect(page.getByRole("alert")).toHaveCount(0);
 });

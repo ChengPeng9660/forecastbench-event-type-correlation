@@ -43,7 +43,7 @@ export default function MultiModelAggregationExplorer({scope,baseConfiguration}:
   const rows=loaded?Array.from({length:path.length-1},(_,i)=>({n:i+2,...loaded.subsets[subsetKey(path.slice(0,i+2))].scopes[scope]})):[];
   const first=rows[0],last=rows[rows.length-1],improvement=first&&last?first.brier[method]-last.brier[method]:null;
   return <div className="mm-explorer" data-testid="mm-explorer">
-    <div className="mm-context"><span>Every model has a specialty · No reversals</span><span>Post-hoc · Train BI range ≤3 · ≥50% type coverage</span></div>
+    <div className="mm-context"><span>Every model has a specialty · No reversals</span><span>Train BI range ≤3 · ≥50% type coverage</span></div>
     <div className="mm-pickers">
       {baseConfiguration===undefined?<label>Base model<select aria-label="Team base model" value={actualBase??''} onChange={e=>change({base:index.models[Number(e.target.value)],path:[],size})}>{actualBase!=null&&!modelIds.includes(actualBase)&&<option value={actualBase}>{baseName||index.models[actualBase]} · no eligible team</option>}{modelIds.map(m=><option key={m} value={m}>{index.models[m]}</option>)}</select></label>:<div className="ad-fixed-base"><span>BASE MODEL · MARKET CHART</span><b>{baseConfiguration}</b></div>}
       <label>Number of models<select aria-label="Number of models" value={size} onChange={e=>change({size:Number(e.target.value),path})}>{[2,3,4].map(n=><option key={n} value={n}>{n} models · {index.groups.filter(g=>g.models.length===n&&g.paths.some(p=>p[0]===(actualBase??-1))).length} eligible teams</option>)}</select></label>

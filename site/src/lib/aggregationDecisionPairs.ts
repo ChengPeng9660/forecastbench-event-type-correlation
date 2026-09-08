@@ -1,5 +1,5 @@
 import type {DecisionFilters,PoolMode} from "./aggregationDecision";
-import {DISPLAYED_STABILITY_GROUP} from "./aggregationDecision";
+import {DISPLAYED_STABILITY_GROUP,DISPLAYED_TEST_SCOPE} from "./aggregationDecision";
 import type {TrainingRoute,TestScope} from "./typeSelection";
 import {MECHANISM_METHODS} from "./typeSelectionMechanisms";
 import {RAW_METHODS} from "./typeSelectionNoCalibration";
@@ -36,6 +36,7 @@ export function pairsForBase(pairs:DecisionPairMeta[],base:string,filters:Decisi
 export function writeDecisionQuery(values:Record<string,string>){
   const q=new URLSearchParams(location.search);for(const [key,value] of Object.entries(values))q.set(key,value);
   q.set("cc_stability",DISPLAYED_STABILITY_GROUP);
+  q.set("cc_test_scope",DISPLAYED_TEST_SCOPE);
   history.replaceState(null,"",`${location.pathname}?${q}${location.hash}`);
 }
 export function pairEligible(p:Pick<DecisionPairMeta,"train_gap"|"train_coverage"|"same_model_version"|"same_prompt"|"same_information"|"stability">,f:DecisionFilters){

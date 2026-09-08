@@ -9,6 +9,7 @@ import {loadTypewiseAggregation,type TypewiseCohortView} from "./typewiseMatched
 export type DecisionFilters={gap:AbilityGap;coverage:number;pairScope:PairScope;scope:TestScope;stability?:StabilityGroup};
 // Temporary presentation scope; archived cohorts and calculations remain available.
 export const DISPLAYED_STABILITY_GROUP:StabilityGroup="stable";
+export const DISPLAYED_TEST_SCOPE:TestScope="complementary";
 export type PoolMode="raw"|"input"|"output";
 export type DecisionAggregate=Pick<MechanismAggregate,"pairs"|"events"|"targets"|"brier"|"ece"|"wins">;
 export type DecisionDirection={split:number;fold:number;scopes:Record<TestScope,DecisionAggregate>};
@@ -64,7 +65,7 @@ export function initialDecisionFilters(search:string):DecisionFilters {
   const q=new URLSearchParams(search),coverage=Number(q.get("cc_coverage")??.5);
   return {gap:q.get("cc_gap")==="5"?5:3,coverage:[.5,.6,.7,.8].includes(coverage)?coverage:.5,
     pairScope:["different_model_version","matched_conditions"].includes(q.get("cc_scope")??"")?q.get("cc_scope") as PairScope:"all",
-    scope:q.get("cc_test_scope")==="complementary"?"complementary":"all",
+    scope:DISPLAYED_TEST_SCOPE,
     stability:DISPLAYED_STABILITY_GROUP};
 }
 export function decisionSummary(view:DecisionView,scope:TestScope){

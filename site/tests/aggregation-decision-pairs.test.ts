@@ -29,7 +29,7 @@ describe("individual pair evidence",()=>{
     expect(read("aggregation-decision-pairs/provenance.json").validated_primary_mean_scores).toBe(3840);
   });
   it("retains a losing pair and uses that pair's direction eligibility",()=>{
-    const p=pair("p-feba1dc1f7ef"),f=initialDecisionFilters("");
+    const p=pair("p-feba1dc1f7ef"),f={...initialDecisionFilters(""),scope:"all" as const};
     const s=pairDecisionSummary(p,f);
     expect(s.gain).toBeCloseTo(-0.00023816306136345577,12);
     expect(s.row.events).toBe(180);
