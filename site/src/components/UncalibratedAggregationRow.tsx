@@ -1,50 +1,46 @@
-import {useEffect,useState} from "react";
+import {Fragment} from "react";
 import {score} from "../lib/complementarity";
-import {writeDecisionQuery} from "../lib/aggregationDecisionPairs";
 
-const METHODS=[
-  {id:"simple_mean",label:"Simple mean",index:1},
-  {id:"log_odds_mean",label:"Log-odds mean",index:2},
-  {id:"ec_w0_56",label:"EC · w = 0.56",index:3},
-  {id:"piecewise_odds",label:"Piecewise odds",index:4},
+export const UNCALIBRATED_METHODS=[
+  {id:"simple_mean",label:"Simple mean",description:"Average the two probabilities",index:1},
+  {id:"log_odds_mean",label:"Log-odds mean",description:"Average the two logits",index:2},
+  {id:"ec_w0_56",label:"EC · w = 0.56",description:"Scale the summed logits by 0.56",index:3},
+  {id:"piecewise_odds",label:"Piecewise odds",description:"Use thresholded odds pooling",index:4},
 ] as const;
-type Method=typeof METHODS[number];
-export type UncalibratedChoice={method:Method;choose:(id:string)=>void};
 
-function readMethod():Method {
-  const id=new URLSearchParams(location.search).get("cc_raw_method");
-  return METHODS.find(method=>method.id===id)??METHODS[0];
+function Gain({before,after,referenceLabel,testId}:{before:number;after:number;referenceLabel:string;testId?:string}){
+  const gain=before-after,relative=before>0?100*gain/before:null;
+  return <small data-testid={testId} className={gain>1e-10?"ad-positive":gain< -1e-10?"ad-negative":""}>
+    Brier gain vs {referenceLabel}: {score(gain,6,true)}{relative!=null&&` (${Math.abs(relative).toFixed(2)}% ${relative<0?"higher":"lower"})`}
+  </small>;
 }
 
-export function useUncalibratedMethod():UncalibratedChoice{
-  const [method,setMethod]=useState(readMethod);
-  useEffect(()=>{
-    const restore=()=>setMethod(readMethod());
-    window.addEventListener("popstate",restore);window.addEventListener("hashchange",restore);
-    return()=>{window.removeEventListener("popstate",restore);window.removeEventListener("hashchange",restore);};
-  },[]);
-  function choose(id:string){
-    const next=METHODS.find(candidate=>candidate.id===id)??METHODS[0];
-    setMethod(next);writeDecisionQuery({cc_raw_method:next.id});
-  }
-  return {method,choose};
+export function UncalibratedAggregationRows({brier,ece,referenceLabel="type selection"}:{brier:readonly number[];ece:readonly number[]|null;referenceLabel?:string}){
+  return <>{UNCALIBRATED_METHODS.map((method,index)=>{
+    const suffix=String.fromCharCode(97+index);
+    return <Fragment key={method.id}>
+      <tr className={`ad-raw-row${index===0?" ad-raw-row-first":""}`} data-testid={`ad-uncalibrated-row-${method.id}`} data-aggregation-rule={method.id}>
+        <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">2{suffix}</span><div className="ad-raw-method">
+          <span className="ad-raw-kind">Uncalibrated aggregation</span>
+          <b>{method.label}</b>
+          <small className="ad-raw-description">{method.description}</small>
+          <Gain before={brier[0]} after={brier[method.index]} referenceLabel={referenceLabel} testId={`ad-uncalibrated-gain-${method.id}`}/>
+        </div></div></th>
+        <td data-testid={`ad-uncalibrated-score-${method.id}`}>{score(brier[method.index],6)}</td>
+        <td data-testid={`ad-uncalibrated-ece-score-${method.id}`}>{score(ece?.[method.index],6)}</td>
+      </tr>
+    </Fragment>;
+  })}</>;
 }
 
-export function UncalibratedAggregationRow({brier,method,onChange,referenceLabel="type selection"}:{brier:readonly number[];method:Method;onChange:(id:string)=>void;referenceLabel?:string}){
-  const value=brier[method.index],gain=brier[0]-value,relative=brier[0]>0?100*gain/brier[0]:null;
-  return <tr className="ad-raw-row" data-testid="ad-uncalibrated-row">
-    <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">5</span><div className="ad-raw-method">
-      <b>Uncalibrated aggregation</b>
-      <select aria-label="Uncalibrated aggregation method" value={method.id} onChange={event=>onChange(event.target.value)}>{METHODS.map(option=><option key={option.id} value={option.id}>{option.label}</option>)}</select>
-      <small data-testid="ad-uncalibrated-gain" className={gain>1e-10?"ad-positive":gain< -1e-10?"ad-negative":""}>Brier gain vs {referenceLabel}: {score(gain,6,true)}{relative!=null&&` (${Math.abs(relative).toFixed(2)}% ${relative<0?"higher":"lower"})`}</small>
+export function UncalibratedJointRow({brier,ece,referenceBrier,referenceLabel="type selection"}:{brier:number|null;ece:number|null|undefined;referenceBrier:number|null;referenceLabel?:string}){
+  return <tr className="ad-raw-joint-row" data-testid="ad-uncalibrated-joint-row">
+    <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">3</span><div className="ad-raw-method">
+      <span className="ad-raw-kind">Learned raw rule</span>
+      <b>Matched aggregation · no calibration</b>
+      {brier!=null&&referenceBrier!=null&&<Gain before={referenceBrier} after={brier} referenceLabel={referenceLabel} testId="ad-uncalibrated-joint-gain"/>}
     </div></div></th>
-    <td>2</td><td data-testid="ad-uncalibrated-score">{score(value,6)}</td>
-  </tr>;
-}
-
-export function UncalibratedJointRow({brier}:{brier:number|null}){
-  return <tr data-testid="ad-uncalibrated-joint-row">
-    <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">6</span><b>Matched aggregation · no calibration</b></div></th>
-    <td>2</td><td>{score(brier,6)}</td>
+    <td data-testid="ad-uncalibrated-joint-brier">{score(brier,6)}</td>
+    <td data-testid="ad-uncalibrated-joint-ece">{score(ece,6)}</td>
   </tr>;
 }

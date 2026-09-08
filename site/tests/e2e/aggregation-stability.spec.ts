@@ -29,7 +29,8 @@ test("defaults to non-reversing complementary pairs and recomputes each pooled c
         await section.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
         await section.getByLabel("Pooling table sort order",{exact:true}).selectOption("brier");
         await expectPoolingComparison(section.getByTestId("ad-pool-table"),expected[scope].pools[mode].brier,true);
-        await expect(section.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(expected[scope].pools.raw.brier[7].toFixed(6));
+        await expect(section.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(expected[scope].pools.raw.brier[7].toFixed(6));
+        await expect(section.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(expected[scope].pools.raw.ece[7].toFixed(6));
       }
     }
   }
@@ -56,7 +57,8 @@ test("a reversed complementary pair is excluded by default and can be opened wit
     await section.getByRole("group",{name:"Pair pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
     await expectPoolingComparison(section.getByTestId("ad-pair-pool-table"),reversed.scopes.complementary.pools[mode].brier);
     await expect(table.locator("tbody tr")).toHaveCount(6);
-    await expect(section.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(reversed.scopes.complementary.pools.raw.brier[7].toFixed(6));
+    await expect(section.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(reversed.scopes.complementary.pools.raw.brier[7].toFixed(6));
+    await expect(section.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(reversed.scopes.complementary.pools.raw.ece[7].toFixed(6));
   }
   await section.getByText("Event-type selections",{exact:true}).click();
   const health=section.getByTestId("ad-pair-routes").getByRole("row").filter({hasText:"Health"});
@@ -92,7 +94,8 @@ test("market chart selection keeps the base and restricts partners to no reversa
   await block.getByLabel("Partner model",{exact:true}).selectOption(ids[0]);
   await expect(block.getByTestId("ad-stability-status")).toContainText("No type reversals");
   await expect(block.getByTestId("ad-base-ability")).toContainText(base.model.raw_brier.toFixed(6));
-  await expect(block.getByTestId("ad-uncalibrated-joint-row").locator("td").last()).toHaveText(loadPair(ids[0]).scopes.all.pools.raw.brier[7].toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(loadPair(ids[0]).scopes.all.pools.raw.brier[7].toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(loadPair(ids[0]).scopes.all.pools.raw.ece[7].toFixed(6));
   await block.scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath("market-stable-pairs.png")});
   await expect(page).toHaveURL(/#market-performance$/);
 });
