@@ -28,22 +28,22 @@ test("the first market chart selects the base for the following experiment",asyn
     await expect(block.getByLabel("Partner model",{exact:true}).locator("option")).toHaveCount(partners.length+1);
     for(const chosen of partners.slice(0,2)){
       await block.getByLabel("Partner model",{exact:true}).selectOption(chosen.id);
-      await expect(block.getByTestId("ad-pair-main-table")).toContainText(pair(chosen.id).scopes.all.brier[7].toFixed(6));
+      await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(pair(chosen.id).scopes.all.pools.raw.brier[7].toFixed(6));
       await expect(block.getByTestId("ad-base-ability")).toContainText(base.model.raw_brier.toFixed(6));
       await expect(block.getByTestId("ad-base-ability")).toContainText(base.model.brier_index.toFixed(2));
       await expect(block.getByTestId("ad-pair-identities").locator("div").first()).toContainText(base.exact_configuration);
     }
     await expect(page).toHaveURL(/#market-performance$/);
-    await expect(block.locator("p")).toHaveCount(0);
+    await expect(block.locator(".ad-pending")).toHaveCount(0);
   }
   const current=await block.getByLabel("Partner model",{exact:true}).inputValue();
   await block.getByRole("button",{name:"Complementary events only",exact:true}).click();
-  await expect(block.getByTestId("ad-pair-main-table")).toContainText(pair(current).scopes.complementary.brier[7].toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(pair(current).scopes.complementary.pools.raw.brier[7].toFixed(6));
   await expect(block.getByTestId("ad-base-ability")).toContainText(bases[1].model.raw_brier.toFixed(6));
   await page.reload();
   await expect(block.getByLabel("Partner model",{exact:true})).toHaveValue(current);
   await expect(block.locator(".ad-pair-view")).toHaveAttribute("data-base-configuration",bases[1].exact_configuration);
-  await expect(block.getByTestId("ad-pair-main-table")).toContainText(pair(current).scopes.complementary.brier[7].toFixed(6));
+  await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(pair(current).scopes.complementary.pools.raw.brier[7].toFixed(6));
   await block.getByText("Event-type selections",{exact:true}).click();
   const side=pairBaseSide(pair(current),bases[1].exact_configuration),route=pair(current).routes[0];
   await expect(block.getByTestId("ad-pair-routes").locator("tbody tr").first().locator("td").nth(1)).toHaveText((side===0?route.train_brier_a:route.train_brier_b).toFixed(5));
