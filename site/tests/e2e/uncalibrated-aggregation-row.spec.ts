@@ -76,7 +76,7 @@ test("market pair keeps every raw rule expanded on complementary events across p
   const errors:string[]=[];page.on("pageerror",error=>errors.push(error.message));
   await page.goto(`/?cc_stability=original&cc_base=${encodeURIComponent(marketPair.model_a)}&cc_pair=${marketId}&cc_raw_method=ec_w0_56#market-performance`);
   const block=page.locator("#market-type-selection"),table=block.getByTestId("ad-pair-main-table");
-  await expect(table.locator("tbody tr")).toHaveCount(6);
+  await expect(table.locator("tbody tr")).toHaveCount(7);
   for(const method of methods){
     const m=index.methods.indexOf(method),scores=marketPair.scopes.complementary;
     await expect(table.getByTestId(`ad-uncalibrated-score-${method}`)).toHaveText(scores.brier[m].toFixed(6));

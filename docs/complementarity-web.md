@@ -279,3 +279,23 @@ annotation are removed from the focused UI. Study protocols and downloadable
 evidence retain the full methodology and provenance.
 This is a presentation change: experimental outputs, archived cohort loaders,
 scoring, routing, fitted coefficients and calibration behavior are unchanged.
+
+## Event-type weights for individual pairs (2026-09-09)
+
+The individual-pair comparison, including the Markets-linked view, now includes
+row 4, `Matched aggregation · event-type weights`, immediately after row 3,
+`Matched aggregation · no calibration`. Brier, ECE, selection gain, and the
+comparison with the global coefficient come from the selected pair on the same
+complementary-event support. The ECE disclosure and pair JSON download include
+the new result. Changing the base or partner reloads the matching scores.
+
+`python -m analysis.export_typewise_pair_scores` extracts the primary direction
+from the frozen `all-direction-results.jsonl.gz` into small pair shards. It
+performs no fitting or rescoring and verifies identities, support, and both
+selection/global Brier and ECE against the existing pair records. The browser
+checks these contracts again before displaying a pair. Export provenance and
+shard hashes are recorded in `typewise-matched-aggregation/pair-scores-manifest.json`.
+
+The `2–4 models` tab is temporarily hidden in both the overall explorer and the
+Markets embed. Existing direct model-count URLs and their archived data remain
+available.

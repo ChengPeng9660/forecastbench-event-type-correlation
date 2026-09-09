@@ -21,7 +21,7 @@ async function checkRows(block:any,path:number[],team:any,scope:string,mode:stri
 test('model-count growth uses matched complementary support in both calibration modes',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(selectedUrl());
  const block=page.locator('#complementarity');
- await expect(block.getByRole('button',{name:'2–4 models',exact:true})).toHaveAttribute('aria-pressed','true');
+ await expect(block.getByRole('button',{name:'2–4 models',exact:true})).toHaveCount(0);
  await expect(block.getByTestId('mm-explorer')).toContainText('Every model has a specialty');
  await expect(block.getByTestId('ad-test-scope-label')).toHaveCount(0);
  await expect(block.getByText('Pooling methods',{exact:true})).toHaveCount(0);
@@ -50,7 +50,9 @@ test('changing inclusion order and final team rebinds every score, and pair view
  await block.getByLabel('Number of models',{exact:true}).selectOption('3');await expect(block.getByTestId('mm-results').locator('tbody tr')).toHaveCount(2);
  await block.getByLabel('Number of models',{exact:true}).selectOption('2');await expect(block.getByTestId('mm-results').locator('tbody tr')).toHaveCount(1);
  await block.getByRole('button',{name:'Overall evidence',exact:true}).click();await expect(block.getByTestId('ad-main-table').locator('tbody tr')).toHaveCount(7);
- await block.getByRole('button',{name:'2–4 models',exact:true}).click();await expect(block.getByLabel('Number of models',{exact:true})).toHaveValue('2');
+ await expect(block.getByRole('button',{name:'2–4 models',exact:true})).toHaveCount(0);
+ const legacy=new URL(page.url());legacy.searchParams.set('cc_result','multi');await page.goto(legacy.href);
+ await expect(block.getByLabel('Number of models',{exact:true})).toHaveValue('2');
 });
 
 test('market base stays linked to the model-count explorer and missing teams remain explicit',async({page})=>{

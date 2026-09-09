@@ -3,6 +3,7 @@ import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data/aggregation-stability",p),"utf8"));
 const id="p-feba1dc1f7ef",pair=read("pairs/fe.json")[id];
+const typewise=(id:string)=>JSON.parse(readFileSync(resolve(`public/data/typewise-matched-aggregation/pairs/${id.slice(2,4)}.json`),"utf8")).pairs[id];
 
 test("opens base and partner controls while retaining the exact raw scores",async({page},testInfo)=>{
   const requests:string[]=[],errors:string[]=[];
@@ -21,6 +22,13 @@ test("opens base and partner controls while retaining the exact raw scores",asyn
   const table=section.getByTestId("ad-pair-main-table");
   for(const m of [0,1,2,3,4])await expect(table).toContainText(pair.scopes.complementary.brier[m].toFixed(6));
   await expect(table).toContainText(pair.scopes.complementary.pools.raw.brier[7].toFixed(6));
+  const eventType=typewise(id).scopes.complementary;
+  await expect(table.getByTestId("ad-event-type-joint-brier")).toHaveText(eventType.brier[2].toFixed(6));
+  await expect(table.getByTestId("ad-event-type-joint-ece")).toHaveText(eventType.ece[2].toFixed(6));
+  await expect(table.locator("tbody tr").nth(5)).toHaveAttribute("data-testid","ad-uncalibrated-joint-row");
+  await expect(table.locator("tbody tr").nth(6)).toHaveAttribute("data-testid","ad-event-type-joint-row");
+  await expect(table.getByTestId("ad-event-type-joint-row").locator(".ad-row-number")).toHaveText("4");
+  await expect(section.getByRole("button",{name:"2–4 models",exact:true})).toHaveCount(0);
   await expect(page).toHaveURL(new RegExp(`cc_pair=${id}`));
   await expect(section.locator("details[open]")).toHaveCount(0);
   await expect(section.locator(".ad-verdict,.ad-comparison-note,.ad-footnote,.ad-reading")).toHaveCount(0);
@@ -46,6 +54,8 @@ test("pins the base while browsing partners and orients both sides correctly",as
   const next=await section.getByLabel("Partner model",{exact:true}).inputValue();expect(next).not.toBe(id);
   await expect(section.getByLabel("Base model",{exact:true})).toHaveValue(pair.model_a);
   const nextPair=read(`pairs/${next.slice(2,4)}.json`)[next];
+  await expect(section.getByTestId("ad-event-type-joint-brier")).toHaveText(typewise(next).scopes.complementary.brier[2].toFixed(6));
+  await expect(section.getByTestId("ad-event-type-joint-ece")).toHaveText(typewise(next).scopes.complementary.ece[2].toFixed(6));
   await expect(section.getByTestId("ad-pair-identities").locator("div").nth(1)).toContainText(nextPair.model_a===pair.model_a?nextPair.model_b:nextPair.model_a);
   await section.getByLabel("Base model",{exact:true}).selectOption(pair.model_b);
   await section.getByLabel("Partner model",{exact:true}).selectOption(id);
@@ -55,6 +65,7 @@ test("pins the base while browsing partners and orients both sides correctly",as
   await expect(first.locator("td").nth(1)).toHaveText(pair.routes[0].train_brier_b.toFixed(5));
   await expect(first.locator("td").nth(3)).toHaveText(pair.routes[0].selected===1?"Base":"Partner");
   await expect(section.getByTestId("ad-pair-main-table")).toContainText(pair.scopes.complementary.pools.raw.brier[7].toFixed(6));
+  await expect(section.getByTestId("ad-event-type-joint-brier")).toHaveText(typewise(id).scopes.complementary.brier[2].toFixed(6));
   await section.getByRole("button",{name:"Overall evidence",exact:true}).click();
   await expect(section.getByTestId("ad-effect")).toContainText("0.56%");
 });

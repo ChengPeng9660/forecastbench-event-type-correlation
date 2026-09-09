@@ -1,13 +1,35 @@
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {afterEach,describe,expect,it,vi} from "vitest";
-import {loadTypewiseAggregation,TYPEWISE_METHODS,type TypewiseIndex,type TypewiseView} from "../src/lib/typewiseMatchedAggregation";
+import {loadTypewiseAggregation,loadTypewisePair,TYPEWISE_METHODS,type TypewiseIndex,type TypewiseView} from "../src/lib/typewiseMatchedAggregation";
 
 const read=(path:string)=>JSON.parse(readFileSync(resolve("public/data",path),"utf8"));
 const index=read("typewise-matched-aggregation/index.json") as TypewiseIndex;
 afterEach(()=>vi.unstubAllGlobals());
 
 describe("event-type matched aggregation publication",()=>{
+  it("joins pair scores only when identity, split, support, and both baselines match",async()=>{
+    const id="p-b1f8f0fb8e7d",pair=read("aggregation-stability/pairs/b1.json")[id];
+    const parentIndex=read("aggregation-stability/index.json"),published=read("typewise-matched-aggregation/pairs/b1.json");
+    vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:false,status:503}));
+    await expect(loadTypewisePair(pair,parentIndex)).rejects.toThrow("503");
+    for(const corrupt of [
+      (d:typeof published)=>d.primary_fold=1,
+      (d:typeof published)=>d.pairs[id].model_a="different configuration",
+      (d:typeof published)=>d.pairs[id].scopes.complementary.events++,
+      (d:typeof published)=>d.pairs[id].scopes.complementary.brier[0]+=.001,
+      (d:typeof published)=>d.pairs[id].scopes.complementary.ece[1]+=.001,
+      (d:typeof published)=>d.pairs[id].scopes.complementary.ece[2]=NaN,
+    ]){
+      const data=structuredClone(published);corrupt(data);
+      vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:true,json:async()=>data}));
+      await expect(loadTypewisePair(pair,parentIndex)).rejects.toThrow(/contract|selected pair|test support|reproduce/);
+    }
+    vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:true,json:async()=>published}));
+    await expect(loadTypewisePair(pair,parentIndex)).resolves.toEqual(published.pairs[id]);
+    await expect(loadTypewisePair(pair,parentIndex)).resolves.toEqual(published.pairs[id]);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
   it("reproduces selection and the global coefficient before adding the event-type result",()=>{
     for(const key of index.views){
       const view=read(`typewise-matched-aggregation/views/${key}.json`) as TypewiseView;

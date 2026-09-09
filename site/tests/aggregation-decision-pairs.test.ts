@@ -50,9 +50,11 @@ describe("individual pair evidence",()=>{
     await expect(loadDecisionPairIndex()).resolves.toHaveProperty("pairs.length",2805);
     const meta=index.pairs.find(p=>p.id==="p-001112c40ea7")!;
     const expected=pair(meta.id);
-    await expect(loadDecisionPair(meta,index)).resolves.toEqual(expected);
-    expect(requested).toHaveLength(2);
+    const typewise=read("typewise-matched-aggregation/pairs/00.json").pairs[meta.id];
+    await expect(loadDecisionPair(meta,index)).resolves.toEqual({...expected,typewise});
+    expect(requested).toHaveLength(3);
     expect(requested[1]).toContain("/pairs/00.json");
+    expect(requested[2]).toContain("/typewise-matched-aggregation/pairs/00.json");
     const other=index.pairs.find(p=>p.id==="p-feba1dc1f7ef")!;
     vi.stubGlobal("fetch",vi.fn(async(url:string)=>({ok:true,json:async()=>{const d=read(url.split("data/")[1]);d[other.id].scopes.all.pools.output.events-=1;return d;}})));
     await expect(loadDecisionPair(other,index)).rejects.toThrow("same test support");

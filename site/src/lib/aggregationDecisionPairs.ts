@@ -4,6 +4,7 @@ import type {TrainingRoute,TestScope} from "./typeSelection";
 import {MECHANISM_METHODS} from "./typeSelectionMechanisms";
 import {RAW_METHODS} from "./typeSelectionNoCalibration";
 import {STABILITY_PATH,matchesStability,type StabilityStatus} from "./aggregationStability";
+import {loadTypewisePair,type TypewisePair} from "./typewiseMatchedAggregation";
 
 export const DECISION_PAIR_PATH=`${import.meta.env.BASE_URL}data/aggregation-decision-pairs/`;
 export interface DecisionPairMeta {
@@ -21,6 +22,7 @@ export interface DecisionPair extends DecisionPairMeta {
   scopes:Record<TestScope,PairScores & {pools:Record<PoolMode,PairScores>;single_brier:number[]}>;
   directions:DecisionPairDirection[];routes:(TrainingRoute & {test_events?:number;test_brier_a?:number|null;test_brier_b?:number|null;test_status?:string;policy_selected?:number})[];
   train_overall_brier?:number[];
+  typewise?:TypewisePair;
 }
 export interface DecisionPairIndex {
   schema_version:1;primary_split:number;primary_fold:number;mechanism_methods:string[];
@@ -82,5 +84,5 @@ export async function loadDecisionPair(meta:DecisionPairMeta,index:DecisionPairI
     for(const scope of ["all","complementary"] as const)if(pair.stability!=="no_reversal"&&Math.abs(pair.scopes[scope].brier[0]-pair.scopes[scope].single_brier[pair.overall_choice!])>1e-12)throw new Error("Fallback scores do not use the training-overall model.");
   }
   if(!signal?.aborted)cache.set(key,rows);
-  return pair;
+  return !index.post_hoc||pair.stability==="no_reversal"?{...pair,typewise:await loadTypewisePair(pair,index,signal)}:pair;
 }

@@ -12,6 +12,7 @@ const pairBaseSide=(p:DecisionPair,base:string)=>p.model_a===base?0:1;
 const available=market.points.filter(p=>pairsForBase(index.pairs,p.exact_configuration,filters).length>=2);
 const bases=[available.find(p=>p.canonical_model_version.startsWith("GPT-5-"))!,available.find(p=>p.canonical_model_version.startsWith("Claude-3-5"))!];
 const pair=(id:string):DecisionPair=>JSON.parse(readFileSync(resolve(`public/data/aggregation-stability/pairs/${id.slice(2,4)}.json`),"utf8"))[id];
+const typewise=(id:string)=>JSON.parse(readFileSync(resolve(`public/data/typewise-matched-aggregation/pairs/${id.slice(2,4)}.json`),"utf8")).pairs[id];
 
 test("the first market chart selects the base for the following experiment",async({page},testInfo)=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
@@ -29,6 +30,8 @@ test("the first market chart selects the base for the following experiment",asyn
     for(const chosen of partners.slice(0,2)){
       await block.getByLabel("Partner model",{exact:true}).selectOption(chosen.id);
       await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(pair(chosen.id).scopes.complementary.pools.raw.brier[7].toFixed(6));
+      await expect(block.getByTestId("ad-event-type-joint-brier")).toHaveText(typewise(chosen.id).scopes.complementary.brier[2].toFixed(6));
+      await expect(block.getByTestId("ad-event-type-joint-ece")).toHaveText(typewise(chosen.id).scopes.complementary.ece[2].toFixed(6));
       await expect(block.getByTestId("ad-base-ability")).toHaveCount(0);
       await expect(block.locator(".ad-pair-browse")).not.toContainText("eligible partners");
       await expect(block.getByTestId("ad-pair-identities").locator("div").first()).toContainText(base.exact_configuration);
@@ -38,6 +41,7 @@ test("the first market chart selects the base for the following experiment",asyn
   }
   const current=await block.getByLabel("Partner model",{exact:true}).inputValue();
   await expect(block.getByTestId("ad-test-scope-label")).toHaveCount(0);
+  await expect(block.getByRole("button",{name:"2–4 models",exact:true})).toHaveCount(0);
   await expect(block.getByTestId("ad-cohort-label")).toHaveCount(0);
   await expect(block.getByTestId("ad-context")).toHaveCount(0);
   await expect(block.getByText("Pooling methods",{exact:true})).toHaveCount(0);
