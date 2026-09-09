@@ -4,6 +4,7 @@ import type {DecisionPair,DecisionPairIndex,DecisionPairMeta,PairScores} from ".
 
 export const TYPEWISE_PATH=`${import.meta.env.BASE_URL}data/typewise-matched-aggregation/`;
 export const TYPEWISE_METHODS=["type_selection","global_joint","event_type_joint"] as const;
+export const EVENT_TYPE_METHODS=["model_a","model_b","global_joint","event_type_joint"] as const;
 const TYPEWISE_COHORTS=["all","no_reversal","reversed_or_unverified"] as const;
 export type TypewiseCohort="all"|"no_reversal"|"reversed_or_unverified";
 export interface TypewiseAggregate {
@@ -34,9 +35,10 @@ export interface TypewiseIndex {
 
 export interface TypewisePair extends DecisionPairMeta {
   scopes:Record<TestScope,PairScores>;
+  event_types:Record<string,PairScores>;
 }
 interface TypewisePairShard {
-  schema_version:1;methods:string[];primary_split:number;primary_fold:number;
+  schema_version:2;methods:string[];event_type_methods:string[];primary_split:number;primary_fold:number;
   source_audit_status:string;pairs:Record<string,TypewisePair>;
 }
 const pairCache=new Map<string,TypewisePairShard>();
@@ -49,7 +51,8 @@ export async function loadTypewisePair(pair:DecisionPair,index:DecisionPairIndex
     if(!response.ok)throw new Error(`Event-type pair results could not be loaded (${response.status}).`);
     data=await response.json() as TypewisePairShard;
   }
-  if(data.schema_version!==1||data.source_audit_status!=="PASS"||data.methods?.join("|")!==TYPEWISE_METHODS.join("|")||
+  if(data.schema_version!==2||data.source_audit_status!=="PASS"||data.methods?.join("|")!==TYPEWISE_METHODS.join("|")||
+    data.event_type_methods?.join("|")!==EVENT_TYPE_METHODS.join("|")||
     data.primary_split!==index.primary_split||data.primary_fold!==index.primary_fold)
     throw new Error("Event-type pair results failed the published data contract.");
   const result=data.pairs?.[pair.id];
@@ -64,6 +67,30 @@ export async function loadTypewisePair(pair:DecisionPair,index:DecisionPairIndex
     for(const metric of ["brier","ece"] as const)if([0,7].some((method,i)=>Math.abs(scores[metric][i]-baseline[metric][method])>1e-12))
       throw new Error("Event-type pair scores do not reproduce selection and the global weight.");
   }
+  const complementary=pair.routes.filter(route=>route.complementary);
+  const eventTypes=result.event_types;
+  if(!eventTypes||Object.keys(eventTypes).sort().join("|")!==complementary.map(route=>route.type).sort().join("|"))
+    throw new Error("Event-type pair scores do not match the complementary routes.");
+  let events=0,targets=0;
+  const reconstructed=[0,0,0];
+  for(const route of complementary){
+    const row=eventTypes[route.type];
+    if(!row||!Number.isInteger(row.events)||row.events<=0||!Number.isInteger(row.targets)||row.targets<row.events||
+      [row.brier,row.ece].some(values=>values?.length!==EVENT_TYPE_METHODS.length||
+        !values.every(value=>Number.isFinite(value)&&value>=0&&value<=1)))
+      throw new Error("Event-type performance scores are incomplete.");
+    events+=row.events;targets+=row.targets;
+    reconstructed[0]+=row.events*row.brier[route.selected];
+    reconstructed[1]+=row.events*row.brier[2];
+    reconstructed[2]+=row.events*row.brier[3];
+    for(const [side,expected] of [[0,route.test_brier_a],[1,route.test_brier_b]] as const)
+      if(expected!=null&&Math.abs(row.brier[side]-expected)>1e-12)
+        throw new Error("Event-type model scores do not match the selected pair.");
+  }
+  const complementaryScope=result.scopes.complementary;
+  if(events!==complementaryScope.events||targets!==complementaryScope.targets||
+    reconstructed.some((value,method)=>Math.abs(value/events-complementaryScope.brier[method])>1e-12))
+    throw new Error("Event-type performance scores do not reproduce the pair totals.");
   if(!signal?.aborted)pairCache.set(shard,data);
   return result;
 }

@@ -5,8 +5,6 @@ import {DECISION_PAIR_PATH,loadDecisionPairIndex,loadDecisionPair,pairDecisionSu
 import {EventTypeJointRow,UNCALIBRATED_METHODS,UncalibratedAggregationRows,UncalibratedJointRow} from "./UncalibratedAggregationRow";
 import {STABILITY_PATH} from "../lib/aggregationStability";
 
-const pct=(v:number|null,digits=1)=>v==null?"—":`${(100*v).toFixed(digits)}%`;
-const color=(v:number)=>v>1e-10?"ad-positive":v< -1e-10?"ad-negative":"";
 const typeNames:Record<string,string>={health:"Health",politics:"Politics",sports:"Sports",finance:"Finance / economics",technology:"Technology",climate_weather:"Climate / weather",entertainment_culture:"Entertainment / culture"};
 
 function PairEvidence({pair,index,filters,base}:{pair:DecisionPair;index:DecisionPairIndex;filters:DecisionFilters;base:string}){
@@ -14,14 +12,24 @@ function PairEvidence({pair,index,filters,base}:{pair:DecisionPair;index:Decisio
   const typewise=pair.typewise?.scopes[filters.scope];
   const fallback=!!pair.stability&&pair.stability!=="no_reversal";
   const referenceLabel=fallback?"overall selection":"type selection",selectionLabel=fallback?"Overall selection (train)":"Type-based selection";
-  const rawJointBrier=r.pools.raw.brier[7],rawGain=r.brier[0]-rawJointBrier,rawRelative=r.brier[0]>0?rawGain/r.brier[0]:null;
-  const negative=rawGain< -1e-10,complementaryRoutes=pair.routes.filter(route=>route.complementary);
+  const rawJointBrier=r.pools.raw.brier[7],complementaryRoutes=pair.routes.filter(route=>route.complementary);
+  const [activeType,setActiveType]=useState(complementaryRoutes[0]?.type??"");
+  const activeRoute=complementaryRoutes.find(route=>route.type===activeType);
+  const eventType=pair.typewise?.event_types[activeType];
+  const partner=pairPartner(pair,base);
   return <div data-testid="ad-pair-results">
-    <div className="ad-pair-identities" data-testid="ad-pair-identities"><div><span>BASE MODEL</span><b>{base}</b></div><div><span>PARTNER MODEL</span><b>{pairPartner(pair,base)}</b></div></div>
-    <div className="ad-result-strip"><div className={`ad-effect ${color(rawGain)}`} data-testid="ad-pair-effect"><strong>{pct(rawRelative==null?null:Math.abs(rawRelative),2)}</strong><span>Brier {negative?"increase":"reduction"} vs {referenceLabel} · learned raw rule</span></div><div className="ad-facts" data-testid="ad-pair-facts"><div><strong className={color(rawGain)}>{score(rawGain,6,true)}</strong><span>Brier gain</span></div><div><strong>{r.events.toLocaleString()}</strong><span>test events · {r.targets.toLocaleString()} targets</span></div><div><strong>{complementaryRoutes.length}</strong><span>complementary event types</span></div></div></div>
     <section className="ad-complementary-types" aria-label="Complementary event types" data-testid="ad-complementary-types">
-      <div className="ad-complementary-heading"><div><span>PAIR COMPLEMENTARITY</span><h3>Complementary event types</h3></div><p>Each type below has a different training-set specialist within this pair.</p></div>
-      <div className="ad-type-list" role="list">{complementaryRoutes.map(route=>{const baseSpecialist=route.selected===side;return <div className={`ad-type-chip ${baseSpecialist?"ad-type-base":"ad-type-partner"}`} role="listitem" key={route.type} data-testid="ad-complementary-type"><b>{typeNames[route.type]??route.type}</b><span>{baseSpecialist?"Base":"Partner"} specialist</span></div>;})}</div>
+      <div className="ad-complementary-heading"><div><span>PAIR COMPLEMENTARITY</span><h3>Complementary event types</h3></div><p>Select an event type to compare both models and the two matched aggregation rules.</p></div>
+      <div className="ad-type-list" aria-label="Choose an event type">{complementaryRoutes.map(route=>{const baseSpecialist=route.selected===side,active=route.type===activeType;return <button type="button" className={`ad-type-chip ${baseSpecialist?"ad-type-base":"ad-type-partner"}`} aria-pressed={active} aria-controls="ad-event-type-performance" onClick={()=>setActiveType(route.type)} key={route.type} data-testid="ad-complementary-type"><b>{typeNames[route.type]??route.type}</b><span>{baseSpecialist?"Base":"Partner"} specialist{active?" · Selected":""}</span></button>;})}</div>
+      {eventType&&activeRoute&&<div className="ad-event-type-performance" id="ad-event-type-performance" data-testid="ad-event-type-performance" aria-live="polite">
+        <div className="ad-event-type-performance-heading"><div><span>EVENT-TYPE PERFORMANCE</span><h4>{typeNames[activeType]??activeType}</h4></div><p>{eventType.events.toLocaleString()} test events · {eventType.targets.toLocaleString()} targets · lower is better</p></div>
+        <div className="ad-table-scroll"><table className="ad-event-type-table"><thead><tr><th>Prediction pipeline</th><th>Test Brier ↓</th><th>Test ECE ↓</th></tr></thead><tbody>
+          <tr data-testid="ad-event-type-base-row"><th scope="row"><b>Base model</b><small>{activeRoute.selected===side?"Selected specialist":"Second forecast"} · {base}</small></th><td>{score(eventType.brier[side],6)}</td><td>{score(eventType.ece[side],6)}</td></tr>
+          <tr data-testid="ad-event-type-partner-row"><th scope="row"><b>Partner model</b><small>{activeRoute.selected===1-side?"Selected specialist":"Second forecast"} · {partner}</small></th><td>{score(eventType.brier[1-side],6)}</td><td>{score(eventType.ece[1-side],6)}</td></tr>
+          <tr className="ad-event-type-global-row" data-testid="ad-event-type-global-row"><th scope="row"><b>Matched aggregation · no calibration</b><small>One global train-fitted weight</small></th><td>{score(eventType.brier[2],6)}</td><td>{score(eventType.ece[2],6)}</td></tr>
+          <tr className="ad-event-type-weight-row" data-testid="ad-event-type-weight-row"><th scope="row"><b>Matched aggregation · event-type weights</b><small>Train-fitted weight for {typeNames[activeType]??activeType}</small></th><td>{score(eventType.brier[3],6)}</td><td>{score(eventType.ece[3],6)}</td></tr>
+        </tbody></table></div>
+      </div>}
     </section>
     <section className="ad-comparison"><div className="ad-section-heading"><h3>Pipeline comparison</h3><span>{filters.scope==="all"?"All test events":"Complementary events"} · Brier &amp; ECE ↓</span></div>
       <div className="ad-table-scroll"><table className="ad-main-table" data-testid="ad-pair-main-table"><thead><tr><th>Prediction pipeline</th><th>Test Brier ↓</th><th>Test ECE ↓</th></tr></thead><tbody><tr><th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">1</span><b>{selectionLabel}</b></div></th><td>{score(r.brier[0],6)}</td><td>{score(r.ece[0],6)}</td></tr><UncalibratedAggregationRows brier={r.brier} ece={r.ece} referenceLabel={referenceLabel}/><UncalibratedJointRow brier={rawJointBrier} ece={r.pools.raw.ece[7]} referenceBrier={r.brier[0]} referenceLabel={referenceLabel}/>{typewise&&<EventTypeJointRow brier={typewise.brier[2]} ece={typewise.ece[2]} referenceBrier={typewise.brier[0]} globalBrier={typewise.brier[1]} globalEce={typewise.ece[1]} referenceLabel={referenceLabel}/>}</tbody></table></div>

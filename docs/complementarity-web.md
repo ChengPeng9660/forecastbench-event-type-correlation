@@ -289,12 +289,23 @@ comparison with the global coefficient come from the selected pair on the same
 complementary-event support. The ECE disclosure and pair JSON download include
 the new result. Changing the base or partner reloads the matching scores.
 
+Each complementary event-type chip is also a selector. Its detail table compares
+the base model, partner model, global no-calibration matched aggregation, and
+event-type-weight matched aggregation on that event type's identical held-out
+targets. Both Brier and ECE are shown; changing the base orientation swaps only
+the two single-model display rows and leaves the two aggregation scores unchanged.
+
 `python -m analysis.export_typewise_pair_scores` extracts the primary direction
-from the frozen `all-direction-results.jsonl.gz` into small pair shards. It
-performs no fitting or rescoring and verifies identities, support, and both
-selection/global Brier and ECE against the existing pair records. The browser
-checks these contracts again before displaying a pair. Export provenance and
-shard hashes are recorded in `typewise-matched-aggregation/pair-scores-manifest.json`.
+from the frozen `all-direction-results.jsonl.gz` into small pair shards. It does
+not fit or alter any coefficient. For the per-type display only, it independently
+reconstructs predictions from the frozen panel, primary split, router, and saved
+training coefficients, then scores each complementary type under the published
+event-equal Brier and target-weighted ECE definitions. The export verifies model
+identity, support, aggregate selection/global/typewise scores, and available
+single-model test Brier values against the existing pair records. The browser
+checks the pair/type support and Brier reconstruction again before display.
+Export provenance, source hashes, reconstruction errors, and shard hashes are
+recorded in `typewise-matched-aggregation/pair-scores-manifest.json`.
 
 The `2–4 models` tab is temporarily hidden in both the overall explorer and the
 Markets embed. Existing direct model-count URLs and their archived data remain

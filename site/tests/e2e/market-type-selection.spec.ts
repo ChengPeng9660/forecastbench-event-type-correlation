@@ -32,9 +32,15 @@ test("the first market chart selects the base for the following experiment",asyn
       await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(pair(chosen.id).scopes.complementary.pools.raw.brier[7].toFixed(6));
       await expect(block.getByTestId("ad-event-type-joint-brier")).toHaveText(typewise(chosen.id).scopes.complementary.brier[2].toFixed(6));
       await expect(block.getByTestId("ad-event-type-joint-ece")).toHaveText(typewise(chosen.id).scopes.complementary.ece[2].toFixed(6));
+      const selectedPair=pair(chosen.id),selectedSide=pairBaseSide(selectedPair,base.exact_configuration);
+      const firstType=selectedPair.routes.find(route=>route.complementary)!,typeScores=typewise(chosen.id).event_types[firstType.type];
+      await expect(block.getByTestId("ad-event-type-base-row").locator("td").first()).toHaveText(typeScores.brier[selectedSide].toFixed(6));
+      await expect(block.getByTestId("ad-event-type-global-row")).toContainText(typeScores.ece[2].toFixed(6));
+      await expect(block.getByTestId("ad-event-type-weight-row")).toContainText(typeScores.ece[3].toFixed(6));
       await expect(block.getByTestId("ad-base-ability")).toHaveCount(0);
       await expect(block.locator(".ad-pair-browse")).not.toContainText("eligible partners");
-      await expect(block.getByTestId("ad-pair-identities").locator("div").first()).toContainText(base.exact_configuration);
+      await expect(block.locator(".ad-fixed-base")).toContainText(base.exact_configuration);
+      await expect(block.getByTestId("ad-pair-identities")).toHaveCount(0);
     }
     await expect(page).toHaveURL(/#market-performance$/);
     await expect(block.locator(".ad-pending")).toHaveCount(0);

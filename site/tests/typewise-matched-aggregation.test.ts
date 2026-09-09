@@ -1,7 +1,7 @@
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {afterEach,describe,expect,it,vi} from "vitest";
-import {loadTypewiseAggregation,loadTypewisePair,TYPEWISE_METHODS,type TypewiseIndex,type TypewiseView} from "../src/lib/typewiseMatchedAggregation";
+import {EVENT_TYPE_METHODS,loadTypewiseAggregation,loadTypewisePair,TYPEWISE_METHODS,type TypewiseIndex,type TypewiseView} from "../src/lib/typewiseMatchedAggregation";
 
 const read=(path:string)=>JSON.parse(readFileSync(resolve("public/data",path),"utf8"));
 const index=read("typewise-matched-aggregation/index.json") as TypewiseIndex;
@@ -14,12 +14,16 @@ describe("event-type matched aggregation publication",()=>{
     vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:false,status:503}));
     await expect(loadTypewisePair(pair,parentIndex)).rejects.toThrow("503");
     for(const corrupt of [
+      (d:typeof published)=>d.event_type_methods=[...EVENT_TYPE_METHODS,"bad"],
       (d:typeof published)=>d.primary_fold=1,
       (d:typeof published)=>d.pairs[id].model_a="different configuration",
       (d:typeof published)=>d.pairs[id].scopes.complementary.events++,
       (d:typeof published)=>d.pairs[id].scopes.complementary.brier[0]+=.001,
       (d:typeof published)=>d.pairs[id].scopes.complementary.ece[1]+=.001,
       (d:typeof published)=>d.pairs[id].scopes.complementary.ece[2]=NaN,
+      (d:typeof published)=>delete d.pairs[id].event_types[Object.keys(d.pairs[id].event_types)[0]],
+      (d:typeof published)=>d.pairs[id].event_types[Object.keys(d.pairs[id].event_types)[0]].brier[3]+=.001,
+      (d:typeof published)=>d.pairs[id].event_types[Object.keys(d.pairs[id].event_types)[0]].ece[2]=NaN,
     ]){
       const data=structuredClone(published);corrupt(data);
       vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:true,json:async()=>data}));
@@ -29,6 +33,22 @@ describe("event-type matched aggregation publication",()=>{
     await expect(loadTypewisePair(pair,parentIndex)).resolves.toEqual(published.pairs[id]);
     await expect(loadTypewisePair(pair,parentIndex)).resolves.toEqual(published.pairs[id]);
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+  it("publishes both models and both matched rules on every complementary event type",()=>{
+    const id="p-b1f8f0fb8e7d",pair=read("aggregation-stability/pairs/b1.json")[id];
+    const published=read("typewise-matched-aggregation/pairs/b1.json");
+    expect(published.schema_version).toBe(2);
+    expect(published.event_type_methods).toEqual(EVENT_TYPE_METHODS);
+    const result=published.pairs[id];
+    const complementary=pair.routes.filter((route:{complementary:boolean})=>route.complementary);
+    expect(Object.keys(result.event_types).sort()).toEqual(complementary.map((route:{type:string})=>route.type).sort());
+    for(const route of complementary){
+      const row=result.event_types[route.type];
+      expect(row.events).toBe(route.test_events);
+      expect(row.brier).toHaveLength(4);expect(row.ece).toHaveLength(4);
+      expect(row.brier[0]).toBeCloseTo(route.test_brier_a,12);
+      expect(row.brier[1]).toBeCloseTo(route.test_brier_b,12);
+    }
   });
   it("reproduces selection and the global coefficient before adding the event-type result",()=>{
     for(const key of index.views){
