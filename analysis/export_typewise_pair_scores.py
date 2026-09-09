@@ -1,5 +1,6 @@
 """Publish pair and event-type views of frozen aggregation results without fitting."""
 
+import argparse
 import csv
 import gzip
 import hashlib
@@ -11,7 +12,7 @@ from pathlib import Path
 import numpy as np
 
 from analysis.type_selection import event_weights, split_rows
-from analysis.typewise_matched_aggregation import method_predictions
+from analysis.typewise_matched_aggregation import METHOD_VERSION, PROTOCOL_VERSION, method_predictions
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "site/public/data"
@@ -145,9 +146,10 @@ def reconstruct_event_types(row, parent, stable_parent, panel, model_indices, fo
     return result, maximum_error, comparisons
 
 
-def export():
-    destination = DATA / "typewise-matched-aggregation"
+def export(destination=None):
+    destination = Path(destination) if destination is not None else DATA / "typewise-matched-aggregation"
     index = read(destination / "index.json")
+    assert index["method_version"] == METHOD_VERSION
     assert index["audit"]["status"] == "PASS" and index["audit"]["train_only_coefficients"]
     assert index["methods"] == METHODS
     primary = (index["primary_split"], index["primary_fold"])
@@ -216,7 +218,8 @@ def export():
     outputs = {}
     for shard, pairs in sorted(shards.items()):
         path = destination / "pairs" / f"{shard}.json"
-        write(path, {"schema_version": 2, "methods": METHODS,
+        write(path, {"schema_version": 2, "method_version": METHOD_VERSION,
+                     "protocol_version": PROTOCOL_VERSION, "methods": METHODS,
                      "event_type_methods": EVENT_TYPE_METHODS,
                      "primary_split": primary[0], "primary_fold": primary[1],
                      "source_audit_status": "PASS", "pairs": pairs})
@@ -224,13 +227,15 @@ def export():
     inputs = [source, destination / "index.json", destination / "audit.json",
               destination / "source-manifest.json"]
     manifest = {
-        "schema_version": 2, "validation_status": "PASS", "primary_pairs": len(ids),
+        "schema_version": 2, "method_version": METHOD_VERSION,
+        "protocol_version": PROTOCOL_VERSION, "validation_status": "PASS", "primary_pairs": len(ids),
         "export_only": True, "fitting_performed": False, "test_scores_reconstructed": True,
         "event_type_methods": EVENT_TYPE_METHODS, "reconstructed_pair_types": reconstructed_types,
         "validated_parent_scores": comparisons, "validated_reconstructed_scores": reconstructed_scores,
         "max_parent_score_error": maximum_error,
         "max_reconstruction_error": maximum_reconstruction_error,
-        "source_sha256": {str(path.relative_to(DATA)): digest(path) for path in inputs},
+        "source_sha256": {"typewise-matched-aggregation/" + str(path.relative_to(destination)): digest(path)
+                          for path in inputs},
         "reconstruction_source_sha256": {
             str(path.relative_to(study)): digest(path)
             for path in [study / name for name in reconstruction_files]
@@ -242,4 +247,8 @@ def export():
 
 
 if __name__ == "__main__":
-    export()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--destination", type=Path,
+                        help="Audited typewise build directory; defaults to the website data directory")
+    args = parser.parse_args()
+    export(args.destination)

@@ -52,7 +52,7 @@ export function EventTypeJointRow({brier,ece,referenceBrier,globalBrier,globalEc
     <th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">4</span><div className="ad-raw-method">
       <span className="ad-raw-kind">Learned by event type · exploratory</span>
       <b>Matched aggregation · event-type weights</b>
-      <small className="ad-raw-description">One train-fitted λ per supported type · no calibration</small>
+      <small className="ad-raw-description">Type-normalized training · no calibration</small>
       {brier!=null&&referenceBrier!=null&&<Gain before={referenceBrier} after={brier} referenceLabel={referenceLabel} testId="ad-event-type-joint-gain"/>}
       {globalBrierGain!=null&&globalEceGain!=null&&<small className="ad-typewise-global" data-testid="ad-event-type-vs-global">Vs global weight · Brier {score(globalBrierGain,6,true)} · ECE {score(globalEceGain,6,true)}</small>}
     </div></div></th>

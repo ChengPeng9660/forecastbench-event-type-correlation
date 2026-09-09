@@ -28,64 +28,39 @@ SCOPES = ("all", "complementary")
 COHORTS = ("all", "no_reversal", "reversed_or_unverified")
 FLAGS = ("same_model_version", "same_prompt", "same_information")
 RIDGE = 0.005
+METHOD_VERSION = "type_normalized_ll_ridge_v1"
+PROTOCOL_VERSION = "20260909-normalized-ridge"
 TOL = 1e-12
 N = len(METHODS)
 
 
-def _fit_group_coefficients(z, x, y, weights, codes, count):
-    """Jointly solve separable one-dimensional ridge-logistic objectives."""
-    beta = np.zeros(count)
-
-    def objective(value):
-        linear = z + value[codes] * x
-        return float(weights @ (np.logaddexp(0, linear) - y * linear) + .5 * RIDGE * (value @ value))
-
-    for iteration in range(100):
-        q = sigmoid(z + beta[codes] * x)
-        gradient = np.bincount(codes, weights=weights * x * (q - y), minlength=count) + RIDGE * beta
-        if float(np.max(np.abs(gradient))) < 1e-11:
-            break
-        hessian = np.bincount(codes, weights=weights * x * x * q * (1 - q), minlength=count) + RIDGE
-        step = np.clip(gradient / hessian, -20, 20)
-        old = objective(beta)
-        scale = 1.0
-        for _ in range(40):
-            candidate = beta - scale * step
-            if objective(candidate) <= old - 1e-4 * scale * float(gradient @ step) + 1e-15:
-                break
-            scale /= 2
-        beta = candidate
-    q = sigmoid(z + beta[codes] * x)
-    gradient = np.bincount(codes, weights=weights * x * (q - y), minlength=count) + RIDGE * beta
-    residual = float(np.max(np.abs(gradient)))
-    assert residual < 1e-8, f"Typewise solver did not converge: {residual}"
-    return beta, residual, iteration + 1, objective(beta)
-
-
 def fit_typewise_weights(selected, other, outcomes, events, types, router):
-    """Fit one coefficient per supported training type and one pooled fallback."""
+    """Normalize events within each supported type; use global for every fallback.
+
+    This is the retained ``ll_type_normalized`` estimator: the same scalar
+    ridge-logistic solver as global, independently applied to each type.
+    RIDGE is .005 in beta units, or .08 in lambda=beta/4 units, for every fit.
+    """
     global_fit = fit_weights(selected, other, outcomes, events)
-    supported = sorted(route["type"] for route in router["routes"] if route["train_events"] >= 30)
-    supported_index = {group: index for index, group in enumerate(supported)}
-    fallback_mask = ~np.isin(types, supported)
-    has_fallback = bool(fallback_mask.any())
-    count = len(supported) + int(has_fallback)
-    assert count > 0
-    fallback_code = len(supported)
-    codes = np.array([supported_index.get(str(group), fallback_code) for group in types], dtype=int)
-    weights = event_weights(events)
-    z = logit(selected)
-    x = (logit(other) - z) / 4
-    beta, residual, iterations, objective = _fit_group_coefficients(
-        z, x, outcomes, weights, codes, count)
-    type_betas = {group: float(beta[index]) for group, index in supported_index.items()}
-    if has_fallback:
-        fallback_beta = float(beta[fallback_code])
-        fallback_source = "pooled"
-    else:
-        fallback_beta = float(4 * global_fit["log_weight"])
-        fallback_source = "global"
+    supported = sorted(route["type"] for route in router["routes"]
+                       if route["type"] and route["train_events"] >= 30)
+    type_fits = {}
+    objective = 0.0
+    for group in supported:
+        inside = types == group
+        assert inside.any(), f"Supported training type has no observations: {group}"
+        fitted = fit_weights(selected[inside], other[inside], outcomes[inside], events[inside])
+        type_fits[group] = fitted
+        z = logit(selected[inside])
+        beta = 4 * fitted["log_weight"]
+        linear = z + fitted["log_weight"] * (logit(other[inside]) - z)
+        objective += float(event_weights(events[inside]) @
+                           (np.logaddexp(0, linear) - outcomes[inside] * linear) + .5 * RIDGE * beta**2)
+    type_betas = {group: float(4 * fitted["log_weight"]) for group, fitted in type_fits.items()}
+    fallback_beta = float(4 * global_fit["log_weight"])
     return {
+        "method_version": METHOD_VERSION,
+        "protocol_version": PROTOCOL_VERSION,
         "global_log_weight": float(global_fit["log_weight"]),
         "global_beta": float(4 * global_fit["log_weight"]),
         "global_gradient": float(global_fit["gradient"]),
@@ -94,9 +69,10 @@ def fit_typewise_weights(selected, other, outcomes, events, types, router):
         "type_log_weights": {group: value / 4 for group, value in type_betas.items()},
         "fallback_beta": fallback_beta,
         "fallback_log_weight": fallback_beta / 4,
-        "fallback_source": fallback_source,
-        "typewise_gradient": residual,
-        "iterations": iterations,
+        "fallback_source": "global",
+        "typewise_gradient": max((fitted["gradient"] for fitted in type_fits.values()), default=0.0),
+        "iterations": max((fitted["iterations"] for fitted in type_fits.values()), default=0),
+        "type_iterations": {group: fitted["iterations"] for group, fitted in type_fits.items()},
         "objective": objective,
     }
 
@@ -185,6 +161,7 @@ def evaluate(task):
             test_s, test_o, y[test], events[test], types[test], fit,
             predictions, duplicate, masks, results)
     metadata = {
+        "method_version": METHOD_VERSION, "protocol_version": PROTOCOL_VERSION,
         "id": pair_id(MODELS[i], MODELS[j]),
         "model_a": MODELS[i], "model_b": MODELS[j],
         "split": seed, "fold": fold,
@@ -276,7 +253,8 @@ def write_report(destination):
     coefficients = json.loads((destination / "coefficient-summary.json").read_text())
     lines = [
         "# Event-type matched aggregation without calibration", "",
-        "2026-09-08 exploratory historical-holdout follow-up.", "",
+        "2026-09-09 exploratory historical-holdout follow-up; type_normalized_ll_ridge_v1.", "",
+        "Each supported type normalizes its training events independently and uses the same ridge strength as the global fit. Sparse, empty, and unseen types use the unchanged global coefficient.", "",
         "The main all-pair cohort is training-defined. The no-reversal and reversed-or-unverified cohorts are post-hoc diagnostics because their labels use test outcomes; they never alter routing or coefficients.", "",
         "Brier is event-equal within pair and then pair-equal. ECE is target-weighted in ten fixed equal-width bins. Lower is better for both.", "",
     ]
@@ -345,10 +323,13 @@ def export(study, destination, workers=4, limit=None):
     ]
     source.update(
         protocol_sha256=digest(protocol),
+        method_version=METHOD_VERSION,
+        protocol_version=PROTOCOL_VERSION,
         code_hashes={path: digest(ROOT / path) for path in code_paths},
     )
     write_json(destination / "protocol-lock.json", {
         "protocol_sha256": digest(protocol), "started_at_unix": time.time(),
+        "method_version": METHOD_VERSION, "protocol_version": PROTOCOL_VERSION,
     })
 
     columns = ["i", "j", "split", "fold", "dimension", "train_gap", "train_coverage",
@@ -367,6 +348,7 @@ def export(study, destination, workers=4, limit=None):
     fit_summaries = []
     audit = {
         "status": "RUNNING", "pair_directions": 0, "primary_pairs": 0,
+        "method_version": METHOD_VERSION, "protocol_version": PROTOCOL_VERSION,
         "independent_directions": 0, "max_independent_error": 0.0,
         "max_gradient": 0.0, "max_parent_score_error": 0.0,
         "train_only_coefficients": True,
@@ -419,7 +401,8 @@ def export(study, destination, workers=4, limit=None):
     (destination / "views").mkdir(exist_ok=True)
     for gap, coverage, identity in filters:
         key = view_key(gap, coverage, identity)
-        view = {"key": key, "gap": gap, "coverage": coverage, "pair_scope": identity, "cohorts": {}}
+        view = {"key": key, "gap": gap, "coverage": coverage, "pair_scope": identity, "cohorts": {},
+                "method_version": METHOD_VERSION, "protocol_version": PROTOCOL_VERSION}
         for cohort in COHORTS:
             directions = []
             for seed in SEEDS:
@@ -453,6 +436,7 @@ def export(study, destination, workers=4, limit=None):
     default_fits = [fit for fit in fit_summaries
                     if fit["train_gap"] <= 3 + TOL and fit["train_coverage"] >= .5]
     coefficient_summary = {
+        "method_version": METHOD_VERSION, "protocol_version": PROTOCOL_VERSION,
         "population": "primary gap3 coverage50 all exact configurations",
         "pairs": len(default_fits),
         "global_log_weight": _summarize_values([fit["global_log_weight"] for fit in default_fits]),
@@ -471,7 +455,8 @@ def export(study, destination, workers=4, limit=None):
         elapsed_seconds=round(time.monotonic() - started, 2),
     )
     write_json(destination / "index.json", {
-        "schema_version": 1, "date": "2026-09-08", "exploratory": True,
+        "schema_version": 1, "date": "2026-09-09", "exploratory": True,
+        "method_version": METHOD_VERSION, "protocol_version": PROTOCOL_VERSION,
         "methods": METHODS, "method_labels": LABELS,
         "primary_split": SEEDS[0], "primary_fold": 0,
         "cohorts": COHORTS, "scopes": SCOPES,
@@ -487,7 +472,7 @@ def export(study, destination, workers=4, limit=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--study", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=ROOT / "data/build/typewise-matched-aggregation-20260908")
+    parser.add_argument("--output", type=Path, default=ROOT / "data/build/typewise-matched-aggregation-20260909-normalized-ridge")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()

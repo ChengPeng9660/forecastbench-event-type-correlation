@@ -1,7 +1,7 @@
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {afterEach,describe,expect,it,vi} from "vitest";
-import {EVENT_TYPE_METHODS,loadTypewiseAggregation,loadTypewisePair,TYPEWISE_METHODS,type TypewiseIndex,type TypewiseView} from "../src/lib/typewiseMatchedAggregation";
+import {EVENT_TYPE_METHODS,loadTypewiseAggregation,loadTypewisePair,TYPEWISE_METHODS,TYPEWISE_METHOD_VERSION,type TypewiseIndex,type TypewiseView} from "../src/lib/typewiseMatchedAggregation";
 
 const read=(path:string)=>JSON.parse(readFileSync(resolve("public/data",path),"utf8"));
 const index=read("typewise-matched-aggregation/index.json") as TypewiseIndex;
@@ -14,6 +14,7 @@ describe("event-type matched aggregation publication",()=>{
     vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:false,status:503}));
     await expect(loadTypewisePair(pair,parentIndex)).rejects.toThrow("503");
     for(const corrupt of [
+      (d:typeof published)=>d.method_version="legacy_full_fold_ridge",
       (d:typeof published)=>d.event_type_methods=[...EVENT_TYPE_METHODS,"bad"],
       (d:typeof published)=>d.primary_fold=1,
       (d:typeof published)=>d.pairs[id].model_a="different configuration",
@@ -38,6 +39,7 @@ describe("event-type matched aggregation publication",()=>{
     const id="p-b1f8f0fb8e7d",pair=read("aggregation-stability/pairs/b1.json")[id];
     const published=read("typewise-matched-aggregation/pairs/b1.json");
     expect(published.schema_version).toBe(2);
+    expect(published.method_version).toBe(TYPEWISE_METHOD_VERSION);
     expect(published.event_type_methods).toEqual(EVENT_TYPE_METHODS);
     const result=published.pairs[id];
     const complementary=pair.routes.filter((route:{complementary:boolean})=>route.complementary);
@@ -51,8 +53,10 @@ describe("event-type matched aggregation publication",()=>{
     }
   });
   it("reproduces selection and the global coefficient before adding the event-type result",()=>{
+    expect(index.method_version).toBe(TYPEWISE_METHOD_VERSION);
     for(const key of index.views){
       const view=read(`typewise-matched-aggregation/views/${key}.json`) as TypewiseView;
+      expect(view.method_version).toBe(TYPEWISE_METHOD_VERSION);
       const original=read(`type-selection-no-calibration/views/${key}.json`);
       const stable=read(`aggregation-stability/views/${key}.json`);
       for(let direction=0;direction<10;direction++)for(const scope of ["all","complementary"] as const){
@@ -69,14 +73,26 @@ describe("event-type matched aggregation publication",()=>{
       }
     }
   });
-  it("improves both metrics over type selection in every default direction",()=>{
+  it("reconstructs direction win counts without assuming every direction improves",()=>{
     const view=read("typewise-matched-aggregation/views/gap3-coverage50-all.json") as TypewiseView;
-    for(const cohort of ["all","no_reversal"] as const)for(const scope of ["all","complementary"] as const){
-      for(const direction of view.cohorts[cohort].directions){
-        const row=direction.scopes[scope];
-        expect(row.brier![0]-row.brier![2]).toBeGreaterThan(0);
-        expect(row.ece![0]-row.ece![2]).toBeGreaterThan(0);
+    for(const cohort of ["all","no_reversal","reversed_or_unverified"] as const)for(const scope of ["all","complementary"] as const){
+      const group=view.cohorts[cohort],rows=group.directions.map(direction=>direction.scopes[scope]).filter(row=>row.pairs>0);
+      const summary=group.direction_summary[scope];
+      expect(summary.defined_directions).toBe(rows.length);
+      for(const metric of ["brier","ece"] as const){
+        expect(summary[`${metric}_better_than_selection`]).toEqual(TYPEWISE_METHODS.map((_,method)=>rows.filter(row=>row[metric]![0]-row[metric]![method]>1e-10).length));
+        expect(summary[`typewise_${metric}_better_than_global`]).toBe(rows.filter(row=>row[metric]![1]-row[metric]![2]>1e-10).length);
       }
+    }
+  });
+  it("rejects a legacy method version in either the index or view",async()=>{
+    const published=read("typewise-matched-aggregation/views/gap3-coverage50-all.json");
+    for(const layer of ["index","view"] as const){
+      const key=`legacy-version-${layer}`,ix={...index,views:[...index.views,key]},view={...published,key};
+      if(layer==="index")Object.assign(ix,{method_version:"legacy_full_fold_ridge"});
+      else view.method_version="legacy_full_fold_ridge";
+      vi.stubGlobal("fetch",vi.fn().mockResolvedValueOnce({ok:true,json:async()=>ix}).mockResolvedValueOnce({ok:true,json:async()=>view}));
+      await expect(loadTypewiseAggregation(key)).rejects.toThrow("contract");
     }
   });
   it("validates audit status, methods, cohort partition, and failed requests",async()=>{

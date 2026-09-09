@@ -1,1 +1,8 @@
-{"protocol_sha256":"5f0b4903fff3bfc25f39df319eaeeeb8fbd5408bc2c7005d769a0bb7e6fcebc4","started_at_unix":1788864452.532403}
+{
+  "protocol_sha256": "2269e6e376ab40ce5291a048e4d96ff34f2a78eb3dd048baeac1e939cab63364",
+  "started_at_unix": 1788948432.198698,
+  "method_version": "type_normalized_ll_ridge_v1",
+  "protocol_version": "20260909-normalized-ridge",
+  "final_protocol_sha256": "45be8902fd065975bd67891e4cee009972bd1bf88d96e7c3deef5283375bd7e4",
+  "post_fit_editorial_clarification": "After fitting, clarified that choosing the algorithm variant was exploratory. The protocol_sha256 field preserves the original fitting-time hash; final_protocol_sha256 matches the published wording. No objective, coefficient, split, threshold, or score changed."
+}

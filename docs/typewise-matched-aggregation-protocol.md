@@ -1,8 +1,13 @@
 # Event-type matched aggregation without explicit calibration
 
-2026-09-08. This exploratory follow-up is fixed before computing the new
-event-type-weight results. Existing global-weight Brier and ECE results have
-already been inspected, so this is not a fresh confirmatory study.
+2026-09-09. Protocol version: `20260909-normalized-ridge`.
+Method version: `type_normalized_ll_ridge_v1`.
+
+This revision promotes the retained `ll_type_normalized` variant following
+exploratory evaluation of the existing historical holdout. The algorithm
+variant was selected after inspecting those results; it is not a fresh
+confirmatory study. Every individual coefficient still uses training data
+only. The original 2026-09-08 artifacts remain a separate archived method.
 
 ## Question and unchanged population
 
@@ -21,8 +26,9 @@ events, test targets, router choices, and scope masks.
 The main cohort is selected entirely from training information. Also report a
 post-hoc no-reversal partition for direct comparison with the later stability
 analysis. Test outcomes may label that diagnostic partition, but never select
-a coefficient, method, threshold, pair in the main cohort, or reporting
-direction.
+an individual coefficient, threshold, pair in the main cohort, or reporting
+direction. The choice of the algorithm variant is the exploratory decision
+disclosed above.
 
 ## Methods
 
@@ -40,20 +46,34 @@ Compare three methods:
    published one-coefficient training objective.
 3. Event-type matched aggregation: `q = sigmoid(z_s + beta_g*x)`, where `g` is
    the exact seven-domain event type when that type has at least 30 distinct
-   training events. All remaining sparse, empty, or unseen types share one
-   fallback group.
+   training events. Sparse, empty, and unseen types use the unchanged global
+   matched coefficient. No pooled fallback coefficient is fitted.
 
-Fit the event-type coefficients on the full common training fold only by
-minimizing
+Fit each supported event-type coefficient independently on that type's
+common training events by minimizing
 
-`sum_i w_i * logloss(y_i, q_i) + 0.005/2 * sum_g beta_g^2`,
+`sum_{i: type(i)=g} w_{i|g} * logloss(y_i, q_i) + 0.005/2 * beta_g^2`,
 
-where `w_i` gives every training event equal total weight across the complete
-training fold. Do not renormalize weights within an event type; consequently,
-coefficients for smaller groups receive stronger effective shrinkage toward
-zero, which is raw type selection. Coefficients are unrestricted. If a group
-has no varying predictor, use zero. If no fallback-group observations exist,
-unseen test types use the fitted global coefficient.
+where the weights sum to one **within the type**. Each type's events receive
+equal total weight, and each event's weight is divided equally among its
+targets. Call the same scalar ridge-logistic solver used by the global fit
+on these type-restricted arrays. The coefficient on the raw logit difference
+is `lambda_g = beta_g/4`; thus the penalty is equivalently
+`0.08/2 * lambda_g^2` for every type and for global. It does not become
+`0.08/W_g` for a type with training mass `W_g`.
+
+Coefficients remain unrestricted; no intercept or calibration slope is
+estimated. A type with no varying predictor receives zero. The global fit
+continues to use the complete common training fold with event-equal weights
+and its existing ridge value. Selection, filtering, split directions, score
+definitions, and the global predictions are unchanged.
+
+Apply this rule to every exported filter and all ten directions, including
+all-pair and post-hoc stability partitions, rather than replacing only the
+default no-reversal summary. Indexes, views, coefficient records, and audit
+metadata carry the method and protocol versions above. The fit's `objective`
+field is the sum of the supported types' independently normalized penalized
+objectives; it excludes the separate global fallback fit.
 
 This is an aggregation-only interaction: replacing `o` with `s` sets `x=0`
 and reproduces the selected probability up to the documented clipping error.

@@ -3,6 +3,7 @@ import type {TestScope} from "./typeSelection";
 import type {DecisionPair,DecisionPairIndex,DecisionPairMeta,PairScores} from "./aggregationDecisionPairs";
 
 export const TYPEWISE_PATH=`${import.meta.env.BASE_URL}data/typewise-matched-aggregation/`;
+export const TYPEWISE_METHOD_VERSION="type_normalized_ll_ridge_v1" as const;
 export const TYPEWISE_METHODS=["type_selection","global_joint","event_type_joint"] as const;
 export const EVENT_TYPE_METHODS=["model_a","model_b","global_joint","event_type_joint"] as const;
 const TYPEWISE_COHORTS=["all","no_reversal","reversed_or_unverified"] as const;
@@ -21,10 +22,12 @@ export interface TypewiseCohortView {
   }>;
 }
 export interface TypewiseView {
+  method_version:typeof TYPEWISE_METHOD_VERSION;
   key:string;gap:AbilityGap;coverage:number;pair_scope:PairScope;
   cohorts:Record<TypewiseCohort,TypewiseCohortView>;
 }
 export interface TypewiseIndex {
+  method_version:typeof TYPEWISE_METHOD_VERSION;
   schema_version:1;date:string;exploratory:true;methods:string[];method_labels:string[];
   primary_split:number;primary_fold:number;cohorts:TypewiseCohort[];
   scopes:TestScope[];views:string[];
@@ -38,6 +41,7 @@ export interface TypewisePair extends DecisionPairMeta {
   event_types:Record<string,PairScores>;
 }
 interface TypewisePairShard {
+  method_version:typeof TYPEWISE_METHOD_VERSION;
   schema_version:2;methods:string[];event_type_methods:string[];primary_split:number;primary_fold:number;
   source_audit_status:string;pairs:Record<string,TypewisePair>;
 }
@@ -51,7 +55,7 @@ export async function loadTypewisePair(pair:DecisionPair,index:DecisionPairIndex
     if(!response.ok)throw new Error(`Event-type pair results could not be loaded (${response.status}).`);
     data=await response.json() as TypewisePairShard;
   }
-  if(data.schema_version!==2||data.source_audit_status!=="PASS"||data.methods?.join("|")!==TYPEWISE_METHODS.join("|")||
+  if(data.schema_version!==2||data.method_version!==TYPEWISE_METHOD_VERSION||data.source_audit_status!=="PASS"||data.methods?.join("|")!==TYPEWISE_METHODS.join("|")||
     data.event_type_methods?.join("|")!==EVENT_TYPE_METHODS.join("|")||
     data.primary_split!==index.primary_split||data.primary_fold!==index.primary_fold)
     throw new Error("Event-type pair results failed the published data contract.");
@@ -109,7 +113,7 @@ export async function loadTypewiseAggregation(key:string,signal?:AbortSignal){
   ]);
   for(const response of responses)if(!response.ok)throw new Error(`Event-type aggregation results could not be loaded (${response.status}).`);
   const [index,view]=await Promise.all(responses.map(response=>response.json())) as [TypewiseIndex,TypewiseView];
-  if(index.schema_version!==1||!index.exploratory||index.audit?.status!=="PASS"||
+  if(index.schema_version!==1||index.method_version!==TYPEWISE_METHOD_VERSION||view.method_version!==TYPEWISE_METHOD_VERSION||!index.exploratory||index.audit?.status!=="PASS"||
     !index.audit.train_only_coefficients||index.methods?.join("|")!==TYPEWISE_METHODS.join("|")||
     index.cohorts?.join("|")!==TYPEWISE_COHORTS.join("|")||index.scopes?.join("|")!=="all|complementary"||
     !index.views?.includes(key)||view.key!==key)throw new Error("Event-type aggregation results failed the published data contract.");

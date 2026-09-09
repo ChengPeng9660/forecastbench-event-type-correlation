@@ -7,6 +7,8 @@ import numpy as np
 
 
 RIDGE = 0.005
+METHOD_VERSION = "type_normalized_ll_ridge_v1"
+PROTOCOL_VERSION = "20260909-normalized-ridge"
 
 
 def _weights(events):
@@ -57,7 +59,16 @@ def independent_scores(predictions, outcomes, events):
 def independent_check(train_s, train_o, train_y, train_events, train_types,
                       test_s, test_o, test_y, test_events, test_types,
                       fit, predictions, duplicate, masks, results):
-    """Reconstruct predictions, scores, duplicates, and all fitted gradients."""
+    """Audit the type-normalized ridge contract independently of its solver."""
+    assert fit["method_version"] == METHOD_VERSION
+    assert fit["protocol_version"] == PROTOCOL_VERSION
+    supported = {str(group) for group in np.unique(train_types)
+                 if group and len(np.unique(train_events[train_types == group])) >= 30}
+    assert set(fit["supported_types"]) == supported
+    assert set(fit["type_betas"]) == set(fit["type_log_weights"]) == supported
+    assert fit["fallback_source"] == "global"
+    assert abs(fit["fallback_log_weight"] - fit["global_log_weight"]) < 1e-12
+    assert abs(fit["fallback_beta"] - 4 * fit["global_log_weight"]) < 1e-12
     rebuilt = reconstruct(test_s, test_o, test_types, fit)
     duplicate_rebuilt = reconstruct(test_s, test_s, test_types, fit)
     error = max(float(np.max(np.abs(rebuilt - predictions))),
@@ -66,16 +77,20 @@ def independent_check(train_s, train_o, train_y, train_events, train_types,
     weights = _weights(train_events)
     z = _logit(train_s)
     x = (_logit(train_o) - z) / 4
-    supported = set(fit["supported_types"])
     groups = [(group, train_types == group, beta)
               for group, beta in fit["type_betas"].items()]
-    if fit["fallback_source"] == "pooled":
-        groups.append(("__fallback__", ~np.isin(train_types, list(supported)), fit["fallback_beta"]))
     max_gradient = 0.0
-    for _, inside, beta in groups:
-        q = _logistic(z[inside] + beta * x[inside])
-        gradient = float(weights[inside] @ (x[inside] * (q - train_y[inside])) + RIDGE * beta)
+    objective = 0.0
+    for group, inside, beta in groups:
+        assert abs(beta - 4 * fit["type_log_weights"][group]) < 1e-12
+        group_weights = _weights(train_events[inside])
+        linear = z[inside] + beta * x[inside]
+        q = _logistic(linear)
+        gradient = float(group_weights @ (x[inside] * (q - train_y[inside])) + RIDGE * beta)
+        objective += float(group_weights @ (np.logaddexp(0, linear) - train_y[inside] * linear)
+                           + .5 * RIDGE * beta**2)
         max_gradient = max(max_gradient, abs(gradient))
+    error = max(error, abs(objective - fit["objective"]))
 
     global_beta = 4 * fit["global_log_weight"]
     global_q = _logistic(z + global_beta * x)

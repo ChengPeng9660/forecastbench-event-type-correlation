@@ -27,7 +27,7 @@ function PairEvidence({pair,index,filters,base}:{pair:DecisionPair;index:Decisio
           <tr data-testid="ad-event-type-base-row"><th scope="row"><b>Base model</b><small>{activeRoute.selected===side?"Selected specialist":"Second forecast"} · {base}</small></th><td>{score(eventType.brier[side],6)}</td><td>{score(eventType.ece[side],6)}</td></tr>
           <tr data-testid="ad-event-type-partner-row"><th scope="row"><b>Partner model</b><small>{activeRoute.selected===1-side?"Selected specialist":"Second forecast"} · {partner}</small></th><td>{score(eventType.brier[1-side],6)}</td><td>{score(eventType.ece[1-side],6)}</td></tr>
           <tr className="ad-event-type-global-row" data-testid="ad-event-type-global-row"><th scope="row"><b>Matched aggregation · no calibration</b><small>One global train-fitted weight</small></th><td>{score(eventType.brier[2],6)}</td><td>{score(eventType.ece[2],6)}</td></tr>
-          <tr className="ad-event-type-weight-row" data-testid="ad-event-type-weight-row"><th scope="row"><b>Matched aggregation · event-type weights</b><small>Train-fitted weight for {typeNames[activeType]??activeType}</small></th><td>{score(eventType.brier[3],6)}</td><td>{score(eventType.ece[3],6)}</td></tr>
+          <tr className="ad-event-type-weight-row" data-testid="ad-event-type-weight-row"><th scope="row"><b>Matched aggregation · event-type weights</b><small>Type-normalized training for {typeNames[activeType]??activeType}</small></th><td>{score(eventType.brier[3],6)}</td><td>{score(eventType.ece[3],6)}</td></tr>
         </tbody></table></div>
       </div>}
     </section>

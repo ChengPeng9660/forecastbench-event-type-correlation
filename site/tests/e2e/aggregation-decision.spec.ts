@@ -1,4 +1,8 @@
 import {expect,test} from "@playwright/test";
+import {readFileSync} from "node:fs";
+import {resolve} from "node:path";
+
+const typewise=JSON.parse(readFileSync(resolve("public/data/typewise-matched-aggregation/views/gap3-coverage50-all.json"),"utf8"));
 
 test("leads legacy section links with the raw aggregation comparison and keeps details closed",async({page},testInfo)=>{
   const requests:string[]=[],errors:string[]=[];
@@ -12,8 +16,10 @@ test("leads legacy section links with the raw aggregation comparison and keeps d
   await expect(page.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
   await expect(page.getByTestId("ad-main-table")).toContainText("0.153146");
   await expect(page.getByTestId("ad-main-table")).toContainText("0.152295");
-  await expect(page.getByTestId("ad-event-type-joint-brier")).toHaveText("0.152190");
-  await expect(page.getByTestId("ad-event-type-joint-ece")).toHaveText("0.087643");
+  const eventType=typewise.cohorts.no_reversal.primary.scopes.complementary;
+  await expect(page.getByTestId("ad-event-type-joint-brier")).toHaveText(eventType.brier[2].toFixed(6));
+  await expect(page.getByTestId("ad-event-type-joint-ece")).toHaveText(eventType.ece[2].toFixed(6));
+  await expect(page.getByTestId("ad-event-type-joint-row")).toContainText("Type-normalized training");
   await expect(section.locator("details[open]")).toHaveCount(0);
   await expect(page.locator("#type-selection-calibrated-pooling")).toHaveCount(0);
   await expect(page.getByLabel("Select exact model pair")).toHaveCount(0);
@@ -44,6 +50,9 @@ test("removes focused metadata and pooling controls while retaining evidence dow
   await expect(section.getByTestId("ad-pool-table")).toHaveCount(0);
   await expect(page.getByText("Test directions",{exact:true})).toHaveCount(0);
   await expect(page.getByTestId("ad-test-directions")).toHaveCount(0);
+  await section.getByText("Event-type aggregation evidence",{exact:true}).click();
+  await expect(section.getByText(/weights normalized separately for each type/)).toContainText("(0.08/2)λ²");
+  await expect(section.getByText(/Sparse or unseen types use the global matched weight/)).toBeVisible();
   await page.getByText("ECE & downloads",{exact:true}).click();
   await expect(page.getByRole("link",{name:"Matched comparison report ↗",exact:true})).toHaveAttribute("href",/aggregation-stability\/REPORT.md$/);
   const width=await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);
