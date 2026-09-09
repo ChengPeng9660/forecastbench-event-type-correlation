@@ -27,7 +27,7 @@ describe("event-type matched aggregation publication",()=>{
     ]){
       const data=structuredClone(published);corrupt(data);
       vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:true,json:async()=>data}));
-      await expect(loadTypewisePair(pair,parentIndex)).rejects.toThrow(/contract|selected pair|test support|reproduce/);
+      await expect(loadTypewisePair(pair,parentIndex)).rejects.toThrow(/contract|selected pair|test support|reproduce|complementary routes/);
     }
     vi.stubGlobal("fetch",vi.fn().mockResolvedValue({ok:true,json:async()=>published}));
     await expect(loadTypewisePair(pair,parentIndex)).resolves.toEqual(published.pairs[id]);
