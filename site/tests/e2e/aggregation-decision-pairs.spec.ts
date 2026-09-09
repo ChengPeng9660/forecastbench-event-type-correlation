@@ -1,7 +1,6 @@
 import {expect,test} from "@playwright/test";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
-import {expectPoolingComparison} from "./pooling-comparison-check";
 const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data/aggregation-stability",p),"utf8"));
 const id="p-feba1dc1f7ef",pair=read("pairs/fe.json")[id];
 
@@ -26,7 +25,10 @@ test("opens base and partner controls while retaining the exact raw scores",asyn
   await expect(section.locator("details[open]")).toHaveCount(0);
   await expect(section.locator(".ad-verdict,.ad-comparison-note,.ad-footnote,.ad-reading")).toHaveCount(0);
   await page.screenshot({path:testInfo.outputPath("base-partner-picker.png")});
-  await expect(section.getByTestId("ad-test-scope-label")).toHaveText("Complementary events only");
+  await expect(section.getByTestId("ad-test-scope-label")).toHaveCount(0);
+  await expect(section.getByTestId("ad-cohort-label")).toHaveCount(0);
+  await expect(section.getByTestId("ad-context")).toHaveCount(0);
+  await expect(section.getByText("Pooling methods",{exact:true})).toHaveCount(0);
   await expect(section.locator("[data-testid=ad-pair-results] > .ad-pair-context")).toHaveCount(0);
   await expect(section.getByTestId("ad-stability-status")).toHaveCount(0);
   await expect(section.locator(".ad-pair-browse")).not.toContainText("eligible partners");
@@ -53,30 +55,15 @@ test("pins the base while browsing partners and orients both sides correctly",as
   await expect(first.locator("td").nth(1)).toHaveText(pair.routes[0].train_brier_b.toFixed(5));
   await expect(first.locator("td").nth(3)).toHaveText(pair.routes[0].selected===1?"Base":"Partner");
   await expect(section.getByTestId("ad-pair-main-table")).toContainText(pair.scopes.complementary.pools.raw.brier[7].toFixed(6));
-  await section.getByText("Change study scope",{exact:true}).click();
-  await section.getByLabel("Verdict model-pair scope",{exact:true}).selectOption("matched_conditions");
-  await expect(section.getByTestId("ad-pair-results")).toHaveCount(0);
-  await expect(section.getByRole("status")).toContainText(/outside the current filters|No eligible partners/);
-  await expect(section.getByTestId("ad-effect")).toHaveCount(0);
   await section.getByRole("button",{name:"Overall evidence",exact:true}).click();
-  await expect(section.getByTestId("ad-effect")).toContainText("0.79%");
+  await expect(section.getByTestId("ad-effect")).toContainText("0.56%");
 });
 
-test("pair pooling compares selection and four pools with persistent Brier sorting",async({page},testInfo)=>{
+test("pair view omits pooling methods while retaining event-type evidence",async({page})=>{
   await page.goto(`/?cc_stability=original&cc_result=pair&cc_pair=${id}#complementarity`);
   const section=page.locator("#complementarity");
-  await section.getByText("Pooling methods",{exact:true}).click();
-  const table=section.getByTestId("ad-pair-pool-table"),sort=section.getByLabel("Pooling table sort order",{exact:true});
-  await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier);
-  await sort.selectOption("brier");
-  for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
-    await section.getByRole("group",{name:"Pair pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
-    await expectPoolingComparison(table,pair.scopes.complementary.pools[mode].brier,true);
-  }
-  await table.locator("..").locator("..").screenshot({path:testInfo.outputPath("pair-pooling-sorted.png")});
-  await page.reload();await section.getByText("Pooling methods",{exact:true}).click();
-  await expect(sort).toHaveValue("brier");await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier,true);
-  await sort.selectOption("method");await expectPoolingComparison(table,pair.scopes.complementary.pools.raw.brier);
+  await expect(section.getByText("Pooling methods",{exact:true})).toHaveCount(0);
+  await expect(section.getByTestId("ad-pair-pool-table")).toHaveCount(0);
   await expect(section.getByText("Test directions",{exact:true})).toHaveCount(0);
   await expect(section.getByTestId("ad-pair-directions")).toHaveCount(0);
   await section.getByText("Event-type selections",{exact:true}).click();

@@ -37,7 +37,10 @@ test("the first market chart selects the base for the following experiment",asyn
     await expect(block.locator(".ad-pending")).toHaveCount(0);
   }
   const current=await block.getByLabel("Partner model",{exact:true}).inputValue();
-  await expect(block.getByTestId("ad-test-scope-label")).toHaveText("Complementary events only");
+  await expect(block.getByTestId("ad-test-scope-label")).toHaveCount(0);
+  await expect(block.getByTestId("ad-cohort-label")).toHaveCount(0);
+  await expect(block.getByTestId("ad-context")).toHaveCount(0);
+  await expect(block.getByText("Pooling methods",{exact:true})).toHaveCount(0);
   await expect(block.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(pair(current).scopes.complementary.pools.raw.brier[7].toFixed(6));
   await expect(block.getByTestId("ad-base-ability")).toHaveCount(0);
   await page.reload();

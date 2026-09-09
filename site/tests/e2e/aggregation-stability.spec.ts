@@ -1,7 +1,6 @@
 import {expect,test} from "@playwright/test";
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
-import {expectPoolingComparison} from "./pooling-comparison-check";
 const read=(p:string)=>JSON.parse(readFileSync(resolve("public/data",p),"utf8"));
 const index=read("aggregation-stability/index.json"),view=read("aggregation-stability/views/gap3-coverage50-all.json");
 const typewise=read("typewise-matched-aggregation/views/gap3-coverage50-all.json");
@@ -10,41 +9,37 @@ const eligible=(p:any)=>p.train_gap<=3+1e-12&&p.train_coverage>=.5;
 const stable=index.pairs.find((p:any)=>eligible(p)&&p.stability==="no_reversal");
 const reversed=loadPair("p-8ff6126fb390");
 
-test("defaults to non-reversing complementary pairs and recomputes each pooled comparator",async({page},testInfo)=>{
+test("defaults to non-reversing complementary pairs without focused scope metadata",async({page},testInfo)=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
   await page.goto("/#complementarity");
-  const section=page.locator("#complementarity"),group=section.getByTestId("ad-cohort-label");
-  await expect(group).toHaveText("No reversals");
+  const section=page.locator("#complementarity");
+  await expect(section.getByTestId("ad-cohort-label")).toHaveCount(0);
   await expect(section.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
   await expect(section.getByTestId("ad-posthoc-label")).toHaveCount(0);
-  await expect(section.getByTestId("ad-test-scope-label")).toHaveText("Complementary events only");
+  await expect(section.getByTestId("ad-test-scope-label")).toHaveCount(0);
+  await expect(section.getByTestId("ad-context")).toHaveCount(0);
+  await expect(section.getByText("Pooling methods",{exact:true})).toHaveCount(0);
   for(const cohort of ["stable","fallback","all","original"]){
     await page.goto(`/?cc_stability=${cohort}&cc_test_scope=all#complementarity`);
     await expect(page).toHaveURL(/cc_stability=stable/);
     await expect(page).toHaveURL(/cc_test_scope=complementary/);
-    await expect(group).toHaveText("No reversals");
+    await expect(section.getByTestId("ad-cohort-label")).toHaveCount(0);
     await expect(section.getByLabel("Complementary-pair group",{exact:true})).toHaveCount(0);
     const expected=view.cohorts.stable.primary.scopes;
     await expect(section.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
     await expect(section.getByTestId("ad-event-type-joint-row")).toHaveCount(1);
     await expect(section.getByTestId("ad-event-type-unavailable")).toHaveCount(0);
-    await expect(section.getByTestId("ad-context")).toContainText(`${expected.complementary.pairs.toLocaleString()} model pairs`);
-    const disclosure=section.getByText("Pooling methods",{exact:true}).locator("..");
-    if(!await disclosure.evaluate(el=>(el as HTMLDetailsElement).open))await section.getByText("Pooling methods",{exact:true}).click();
+    await expect(section.getByTestId("ad-context")).toHaveCount(0);
+    await expect(section.getByText("Pooling methods",{exact:true})).toHaveCount(0);
     const eventType=typewise.cohorts.no_reversal.primary.scopes.complementary;
     await expect(section.getByTestId("ad-event-type-joint-brier")).toHaveText(eventType.brier[2].toFixed(6));
     await expect(section.getByTestId("ad-event-type-joint-ece")).toHaveText(eventType.ece[2].toFixed(6));
     await expect(section.getByTestId("ad-main-table").locator("tbody tr").first()).toContainText(expected.complementary.brier[0].toFixed(6));
-    for(const [mode,label] of [["raw","No calibration"],["input","Calibrate models → pool"],["output","Pool → calibrate output"]]){
-      await section.getByRole("group",{name:"Supporting pooling pipeline",exact:true}).getByRole("button",{name:label,exact:true}).click();
-      await section.getByLabel("Pooling table sort order",{exact:true}).selectOption("brier");
-      await expectPoolingComparison(section.getByTestId("ad-pool-table"),expected.complementary.pools[mode].brier,true);
-      await expect(section.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(expected.complementary.pools.raw.brier[7].toFixed(6));
-      await expect(section.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(expected.complementary.pools.raw.ece[7].toFixed(6));
-    }
+    await expect(section.getByTestId("ad-uncalibrated-joint-brier")).toHaveText(expected.complementary.pools.raw.brier[7].toFixed(6));
+    await expect(section.getByTestId("ad-uncalibrated-joint-ece")).toHaveText(expected.complementary.pools.raw.ece[7].toFixed(6));
   }
   await page.reload();
-  await expect(group).toHaveText("No reversals");
+  await expect(section.getByTestId("ad-cohort-label")).toHaveCount(0);
   await page.screenshot({path:testInfo.outputPath("stable-complementary-overall.png")});
   expect(errors).toEqual([]);
   const widths=await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.clientWidth]);expect(widths[0]).toBeLessThanOrEqual(widths[1]+1);
@@ -93,7 +88,7 @@ test("market chart selection keeps the base and restricts partners to no reversa
   const marker=page.locator(`.market-performance-hit[data-configuration=${JSON.stringify(base.exact_configuration)}]`);
   await marker.focus();await marker.press("Enter");
   const block=page.locator("#market-type-selection");
-  await expect(block.getByTestId("ad-cohort-label")).toHaveText("No reversals");
+  await expect(block.getByTestId("ad-cohort-label")).toHaveCount(0);
   await expect(block.locator(".ad-pair-view")).toHaveAttribute("data-base-configuration",base.exact_configuration);
   const ids=await block.getByLabel("Partner model",{exact:true}).locator("option").evaluateAll(options=>options.map(o=>(o as HTMLOptionElement).value).filter(Boolean));
   expect(ids.length).toBeGreaterThan(0);
@@ -113,5 +108,5 @@ test("stability data failures support retry without displaying older scores",asy
   await page.goto("/#complementarity");
   await expect(page.getByRole("alert")).toContainText("503");await expect(page.getByTestId("ad-main-table")).toHaveCount(0);
   fail=false;await page.getByRole("button",{name:"Retry aggregation verdict",exact:true}).click();
-  await expect(page.getByTestId("ad-context")).toContainText(`${view.cohorts.stable.primary.scopes.complementary.pairs.toLocaleString()} model pairs`);
+  await expect(page.getByTestId("ad-main-table").locator("tbody tr")).toHaveCount(7);
 });

@@ -1,19 +1,16 @@
 import {useEffect,useMemo,useState} from "react";
 import {score} from "../lib/complementarity";
-import type {DecisionFilters,PoolMode} from "../lib/aggregationDecision";
+import type {DecisionFilters} from "../lib/aggregationDecision";
 import {DECISION_PAIR_PATH,loadDecisionPairIndex,loadDecisionPair,pairDecisionSummary,pairHasBase,pairPartner,pairBaseSide,pairsForBase,writeDecisionQuery,type DecisionPairIndex,type DecisionPair} from "../lib/aggregationDecisionPairs";
 import {UNCALIBRATED_METHODS,UncalibratedAggregationRows,UncalibratedJointRow} from "./UncalibratedAggregationRow";
-import {PoolingComparisonTable} from "./PoolingComparisonTable";
 import {STABILITY_PATH} from "../lib/aggregationStability";
 
 const pct=(v:number|null,digits=1)=>v==null?"—":`${(100*v).toFixed(digits)}%`;
 const color=(v:number)=>v>1e-10?"ad-positive":v< -1e-10?"ad-negative":"";
 const typeNames:Record<string,string>={health:"Health",politics:"Politics",sports:"Sports",finance:"Finance / economics",technology:"Technology",climate_weather:"Climate / weather",entertainment_culture:"Entertainment / culture"};
-const modes=[['raw','No calibration'],['input','Calibrate models → pool'],['output','Pool → calibrate output']] as const;
 
 function PairEvidence({pair,index,filters,base}:{pair:DecisionPair;index:DecisionPairIndex;filters:DecisionFilters;base:string}){
-  const [mode,setMode]=useState<PoolMode>("raw");
-  const s=pairDecisionSummary(pair,filters),r=s.row,pool=r.pools[mode],side=pairBaseSide(pair,base);
+  const {row:r}=pairDecisionSummary(pair,filters),side=pairBaseSide(pair,base);
   const fallback=!!pair.stability&&pair.stability!=="no_reversal";
   const referenceLabel=fallback?"overall selection":"type selection",selectionLabel=fallback?"Overall selection (train)":"Type-based selection";
   const rawJointBrier=r.pools.raw.brier[7],rawGain=r.brier[0]-rawJointBrier,rawRelative=r.brier[0]>0?rawGain/r.brier[0]:null;
@@ -29,10 +26,6 @@ function PairEvidence({pair,index,filters,base}:{pair:DecisionPair;index:Decisio
       <div className="ad-table-scroll"><table className="ad-main-table" data-testid="ad-pair-main-table"><thead><tr><th>Prediction pipeline</th><th>Test Brier ↓</th><th>Test ECE ↓</th></tr></thead><tbody><tr><th scope="row"><div className="ad-pipeline-label"><span className="ad-row-number">1</span><b>{selectionLabel}</b></div></th><td>{score(r.brier[0],6)}</td><td>{score(r.ece[0],6)}</td></tr><UncalibratedAggregationRows brier={r.brier} ece={r.ece} referenceLabel={referenceLabel}/><UncalibratedJointRow brier={rawJointBrier} ece={r.pools.raw.ece[7]} referenceBrier={r.brier[0]} referenceLabel={referenceLabel}/></tbody></table></div>
     </section>
     <div className="ad-supporting">
-      <details className="ad-disclosure"><summary>Pooling methods</summary><div className="ad-detail-body">
-        <div className="ad-switch ad-pool-switch" role="group" aria-label="Pair pooling pipeline">{modes.map(([v,label])=><button key={v} aria-pressed={mode===v} onClick={()=>setMode(v)}>{label}</button>)}</div>
-        <PoolingComparisonTable brier={pool.brier} methodLabels={index.pool_labels} testId="ad-pair-pool-table"/>
-      </div></details>
       <details className="ad-disclosure"><summary>Event-type selections</summary><div className="ad-detail-body"><div className="ad-table-scroll"><table className="ad-direction-table" data-testid="ad-pair-routes"><thead><tr><th>Event type</th><th>Train events</th><th>{pair.stability?"Base train Brier":"Base Brier"}</th><th>{pair.stability?"Partner train Brier":"Partner Brier"}</th><th>{pair.stability?"Policy model":"Selected model"}</th><th>Support</th>{pair.stability&&<><th>Test events</th><th>Base test Brier</th><th>Partner test Brier</th><th>Type advantage</th></>}</tr></thead><tbody>{pair.routes.map(t=><tr key={t.type}><th scope="row">{typeNames[t.type]??t.type}</th><td>{t.train_events}</td><td>{score(side===0?t.train_brier_a:t.train_brier_b,5)}</td><td>{score(side===0?t.train_brier_b:t.train_brier_a,5)}</td><td>{(t.policy_selected??t.selected)===side?"Base":"Partner"}</td><td>{t.fallback?"Overall fallback":t.complementary?"Complementary":"Supported"}</td>{pair.stability&&<><td>{t.test_events}</td><td>{score(side===0?t.test_brier_a:t.test_brier_b,5)}</td><td>{score(side===0?t.test_brier_b:t.test_brier_a,5)}</td><td>{({retained:"Retained",reversed:"Reversed",tied:"Tie · no reversal",unverified:"No test events",not_complementary:"Outside complementary set"} as Record<string,string>)[t.test_status??""]}</td></>}</tr>)}</tbody></table></div><div className="ad-pair-context">Single-model test Brier · Base {score(r.single_brier[side],6)} · Partner {score(r.single_brier[1-side],6)}</div></div></details>
       <details className="ad-disclosure"><summary>ECE & downloads</summary><div className="ad-detail-body"><div className="ad-table-scroll"><table className="ad-ece-table"><thead><tr><th>Pipeline</th><th>ECE ↓</th></tr></thead><tbody><tr><th scope="row">{selectionLabel}</th><td>{score(r.ece[0],6)}</td></tr>{UNCALIBRATED_METHODS.map(method=><tr key={method.id} data-testid={`ad-uncalibrated-ece-${method.id}`}><th scope="row">Uncalibrated aggregation · {method.label}</th><td>{score(r.ece[method.index],6)}</td></tr>)}<tr><th scope="row">Matched aggregation · no calibration</th><td>{score(r.pools.raw.ece[7],6)}</td></tr></tbody></table></div><div className="ad-downloads"><button className="ad-link-button" onClick={()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(pair,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download=`${pair.id}-aggregation.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}}>Pair scores ↓</button><a href={`${index.post_hoc?STABILITY_PATH:DECISION_PAIR_PATH}${index.post_hoc?"source-manifest.json":"provenance.json"}`}>Data provenance ↗</a></div></div></details>
     </div>

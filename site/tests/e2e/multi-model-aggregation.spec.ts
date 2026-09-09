@@ -23,7 +23,8 @@ test('model-count growth uses matched complementary support in both calibration 
  const block=page.locator('#complementarity');
  await expect(block.getByRole('button',{name:'2–4 models',exact:true})).toHaveAttribute('aria-pressed','true');
  await expect(block.getByTestId('mm-explorer')).toContainText('Every model has a specialty');
- await expect(block.getByTestId('ad-test-scope-label')).toHaveText('Complementary events only');
+ await expect(block.getByTestId('ad-test-scope-label')).toHaveCount(0);
+ await expect(block.getByText('Pooling methods',{exact:true})).toHaveCount(0);
  await expect(block.getByRole('button',{name:'All test events',exact:true})).toHaveCount(0);
  await expect(block.locator('.mm-context')).not.toContainText('Post-hoc');
  for(const [mode,label] of [['calibrated','Match + calibrate'],['raw','Match only · no calibration']]){

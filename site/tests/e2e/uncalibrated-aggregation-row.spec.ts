@@ -42,14 +42,8 @@ test("expands all four raw rules and removes the three calibrated rows",async({p
   await expect(block.getByTestId("ad-event-type-joint-gain")).toContainText(signed(eventType.brier[0]-eventType.brier[2]));
   await expect(block.getByTestId("ad-event-type-vs-global")).toContainText(`ECE ${signed(eventType.ece[1]-eventType.ece[2])}`);
   await expect(block.getByTestId("ad-event-type-ece-summary")).toContainText(eventType.ece[2].toFixed(6));
-  await block.getByText("Change study scope",{exact:true}).click();
-  await block.getByLabel("Verdict training ability gap",{exact:true}).selectOption("5");
-  const changed=read("aggregation-stability/views/gap5-coverage50-all.json").cohorts.stable.primary.scopes.complementary;
-  for(const method of methods){
-    const m=index.methods.indexOf(method);
-    await expect(block.getByTestId(`ad-uncalibrated-score-${method}`)).toHaveText(changed.brier[m].toFixed(6));
-    await expect(block.getByTestId(`ad-uncalibrated-ece-score-${method}`)).toHaveText(changed.ece[m].toFixed(6));
-  }
+  await expect(block.getByText("Change study scope",{exact:true})).toHaveCount(0);
+  await expect(block.getByLabel("Verdict training ability gap",{exact:true})).toHaveCount(0);
   await page.reload();
   await expect(block.getByTestId("ad-uncalibrated-row-simple_mean")).toBeVisible();
   await expect(block.getByTestId("ad-uncalibrated-row-piecewise_odds")).toBeVisible();
